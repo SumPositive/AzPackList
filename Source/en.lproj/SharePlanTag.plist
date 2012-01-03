@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<array>
+		<string>(*Usefulness)</string>
+		<string>Domestic</string>
+		<string>Overseas</string>
+		<string>Camping</string>
+		<string>Fishing</string>
+		<string>Climbing</string>
+		<string>Hobby</string>
+		<string>Event</string>
+		<string>Stockpile</string>
+		<string>Other</string>
+	</array>
+	<array>
+		<string>(*Days)</string>
+		<string>1day</string>
+		<string>2days</string>
+		<string>3days</string>
+		<string>4days</string>
+		<string>More days</string>
+	</array>
+	<array>
+		<string>(*Man)</string>
+		<string>1p</string>
+		<string>2p</string>
+		<string>3p</string>
+		<string>4p</string>
+		<string>More p</string>
+	</array>
+</array>
+</plist>

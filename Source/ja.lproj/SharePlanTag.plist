@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<array>
+		<string>(*用途)</string>
+		<string>国内旅行</string>
+		<string>海外旅行</string>
+		<string>キャンプ</string>
+		<string>つり</string>
+		<string>登山</string>
+		<string>趣味</string>
+		<string>イベント</string>
+		<string>災害備蓄</string>
+		<string>その他</string>
+	</array>
+	<array>
+		<string>(*期間)</string>
+		<string>1日</string>
+		<string>2日</string>
+		<string>3日</string>
+		<string>4日</string>
+		<string>5日以上</string>
+	</array>
+	<array>
+		<string>(*人数)</string>
+		<string>1人</string>
+		<string>2人</string>
+		<string>3人</string>
+		<string>4人</string>
+		<string>5人以上</string>
+	</array>
+</array>
+</plist>
