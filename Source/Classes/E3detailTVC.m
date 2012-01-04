@@ -136,6 +136,8 @@
 - (void)loadView
 {	//【Tips】ここでaddSubviewするオブジェクトは全てautoreleaseにすること。メモリ不足時には自動的に解放後、改めてここを通るので、初回同様に生成するだけ。
 	[super loadView];
+	// 背景テクスチャ・タイルペイント
+	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 
 	// Set up NEXT Left [Back] buttons.
 	self.navigationItem.backBarButtonItem  = [[UIBarButtonItem alloc]
@@ -159,8 +161,6 @@
 - (void)viewDidLoad 
 {
 	[super viewDidLoad];
-	// 背景テクスチャ・タイルペイント
-	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 
 	// listen to our app delegates notification that we might want to refresh our detail view
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAllViews:) name:NFM_REFRESH_ALL_VIEWS

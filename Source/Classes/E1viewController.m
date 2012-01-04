@@ -786,6 +786,15 @@
 - (void)loadView
 {	//【Tips】ここでaddSubviewするオブジェクトは全てautoreleaseにすること。メモリ不足時には自動的に解放後、改めてここを通るので、初回同様に生成するだけ。
 	[super loadView];
+	// 背景テクスチャ・タイルペイント
+	if (appDelegate_.app_is_iPad) {
+		self.view.backgroundColor = [UIColor colorWithRed:152/255.0f 
+													green:81/255.0f 
+													 blue:75/255.0f 
+													alpha:1.0f];
+	} else {
+		self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+	}
 	
 	// Set up NEXT Left [Back] buttons.
 	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
@@ -842,8 +851,6 @@
 - (void)viewDidLoad 
 { //iCloud
 	[super viewDidLoad];
-	// 背景テクスチャ・タイルペイント
-	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 
 	// observe the app delegate telling us when it's finished asynchronously setting up the persistent store
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refetcheAllData:)
@@ -1069,10 +1076,7 @@
 		case 0:
 			return MiSection0Rows + 1; // +1:Add行
 		case 1:
-			if (appDelegate_.AppEnabled_Dropbox) {
-				return 5;	//Action menu
-			}
-			return 4;	//Action menu
+			return 5;	//Action menu
 	}
 	return 0;
 }
@@ -1109,7 +1113,7 @@
 	switch (section) {
 		case 1: {
 			NSString *zz = @"";  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
-			if (appDelegate_.AppEnabled_iCloud) {
+			if (appDelegate_.app_is_sponsor) {
 				zz = NSLocalizedString(@"iCloud ON",nil); //@"<<< Will syncronize with iCloud >>>";
 			}
 			if (appDelegate_.app_is_iPad) {
@@ -1303,9 +1307,7 @@
 		cell.detailTextLabel.textColor = [UIColor grayColor];
 		cell.showsReorderControl = NO;
 
-		NSInteger iRow = indexPath.row;
-		if (appDelegate_.AppEnabled_Dropbox==NO && 1<=iRow) iRow++; // Dropbox無効
-		switch (iRow) {
+		switch (indexPath.row) {
 			case 0:
 				cell.imageView.image = [UIImage imageNamed:@"Icon32-SharedAdd"];
 				cell.textLabel.text = NSLocalizedString(@"Import SharePlan",nil);
@@ -1385,9 +1387,7 @@
 		}
 	}
 	else if (indexPath.section == 1) {
-		NSInteger iRow = indexPath.row;
-		if (appDelegate_.AppEnabled_Dropbox==NO && 1<=iRow) iRow++; // Dropbox無効
-		switch (iRow) {
+		switch (indexPath.row) {
 			case 0: // SharePlan Search
 				[self	actionImportSharedPackList];
 				break;

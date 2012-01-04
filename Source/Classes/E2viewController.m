@@ -850,7 +850,6 @@
 - (void)loadView
 {	//【Tips】ここでaddSubviewするオブジェクトは全てautoreleaseにすること。メモリ不足時には自動的に解放後、改めてここを通るので、初回同様に生成するだけ。
 	[super loadView];
-	
 	// 背景テクスチャ・タイルペイント
 	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 
@@ -1141,11 +1140,7 @@
 			break;
 		case 2: // Action menu
 			if (!PbSharePlanList_ && 0 < MiSection0Rows) {
-				if (appDelegate_.AppEnabled_Dropbox) {
-					rows = 7;
-				} else {
-					rows = 6;
-				}
+				rows = 7;
 			}
 			else rows = 0;
 			break;
@@ -1464,9 +1459,7 @@
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			cell.showsReorderControl = NO;		// Move禁止
 			
-			NSInteger iRow = indexPath.row;
-			if (appDelegate_.AppEnabled_Dropbox==NO && 3<=iRow) iRow++; // Dropbox無効
-			switch (iRow) {
+			switch (indexPath.row) {
 				case 0:
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-CircleCheckClear"];
 					cell.textLabel.text = NSLocalizedString(@"All ZERO",nil);
@@ -1616,9 +1609,7 @@
 			break;
 			
 		case 2: { // Action Menu
-			NSInteger iRow = indexPath.row;
-			if (appDelegate_.AppEnabled_Dropbox==NO && 3<=iRow) iRow++; // Dropbox無効
-			switch (iRow) {
+			switch (indexPath.row) {
 				case 0: // All Zero  全在庫数量を、ゼロにする
 					[self	actionAllZero];
 					break;

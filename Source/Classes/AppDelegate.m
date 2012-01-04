@@ -55,8 +55,8 @@
 @synthesize RaClipE3objects;
 @synthesize AppShouldAutorotate, AppUpdateSave;
 @synthesize dropboxSaveE1selected = dropboxSaveE1selected_;
-@synthesize AppEnabled_iCloud = AppEnabled_iCloud_;
-@synthesize AppEnabled_Dropbox = AppEnabled_Dropbox_;
+//@synthesize AppEnabled_iCloud = AppEnabled_iCloud_;
+//@synthesize AppEnabled_Dropbox = AppEnabled_Dropbox_;
 
 @synthesize app_is_iPad = app_is_iPad_;
 @synthesize app_is_sponsor = app_is_sponsor_;
@@ -141,7 +141,8 @@
 		exit(0);
 	}
 	app_is_iPad_ = [[[UIDevice currentDevice] model] hasPrefix:@"iPad"];	// iPad
-
+	NSLog(@"app_is_iPad_=%d,  app_is_Ad_=%d,  app_is_sponsor_=%d", app_is_iPad_, app_is_Ad_, app_is_sponsor_);
+	
 	// iCloud-KVS
 	if (app_is_sponsor_==NO) {
 		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
@@ -171,6 +172,8 @@
 		mainSVC_.delegate = padRootVC_;
 		//[naviRight release];
 		//[naviLeft release];
+		// mainVC を window へ登録
+		[window addSubview:mainSVC_.view];
 	}
 	else {
 		E1viewController *e1viewCon = [[E1viewController alloc] init];
@@ -178,9 +181,9 @@
 		// e1viewCon を naviCon へ登録
 		mainNC_ = [[UINavigationController alloc] initWithRootViewController:e1viewCon];
 		//[e1viewCon release];
+		// mainVC を window へ登録
+		[window addSubview:mainNC_.view];
 	}
-	// mainVC を window へ登録
-	[window addSubview:mainNC_.view];
 	
 	//--------------------------------------------------[Clip Board] クリップボード初期化
 	//self.RaClipE3objects = [[NSMutableArray array] retain]; NG/@property (nonatomic, retain)により代入時にretainされているため。
@@ -191,6 +194,7 @@
 	
 	MbAdCanVisible = NO;		// 現在状況、(NO)表示禁止  (YES)表示可能
 
+	// Dropbox 標準装備
 	DBSession* dbSession = [[DBSession alloc]
 							 initWithAppKey:DBOX_APPKEY
 							 appSecret:DBOX_SECRET
@@ -272,10 +276,10 @@
         }
         return YES;
     }
-	else if (AppEnabled_Dropbox_==NO) {
-		alertBox( NSLocalizedString(@"Dropbox NGAPP",nil), NSLocalizedString(@"Dropbox NGAPP msg",nil), @"OK");
-		return NO;
-	}
+	//else if (app_is_sponsor_==NO) {
+	//	alertBox( NSLocalizedString(@"Dropbox NGAPP",nil), NSLocalizedString(@"Dropbox NGAPP msg",nil), @"OK");
+	//	return NO;
+	//}
     return NO;
 }
 
@@ -413,12 +417,12 @@
 					   URLByAppendingPathComponent:@"AzPack.sqlite"];	//【重要】変更禁止＜＜データ移行されなくなる。
 	NSLog(@"storeUrl=%@", storeUrl);*/
 	NSString *storePath = [[self applicationDocumentsDirectory]
-						   stringByAppendingPathComponent:@"AzPack.sqlite"];	//【重要】リリース後変更禁止
+						   stringByAppendingPathComponent:@"AzPackList.sqlite"];	//【重要】リリース後変更禁止
 	NSLog(@"storePath=%@", storePath);
 	
     persistentStoreCoordinator_ = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
 	
-	if (AppEnabled_iCloud_) {  // (IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0"))
+	if (app_is_sponsor_) {  // (IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0"))
 		 // do this asynchronously since if this is the first time this particular device is syncing with preexisting
 		 // iCloud content it may take a long long time to download
 		 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -437,7 +441,7 @@
 				 options = [NSDictionary dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
 							[NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption,
-							@"com.azukid.AzPackingS1.sqlog", NSPersistentStoreUbiquitousContentNameKey,	//【重要】リリース後変更禁止
+							@"com.azukid.AzPackList.sqlog", NSPersistentStoreUbiquitousContentNameKey,	//【重要】リリース後変更禁止
 							cloudURL, NSPersistentStoreUbiquitousContentURLKey,												//【重要】リリース後変更禁止
 							nil];
 			 } else {
@@ -503,7 +507,7 @@
 	NSManagedObjectContext* moc = nil;
 	
     if (coordinator != nil) {
-		if (AppEnabled_iCloud_) {  // (IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0"))
+		if (app_is_sponsor_) {  // (IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0"))
 			moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
 			
 			[moc performBlockAndWait:^{

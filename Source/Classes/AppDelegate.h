@@ -27,8 +27,8 @@
 @property (nonatomic, retain) NSMutableArray *RaClipE3objects;  // 外部から参照されるため
 @property (nonatomic, assign) BOOL	AppShouldAutorotate;
 @property (nonatomic, assign) BOOL	AppUpdateSave;
-@property (nonatomic, assign) BOOL	AppEnabled_iCloud;
-@property (nonatomic, assign) BOOL	AppEnabled_Dropbox;
+//@property (nonatomic, assign) BOOL	AppEnabled_iCloud;
+//@property (nonatomic, assign) BOOL	AppEnabled_Dropbox;
 @property (nonatomic, retain) E1			*dropboxSaveE1selected;
 
 // 
