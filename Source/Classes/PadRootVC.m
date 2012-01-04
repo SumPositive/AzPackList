@@ -24,13 +24,14 @@
 - (void)unloadRelease	// dealloc, viewDidUnload から呼び出される
 {
 	NSLog(@"--- unloadRelease --- PadRootVC");
-   [popoverButtonItem release], popoverButtonItem = nil;
+   //[popoverButtonItem release], 
+	popoverButtonItem = nil;
 }
 
 - (void)dealloc
 {
 	[self unloadRelease];
-    [super dealloc];
+    //[super dealloc];
 }
 
 - (void)viewDidUnload 
@@ -71,7 +72,8 @@
 	UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(124,124, 72,72)];
 	[iv setImage:[UIImage imageNamed:@"Icon72"]];
 	[self.view addSubview:iv]; 
-	[iv release], iv = nil;
+	//[iv release], 
+	iv = nil;
 }
 
 /*

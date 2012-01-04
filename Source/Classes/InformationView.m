@@ -35,7 +35,7 @@ static UIColor *MpColorBlue(float percent) {
 #pragma mark - dealloc
 
 - (void)dealloc {
-    [super dealloc];
+    //;
 }
 
 
@@ -109,7 +109,7 @@ static UIColor *MpColorBlue(float percent) {
 			} else {
 				[appDelegate_.mainNC presentModalViewController:picker animated:YES];
 			}
-			[picker release];
+			//[picker release];
 			//Bug//[self hide]; 上のアニメと競合してメール画面が表示されない。これより先にhideするように改めた。
 		}	break;
 	}
@@ -125,7 +125,7 @@ static UIColor *MpColorBlue(float percent) {
 										  otherButtonTitles:@"OK", nil];
 	alert.tag = ALERT_TAG_GoAppStore;
 	[alert show];
-	[alert autorelease];
+	//[alert autorelease];
 }
 
 - (void)buGoSupportSite:(UIButton *)button
@@ -137,7 +137,7 @@ static UIColor *MpColorBlue(float percent) {
 										  otherButtonTitles:@"OK", nil];
 	alert.tag = ALERT_TAG_GoSupportSite;
 	[alert show];
-	[alert autorelease];
+	//[alert autorelease];
 }
 
 -(void)buPostComment:(UIButton*)sender 
@@ -158,7 +158,7 @@ static UIColor *MpColorBlue(float percent) {
 										  otherButtonTitles:@"OK", nil];
 	alert.tag = ALERT_TAG_PostComment;
 	[alert show];
-	[alert autorelease];
+	//[alert autorelease];
 }
 
 
@@ -220,7 +220,7 @@ static UIColor *MpColorBlue(float percent) {
 	label.adjustsFontSizeToFitWidth = YES;
 	label.minimumFontSize = 16;
 	label.baselineAdjustment = UIBaselineAdjustmentAlignBaselines;
-	[self.view addSubview:label]; [label release];
+	[self.view addSubview:label];//[label release];
 	
 	//------------------------------------------Lable:Version
 	label = [[UILabel alloc] initWithFrame:CGRectMake(100, 80, 200, 45)];
@@ -238,7 +238,7 @@ static UIColor *MpColorBlue(float percent) {
 	label.textColor = [UIColor whiteColor];
 	label.backgroundColor = [UIColor clearColor]; //背景透明
 	label.font = [UIFont boldSystemFontOfSize:12];
-	[self.view addSubview:label]; [label release];
+	[self.view addSubview:label]; //[label release];
 
 	//------------------------------------------Lable:Azuki Color
 	label = [[UILabel alloc] initWithFrame:CGRectMake(20, 110, 100, 77)];
@@ -253,7 +253,7 @@ static UIColor *MpColorBlue(float percent) {
 	label.textColor = [UIColor whiteColor];
 	label.backgroundColor = [UIColor clearColor]; //背景透明
 	label.font = [UIFont boldSystemFontOfSize:10];
-	[self.view addSubview:label]; [label release];
+	[self.view addSubview:label]; //[label release];
 	
 	//------------------------------------------Lable:著作権表示
 	label = [[UILabel alloc] initWithFrame:CGRectMake(100, 130, 200, 60)];
@@ -266,7 +266,7 @@ static UIColor *MpColorBlue(float percent) {
 	label.textColor = [UIColor whiteColor];
 	label.backgroundColor = [UIColor clearColor]; //背景透明
 	label.font = [UIFont systemFontOfSize:12];
-	[self.view addSubview:label]; [label release];	
+	[self.view addSubview:label]; //[label release];	
 	
 	//------------------------------------------Go to Support blog.
 	UIButton *bu = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -302,7 +302,7 @@ static UIColor *MpColorBlue(float percent) {
 	label.textColor = [UIColor whiteColor];
 	label.backgroundColor = [UIColor clearColor]; //背景透明
 	label.font = [UIFont fontWithName:@"Courier" size:10];
-	[self.view addSubview:label]; [label release];	
+	[self.view addSubview:label]; //[label release];	
 	
 	//------------------------------------------注意
 	label = [[UILabel alloc] initWithFrame:CGRectMake(20, 360, 280, 65)];
@@ -312,7 +312,7 @@ static UIColor *MpColorBlue(float percent) {
 	label.textColor = [UIColor whiteColor];
 	label.backgroundColor = [UIColor clearColor]; //背景透明
 	label.font = [UIFont fontWithName:@"Courier" size:10];
-	[self.view addSubview:label]; [label release];	
+	[self.view addSubview:label]; //[label release];	
 
 	//------------------------------------------CLOSE
 	label = [[UILabel alloc] initWithFrame:CGRectMake(20, 435, 280, 25)];
@@ -325,7 +325,7 @@ static UIColor *MpColorBlue(float percent) {
 	label.textColor = [UIColor whiteColor];
 	label.backgroundColor = [UIColor clearColor]; //背景透明
 	label.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-	[self.view addSubview:label]; [label release];	
+	[self.view addSubview:label]; //[label release];	
 
     return self;
 }

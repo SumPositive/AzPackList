@@ -28,7 +28,7 @@
 {
 	// @property (retain)
 	
-	[super dealloc];
+	//[super dealloc];
 }
 
 
@@ -161,8 +161,8 @@
 
 	cell = [tableView dequeueReusableCellWithIdentifier:zCellIndex];
 	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-									   reuseIdentifier:zCellIndex] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+									   reuseIdentifier:zCellIndex];
 		cell.accessoryType = UITableViewCellAccessoryNone;
 		cell.showsReorderControl = NO; // Move禁止
 		
@@ -199,7 +199,7 @@
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptShouldAutorotate;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
-				[cell.contentView  addSubview:sw]; [sw release];
+				[cell.contentView  addSubview:sw]; //[sw release];
 				cell.textLabel.text = NSLocalizedString(@"Autorotate",nil);
 				cell.detailTextLabel.text = NSLocalizedString(@"Autorotate comment",nil);
 			}
@@ -217,7 +217,7 @@
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptShowTotalWeight;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
-				[cell.contentView  addSubview:sw]; [sw release];
+				[cell.contentView  addSubview:sw]; //[sw release];
 				cell.textLabel.text = NSLocalizedString(@"Stock weight",nil);
 				cell.detailTextLabel.text = NSLocalizedString(@"Stock weight comment",nil);
 			}
@@ -235,7 +235,7 @@
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptShowTotalWeightReq;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
-				[cell.contentView  addSubview:sw]; [sw release];
+				[cell.contentView  addSubview:sw];// [sw release];
 				cell.textLabel.text = NSLocalizedString(@"Need weight",nil);
 				cell.detailTextLabel.text = NSLocalizedString(@"Need weight comment",nil);
 			}
@@ -253,7 +253,7 @@
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptTotlWeightRound;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
-				[cell.contentView  addSubview:sw]; [sw release];
+				[cell.contentView  addSubview:sw]; //[sw release];
 				cell.textLabel.text = NSLocalizedString(@"Round off Weight",nil);
 				cell.detailTextLabel.text = NSLocalizedString(@"Round off Weight comment",nil);
 			}
@@ -271,7 +271,7 @@
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptCheckingAtEditMode;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
-				[cell.contentView  addSubview:sw]; [sw release];
+				[cell.contentView  addSubview:sw]; //[sw release];
 				cell.textLabel.text = NSLocalizedString(@"Checking",nil);
 				cell.detailTextLabel.text = NSLocalizedString(@"Checking comment",nil);
 			}
@@ -289,7 +289,7 @@
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptSearchItemsNote;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
-				[cell.contentView  addSubview:sw]; [sw release];
+				[cell.contentView  addSubview:sw]; //[sw release];
 				cell.textLabel.text = NSLocalizedString(@"SearchItemsNote",nil);
 				cell.detailTextLabel.text = NSLocalizedString(@"SearchItemsNote comment",nil);
 			}

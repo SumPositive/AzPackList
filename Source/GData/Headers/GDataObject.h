@@ -185,9 +185,26 @@ enum GDataDescRecTypes {
   kGDataDescValueIsKeyPath
 };
 
+
+//-------------------------------------------------MASA
+#ifndef GDATA_REQUIRES_ARC
+#if defined(__clang__)
+#if __has_feature(objc_arc)
+#define GDATA_REQUIRES_ARC 1
+#endif
+#endif
+#endif
+
+#if GDATA_REQUIRES_ARC
+#define GDATA_UNSAFE_UNRETAINED __unsafe_unretained
+#else
+#define GDATA_UNSAFE_UNRETAINED
+#endif
+
+
 typedef struct GDataDescriptionRecord {
-  NSString *label;
-  NSString *keyPath;
+  NSString GDATA_UNSAFE_UNRETAINED *label;
+  NSString GDATA_UNSAFE_UNRETAINED  *keyPath;
   enum GDataDescRecTypes reportType;
 } GDataDescriptionRecord;
 
@@ -199,8 +216,9 @@ typedef struct GDataDescriptionRecord {
   // element name from original XML, used for later XML generation
   NSString *elementName_;
 
-  GDataObject *parent_;  // WEAK, parent in tree of GData objects
-
+  //GDataObject *parent_;  // WEAK, parent in tree of GData objects
+  GDataObject GDATA_UNSAFE_UNRETAINED *parent_;
+	
   // GDataObjects keep namespaces as {key:prefix value:URI} dictionary entries
   NSMutableDictionary *namespaces_;
 

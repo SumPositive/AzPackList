@@ -28,35 +28,6 @@
 
 
 @interface GooDocsView : UITableViewController <UITextFieldDelegate, UIActionSheetDelegate> 
-{
-	
-@private
-	NSManagedObjectContext *Rmoc;
-	E1 *Re1selected;
-	NSInteger PiSelectedRow;  // Uploadの対象行 ／ Downloadの新規追加される行になる
-	BOOL	PbUpload;		// YES=Upload  NO=Download
-
-	id									delegate;
-	UIPopoverController*	selfPopover;  // 自身を包むPopover  閉じる為に必要
-
-	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
-	GDataFeedDocList *mDocListFeed;
-	NSError *mDocListFetchError;
-	GDataServiceTicket *mDocListFetchTicket;
-	GDataServiceTicket *mUploadTicket;
-	NSString *RzOldUsername;
-	//----------------------------------AutoRelease
-	UITextField *MtfUsername;
-	UITextField *MtfPassword;
-	//----------------------------------------------Owner移管につきdealloc時のrelese不要
-	UIActionSheet  *MactionProgress;
-	//----------------------------------------------assign
-	AppDelegate *appDelegate_;
-	BOOL	MbLogin;
-	GDataHTTPFetcher *MfetcherActive;  // STOPのため保持
-	NSInteger  MiRowDownload;		// Download対象行
-	//BOOL MbOptShouldAutorotate;
-}
 
 @property (nonatomic, retain) NSManagedObjectContext *Rmoc;
 @property (nonatomic, retain) E1 *Re1selected;

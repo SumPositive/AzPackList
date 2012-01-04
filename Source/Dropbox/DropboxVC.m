@@ -106,10 +106,10 @@
 	ibTfName.returnKeyType = UIReturnKeyDone;
 	
 	// alertIndicatorOn: alertIndicatorOff: のための準備
-	[mAlert release];
+	//[mAlert release];
 	mAlert = [[UIAlertView alloc] initWithTitle:@"" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:nil]; // deallocにて解放
 	//[self.view addSubview:mAlert];　　alertIndicatorOn:にてaddSubviewしている。
-	[mActivityIndicator release];
+	//[mActivityIndicator release];
 	mActivityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
 	mActivityIndicator.frame = CGRectMake(0, 0, 50, 50);
 	[mAlert addSubview:mActivityIndicator];
@@ -176,13 +176,15 @@
 
 - (void)dealloc 
 {
-	[Re1selected release];
+	//[Re1selected release];
 	
-	[mDidSelectRowAtIndexPath release], mDidSelectRowAtIndexPath = nil;
-	[mActivityIndicator release];
-	[mAlert release];
-	[mMetadatas release], mMetadatas = nil;
-    [super dealloc];
+	//[mDidSelectRowAtIndexPath release], 
+	mDidSelectRowAtIndexPath = nil;
+	//[mActivityIndicator release];
+	//[mAlert release];
+	//[mMetadatas release], 
+	mMetadatas = nil;
+    //[super dealloc];
 }
 
 
@@ -197,7 +199,7 @@
 			NSLog(@"\t%@", file.filename);
 		}
 #endif
-		[mMetadatas release], 
+		//[mMetadatas release], 
 		mMetadatas = nil;
 		if (0 < [metadata.contents count]) {
 			//mMetadatas = [[NSMutableArray alloc] initWithArray:metadata.contents];
@@ -211,15 +213,15 @@
 			if (ibSegSort.selectedSegmentIndex==0) { // Name Asc
 				NSSortDescriptor *sort1 = [[NSSortDescriptor alloc] initWithKey:@"filename" ascending:YES];
 				NSArray *sorting = [[NSArray alloc] initWithObjects:sort1,nil];
-				[sort1 release];
+				//[sort1 release];
 				[mMetadatas sortUsingDescriptors:sorting]; // 降順から昇順にソートする
-				[sorting release];
+				//[sorting release];
 			} else { // Date Desc
 				NSSortDescriptor *sort1 = [[NSSortDescriptor alloc] initWithKey:@"lastModifiedDate" ascending:NO];
 				NSArray *sorting = [[NSArray alloc] initWithObjects:sort1,nil];
-				[sort1 release];
+				//[sort1 release];
 				[mMetadatas sortUsingDescriptors:sorting]; // 降順から昇順にソートする
-				[sorting release];
+				//[sorting release];
 			}
 			[ibTableView reloadData];
 		}
@@ -231,7 +233,7 @@
 - (void)restClient:(DBRestClient *)client loadMetadataFailedWithError:(NSError *)error 
 {	// メタデータ読み込み失敗
     NSLog(@"Error loading metadata: %@", error);
-	[mMetadatas release];
+	//[mMetadatas release];
 	mMetadatas = nil;
 	[ibTableView reloadData];
 	//
@@ -253,11 +255,11 @@
 	}
 	else {
 		// 成功アラート
-		UIAlertView *alv = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Dropbox QuoteDone", nil)
+		UIAlertView *alv = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Dropbox QuoteDone", nil)
 													   message:nil
 													  delegate:nil
 											 cancelButtonTitle:nil
-											 otherButtonTitles:NSLocalizedString(@"Roger", nil), nil] autorelease];
+											 otherButtonTitles:NSLocalizedString(@"Roger", nil), nil];
 		[alv	show];
 		// 再表示 通知発信
 		NSNotification* refreshNotification = [NSNotification notificationWithName:NFM_REFRESH_ALL_VIEWS
@@ -282,9 +284,9 @@
 	// Dropbox/App/CalcRoll 一覧表示
 	[[self restClient] loadMetadata:@"/"];
 	[self alertIndicatorOff];
-	UIAlertView *alv = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Dropbox SaveDone", nil) 
+	UIAlertView *alv = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Dropbox SaveDone", nil) 
 												   message:nil  delegate:nil cancelButtonTitle:nil 
-										 otherButtonTitles:NSLocalizedString(@"Roger", nil), nil] autorelease];
+										 otherButtonTitles:NSLocalizedString(@"Roger", nil), nil];
 	[alv show];
 }
 
@@ -347,18 +349,18 @@
 {
 	if (0<=indexPath.row && indexPath.row<[mMetadatas count]) 
 	{
-		[mDidSelectRowAtIndexPath release], 
+		//[mDidSelectRowAtIndexPath release], 
 		mDidSelectRowAtIndexPath = nil;
 		DBMetadata *dbm = [mMetadatas objectAtIndex:indexPath.row];
 		if (dbm) {
 			mDidSelectRowAtIndexPath = [indexPath copy];
 			NSLog(@"dbm.filename=%@", dbm.filename);
 
-			UIActionSheet *as = [[[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Dropbox Are you sure", nil) 
+			UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Dropbox Are you sure", nil) 
 															 delegate:self 
 													cancelButtonTitle:NSLocalizedString(@"Cancel", nil) 
 											   destructiveButtonTitle:nil
-													otherButtonTitles:NSLocalizedString(@"Dropbox Change", nil), nil] autorelease];
+													otherButtonTitles:NSLocalizedString(@"Dropbox Change", nil), nil];
 			as.tag = TAG_ACTION_Retrieve;
 			[as showInView:self.view];
 		}
@@ -427,7 +429,7 @@ replacementString:(NSString *)string
 										  message:zErr
 										  delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
 					[alert show];
-					[alert release];
+					//[alert release];
 					break;
 				}
 				// Upload開始

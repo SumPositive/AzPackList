@@ -8,13 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-int main(int argc, char *argv[]) {
-    
-    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-  //int retVal = UIApplicationMain(argc, argv, nil, nil); ------ MainWindow.xlb を使う場合（標準）
-	int retVal = UIApplicationMain(argc, argv, nil, @"AppDelegate");
-    [pool release];
-    return retVal;
+int main(int argc, char *argv[]) 
+{
+	@autoreleasepool {
+		return UIApplicationMain(argc, argv, nil, @"AppDelegate");
+	}
 }
 
 

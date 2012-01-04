@@ -102,7 +102,6 @@
 
 - (void)loadView {
     [super loadView];
-	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
 	//NSLog(@"frameWeb=(%f,%f)-(%f,%f)", frameWeb.origin.x,frameWeb.origin.y, frameWeb.size.width,frameWeb.size.height);
 	//MwebView = [[UIWebView alloc] initWithFrame:frameWeb];
@@ -125,30 +124,30 @@
 	// 上部のバーを無くして、全て下部ツールバーだけにした。
 	self.navigationController.navigationBarHidden = YES;
 	
-	UIBarButtonItem *buFlex = [[[UIBarButtonItem alloc] 
+	UIBarButtonItem *buFlex = [[UIBarButtonItem alloc] 
 								initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-								target:nil action:nil] autorelease];
+								target:nil action:nil];
 	
-	UIBarButtonItem *buClose = [[[UIBarButtonItem alloc] 
+	UIBarButtonItem *buClose = [[UIBarButtonItem alloc] 
 							   initWithBarButtonSystemItem:UIBarButtonSystemItemStop
-							   target:self action:@selector(close:)] autorelease];
+							   target:self action:@selector(close:)];
 
-	MbuBack = [[[UIBarButtonItem alloc] 
+	MbuBack = [[UIBarButtonItem alloc] 
 				initWithImage:[UIImage imageNamed:@"Icon16-WebBack"]
 				style:UIBarButtonItemStylePlain
-				target:self action:@selector(toolBack)] autorelease];
-	MbuForward = [[[UIBarButtonItem alloc] 
+				target:self action:@selector(toolBack)];
+	MbuForward = [[UIBarButtonItem alloc] 
 				   initWithImage:[UIImage imageNamed:@"Icon16-WebForward"]
 				   style:UIBarButtonItemStylePlain
-				   target:self action:@selector(toolForward)] autorelease];
-	MbuReload = [[[UIBarButtonItem alloc] 
+				   target:self action:@selector(toolForward)];
+	MbuReload = [[UIBarButtonItem alloc] 
 				  initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
-				  target:self action:@selector(toolReload)] autorelease];
+				  target:self action:@selector(toolReload)];
 	
-	MactivityIndicator = [[[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 32.0f, 32.0f)] autorelease];
+	MactivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 32.0f, 32.0f)];
 	[MactivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
 	[MactivityIndicator startAnimating]; // 通信不能のとき、インジケータだけ動かすため
-	UIBarButtonItem *buActInd = [[[UIBarButtonItem alloc] initWithCustomView:MactivityIndicator] autorelease];
+	UIBarButtonItem *buActInd = [[UIBarButtonItem alloc] initWithCustomView:MactivityIndicator];
 
 	NSArray *aArray = [NSArray arrayWithObjects:  MbuReload, buFlex, MbuBack, buActInd, MbuForward, buFlex, buClose, nil];
 	self.navigationController.toolbarHidden = NO;
@@ -161,7 +160,7 @@
 	MlbMessage.backgroundColor = [UIColor blueColor];
 	MlbMessage.font = [UIFont systemFontOfSize:12];
 	MlbMessage.hidden = YES;
-	[self.view addSubview:MlbMessage], [MlbMessage release];
+	[self.view addSubview:MlbMessage]; //, [MlbMessage release];
 	// .frame セットは、viewWillAppear:にてdidRotateFromInterfaceOrientation:を呼び出している
 }
 
@@ -248,14 +247,18 @@
 	if (MwebView) {
 		[MwebView stopLoading];
 		MwebView.delegate = nil; // これしないと落ちます
-		[MwebView release], MwebView = nil;
+		//[MwebView release], 
+		MwebView = nil;
 	}
 	
-	[urlOutside release], urlOutside = nil;
+	//[urlOutside release], 
+	urlOutside = nil;
 	// @property (retain)
-	[Rurl release], Rurl = nil;
-	[RzDomain release], RzDomain = nil;
-    [super dealloc];
+	//[Rurl release], 
+	Rurl = nil;
+	//[RzDomain release], 
+	RzDomain = nil;
+    //[super dealloc];
 }
 
 
@@ -311,7 +314,7 @@
 											  cancelButtonTitle:NSLocalizedString(@"WebSite Cancel", nil)
 											  otherButtonTitles:NSLocalizedString(@"WebSite GoOut", nil), nil];
 		[alert show];
-		[alert release];
+		//[alert release];
 		MlbMessage.backgroundColor = [UIColor redColor]; //許可していないドメイン
 		return NO;
 	}

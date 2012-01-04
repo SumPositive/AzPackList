@@ -102,13 +102,13 @@
 		NSSortDescriptor *sortRow = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
 		NSArray *sortArray = [[NSArray alloc] initWithObjects:sortRow, nil];
 		[fetchRequest setSortDescriptors:sortArray];
-		[sortArray release];
-		[sortRow release];
+		//[sortArray release];
+		//[sortRow release];
 		// Create and initialize the fetch results controller.
 		RfetchedE1 = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest 
 														 managedObjectContext:Rmoc 
 														   sectionNameKeyPath:nil cacheName:@"E1nodes"];
-		[fetchRequest release];
+		//[fetchRequest release];
 	}
 	
 	// 読み込み
@@ -208,12 +208,14 @@
 		if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 		
 		if (MinformationView) {
-			[MinformationView release], MinformationView = nil;
+			//[MinformationView release], 
+			MinformationView = nil;
 		}
 		MinformationView = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
 		//MinformationView.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
 		
-		[Mpopover release], Mpopover = nil;
+		//[Mpopover release], 
+		Mpopover = nil;
 		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:MinformationView];
 		Mpopover = [[UIPopoverController alloc] initWithContentViewController:MinformationView];
 		//Mpopover.popoverContentSize = CGSizeMake(320, 510);
@@ -242,7 +244,8 @@
 		 */
 		// モーダル UIViewController
 		if (MinformationView) {
-			[MinformationView release], MinformationView = nil;
+			//[MinformationView release], 
+			MinformationView = nil;
 		}
 		MinformationView = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
 		MinformationView.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
@@ -260,7 +263,8 @@
 	SettingTVC *vi = [[SettingTVC alloc] init];
 
 	if (appDelegate_.app_is_iPad) {
-		[Mpopover release], Mpopover = nil;
+		//[Mpopover release], 
+		Mpopover = nil;
 		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:vi];
 		Mpopover = [[UIPopoverController alloc] initWithContentViewController:vi];
 		//Mpopover.popoverContentSize = CGSizeMake(480, 400);
@@ -278,7 +282,7 @@
 		[vi setHidesBottomBarWhenPushed:YES];
 		[self.navigationController pushViewController:vi animated:YES];
 	}
-	[vi release];
+	//[vi release];
 	
 	if (appDelegate_.app_is_Ad) {
 		// 各viewDidAppear:にて「許可/禁止」を設定する
@@ -350,13 +354,15 @@
 	SpSearchVC *vc = [[SpSearchVC alloc] init];
 	
 	if (appDelegate_.app_is_iPad) {
-		[Mpopover release], Mpopover = nil;
+		//[Mpopover release], 
+		Mpopover = nil;
 		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:vc];
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
-		[nc release];
+		//[nc release];
 		Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-		[MindexPathEdit release], MindexPathEdit = nil;
+		//[MindexPathEdit release], 
+		MindexPathEdit = nil;
 		
 		CGRect rcArrow;
 		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
@@ -371,7 +377,7 @@
 		[vc setHidesBottomBarWhenPushed:YES];
 		[self.navigationController pushViewController:vc animated:YES];
 	}
-	[vc release];
+	//[vc release];
 }
 
 - (void)actionImportDropbox
@@ -410,13 +416,15 @@
 	goodocs.title = NSLocalizedString(@"Import Google", nil);
 
 	if (appDelegate_.app_is_iPad) {
-		[Mpopover release], Mpopover = nil;
+		//[Mpopover release], 
+		Mpopover = nil;
 		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:goodocs];
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:goodocs];
 		Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
-		[nc release];
+		//[nc release];
 		Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-		[MindexPathEdit release], MindexPathEdit = nil;
+		//[MindexPathEdit release], 
+		MindexPathEdit = nil;
 		CGRect rcArrow;
 		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
 			rcArrow = CGRectMake(768/2-10, 1027-60, 20,20);
@@ -437,7 +445,7 @@
 			[appDelegate_ AdRefresh:NO];	//広告禁止
 		}
 	}
-	[goodocs release];
+	//[goodocs release];
 }
 
 - (void)actionImportYourPC
@@ -472,7 +480,7 @@
 	if(![RhttpServer start:&error])
 	{
 		NSLog(@"Error starting HTTP Server: %@", error);
-		[RhttpServer release];
+		//[RhttpServer release];
 		RhttpServer = nil;
 	}
 	// Upload成功後、CSV LOAD する  ＜＜連続リストアできるように httpResponseForMethod 内で処理＞＞
@@ -487,7 +495,7 @@
 							  message:nil //NSLocalizedString(@"PBoard Paste NG1",nil)
 							  delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
 		[alert show];
-		[alert release];
+		//[alert release];
 		return;
 	}
 	// ペーストボードから取り込んで追加する
@@ -498,7 +506,7 @@
 	NSString *zErr = [FileCsv zLoad:nil];  //==nil:PasteBoardから取り込む
 	//---------------------------------------CSV LOAD End.
 	[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
-	[alert release];
+	//[alert release];
 	if (zErr) {
 		alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"PBoard Error",nil)
 										   message:zErr
@@ -506,7 +514,7 @@
 								 cancelButtonTitle:nil 
 								 otherButtonTitles:@"OK", nil];
 		[alert show];
-		[alert release];
+		//[alert release];
 		return;
 	}
 	alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"PBoard Paste",nil)
@@ -515,7 +523,7 @@
 							 cancelButtonTitle:nil 
 							 otherButtonTitles:@"OK", nil];
 	[alert show];
-	[alert release];
+	//[alert release];
 	// 再表示
 	[self viewWillAppear:YES]; // Fech データセットさせるため
 }
@@ -555,12 +563,12 @@
 		e2view.delegateE3viewController = e3view;		// E2からE3を更新するため
 		[[appDelegate_.mainSVC.viewControllers objectAtIndex:0] pushViewController:e2view animated:YES]; 
 		
-		[e3view release];
+		//[e3view release];
 	} else {
 		[self.navigationController pushViewController:e2view animated:YES];
 	}
 	
-	[e2view release];
+	//[e2view release];
 }
 
 - (void)e1add 
@@ -617,14 +625,16 @@
 	Me1editView.PiAddRow = (-1); // Edit mode.
 	
 	if (appDelegate_.app_is_iPad) {
-		[Mpopover release], Mpopover = nil;
+		//[Mpopover release], 
+		Mpopover = nil;
 		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:Me1editView];
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:Me1editView];
 		Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
-		[nc release];
+	//	[nc release];
 		Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
 		//MindexPathEdit = indexPath;
-		[MindexPathEdit release], MindexPathEdit = [indexPath copy];
+		//[MindexPathEdit release], 
+		MindexPathEdit = [indexPath copy];
 		CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
 		rc.origin.x = rc.size.width - 65;	rc.size.width = 1;
 		rc.origin.y += 10;	rc.size.height -= 20;
@@ -637,7 +647,7 @@
 		[Me1editView setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 		[self.navigationController pushViewController:Me1editView animated:YES];
 	}
-	[Me1editView release]; // self.navigationControllerがOwnerになる
+	//[Me1editView release]; // self.navigationControllerがOwnerになる
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -645,7 +655,7 @@
 	switch (alertView.tag) {
 		case ALERT_TAG_HTTPServerStop:
 			[RhttpServer stop];
-			[RhttpServer release];
+			//[RhttpServer release];
 			RhttpServer = nil;
 			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LocalhostAdressesResolved" object:nil];
 			// 再表示
@@ -704,7 +714,8 @@
 	
 	if(notification)
 	{
-		[MdicAddresses release], MdicAddresses = nil;
+		//[MdicAddresses release], 
+		MdicAddresses = nil;
 		MdicAddresses = [[notification object] copy];
 		NSLog(@"MdicAddresses: %@", MdicAddresses);
 	}
@@ -777,10 +788,10 @@
 	[super loadView];
 	
 	// Set up NEXT Left [Back] buttons.
-	self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc]
+	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
 											  initWithTitle:@"Top"   //NSLocalizedString(@"Back", nil)
 											  style:UIBarButtonItemStylePlain
-											  target:nil  action:nil] autorelease];
+											  target:nil  action:nil];
 	
 	// Set up Right [Edit] buttons.
 #ifdef AzMAKE_SPLASHFACE
@@ -800,23 +811,23 @@
 		UIImageView* iv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Icon24-Free.png"]];
 		UIBarButtonItem* bui = [[UIBarButtonItem alloc] initWithCustomView:iv];
 		self.navigationItem.leftBarButtonItem	= bui;
-		[bui release];
-		[iv release];
+		//[bui release];
+		//[iv release];
 	}
 	
 	//------------------------------------------Adより上層になるように
 	// Tool Bar Button
-	UIBarButtonItem *buFlex = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-																			 target:nil action:nil] autorelease];
-	MbuInfo = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Icon16-Information.png"]
+	UIBarButtonItem *buFlex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+																			 target:nil action:nil];
+	MbuInfo = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Icon16-Information.png"]
 															   style:UIBarButtonItemStylePlain  //Bordered
-											   target:self action:@selector(azInformationView)] autorelease];
+											   target:self action:@selector(azInformationView)];
 	/*UIBarButtonItem *buAction = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction
 																			   target:self action:@selector(azAction)] autorelease];*/
 	
-	UIBarButtonItem *buSet = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Icon16-Setting.png"]
+	UIBarButtonItem *buSet = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Icon16-Setting.png"]
 															  style:UIBarButtonItemStylePlain  //Bordered
-															  target:self action:@selector(azSettingView)] autorelease];
+															  target:self action:@selector(azSettingView)];
 	NSArray *buArray = [NSArray arrayWithObjects: MbuInfo, buFlex, buSet, nil];
 	[self setToolbarItems:buArray animated:YES];
 #ifdef AzMAKE_SPLASHFACE
@@ -831,7 +842,9 @@
 - (void)viewDidLoad 
 { //iCloud
 	[super viewDidLoad];
-	
+	// 背景テクスチャ・タイルペイント
+	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+
 	// observe the app delegate telling us when it's finished asynchronously setting up the persistent store
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refetcheAllData:)
 												 name:NFM_REFETCH_ALL_DATA   object:appDelegate_];
@@ -935,7 +948,8 @@
 			[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
 			if (MinformationView) {
 				[MinformationView hide]; // 正面でなければhide
-				[MinformationView release], MinformationView = nil;
+				//[MinformationView release], 
+				MinformationView = nil;
 			}
 		}
 		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
@@ -974,7 +988,8 @@
 		} else {
 			// Information, Setting などで、回転後のアンカー位置が再現不可なので閉じる
 			[Mpopover dismissPopoverAnimated:YES];
-			[Mpopover release], Mpopover = nil;
+			//[Mpopover release], 
+			Mpopover = nil;
 		}
 	}
 }
@@ -992,15 +1007,20 @@
 	
 	if (RhttpServer) {
 		[RhttpServer stop];
-		[RhttpServer release], RhttpServer = nil;
+		//[RhttpServer release], 
+		RhttpServer = nil;
 	}
-	[RalertHttpServer release], RalertHttpServer = nil;
-	[MdicAddresses release], MdicAddresses = nil;
-	[RfetchedE1 release],		RfetchedE1 = nil;
+	//[RalertHttpServer release], 
+	RalertHttpServer = nil;
+	//[MdicAddresses release], 
+	MdicAddresses = nil;
+	//[RfetchedE1 release],		
+	RfetchedE1 = nil;
 	
 	if (MinformationView) {
 		[MinformationView hide]; // 正面でなければhide
-		[MinformationView release], MinformationView = nil;
+		//[MinformationView release], 
+		MinformationView = nil;
 	}
 }
 
@@ -1021,12 +1041,14 @@
 
 	if (appDelegate_.app_is_iPad) {
 		Mpopover.delegate = nil;	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
-		[Mpopover release], Mpopover = nil;
-		[MindexPathEdit release], MindexPathEdit = nil;
+		//[Mpopover release], 
+		Mpopover = nil;
+		//[MindexPathEdit release], 
+		MindexPathEdit = nil;
 	}
 	//--------------------------------@property (retain)
-	[Rmoc release];
-    [super dealloc];
+	//[Rmoc release];
+    //[super dealloc];
 }
 
 
@@ -1123,9 +1145,9 @@
 			// E1ノードセル
 			cell = [tableView dequeueReusableCellWithIdentifier:zCellSubtitle];
 			if (cell == nil) {
-				cell = [[[UITableViewCell alloc] 
+				cell = [[UITableViewCell alloc] 
 						 initWithStyle:UITableViewCellStyleSubtitle
-						 reuseIdentifier:zCellSubtitle] autorelease];
+						 reuseIdentifier:zCellSubtitle];
 			}
 			// E1 : NSManagedObject
 			E1 *e1obj = [RfetchedE1 objectAtIndexPath:indexPath];
@@ -1220,11 +1242,8 @@
 				UIImage *resultingImage = UIGraphicsGetImageFromCurrentImageContext();  
 				UIGraphicsEndImageContext();  
 				[cell.imageView setImage:resultingImage];
-				AzRETAIN_CHECK(@"E1 lNoCheck:imageView1", imageView1, 1)
-				[imageView1 release];
-				AzRETAIN_CHECK(@"E1 lNoCheck:imageView2", imageView2, 1)
-				[imageView2 release];
-				AzRETAIN_CHECK(@"E1 lNoCheck:resultingImage", resultingImage, 2) //=2:releaseするとフリーズ
+				//[imageView1 release];
+				//[imageView2 release];
 			} 
 			else if (0 < lNoGray) {
 				cell.imageView.image = [UIImage imageNamed:@"Icon32-BagBlue.png"];
@@ -1240,8 +1259,8 @@
 			// Add iPack ボタンセル
 			cell = [tableView dequeueReusableCellWithIdentifier:zCellDefault];
 			if (cell == nil) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault      // Default型
-											   reuseIdentifier:zCellDefault] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault      // Default型
+											   reuseIdentifier:zCellDefault];
 			}
 
 			if (appDelegate_.app_is_iPad) {
@@ -1265,8 +1284,8 @@
 	else { //-----------------------------------------------------------Section(1) Action menu
 		cell = [tableView dequeueReusableCellWithIdentifier:zCellSubtitle];
 		if (cell == nil) {
-			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-										   reuseIdentifier:zCellSubtitle] autorelease];
+			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+										   reuseIdentifier:zCellSubtitle];
 		}
 
 		if (appDelegate_.app_is_iPad) {
@@ -1411,12 +1430,12 @@
 		//NG//MindexPathActionDelete = indexPath;  retainが必要になる
 		MactionDeleteRow = indexPath.row;
 		// 削除コマンド警告
-		UIActionSheet *action = [[[UIActionSheet alloc] 
+		UIActionSheet *action = [[UIActionSheet alloc] 
 								  initWithTitle:NSLocalizedString(@"CAUTION", nil)
 								  delegate:self 
 								  cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
 								  destructiveButtonTitle:NSLocalizedString(@"DELETE Pack", nil)
-								  otherButtonTitles:nil] autorelease];
+								  otherButtonTitles:nil];
 		action.tag = ACTIONSEET_TAG_DELETEPACK;
 		if (self.interfaceOrientation == UIInterfaceOrientationPortrait 
 			OR self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {

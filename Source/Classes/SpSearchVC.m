@@ -22,15 +22,17 @@
 - (void)unloadRelease	// dealloc, viewDidUnload から呼び出される
 {
 	NSLog(@"--- unloadRelease --- SpSearchVC");
-	[RaSegSortSource release],	RaSegSortSource = nil;
-	[RaPickerSource release],	RaPickerSource = nil;
+	//[RaSegSortSource release],	
+	RaSegSortSource = nil;
+	//[RaPickerSource release],	
+	RaPickerSource = nil;
 }
 
 - (void)dealloc    // 生成とは逆順に解放するのが好ましい
 {
 	[self unloadRelease];
 	//--------------------------------@property (retain)
-	[super dealloc];
+	//[super dealloc];
 }
 
 - (void)viewDidUnload 
@@ -57,10 +59,10 @@
 	self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
 	
 	// Set up NEXT Left ＜Back] buttons.
-	self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc]
+	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
 											  initWithTitle:NSLocalizedString(@"Search",nil)
 											  style:UIBarButtonItemStylePlain  
-											  target:nil  action:nil] autorelease];
+											  target:nil  action:nil];
 /*	self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc]
 											  initWithImage:[UIImage imageNamed:@"Icon16-Return1.png"]
 											  style:UIBarButtonItemStylePlain 
@@ -72,7 +74,7 @@
 	Mpicker.delegate = self;
 	Mpicker.dataSource = self;
 	Mpicker.showsSelectionIndicator = YES;
-	[self.view addSubview:Mpicker]; [Mpicker release];
+	[self.view addSubview:Mpicker]; //[Mpicker release];
 	//------------------------------------------------------
 	if (RaSegSortSource == nil) {
 		RaSegSortSource = [[NSArray alloc] initWithObjects:
@@ -83,7 +85,7 @@
 	MsegSort = [[UISegmentedControl alloc] initWithItems:RaSegSortSource];
 	MsegSort.selectedSegmentIndex = 0;
 	[MsegSort addTarget:self action:@selector(vSegSort:) forControlEvents:UIControlEventValueChanged];
-	[self.view addSubview:MsegSort]; [MsegSort release];
+	[self.view addSubview:MsegSort]; //[MsegSort release];
 #ifndef DEBUG
 	MsegSort.hidden = YES;  //GAE-V1:人気順("-downCount")に不具合あるため保留中
 #endif
@@ -232,14 +234,14 @@
 	// Search
 	SpListTVC *vc = [[SpListTVC alloc] init];
 	vc.RaTags = ma;	//BUG//[ma retain];
-	[ma release];
+	//[ma release];
 	// Sort条件
 	NSInteger iSort = MsegSort.selectedSegmentIndex;
 	if (iSort <= 0) vc.RzSort = @"N"; //N 新着順
 	else			vc.RzSort = @"P"; //P 人気順
 
 	[self.navigationController pushViewController:vc animated:YES];
-	[vc release];
+	//[vc release];
 }
 
 @end

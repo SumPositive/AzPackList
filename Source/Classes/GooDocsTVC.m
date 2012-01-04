@@ -45,7 +45,36 @@
 @interface UIActionSheet (extended)
 	- (void)setMessage:(NSString *)message;
 @end
+
 @implementation GooDocsView
+{
+@private
+	//NSManagedObjectContext *Rmoc;
+	//E1 *Re1selected;
+	//NSInteger PiSelectedRow;  // Uploadの対象行 ／ Downloadの新規追加される行になる
+	//BOOL	PbUpload;		// YES=Upload  NO=Download
+	
+	//id									delegate;
+	//UIPopoverController*	selfPopover;  // 自身を包むPopover  閉じる為に必要
+	
+	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
+	GDataFeedDocList *mDocListFeed;
+	NSError *mDocListFetchError;
+	GDataServiceTicket *mDocListFetchTicket;
+	GDataServiceTicket *mUploadTicket;
+	NSString *RzOldUsername;
+	//----------------------------------AutoRelease
+	UITextField *MtfUsername;
+	UITextField *MtfPassword;
+	//----------------------------------------------Owner移管につきdealloc時のrelese不要
+	UIActionSheet  *MactionProgress;
+	//----------------------------------------------assign
+	AppDelegate *appDelegate_;
+	BOOL	MbLogin;
+	GDataHTTPFetcher *MfetcherActive;  // STOPのため保持
+	NSInteger  MiRowDownload;		// Download対象行
+	//BOOL MbOptShouldAutorotate;
+}
 @synthesize Rmoc;
 @synthesize Re1selected;
 @synthesize PiSelectedRow;  // Uploadの対象行 ／ Downloadの新規追加される行になる
@@ -60,31 +89,40 @@
 
 	[mUploadTicket cancelTicket]; // 停止させてから解放するため
 	[mDocListFetchTicket cancelTicket];
-	[mUploadTicket release],		mUploadTicket = nil;
-	[mDocListFetchTicket release],	mDocListFetchTicket = nil;
+	//[mUploadTicket release],		
+	mUploadTicket = nil;
+	//[mDocListFetchTicket release],	
+	mDocListFetchTicket = nil;
 
-	[mDocListFetchError release],	mDocListFetchError = nil;
-	[mDocListFeed release],			mDocListFeed = nil;
+	//[mDocListFetchError release],	
+	mDocListFetchError = nil;
+	//[mDocListFeed release],		
+	mDocListFeed = nil;
 
 	MtfPassword.delegate = nil;
-	[MtfPassword release], MtfPassword = nil;
+	//[MtfPassword release], 
+	MtfPassword = nil;
 	
 	MtfUsername.delegate = nil;
-	[MtfUsername release], MtfUsername = nil;
+	//[MtfUsername release], 
+	MtfUsername = nil;
 
-	[MactionProgress release], MactionProgress = nil;
-	[RzOldUsername release], RzOldUsername = nil;
+	//[MactionProgress release], 
+	MactionProgress = nil;
+	//[RzOldUsername release], 
+	RzOldUsername = nil;
 }
 
 - (void)dealloc 
 {
 	[self unloadRelease];
 
-	[selfPopover release], selfPopover = nil;
+	//[selfPopover release], 
+	selfPopover = nil;
 	//--------------------------------@property (retain)
-	[Re1selected release];
-	[Rmoc release];
-    [super dealloc];
+	//[Re1selected release];
+	//[Rmoc release];
+    //[super dealloc];
 }
 
 - (void)viewDidUnload 
@@ -145,11 +183,11 @@
 		MtfUsername.delegate = self;
 		//BUG//[MzOldUsername initWithString:MtfUsername.text];
 		if (RzOldUsername) { 
-			[RzOldUsername release], RzOldUsername = nil;
+			//[RzOldUsername release], 
+			RzOldUsername = nil;
 		}
 		RzOldUsername = [MtfUsername.text copy]; // コピーを保持(retain)する
 		NSLog(@"RzOldUsername=%@", RzOldUsername); // OK
-		AzRETAIN_CHECK(@"GooDocs RzOldUsername", RzOldUsername, 8) //????????????????????
 	}
 	
 	// Password
@@ -310,8 +348,9 @@
 }
 
 - (void)setDocListFeed:(GDataFeedDocList *)feed {
-	[mDocListFeed autorelease];
-	mDocListFeed = [feed retain];
+	//[mDocListFeed autorelease];
+	//mDocListFeed = [feed retain];
+	mDocListFeed = feed;
 }
 
 - (NSError *)docListFetchError {
@@ -319,8 +358,8 @@
 }
 
 - (void)setDocListFetchError:(NSError *)error {
-	[mDocListFetchError release];
-	mDocListFetchError = [error retain];
+	//[mDocListFetchError release];
+	mDocListFetchError = error;
 }
 
 - (GDataServiceTicket *)docListFetchTicket {
@@ -328,8 +367,8 @@
 }
 
 - (void)setDocListFetchTicket:(GDataServiceTicket *)ticket {
-	[mDocListFetchTicket release];
-	mDocListFetchTicket = [ticket retain];
+	//[mDocListFetchTicket release];
+	mDocListFetchTicket = ticket;
 }
 
 - (GDataServiceTicket *)uploadTicket {
@@ -337,8 +376,8 @@
 }
 
 - (void)setUploadTicket:(GDataServiceTicket *)ticket {
-	[mUploadTicket release];
-	mUploadTicket = [ticket retain];
+	//[mUploadTicket release];
+	mUploadTicket = ticket;
 }
 
 
@@ -356,7 +395,7 @@
 											  cancelButtonTitle:nil 
 											  otherButtonTitles:@"OK", nil];
 		[alert show];
-		[alert release];
+		//[alert release];
 	}
 }
 
@@ -386,7 +425,7 @@
 											  otherButtonTitles:@"OK", nil];
 		alert.tag = 201;
 		[alert show];
-		[alert release];
+		//[alert release];
 	} else {
 		AzLOG(@"Upload error: %@", error);
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Fail",nil)
@@ -395,7 +434,7 @@
 											  cancelButtonTitle:nil 
 											  otherButtonTitles:@"OK", nil];
 		[alert show];
-		[alert release];
+		//[alert release];
 	}
 	[self refreshView];
 } 
@@ -409,7 +448,7 @@
 	// and we first need to fetch a feed or entry with the service object so that
 	// it has a valid auth token
 	GDataServiceGoogleSpreadsheet *spreadsheetService;
-	spreadsheetService = [[[GDataServiceGoogleSpreadsheet alloc] init] autorelease];
+	spreadsheetService = [[GDataServiceGoogleSpreadsheet alloc] init];
 	
 	GDataServiceGoogleDocs *docsService = [self docsService];
 	[spreadsheetService setUserAgent:[docsService userAgent]];
@@ -465,7 +504,7 @@
 		[ai setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
 		[ai startAnimating];
 		[MactionProgress addSubview:ai];
-		[ai release];
+		//[ai release];
 		//[actionProgress showInView:self.view.window]; windowでは回転非対応
 		[MactionProgress showInView:self.view];
 		//deallocへ [actionProgress release];
@@ -520,7 +559,7 @@
 											  cancelButtonTitle:nil 
 											  otherButtonTitles:@"OK", nil];
 		[alert show];
-		[alert release];
+		//[alert release];
 	}
 	else {
 		// ダウンロード成功
@@ -534,7 +573,7 @@
 												  cancelButtonTitle:nil 
 												  otherButtonTitles:@"OK", nil];
 			[alert show];
-			[alert release];
+			//[alert release];
 		}
 		else {
 			// 連続追加に備えてインクリメントする
@@ -547,7 +586,7 @@
 												  otherButtonTitles:@"OK", nil];
 			alert.tag = 101;
 			[alert show];
-			[alert release];
+			//[alert release];
 			//self.bDownloading = YES; // 完了したので繰り返し禁止するため
 		}
 	}
@@ -593,7 +632,7 @@
 										  cancelButtonTitle:nil 
 										  otherButtonTitles:@"OK", nil];
 	[alert show];
-	[alert release];
+	//[alert release];
 	if (MfetcherActive) {
 		// Cancel the fetch of the request that's currently in progress
 		[MfetcherActive stopFetching];
@@ -674,7 +713,7 @@
 								  message:errorMsg
 								  delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
 			[alert show];
-			[alert release];
+			//[alert release];
 			// 進捗サインOFF
 			if (MactionProgress) [MactionProgress dismissWithClickedButtonIndex:0 animated:YES];
 			[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
@@ -749,7 +788,7 @@
 		[ai setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
 		[ai startAnimating];
 		[MactionProgress addSubview:ai];
-		[ai release];
+		//[ai release];
 		[MactionProgress showInView:self.view];
 		//deallocへ [actionProgress release];
 	}
@@ -987,8 +1026,8 @@
 				case 0: // User name
 					cell = [tableView dequeueReusableCellWithIdentifier:zCellUser];
 					if (cell == nil) {
-						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-													   reuseIdentifier:zCellUser] autorelease];
+						cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+													   reuseIdentifier:zCellUser];
 						[cell.contentView addSubview:MtfUsername]; //unloadReleaseにて解放
 						cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
 						cell.textLabel.font = [UIFont systemFontOfSize:12];
@@ -1001,7 +1040,7 @@
 				case 1: // Password
 					cell = [tableView dequeueReusableCellWithIdentifier:zCellPass];
 					if (cell == nil) {
-						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:zCellPass] autorelease];
+						cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:zCellPass];
 						[cell.contentView addSubview:MtfPassword]; //unloadReleaseにて解放
 						cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
 						cell.textLabel.font = [UIFont systemFontOfSize:12];
@@ -1014,15 +1053,15 @@
 				case 2: // Login
 					cell = [tableView dequeueReusableCellWithIdentifier:zCellLogin];
 					if (cell == nil) {
-						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-													   reuseIdentifier:zCellLogin] autorelease];
+						cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+													   reuseIdentifier:zCellLogin];
 
 						UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 6, 120, 8)];
 						label.text = NSLocalizedString(@"Remember Password", @"パスワードを記録する");
 						label.font = [UIFont systemFontOfSize:9];
 						label.backgroundColor = [UIColor clearColor];
 						[cell.contentView addSubview:label];
-						[label release];
+						//[label release];
 						
 						UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectMake(20, 18, 40, 20)];
 						//switchView.delegate = self;
@@ -1030,7 +1069,7 @@
 						[switchView setOn:passwordSave animated:NO]; // 初期値セット
 						[switchView addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 						[cell.contentView addSubview:switchView];
-						[switchView release];
+						//[switchView release];
 						
 						cell.textLabel.text = NSLocalizedString(@"Login and get list", @"ログインする");
 						cell.textLabel.textAlignment = UITextAlignmentRight;
@@ -1044,8 +1083,8 @@
 				// Upload
 				cell = [tableView dequeueReusableCellWithIdentifier:zCellList];
 				if (cell == nil) {
-					cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
-													reuseIdentifier:zCellList] autorelease];
+					cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
+													reuseIdentifier:zCellList];
 				}
 				cell.textLabel.text = Re1selected.name;
 			}
@@ -1054,8 +1093,8 @@
 		case 2: // Download Section
 			cell = [tableView dequeueReusableCellWithIdentifier:zCellList];
 			if (cell == nil) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-											   reuseIdentifier:zCellList] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+											   reuseIdentifier:zCellList];
 			}
 			GDataEntryDocBase *doc = [mDocListFeed entryAtIndex:indexPath.row];
 			cell.textLabel.text = [[doc title] stringValue];
@@ -1102,7 +1141,7 @@
 					[ai setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
 					[ai startAnimating];
 					[MactionProgress addSubview:ai];
-					[ai release];
+					//[ai release];
 					[MactionProgress showInView:self.view];
 					//deallocへ [actionProgress release];
 				}
@@ -1118,7 +1157,7 @@
 										  message:zErr
 										  delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
 					[alert show];
-					[alert release];
+					//[alert release];
 					break;
 				}
 				// Upload開始
@@ -1133,13 +1172,13 @@
 			if (!self.PbUpload) {
 				MiRowDownload = indexPath.row; // Download対象行
 				GDataEntryDocBase *doc = [mDocListFeed entryAtIndex:MiRowDownload];
-				UIActionSheet *sheet = [[[UIActionSheet alloc] 
+				UIActionSheet *sheet = [[UIActionSheet alloc] 
 										 initWithTitle:[[doc title] stringValue]
 										 delegate:self 
 										 cancelButtonTitle:NSLocalizedString(@"Cancel", @"中止")
 										 destructiveButtonTitle:nil
 										 otherButtonTitles:NSLocalizedString(@"Download START", @"ダウンロード開始"), 
-										 nil] autorelease];
+										 nil];
 				sheet.tag = TAG_ACTION_DOWNLOAD_START;
 				[sheet showInView:self.view];
 				//BUG//[sheet release]; autoreleaseにした
@@ -1227,7 +1266,8 @@
 				// ユーザ名が変更になっていた場合は、古いユーザ名で保存したパスワードを削除
 				[SFHFKeychainUtils deleteItemForUsername:RzOldUsername andServiceName:GD_PRODUCTNAME 
 												   error:&error];
-				[RzOldUsername release], RzOldUsername = nil; 
+				//[RzOldUsername release], 
+				RzOldUsername = nil; 
 			}
 			//BUG//[MzOldUsername initWithString:MtfUsername.text];
 			RzOldUsername = [MtfUsername.text copy]; // コピーを保持(retain)する

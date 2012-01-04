@@ -19,7 +19,7 @@ void alertMsgBox( NSString *title, NSString *msg, NSString *buttonTitle )
 										  cancelButtonTitle:nil 
 										  otherButtonTitles:buttonTitle, nil];
 	[alert show];
-	[alert release];
+	//[alert release];
 }
 
 
@@ -42,18 +42,17 @@ NSMutableURLRequest *requestSpPOST( NSString *PzBody )
 	//AzLOG(@"dataSpPOST:PzBody=%@", PzBody);
 	// 日本語を含むURLをUTF8でエンコーディングする
 	// 第3引数のCFSTR(";,/?:@&=+$#")で指定した文字列はエンコードされずにそのまま残る
-	NSString *encodedCmd = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-																			   (CFStringRef)PzBody,
+	NSString *encodedCmd = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+																			   (__bridge CFStringRef)PzBody,
 																			   CFSTR(";,/?:@&=+$#"),
 																			   NULL,
 																			   kCFStringEncodingUTF8);	// release必要
-	AzRETAIN_CHECK(@"requestSpPOST PzBody", PzBody, 2);
+
 	//[PzBody release] //CFURLCreateStringBy...にてretainされるが、encodedCmd解放時に同時に解放される。
 	//AzLOG(@"encodedCmd: %@", encodedCmd);
 	[req setHTTPBody:[encodedCmd dataUsingEncoding:NSUTF8StringEncoding]];  //エンコ済みコマンドセット
-	AzRETAIN_CHECK(@"requestSpPOST encodedCmd", encodedCmd, 2);
-	[encodedCmd release], encodedCmd = nil;
-	AzRETAIN_CHECK(@"requestSpPOST PzBody", PzBody, 1);
+	//[encodedCmd release], 
+	encodedCmd = nil;
 	//同期通信を開始
 	return req;
 }

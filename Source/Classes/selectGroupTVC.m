@@ -21,9 +21,9 @@
 - (void)dealloc    // 生成とは逆順に解放するのが好ましい
 {
 	//--------------------------------@property (retain)
-	[RlbGroup release];
-	[RaE2array release];
-	[super dealloc];
+	//[RlbGroup release];
+	//[RaE2array release];
+	//[super dealloc];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style {
@@ -45,6 +45,13 @@
 	[super loadView];
 }
 */
+
+- (void)viewDidLoad 
+{
+	[super viewDidLoad];
+	// 背景テクスチャ・タイルペイント
+	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+}
 
 - (void)viewWillAppear:(BOOL)animated 	// ＜＜見せない処理＞＞
 {
@@ -114,8 +121,8 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault  // Subtitle
-									   reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault  // Subtitle
+									   reuseIdentifier:CellIdentifier];
     }
 
     // セクションは1つだけ section==0

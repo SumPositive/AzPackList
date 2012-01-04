@@ -48,15 +48,15 @@
 @implementation E3detailTVC
 {
 @private
-	NSMutableArray	*RaE2array;
-	NSMutableArray	*RaE3array;
-	E3						*Re3target;
-	NSInteger			PiAddGroup;		// =(-1)Edit  >=(E2.row)Add Mode
-	NSInteger			PiAddRow;		//(V0.4)Add行の.row ここに追加する
-	BOOL					PbSharePlanList;  // PbSpMode;	// SharePlan プレビューモード
+	//NSMutableArray	*RaE2array;
+	//NSMutableArray	*RaE3array;
+	//E3						*Re3target;
+	//NSInteger			PiAddGroup;		// =(-1)Edit  >=(E2.row)Add Mode
+	//NSInteger			PiAddRow;		//(V0.4)Add行の.row ここに追加する
+	//BOOL					PbSharePlanList;  // PbSpMode;	// SharePlan プレビューモード
 	
-	id									delegate;
-	UIPopoverController*	selfPopover;  // 自身を包むPopover  閉じる為に必要
+	//id									delegate;
+	//UIPopoverController*	selfPopover;  // 自身を包むPopover  閉じる為に必要
 	
 	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
 	//NSAutoreleasePool	*MautoreleasePool;	autoreleaseオブジェクトを「戻り値」にしているため、ここでの破棄禁止
@@ -103,11 +103,12 @@
 
 - (void)dealloc    // 生成とは逆順に解放するのが好ましい
 {
-	[selfPopover release], selfPopover = nil;
-	[Re3target release];
-	[RaE3array release];
-	[RaE2array release];
-	[super dealloc];
+	//[selfPopover release], 
+	selfPopover = nil;
+	//[Re3target release];
+	//[RaE3array release];
+	//[RaE2array release];
+	//[super dealloc];
 }
 
 
@@ -137,27 +138,30 @@
 	[super loadView];
 
 	// Set up NEXT Left [Back] buttons.
-	self.navigationItem.backBarButtonItem  = [[[UIBarButtonItem alloc]
+	self.navigationItem.backBarButtonItem  = [[UIBarButtonItem alloc]
 											   initWithTitle:NSLocalizedString(@"Cancel", nil)
 											   style:UIBarButtonItemStylePlain 
-											   target:nil  action:nil] autorelease];
+											   target:nil  action:nil];
 	
 	// CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
-	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc]
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
 											  initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-											  target:self action:@selector(cancelClose:)] autorelease];
+											  target:self action:@selector(cancelClose:)];
 	
 	if (PbSharePlanList==NO) {
 		// SAVEボタンを右側に追加する
-		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] 
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] 
 												   initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-												   target:self action:@selector(saveClose:)] autorelease];
+												   target:self action:@selector(saveClose:)];
 	}
 }
 
 - (void)viewDidLoad 
 {
 	[super viewDidLoad];
+	// 背景テクスチャ・タイルペイント
+	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+
 	// listen to our app delegates notification that we might want to refresh our detail view
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAllViews:) name:NFM_REFRESH_ALL_VIEWS
 											   object:[[UIApplication sharedApplication] delegate]];
@@ -605,11 +609,11 @@
 	{
 		if ([[NSUserDefaults standardUserDefaults] boolForKey:GD_OptItemsGrayShow] == NO) 
 		{
-			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Added Item",nil)
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Added Item",nil)
 															 message:NSLocalizedString(@"GrayHiddon Alert",nil)
 															delegate:nil 
 												   cancelButtonTitle:nil 
-												   otherButtonTitles:@"OK", nil] autorelease];
+												   otherButtonTitles:@"OK", nil];
 			[alert show];
 		}
 	}
@@ -676,7 +680,7 @@
 	McalcView.delegate = self;
 	McalcView.maxValue = iMax;
 	[self.view addSubview:McalcView];
-	[McalcView release]; // addSubviewにてretain(+1)されるため、こちらはrelease(-1)して解放
+	//[McalcView release]; // addSubviewにてretain(+1)されるため、こちらはrelease(-1)して解放
 	[McalcView show];
 }
 
@@ -816,11 +820,11 @@
 
 - (void)alertWeightOver
 {
-	UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WeightOver",nil)
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WeightOver",nil)
 													 message:NSLocalizedString(@"WeightOver message",nil)
 													delegate:nil 
 										   cancelButtonTitle:nil 
-										   otherButtonTitles:@"OK", nil] autorelease];
+										   otherButtonTitles:@"OK", nil];
 	[alert show];
 }
 
@@ -901,8 +905,8 @@
 
 	cell = [tableView dequeueReusableCellWithIdentifier:zCellIndex];
 	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-									   reuseIdentifier:zCellIndex] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+									   reuseIdentifier:zCellIndex];
 		if (PbSharePlanList) {
 			// 選択禁止
 			cell.accessoryType = UITableViewCellAccessoryNone;
@@ -940,7 +944,7 @@
 					label.textColor = [UIColor grayColor];
 					label.backgroundColor = [UIColor clearColor];
 					label.font = [UIFont systemFontOfSize:12];
-					[cell.contentView addSubview:label]; [label release];
+					[cell.contentView addSubview:label]; //[label release];
 
 					if (appDelegate_.app_is_iPad) {
 						MlbGroup = [[UILabel alloc] initWithFrame:
@@ -966,7 +970,7 @@
 						MlbGroup.text = NSLocalizedString(@"(New Index)", nil);
 					}
 					MlbGroup.backgroundColor = [UIColor clearColor]; // [UIColor grayColor]; //範囲チェック用
-					[cell.contentView addSubview:MlbGroup]; [MlbGroup release];
+					[cell.contentView addSubview:MlbGroup]; //[MlbGroup release];
 				}
 					break;
 				case 1: // Name
@@ -976,7 +980,7 @@
 					label.text = NSLocalizedString(@"Item name", nil);
 					label.textColor = [UIColor grayColor];
 					label.backgroundColor = [UIColor clearColor];
-					[cell.contentView addSubview:label]; [label release];
+					[cell.contentView addSubview:label]; //[label release];
 
 					if (appDelegate_.app_is_iPad) {
 						MtfName = [[UITextField alloc] initWithFrame:
@@ -993,7 +997,7 @@
 					MtfName.returnKeyType = UIReturnKeyDone; // ReturnキーをDoneに変える
 					MtfName.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
 					MtfName.delegate = self; // textFieldShouldReturn:を呼び出すため
-					[cell.contentView addSubview:MtfName]; [MtfName release];
+					[cell.contentView addSubview:MtfName]; //[MtfName release];
 					MtfName.text = Re3target.name; // (未定)表示しない。Editへ持って行かれるため
 					cell.accessoryType = UITableViewCellAccessoryNone; // なし
 				}
@@ -1005,7 +1009,7 @@
 					label.textColor = [UIColor grayColor];
 					label.backgroundColor = [UIColor clearColor];
 					label.font = [UIFont systemFontOfSize:12];
-					[cell.contentView addSubview:label]; [label release];
+					[cell.contentView addSubview:label]; //[label release];
 
 					if (appDelegate_.app_is_iPad) {
 						MtvNote = [[UITextView alloc] initWithFrame:
@@ -1022,7 +1026,7 @@
 					MtvNote.backgroundColor = [UIColor clearColor];
 					//MtvNote.backgroundColor = [UIColor grayColor]; //範囲チェック用
 					MtvNote.delegate = self;
-					[cell.contentView addSubview:MtvNote]; [MtvNote release];
+					[cell.contentView addSubview:MtvNote]; //[MtvNote release];
 					if (Re3target.note == nil) {
 						MtvNote.text = @"";  // TextViewは、(nil) と表示されるので、それを消すため。
 					} else {
@@ -1043,7 +1047,7 @@
 						label.textColor = [UIColor grayColor];
 						label.backgroundColor = [UIColor clearColor];
 						label.font = [UIFont systemFontOfSize:14];
-						[cell.contentView addSubview:label]; [label release];
+						[cell.contentView addSubview:label]; //[label release];
 					}
 					long lVal = (long)[Re3target.stock integerValue];
 					{
@@ -1052,7 +1056,7 @@
 						MlbStock.backgroundColor = [UIColor clearColor];
 						MlbStock.textAlignment = UITextAlignmentRight;
 						MlbStock.font = [UIFont systemFontOfSize:22];
-						[cell.contentView addSubview:MlbStock]; [MlbStock release];
+						[cell.contentView addSubview:MlbStock]; //[MlbStock release];
 						//MlbStock.text = [NSString stringWithFormat:@"%5ld", lVal];
 						// 3桁コンマ付加
 						//NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
@@ -1094,7 +1098,7 @@
 																		delegate:self  dial:lVal  min:0  max:9999  step:1  stepper:YES];
 					mDialStock.backgroundColor = [UIColor clearColor];
 					[cell.contentView addSubview:mDialStock];
-					[mDialStock release];
+					//[mDialStock release];
 				}
 					break;
 				case 4: // Need
@@ -1106,7 +1110,7 @@
 						label.textColor = [UIColor grayColor];
 						label.backgroundColor = [UIColor clearColor];
 						label.font = [UIFont systemFontOfSize:14];
-						[cell.contentView addSubview:label]; [label release];
+						[cell.contentView addSubview:label]; //[label release];
 					}
 					long lVal = (long)[Re3target.need integerValue];
 					{
@@ -1115,7 +1119,7 @@
 						MlbNeed.backgroundColor = [UIColor clearColor];
 						MlbNeed.textAlignment = UITextAlignmentCenter;
 						MlbNeed.font = [UIFont systemFontOfSize:24];
-						[cell.contentView addSubview:MlbNeed]; [MlbNeed release];
+						[cell.contentView addSubview:MlbNeed]; //[MlbNeed release];
 						//MlbNeed.text = [NSString stringWithFormat:@"%5ld", lVal];
 						// 3桁コンマ付加
 						MlbNeed.text = GstringFromNumber(Re3target.need);
@@ -1151,7 +1155,7 @@
 													  delegate:self  dial:lVal  min:0  max:9999  step:1  stepper:YES];
 					mDialNeed.backgroundColor = [UIColor clearColor];
 					[cell.contentView addSubview:mDialNeed];
-					[mDialNeed release];
+					//[mDialNeed release];
 				}
 					break;
 				case 5: // Weight
@@ -1166,7 +1170,7 @@
 						label.adjustsFontSizeToFitWidth = YES;
 						label.minimumFontSize = 8;
 						label.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-						[cell.contentView addSubview:label]; [label release];
+						[cell.contentView addSubview:label]; //[label release];
 					}
 					long lVal = (long)[Re3target.weight integerValue];
 					{
@@ -1175,7 +1179,7 @@
 						MlbWeight.backgroundColor = [UIColor clearColor];
 						MlbWeight.textAlignment = UITextAlignmentCenter;
 						MlbWeight.font = [UIFont systemFontOfSize:24];
-						[cell.contentView addSubview:MlbWeight]; [MlbWeight release];
+						[cell.contentView addSubview:MlbWeight]; //[MlbWeight release];
 						//MlbWeight.text = [NSString stringWithFormat:@"%5ld", lVal];
 						// 3桁コンマ付加
 						MlbWeight.text = GstringFromNumber(Re3target.weight);
@@ -1186,7 +1190,7 @@
 					mDialWeight.backgroundColor = [UIColor clearColor];
 					//[mDialWeight setStepperMagnification:10.0];
 					[cell.contentView addSubview:mDialWeight];
-					[mDialWeight release];
+					//[mDialWeight release];
 #else				
 					{
 						MsliderWeight = [[UISlider alloc] initWithFrame:
@@ -1239,7 +1243,7 @@
 					label.text = NSLocalizedString(@"Shop Keyword", nil);
 					label.textColor = [UIColor grayColor];
 					label.backgroundColor = [UIColor clearColor];
-					[cell.contentView addSubview:label]; [label release];
+					[cell.contentView addSubview:label]; //[label release];
 
 					if (appDelegate_.app_is_iPad) {
 						MtfKeyword = [[UITextField alloc] initWithFrame:
@@ -1256,7 +1260,7 @@
 					MtfKeyword.returnKeyType = UIReturnKeyDone; // ReturnキーをDoneに変える
 					MtfKeyword.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
 					MtfKeyword.delegate = self; // textFieldShouldReturn:を呼び出すため
-					[cell.contentView addSubview:MtfKeyword]; [MtfKeyword release];
+					[cell.contentView addSubview:MtfKeyword]; //[MtfKeyword release];
 					MtfKeyword.text = Re3target.shopKeyword; // (未定)表示しない。Editへ持って行かれるため
 					cell.accessoryType = UITableViewCellAccessoryNone; // なし
 					cell.tag = 00;
@@ -1314,8 +1318,15 @@
 	}
 	// 日本語を含むURLをUTF8でエンコーディングする
 	// 第3引数のCFSTR(";,/?:@&=+$#")で指定した文字列はエンコードされずにそのまま残る
-	NSString *zKeyword = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-																			 (CFStringRef)MtfKeyword.text,
+	//NSString *zKeyword = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+	//																		 (CFStringRef)MtfKeyword.text,
+	//																		 CFSTR(";,/?:@&=+$#"),
+	//																		 NULL,
+	//																		 kCFStringEncodingUTF8);	// release必要
+
+	// __bridge_transfer : CオブジェクトをARC管理オブジェクトにする
+	NSString *zKeyword = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+																			 (__bridge CFStringRef)MtfKeyword.text,
 																			 CFSTR(";,/?:@&=+$#"),
 																			 NULL,
 																			 kCFStringEncodingUTF8);	// release必要
@@ -1324,7 +1335,8 @@
 	web.title = zTitle;
 	web.Rurl = [zUrl stringByAppendingString:zKeyword];
 	web.RzDomain = zDomain;
-	[zKeyword release], zKeyword = nil;
+	//[zKeyword release], 
+	zKeyword = nil;
 
 	if (appDelegate_.app_is_iPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:web];
@@ -1334,11 +1346,11 @@
 		//[self　 presentModalViewController:nc animated:YES];  NG//回転しない
 		//[self.navigationController presentModalViewController:nc animated:YES];  NG//回転しない
 		[appDelegate_.mainSVC presentModalViewController:nc animated:YES];  //回転する
-		[nc release];
+		//[nc release];
 	} else {
 		[self.navigationController pushViewController:web animated:YES];
 	}
-	[web release];
+	//[web release];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
@@ -1359,7 +1371,7 @@
 					selectGroup.RaE2array = RaE2array;
 					selectGroup.RlbGroup = MlbGroup; // .tag=E2.row  .text=E2.name
 					[self.navigationController pushViewController:selectGroup animated:YES];
-					[selectGroup release];
+					//[selectGroup release];
 				}
 					break;
 				case 1: // Name
@@ -1474,9 +1486,9 @@
 		// 左[Cancel] 無効にする
 		self.navigationItem.leftBarButtonItem.enabled = NO;
 		// 右[Done]
-		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] 
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] 
 												   initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-												   target:self action:@selector(nameDone:)] autorelease];
+												   target:self action:@selector(nameDone:)];
 	}
 }
 
@@ -1484,7 +1496,7 @@
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
 	// senderは、MtextView だけ
-    NSMutableString *zText = [[textField.text mutableCopy] autorelease];
+    NSMutableString *zText = [textField.text mutableCopy];
     [zText replaceCharactersInRange:range withString:string];
 	// 置き換えた後の長さをチェックする
 	if ([zText length] <= TEXTFIELD_MAXLENGTH) {
@@ -1512,9 +1524,9 @@
 		// 左[Cancel] 有効にする
 		self.navigationItem.leftBarButtonItem.enabled = YES;
 		// 右[Save]
-		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] 
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] 
 												   initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-												   target:self action:@selector(saveClose:)] autorelease];
+												   target:self action:@selector(saveClose:)];
 	}
 }
 
@@ -1540,9 +1552,9 @@
 		// 左[Cancel] 無効にする
 		self.navigationItem.leftBarButtonItem.enabled = NO;
 		// 右[Done]
-		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] 
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] 
 												   initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-												   target:self action:@selector(noteDone:)] autorelease];
+												   target:self action:@selector(noteDone:)];
 	}
 }
 
@@ -1551,7 +1563,7 @@
  replacementText:(NSString *)zReplace
 {
 	// senderは、MtextView だけ
-    NSMutableString *zText = [[textView.text mutableCopy] autorelease];
+    NSMutableString *zText = [textView.text mutableCopy];
     [zText replaceCharactersInRange:range withString:zReplace];
 	// 置き換えた後の長さをチェックする
 	if ([zText length] <= TEXTVIEW_MAXLENGTH) {
@@ -1574,9 +1586,9 @@
 		// 左[Cancel] 有効にする
 		self.navigationItem.leftBarButtonItem.enabled = YES;
 		// 右[Save]
-		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] 
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] 
 												   initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-												   target:self action:@selector(saveClose:)] autorelease];
+												   target:self action:@selector(saveClose:)];
 	}
 }
 

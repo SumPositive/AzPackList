@@ -78,20 +78,20 @@
 		// autoreleaseかつmainVCへaddSubしているので解放は不要
 	}
 	
-	AzRETAIN_CHECK(@"AppDelegate RaClipE3objects", RaClipE3objects, 1)
-	[RaClipE3objects release];
+	//[RaClipE3objects release];
 
 	mainNC_.delegate = nil;		mainNC_ = nil;
 	mainSVC_.delegate = nil;	mainSVC_ = nil;
 	
 	//[window release];
 	
-	[padRootVC_ release], padRootVC_ = nil;
+	//[padRootVC_ release], 
+	padRootVC_ = nil;
 
-    [moc_ release];
-    [persistentStoreCoordinator_ release];
-    [moModel_ release];
-	[super dealloc];
+    //[moc_ release];
+    //[persistentStoreCoordinator_ release];
+    //[moModel_ release];
+	//[super dealloc];
 }
 
 
@@ -162,22 +162,22 @@
 		E1viewController *e1viewCon = [[E1viewController alloc] init];
 		//e1viewCon.Rmoc = self.managedObjectContext;  //self.メソッド呼び出し ＜CoreData生成：はじまり＞
 		UINavigationController* naviRight = [[UINavigationController alloc] initWithRootViewController:e1viewCon];
-		[e1viewCon release];
+		//[e1viewCon release];
 		
 		// e1viewCon を splitViewCon へ登録
 		//mainVC = [[PadSplitVC alloc] init]; タテ2分割のための実装だったがRejectされたので没
 		mainSVC_ = [[UISplitViewController alloc] init];
 		mainSVC_.viewControllers = [NSArray arrayWithObjects:naviLeft, naviRight, nil];
 		mainSVC_.delegate = padRootVC_;
-		[naviRight release];
-		[naviLeft release];
+		//[naviRight release];
+		//[naviLeft release];
 	}
 	else {
 		E1viewController *e1viewCon = [[E1viewController alloc] init];
 		//e1viewCon.Rmoc = self.managedObjectContext; ＜＜待ちを減らすため、E1viewController:内で生成するように改めた。
 		// e1viewCon を naviCon へ登録
 		mainNC_ = [[UINavigationController alloc] initWithRootViewController:e1viewCon];
-		[e1viewCon release];
+		//[e1viewCon release];
 	}
 	// mainVC を window へ登録
 	[window addSubview:mainNC_.view];
@@ -191,11 +191,10 @@
 	
 	MbAdCanVisible = NO;		// 現在状況、(NO)表示禁止  (YES)表示可能
 
-	DBSession* dbSession = [[[DBSession alloc]
+	DBSession* dbSession = [[DBSession alloc]
 							 initWithAppKey:DBOX_APPKEY
 							 appSecret:DBOX_SECRET
-							 root:kDBRootAppFolder] // either kDBRootAppFolder or kDBRootDropbox
-							autorelease];
+							root:kDBRootAppFolder]; // either kDBRootAppFolder or kDBRootDropbox
 	[DBSession setSharedSession:dbSession];
 
 	return;  // YES;  //iOS4
@@ -217,7 +216,7 @@
 			NSString *zErr = [FileCsv zLoadURL:url];
 			//---------------------------------------CSV LOAD End.
 			[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
-			[alert release];
+			//[alert release];
 			if (zErr) {
 				alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Fail",nil)  //ダウンロード失敗
 												   message:zErr
@@ -232,7 +231,7 @@
 										 otherButtonTitles:@"OK", nil];
 			}
 			[alert show];
-			[alert release];
+			//[alert release];
 			// 再表示
 			if (app_is_iPad_) {
 				UIViewController *vc = [mainSVC_.viewControllers  objectAtIndex:1]; //[1]Right
@@ -247,11 +246,11 @@
 			return YES;
 		}
 		else {
-			UIAlertView *alv = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"AlertExtension", nil)
+			UIAlertView *alv = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"AlertExtension", nil)
 														   message:NSLocalizedString(@"AlertExtensionMsg", nil)
 														  delegate:nil
 												 cancelButtonTitle:nil
-												 otherButtonTitles:NSLocalizedString(@"Roger", nil), nil] autorelease];
+												 otherButtonTitles:NSLocalizedString(@"Roger", nil), nil];
 			[alv	show];
 		}
 	}
@@ -553,7 +552,7 @@
 	//----------------------------------------------------- AdMob  ＜＜loadView:に入れると起動時に生成失敗すると、以後非表示が続いてしまう。
 	if (RoAdMobView==nil) {
 		// iPhone タテ下部に表示固定、ヨコ非表示
-		RoAdMobView = [[[GADBannerView alloc] init] autorelease];
+		RoAdMobView = [[GADBannerView alloc] init];
 		// Adパラメータ初期化
 		RoAdMobView.alpha = 0;	// 現在状況、(0)非表示  (1)表示中
 		RoAdMobView.tag = 0;		// 広告受信状況  (0)なし (1)あり
@@ -581,7 +580,7 @@
 	//----------------------------------------------------- iAd: AdMobの上層になるように後からaddSubviewする
 	if (MbannerView==nil && [[[UIDevice currentDevice] systemVersion] compare:@"4.0"]!=NSOrderedAscending) { // !<  (>=) "4.0"
 		assert(NSClassFromString(@"ADBannerView"));
-		MbannerView = [[[ADBannerView alloc] init] autorelease];		//WithFrame:CGRectZero 
+		MbannerView = [[ADBannerView alloc] init];		//WithFrame:CGRectZero 
 		// Adパラメータ初期化
 		MbannerView.alpha = 0;		// 現在状況、(0)非表示  (1)表示中
 		MbannerView.tag = 0;		// 広告受信状況  (0)なし (1)あり

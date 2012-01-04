@@ -16,6 +16,18 @@
 @end
 
 @implementation editLabelTextVC
+{
+@private
+	//UILabel		*Rlabel;
+	//NSInteger	PiMaxLength;	// 最大文字数　==nil:無制限
+	//NSInteger	PiSuffixLength; // 末尾の改行の数（UILabel複数行で上寄せするために入っている）
+	
+	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
+	//----------------------------------------------Owner移管につきdealloc時のrelese不要
+	UITextView	*MtextView; // self.viewがOwner
+	//----------------------------------------------assign
+	//BOOL MbOptShouldAutorotate;
+}
 @synthesize Rlabel;
 @synthesize PiMaxLength;
 @synthesize PiSuffixLength;
@@ -23,8 +35,8 @@
 - (void)dealloc    // 生成とは逆順に解放するのが好ましい
 {
 	//--------------------------------@property (retain)
-	[Rlabel release];
-	[super dealloc];
+	//[Rlabel release];
+	//[super dealloc];
 }
 
 static UIColor *MpColorBlue(float percent) {
@@ -45,12 +57,12 @@ static UIColor *MpColorBlue(float percent) {
 	self.view.backgroundColor = MpColorBlue(0.3f); //[UIColor groupTableViewBackgroundColor];
 
 	// DONEボタンを右側に追加する
-	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
 											   initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-											   target:self action:@selector(done:)] autorelease];
+											   target:self action:@selector(done:)];
 
 	// とりあえず生成、位置はviewDesignにて決定
-	MtextView = [[[UITextView alloc] init] autorelease];
+	MtextView = [[UITextView alloc] init];
 	MtextView.font = [UIFont systemFontOfSize:16];
 	MtextView.textAlignment = UITextAlignmentLeft;
 	MtextView.keyboardType = UIKeyboardTypeDefault;
@@ -140,7 +152,7 @@ static UIColor *MpColorBlue(float percent) {
 	if (PiMaxLength <= 0) return YES; // 無制限
 	
 	// senderは、MtextView だけ
-    NSMutableString *zText = [[textView.text mutableCopy] autorelease];
+    NSMutableString *zText = [textView.text mutableCopy];
     [zText replaceCharactersInRange:range withString:zReplace];
 	// 置き換えた後の長さをチェックする
 	return ([zText length] <= PiMaxLength); // PiMaxLength以下YES
@@ -163,12 +175,12 @@ static UIColor *MpColorBlue(float percent) {
 }
 */
 
-/*
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad {
-    [super viewDidLoad];
+- (void)viewDidLoad 
+{
+	[super viewDidLoad];
+	// 背景テクスチャ・タイルペイント
+	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 }
-*/
 
 /*
 // Override to allow orientations other than the default portrait orientation.

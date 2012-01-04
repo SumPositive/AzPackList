@@ -22,6 +22,24 @@
 @end
 
 @implementation E2edit   // ViewController
+{
+@private
+	//E1 *Re1selected;  // Edit時は IaE2target.parent と同値であるが、Add時にはこれを頼りにする必要がある。 
+	//E2 *Re2target;
+	//NSInteger PiAddRow;  // (>=0)Add  (-1)Edit
+	//BOOL	PbSharePlanList;	// SharePlan プレビューモード
+	
+	// E2viewが左ペインにあるとき、E2editをPopover内包するために使う。
+	//id									delegate;
+	//UIPopoverController*	selfPopover;  // 自身を包むPopover  閉じる為に必要
+	
+	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
+	//----------------------------------------------Owner移管につきdealloc時のrelese不要
+	UITextField *MtfName;
+	UITextView	*MtvNote;
+	//----------------------------------------------assign
+	AppDelegate		*appDelegate_;
+}
 @synthesize Re1selected;
 @synthesize Re2target;
 @synthesize PiAddRow;
@@ -31,11 +49,12 @@
 
 - (void)dealloc 
 {
-	[selfPopover release], selfPopover = nil;
+	//[selfPopover release], 
+	selfPopover = nil;
 	// @property (retain)
-	[Re2target release];
-	[Re1selected release];
-	[super dealloc];
+	//[Re2target release];
+	//[Re1selected release];
+	//[super dealloc];
 }
 
 - (id)init 
@@ -63,7 +82,7 @@
 	self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
 
 	// E2.name
-	MtfName = [[[UITextField alloc] init] autorelease];
+	MtfName = [[UITextField alloc] init];
 
 	if (appDelegate_.app_is_iPad) {
 		MtfName.font = [UIFont systemFontOfSize:20];
@@ -78,7 +97,7 @@
 	MtfName.delegate = self;
 	[self.view addSubview:MtfName]; //[MtfName release]; // self.viewがOwnerになる
 	// E2.note
-	MtvNote = [[[UITextView alloc] init] autorelease];
+	MtvNote = [[UITextView alloc] init];
 
 	if (appDelegate_.app_is_iPad) {
 		MtvNote.font = [UIFont systemFontOfSize:20];
@@ -91,14 +110,14 @@
 	[self.view addSubview:MtvNote]; //[MtvNote release]; // self.viewがOwnerになる
 	
 	// CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
-	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc]
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
 											  initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-											  target:self action:@selector(cancel:)] autorelease];
+											  target:self action:@selector(cancel:)];
 	if (PbSharePlanList==NO) {
 		// SAVEボタンを右側に追加する
-		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
 												   initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-												   target:self action:@selector(save:)] autorelease];
+												   target:self action:@selector(save:)];
 		self.navigationItem.rightBarButtonItem.enabled = NO; // 変更なし [Save]無効
 	}
 }
@@ -106,6 +125,9 @@
 - (void)viewDidLoad 
 {
 	[super viewDidLoad];
+	// 背景テクスチャ・タイルペイント
+	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+
 	// listen to our app delegates notification that we might want to refresh our detail view
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAllViews:) name:NFM_REFRESH_ALL_VIEWS
 											   object:[[UIApplication sharedApplication] delegate]];
@@ -239,7 +261,7 @@
 replacementString:(NSString *)string 
 {
 	// senderは、MtfName だけ
-    NSMutableString *text = [[textField.text mutableCopy] autorelease];
+    NSMutableString *text = [textField.text mutableCopy];
     [text replaceCharactersInRange:range withString:string];
 	// 置き換えた後の長さをチェックする
 	if ([text length] <= AzMAX_NAME_LENGTH) {
@@ -256,7 +278,7 @@ replacementString:(NSString *)string
 										replacementText:(NSString *)zReplace
 {
 	// senderは、MtvNote だけ
-    NSMutableString *zText = [[textView.text mutableCopy] autorelease];
+    NSMutableString *zText = [textView.text mutableCopy];
     [zText replaceCharactersInRange:range withString:zReplace];
 	// 置き換えた後の長さをチェックする
 	if ([zText length] <= AzMAX_NOTE_LENGTH) {

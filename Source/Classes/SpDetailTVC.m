@@ -12,8 +12,11 @@
 #import "FileCsv.h"
 #import "SpPOST.h"
 #import "SpDetailTVC.h"
-#import  <YAJLiOS/YAJL.h>
 #import "E2viewController.h"
+
+#import  <YAJLiOS/YAJL.h>
+//#import <DropboxSDK/JSON.h>  SBJSONでは、読み取りエラー発生した。（多分、CSV部）
+
 
 #define ACTION_TAG_A_PLAN	901
 
@@ -41,9 +44,11 @@
 	NSLog(@"--- unloadRelease --- SpDetailTVC");
 	
 	[RurlConnection cancel]; // 停止させてから解放する
-	[RurlConnection release],	RurlConnection = nil;
+	//[RurlConnection release],	
+	RurlConnection = nil;
 
-	[RdaResponse release],		RdaResponse = nil;
+	//[RdaResponse release],		
+	RdaResponse = nil;
 }
 
 - (void)dealloc 
@@ -54,8 +59,8 @@
 	}
 	[self unloadRelease];
 	//--------------------------------@property (retain)
-	[RzSharePlanKey release];
-    [super dealloc];
+	//[RzSharePlanKey release];
+    //[super dealloc];
 }
 
 - (void)viewDidUnload 
@@ -93,10 +98,10 @@
 	self.tableView.allowsSelectionDuringEditing = YES;
 
 	// Set up NEXT Left [Back] buttons.
-	self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc]
+	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
 											  initWithTitle:NSLocalizedString(@"Back", nil)
 											  style:UIBarButtonItemStylePlain 
-											  target:nil  action:nil] autorelease];
+											  target:nil  action:nil];
 
 }
 
@@ -131,9 +136,9 @@
     [super viewDidAppear:animated];
 	
 	if (Re1add==nil) { // 初回
-		NSAutoreleasePool *methodPool = [[NSAutoreleasePool alloc] init];	// return前に [pool release] 必須！
-		[self vSharePlanDownload:RzSharePlanKey]; // viewWillAppear:ではRzSharePlanKeyが未定だからここ
-		[methodPool release];
+		@autoreleasepool {
+			[self vSharePlanDownload:RzSharePlanKey]; // viewWillAppear:ではRzSharePlanKeyが未定だからここ
+		}
 	}
 }
 
@@ -203,9 +208,24 @@
 					alertMsgBox( NSLocalizedString(@"Connection Error",nil), 
 								nil,
 								NSLocalizedString(@"Roger",nil) );
-					//[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
+					[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
 					break;
 				}
+				/***
+				// JSON --> NSArray   ＜＜＜ Dropbox標準のSBJSONを使用
+				NSError *err = nil;
+				SBJSON	*js = [SBJSON new];
+				NSArray *jsonArray = [js objectWithString:jsonStr error:&err];
+				js = nil;
+				if (err) {
+					NSLog(@"tmpFileLoad: SBJSON: objectWithString: (err=%@) zJson=%@", [err description], jsonStr);
+					alertMsgBox( NSLocalizedString(@"Connection Error",nil), 
+								[err description],
+								NSLocalizedString(@"Roger",nil) );
+					[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
+					break;
+				}***/
+				NSLog(@"jsonArray=%@", jsonArray);
 				if (0 < [jsonArray count]) {
 					NSDictionary *dic = [jsonArray objectAtIndex:0];
 					NSString *planCsv = [dic objectForKey:@"planCsv"];
@@ -251,7 +271,7 @@
 			default:
 				break;
 		}
-		[jsonStr release];
+		//[jsonStr release];
 	}
 	MiConnectTag = 0; // 通信してません
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
@@ -268,7 +288,8 @@
 					error_str,
 					NSLocalizedString(@"Roger",nil) );
 	}
-	[RdaResponse release], RdaResponse = nil;
+	//[RdaResponse release], 
+	RdaResponse = nil;
 }
 
 
@@ -325,8 +346,8 @@
 				case 0: { //----------------------------------------- name
 					UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:zCellE1name];
 					if (cell == nil) {
-						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-													   reuseIdentifier:zCellE1name] autorelease];
+						cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+													   reuseIdentifier:zCellE1name];
 					}
 					if (Re1add) {
 						// E1 一時読み込みしたものを表示する
@@ -404,11 +425,10 @@
 								UIImage *resultingImage = UIGraphicsGetImageFromCurrentImageContext();  
 								UIGraphicsEndImageContext();  
 								[cell.imageView setImage:resultingImage];
-								AzRETAIN_CHECK(@"E1 lNoCheck:imageView1", imageView1, 1)
-								[imageView1 release];
-								AzRETAIN_CHECK(@"E1 lNoCheck:imageView2", imageView2, 1)
-								[imageView2 release];
-								AzRETAIN_CHECK(@"E1 lNoCheck:resultingImage", resultingImage, 2) //=2:releaseするとフリーズ
+								//[imageView1 release];
+								imageView1 = nil;
+								//[imageView2 release];
+								imageView2 = nil;
 							} 
 							else if (0 < lNoGray) {
 								cell.imageView.image = [UIImage imageNamed:@"Icon32-BagBlue.png"];
@@ -436,8 +456,8 @@
 				case 1: { //----------------------------------------- note
 					UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:zCellE1note];
 					if (cell == nil) {
-						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-													   reuseIdentifier:zCellE1note] autorelease];
+						cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+													   reuseIdentifier:zCellE1note];
 						cell.accessoryType = UITableViewCellAccessoryNone;
 						cell.showsReorderControl = NO;		// Move
 						cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
@@ -447,7 +467,7 @@
 						lb.numberOfLines = 7;
 						lb.backgroundColor = [UIColor clearColor]; // grayColor 範囲チェック時
 						lb.tag = CELL_TAG_NOTE;
-						[cell.contentView addSubview:lb]; [lb release];
+						[cell.contentView addSubview:lb]; //[lb release];
 					}
 					UILabel *lb = (UILabel *)[cell.contentView viewWithTag:CELL_TAG_NOTE];
 					if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { // タテ
@@ -467,8 +487,8 @@
 		case 1: { //-----------------------------------------------------------Section(1) function
 			UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:zCellFunc];
 			if (cell == nil) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-											   reuseIdentifier:zCellFunc] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+											   reuseIdentifier:zCellFunc];
 			}
 			switch (indexPath.row) {
 				case 0: // Add this PLAN
@@ -511,7 +531,7 @@
 			e2view.Re1selected = Re1add;
 			e2view.PbSharePlanList = YES; // SharePlan専用モード
 			[self.navigationController pushViewController:e2view animated:YES];
-			[e2view release];
+			//[e2view release];
 		}
 	}
 	else if (indexPath.section==1) {
@@ -537,7 +557,7 @@
 													  otherButtonTitles:@"OK", nil];
 				alert.tag = ALERT_TAG_PREVIEW; // 前Viewへ戻る
 				[alert show];
-				[alert release];
+				//[alert release];
 			}
 		}
 		else if (indexPath.row==1) { 
@@ -549,7 +569,7 @@
 												  otherButtonTitles:@"OK", nil];
 			alert.tag = ALERT_TAG_DELETE;
 			[alert show];
-			[alert release];
+			//[alert release];
 		}
 	}
 }	
@@ -564,7 +584,8 @@
 		case ALERT_TAG_BREAK: // 通信中断する
 			if (RurlConnection) {
 				[RurlConnection cancel];
-				[RurlConnection release], RurlConnection = nil;
+				//[RurlConnection release], 
+				RurlConnection = nil;
 			}
 			[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
 			break;
@@ -572,13 +593,13 @@
 		case ALERT_TAG_DELETE:
 			if (buttonIndex==1) { // OK
 				// Delete
-				NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];	// return前に [pool release] 必須！
-				NSString *err = [self vSharePlanDelete:RzSharePlanKey];
-				[pool release];
-				if (err) {
-					alertMsgBox( NSLocalizedString(@"Delete Err",nil), err, @"Roger" );
-				} else {
-					alertMsgBox( NSLocalizedString(@"Delete OK",nil), nil, @"OK" );
+				@autoreleasepool {
+					NSString *err = [self vSharePlanDelete:RzSharePlanKey];
+					if (err) {
+						alertMsgBox( NSLocalizedString(@"Delete Err",nil), err, @"Roger" );
+					} else {
+						alertMsgBox( NSLocalizedString(@"Delete OK",nil), nil, @"OK" );
+					}
 				}
 				//
 				if (Re1add) {
@@ -613,7 +634,8 @@
 	
 	if (RurlConnection) {
 		[RurlConnection cancel];
-		[RurlConnection release], RurlConnection = nil;
+		//[RurlConnection release], 
+		RurlConnection = nil;
 	}
 	// 非同期通信
 	RurlConnection = [[NSURLConnection alloc] initWithRequest:requestSpPOST(postCmd)
@@ -634,7 +656,8 @@
 	
 	if (RurlConnection) {
 		[RurlConnection cancel];
-		[RurlConnection release], RurlConnection = nil;
+		//[RurlConnection release],
+		RurlConnection = nil;
 	}
 	// 非同期通信
 	RurlConnection = [[NSURLConnection alloc] initWithRequest:requestSpPOST(postCmd)
@@ -657,7 +680,8 @@
 	
 	if (RurlConnection) {
 		[RurlConnection cancel];
-		[RurlConnection release], RurlConnection = nil;
+		//[RurlConnection release],
+		RurlConnection = nil;
 	}
 	// 非同期通信
 	RurlConnection = [[NSURLConnection alloc] initWithRequest:requestSpPOST(postCmd)

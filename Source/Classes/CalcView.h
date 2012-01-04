@@ -18,31 +18,6 @@
 @end
 
 @interface CalcView : UIView <UITextFieldDelegate>
-{
-@private
-	//--------------------------retain
-	UILabel		*Rlabel;		// Rlabel.tag にはCalc入力された数値(long)を記録する
-	id			Rentity;		// NSNumber
-	NSString	*RzKey;			// @"nAmount"
-	NSString	*RzLabelText;	// 初期時の Rlabel.text を保持 ⇒ 中止時に戻す
-	//----------------------------------------------assign
-	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
-	NSDecimalNumberHandler	*MbehaviorDefault;	// 通貨既定の丸め処理
-	NSDecimalNumberHandler	*MbehaviorCalc;		// 計算途中の丸め処理
-	NSArray					*RaKeyButtons;
-	NSDecimalNumber			*MdecAnswer;
-	//----------------------------------------------Owner移管につきdealloc時のrelese不要
-	UIScrollView		*MscrollView;
-	CGRect				MrectInit;
-	UITextField			*MtextField;
-	//----------------------------------------------assign
-	AppDelegate		*appDelegate_;
-	NSInteger			maxValue;
-	NSInteger			MiRoundingScale;
-	BOOL				MbShow;
-	int					MiFunc;		// (0)Non (-4)+ (-5)- (-6)* (-7)/
-	id					delegate;	// 非形式プロトコル（カテゴリ）方式によるデリゲート
-}
 
 @property (assign) id						delegate;
 @property (nonatomic, retain) UILabel		*Rlabel;

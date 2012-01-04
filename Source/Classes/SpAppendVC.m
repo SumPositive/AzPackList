@@ -33,21 +33,26 @@
 	NSLog(@"--- unloadRelease --- SpAppendVC");
 	
 	[RurlConnection cancel]; // 停止させてから解放する
-	[RurlConnection release],	RurlConnection = nil;
+	//[RurlConnection release],	
+	RurlConnection = nil;
 	
-	[RdaResponse release],			RdaResponse = nil;
-	[RbarButtonItemDone release],	RbarButtonItemDone = nil;
-	[RaPickerSource release],		RaPickerSource = nil;
+	//[RdaResponse release],			
+	RdaResponse = nil;
+	//[RbarButtonItemDone release],	
+	RbarButtonItemDone = nil;
+	//[RaPickerSource release],		
+	RaPickerSource = nil;
 }
 
 - (void)dealloc    // 生成とは逆順に解放するのが好ましい
 {
 	[self unloadRelease];
-	[selfPopover release], selfPopover = nil;
+	//[selfPopover release],
+	selfPopover = nil;
 	//--------------------------------@property (retain)
 	[Re1selected.managedObjectContext rollback]; //一時的に修正された可能性がある.name .note を取り消すため
-	[Re1selected release];
-	[super dealloc];
+	//[Re1selected release];
+	//[super dealloc];
 }
 
 - (void)viewDidUnload 
@@ -80,7 +85,7 @@
 	Mpicker.delegate = self;
 	Mpicker.dataSource = self;
 	Mpicker.showsSelectionIndicator = YES;
-	[self.view addSubview:Mpicker]; [Mpicker release];
+	[self.view addSubview:Mpicker]; //[Mpicker release];
 	//------------------------------------------------------
 	MtfName = [[UITextField alloc] init];
 	MtfName.delegate = self;
@@ -89,7 +94,7 @@
 	MtfName.borderStyle = UITextBorderStyleRoundedRect;
 	MtfName.placeholder = NSLocalizedString(@"Plan name",nil);
 	MtfName.keyboardType = UIKeyboardTypeDefault;
-	[self.view addSubview:MtfName]; [MtfName release];
+	[self.view addSubview:MtfName]; //[MtfName release];
 	//------------------------------------------------------
 	MtvNote = [[UITextView alloc] init];
 	MtvNote.delegate = self;
@@ -97,7 +102,7 @@
 	MtvNote.font = [UIFont systemFontOfSize:14];
 	MtvNote.keyboardType = UIKeyboardTypeDefault;
 	//mTvNote.returnKeyType = UIReturnKeyDone;
-	[self.view addSubview:MtvNote]; [MtvNote release];
+	[self.view addSubview:MtvNote]; //[MtvNote release];
 	//------------------------------------------------------
 	MtfNickname = [[UITextField alloc] init];
 	MtfNickname.delegate = self;
@@ -107,13 +112,13 @@
 	MtfNickname.placeholder = NSLocalizedString(@"Nickname",nil);
 	MtfNickname.text = [[NSUserDefaults standardUserDefaults] valueForKey:GD_DefNickname];
 	MtfNickname.keyboardType = UIKeyboardTypeDefault;
-	[self.view addSubview:MtfNickname]; [MtfNickname release];
+	[self.view addSubview:MtfNickname]; //[MtfNickname release];
 	//------------------------------------------------------
 	MlbNickname = [[UILabel alloc] init];
 	MlbNickname.font = [UIFont systemFontOfSize:12];
 	MlbNickname.text = NSLocalizedString(@"Nickname info",nil);
 	MlbNickname.backgroundColor = [UIColor clearColor];
-	[self.view addSubview:MlbNickname]; [MlbNickname release];
+	[self.view addSubview:MlbNickname]; //[MlbNickname release];
 	//------------------------------------------------------
 	MbuUpload = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 	MbuUpload.titleLabel.font = [UIFont boldSystemFontOfSize:20];
@@ -154,7 +159,7 @@
 // UITextField テキストが変更される「直前」に呼び出される。これにより入力文字数制限を行っている。
 - (BOOL)textField:(UITextField *)sender shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    NSMutableString *zText = [[sender.text mutableCopy] autorelease];
+    NSMutableString *zText = [sender.text mutableCopy];
     [zText replaceCharactersInRange:range withString:string];
 	// 置き換えた後の長さをチェックする
 	return ([zText length] <= sender.tag);  //UITextField.tagに最大文字数セット済み
@@ -177,7 +182,7 @@
 // UITextView テキストが変更される「直前」に呼び出される。これにより入力文字数制限を行っている。
 - (BOOL)textView:(UITextView *)sender shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)string
 {
-    NSMutableString *zText = [[sender.text mutableCopy] autorelease];
+    NSMutableString *zText = [sender.text mutableCopy];
     [zText replaceCharactersInRange:range withString:string];
 	// 置き換えた後の長さをチェックする
 	return ([zText length] <= sender.tag);  //UITextView.tagに最大文字数セット済み
@@ -359,7 +364,7 @@
 											  cancelButtonTitle:@"OK"
 											  otherButtonTitles:nil];
 		[alert show];
-		[alert release];
+		//[alert release];
 		[MtfName becomeFirstResponder];
 		return;
 	}
@@ -373,7 +378,7 @@
 											  cancelButtonTitle:@"OK"
 											  otherButtonTitles:nil];
 		[alert show];
-		[alert release];
+		//[alert release];
 		[MtvNote becomeFirstResponder];
 		return;
 	}
@@ -387,7 +392,7 @@
 											  cancelButtonTitle:@"OK"
 											  otherButtonTitles:nil];
 		[alert show];
-		[alert release];
+		//[alert release];
 		[MtfNickname becomeFirstResponder];
 		return;
 	}
@@ -406,7 +411,7 @@
 												  cancelButtonTitle:@"OK"
 												  otherButtonTitles:nil];
 			[alert show];
-			[alert release];
+			//[alert release];
 			return;
 		}
 	}
@@ -419,7 +424,7 @@
 										  otherButtonTitles:NSLocalizedString(@"Agree",nil), nil];
 	alert.tag = ALERT_TAG_PUBLISH;
 	[alert show];
-	[alert release];
+	//[alert release];
 }
 
 - (NSString *)vSharePlanAppend:(NSMutableArray *)maTags
@@ -443,13 +448,13 @@
 	NSMutableString *zCsv = [NSMutableString new]; //こちら側でメモリ管理する
 	NSString *zCsvErr = [FileCsv zSave:Re1selected toMutableString:zCsv]; // E1 ⇒ CSV string
 	if (zCsvErr) {
-		[zCsv release];
+		//[zCsv release];
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
 		return zCsvErr; // pool変数
 	}
 	postCmd = [postCmd stringByAppendingString:@"&planCsv="];
 	postCmd = [postCmd stringByAppendingString:zCsv];
-	[zCsv release];
+	//[zCsv release];
 	
 	// tag
 	for (NSString *zz in maTags) {
@@ -458,7 +463,7 @@
 	
 	if (RurlConnection) {
 		[RurlConnection cancel]; // 停止させてから解放する
-		[RurlConnection release];
+		//[RurlConnection release];
 		RurlConnection = nil;
 	}
 	// 非同期通信
@@ -489,7 +494,7 @@
 								str,
 								NSLocalizedString(@"Roger",nil) );
 				}
-				[str release];
+				//[str release];
 			}	break;
 			default:
 				break;
@@ -510,7 +515,8 @@
 					error_str,
 					NSLocalizedString(@"Roger",nil) );
 	}
-	[RdaResponse release], RdaResponse = nil;
+	//[RdaResponse release], 
+	RdaResponse = nil;
 }
 
 
@@ -538,29 +544,29 @@
 					}
 				}
 				// Append - Upload - Publish
-				NSAutoreleasePool *methodPool = [[NSAutoreleasePool alloc] init];	// return前に [pool release] 必須！
-				NSString *err = [self vSharePlanAppend:ma];
-				if (err) {
-					UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append Err",nil)
-																	message:err
-																   delegate:self 
-														  cancelButtonTitle:NSLocalizedString(@"Roger",nil)
-														  otherButtonTitles:nil];
-					alert.tag = ALERT_TAG_PREVIEW; // 前のViewへ戻る
-					[alert show];
-					[alert release];
-				} else {
-					UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append OK",nil)
-																	message:NSLocalizedString(@"Append OK Msg",nil)
-																   delegate:self 
-														  cancelButtonTitle:@"OK"
-														  otherButtonTitles:nil];
-					alert.tag = ALERT_TAG_PREVIEW; // 前のViewへ戻る
-					[alert show];
-					[alert release];
+				@autoreleasepool {
+					NSString *err = [self vSharePlanAppend:ma];
+					if (err) {
+						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append Err",nil)
+																		message:err
+																	   delegate:self 
+															  cancelButtonTitle:NSLocalizedString(@"Roger",nil)
+															  otherButtonTitles:nil];
+						alert.tag = ALERT_TAG_PREVIEW; // 前のViewへ戻る
+						[alert show];
+						//[alert release];
+					} else {
+						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append OK",nil)
+																		message:NSLocalizedString(@"Append OK Msg",nil)
+																	   delegate:self 
+															  cancelButtonTitle:@"OK"
+															  otherButtonTitles:nil];
+						alert.tag = ALERT_TAG_PREVIEW; // 前のViewへ戻る
+						[alert show];
+						//[alert release];
+					}
 				}
-				[methodPool release];
-				[ma release];
+				//[ma release];
 			}
 			break;
 	}

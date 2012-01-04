@@ -236,6 +236,10 @@
 	//NSLog(@"-- scrollReset -- mValue=%d  mVmin=%d  mVmax=%d  :: mScrollMax=%.1f  mScrollOfs=%.1f",
 	//	  mValue, mVmin, mVmax, mScrollMax, mScrollOfs);
 
+	if (mDialStep < 1) {
+		NSLog(@"LOGIC ERROR!!!  mDialStep=%ld", (long)mDialStep);
+		mDialStep = 1;
+	}
 	CGFloat ff = (CGFloat)(mDialMax - mDialMin) / mDialStep * PITCH;
 	if (mScrollView.contentSize.width != ff + mScrollView.frame.size.width) 
 	{	// + mScrollView.frame.size.width は、Stepper有無でダイアル幅が変わることに対応するため。

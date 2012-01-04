@@ -42,9 +42,38 @@
 @end
 
 @implementation E3viewController
-//@synthesize  RaE2array;
+{
+@private
+	//E1				*Re1selected;  // grandParent: 常にセットされる
+	//NSInteger		PiFirstSection;  // E2から呼び出されたとき頭出しするセクション viewWillAppear内でジャンプ後、(-1)にする。
+	//NSInteger		PiSortType;		// (-1)Group  (0〜)Sort list.
+	//BOOL			PbSharePlanList;	// SharePlan プレビューモード
+	
+	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
+	//NSAutoreleasePool	*RautoPool;		// [0.3]autorelease独自解放のため
+	NSMutableArray		*RaE2array;			//[1.0.2]E2から受け取るのではなく、ここで生成するようにした。
+	NSMutableArray		*RaE3array;
+	//----------------------------------------------Owner移管につきdealloc時のrelese不要
+	UIPopoverController*	Mpopover;
+	NSIndexPath*				MindexPathEdit;	//[1.1]ポインタ代入注意！copyするように改善した。
+	UIToolbar*					Me2toolbar;
+	//----------------------------------------------assign
+	AppDelegate *appDelegate_;
+	NSIndexPath		*MpathClip;					//[1.1]ポインタ代入注意！copyするように改善した。
+	NSIndexPath	  *MindexPathActionDelete;	//[1.1]ポインタ代入注意！copyするように改善した。
+	//BOOL MbFirstOne;
+	//BOOL MbOptShouldAutorotate;
+	BOOL MbAzOptTotlWeightRound;
+	BOOL MbAzOptShowTotalWeight;
+	BOOL MbAzOptShowTotalWeightReq;
+	BOOL MbAzOptItemsGrayShow;
+	BOOL MbAzOptItemsQuickSort;
+	BOOL MbAzOptCheckingAtEditMode;
+	BOOL MbAzOptSearchItemsNote;
+	BOOL MbClipPaste;
+	CGPoint		McontentOffsetDidSelect; // didSelect時のScrollView位置を記録
+}
 @synthesize  Re1selected;
-//@synthesize  Re2selected;
 @synthesize  PiFirstSection;
 @synthesize  PiSortType;
 @synthesize PbSharePlanList;
@@ -127,9 +156,9 @@
 			Me2toolbar = [[UIToolbar alloc] init];
 			
 			//[Me2toolbar setItems: [NSArray array]];
-			UIBarButtonItem* buFlexible = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease];
+			UIBarButtonItem* buFlexible = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 			
-			UIBarButtonItem* buFixed = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil] autorelease];
+			UIBarButtonItem* buFixed = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
 			
 			NSString* str;
 			if (30<[self.title length]) {
@@ -137,7 +166,7 @@
 			} else {
 				str = self.title;
 			}
-			UIBarButtonItem* buTitle = [[[UIBarButtonItem alloc] initWithTitle:str style:UIBarButtonItemStylePlain target:nil action:nil] autorelease];
+			UIBarButtonItem* buTitle = [[UIBarButtonItem alloc] initWithTitle:str style:UIBarButtonItemStylePlain target:nil action:nil];
 			
 			NSMutableArray* buttons = [[NSMutableArray alloc] initWithObjects:
 									   buFixed, buFlexible, buTitle, buFlexible, nil];
@@ -150,19 +179,19 @@
 			Me2toolbar.barStyle = UIBarStyleDefault;
 			[Me2toolbar setItems:buttons animated:NO];
 			[Me2toolbar sizeToFit];
-			[buttons release];
+			//[buttons release];
 			self.navigationItem.titleView = Me2toolbar;
 		}
 	} else {
 		// Set up NEXT Left [Back] buttons.
-		self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc]
+		self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
 												  initWithTitle:NSLocalizedString(@"Back", nil)
 												  style:UIBarButtonItemStylePlain  
-												  target:nil  action:nil] autorelease];
+												  target:nil  action:nil];
 	}
 	
 	// Search Bar
-	UISearchBar *sb = [[[UISearchBar alloc] initWithFrame:CGRectMake(0,0, self.tableView.bounds.size.width,0)] autorelease];
+	UISearchBar *sb = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0, self.tableView.bounds.size.width,0)];
 	sb.delegate = self;
 	[sb sizeToFit];
 	sb.showsCancelButton = YES;
@@ -176,11 +205,11 @@
 	MbAzOptItemsQuickSort = NO;
 	
 	// Tool Bar Button
-	UIBarButtonItem *buFlex = [[[UIBarButtonItem alloc] 
-								initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace  target:nil action:nil] autorelease];
-	UIBarButtonItem *buSearch = [[[UIBarButtonItem alloc] 
+	UIBarButtonItem *buFlex = [[UIBarButtonItem alloc] 
+								initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace  target:nil action:nil];
+	UIBarButtonItem *buSearch = [[UIBarButtonItem alloc] 
 								 initWithBarButtonSystemItem:UIBarButtonSystemItemSearch  
-								  target:self action:@selector(azSearchBar)] autorelease];
+								  target:self action:@selector(azSearchBar)];
 	// セグメントが回転に対応せず不具合（高さが変わる）発生するため、ボタンに戻した。
 	UIImage *img;
 	if (MbAzOptItemsGrayShow) {
@@ -188,13 +217,13 @@
 	} else {
 		img = [UIImage imageNamed:@"Icon16-ItemGrayHide.png"]; // Gray Hide
 	}
-	UIBarButtonItem *buGray = [[[UIBarButtonItem alloc] initWithImage:img
+	UIBarButtonItem *buGray = [[UIBarButtonItem alloc] initWithImage:img
 																style:UIBarButtonItemStylePlain
 																target:self 
-															   action:@selector(azItemsGrayHide:)] autorelease];
-	UIBarButtonItem *buRefresh = [[[UIBarButtonItem alloc] 
+															   action:@selector(azItemsGrayHide:)];
+	UIBarButtonItem *buRefresh = [[UIBarButtonItem alloc] 
 								  initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
-								   target:self action:@selector(azReflesh)] autorelease];
+								   target:self action:@selector(azReflesh)];
 	NSArray *aArray = [NSArray arrayWithObjects:  buGray, buFlex, buRefresh, buFlex, buSearch, nil];
 	[self setToolbarItems:aArray animated:YES];
 }
@@ -202,6 +231,9 @@
 - (void)viewDidLoad 
 {
 	[super viewDidLoad];
+	// 背景テクスチャ・タイルペイント
+	//self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+
 	// listen to our app delegates notification that we might want to refresh our detail view
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAllViews:) name:NFM_REFRESH_ALL_VIEWS
 											   object:[[UIApplication sharedApplication] delegate]];
@@ -318,7 +350,8 @@
 {
 	//[1.0.2]
 	if (RaE2array) {
-		[RaE2array release], RaE2array = nil;
+		//[RaE2array release], 
+		RaE2array = nil;
 	}
 	RaE2array = [[NSMutableArray alloc] initWithArray:[Re1selected.childs allObjects]];
 	if ([RaE2array count] <= 0) return;  // NoGroup
@@ -326,8 +359,8 @@
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
 	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:&sortDescriptor count:1];
 	[RaE2array sortUsingDescriptors:sortDescriptors];
-	[sortDescriptor release];
-	[sortDescriptors release];
+	//[sortDescriptor release];
+	//[sortDescriptors release];
 	
 	
 	NSString *zSearchText = nil;
@@ -396,9 +429,9 @@
 			// 並べ替えを実行してlistContentに格納します。
 			[muSection sortUsingDescriptors:sortDescriptors]; // NSMutableArray内ソート　NSArrayはダメ
 			[muE3arry addObject:muSection];  // 二次元追加　addObjectsFromArray:にすると同次元になってしまう。
-			[muSection release];
-			[sortDescriptors release];
-			[sortDescriptor release];
+			//[muSection release];
+			//[sortDescriptors release];
+			//[sortDescriptor release];
 		}
 		if (PbSharePlanList==NO) {
 			// SAVE : 変更あれば保存する		Bug:Add行が通常行のように表示される-->Fix[1.1.0]
@@ -449,7 +482,7 @@
 			} else {
 				[muSect0 addObjectsFromArray:muSection]; // Section[0]のArray末尾に追加
 			}
-			[muSection release];
+			//[muSection release];
 			//(V0.4) ソートモードではAdd行なし
 		}
 		// SELECT & ORDER BY　　テーブルの行番号を記録した属性"row"で昇順ソートする
@@ -482,16 +515,16 @@
 		NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:&sortDescriptor count:1];
 		// 並べ替えを実行
 		[muSect0 sortUsingDescriptors:sortDescriptors]; // muE3arry[0]をソートしていることになる
-		[sortDescriptor release];
-		[sortDescriptors release];
+		//[sortDescriptor release];
+		//[sortDescriptors release];
 	}
 	
 	if (RaE3array != muE3arry) {
-		[muE3arry retain];	//先に確保
-		[RaE3array release];	//その後解放
+		//[muE3arry retain];	//先に確保
+		//[RaE3array release];	//その後解放
 		RaE3array = muE3arry;
 	}
-	[muE3arry release];
+	//[muE3arry release];
 	
 	// テーブルビューを更新します。
     [self.tableView reloadData];  // これがないと、次のセクションスクロールでエラーになる
@@ -596,7 +629,7 @@
 	SettingTVC *vi = [[SettingTVC alloc] init];
 	[vi setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 	[self.navigationController pushViewController:vi animated:YES];
-	[vi release];
+	//[vi release];
 }
 
 - (void)e3detailView:(NSIndexPath *)indexPath 
@@ -636,22 +669,23 @@
 		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:e3detail];
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:e3detail];
 		Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
-		[nc release];
+		//[nc release];
 		Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
 		//MindexPathEdit = indexPath; Bug!危険　　　下記FIX
-		[MindexPathEdit release], MindexPathEdit = [indexPath copy];
+		//[MindexPathEdit release], 
+		MindexPathEdit = [indexPath copy];
 		CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
 		rc.origin.x += (rc.size.width/2 - 100);	//(-100)ヨコのとき幅が縮小されてテンキーが欠けるため
 		rc.size.width = 1;
 		[Mpopover presentPopoverFromRect:rc
 								  inView:self.tableView  permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-		e3detail.selfPopover = Mpopover;  [Mpopover release]; //(retain)  内から閉じるときに必要になる
+		e3detail.selfPopover = Mpopover;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
 		e3detail.delegate = self;		// refresh callback
 	} else {
 		[e3detail setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 		[self.navigationController pushViewController:e3detail animated:YES];
 	}
-	[e3detail release];
+	//[e3detail release];
 }
 
 
@@ -663,11 +697,13 @@
 	// ただし、他オブジェクトからの参照無く、viewWillAppearにて生成されるものは破棄可能
 	
 	NSLog(@"--- unloadRelease --- E3viewController");
-	[RaE3array release],	RaE3array = nil;
+	//[RaE3array release],	
+	RaE3array = nil;
 	
 	if (appDelegate_.app_is_iPad) {
 		self.navigationItem.titleView = nil;  //これなしにE1へ戻ると落ちる
-		[Me2toolbar release], Me2toolbar = nil;
+		//[Me2toolbar release], 
+		Me2toolbar = nil;
 	}
 }
 
@@ -686,15 +722,19 @@
 
 	if (appDelegate_.app_is_iPad) {
 		Mpopover.delegate = nil;	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
-		[MindexPathEdit release], MindexPathEdit = nil;
+		//[MindexPathEdit release], 
+		MindexPathEdit = nil;
 	}
-	[MindexPathActionDelete release], MindexPathActionDelete = nil;
-	[MpathClip release], MpathClip = nil;
+	//[MindexPathActionDelete release], 
+	MindexPathActionDelete = nil;
+	//[MpathClip release], 
+	MpathClip = nil;
 	//--------------------------------@property (retain)
-	[RaE2array release],	RaE2array = nil;
-	//[Re2selected release],	Re2selected = nil;
-	[Re1selected release],	Re1selected = nil;
-	[super dealloc];
+	//[RaE2array release],	
+	RaE2array = nil;
+	//[Re1selected release],	
+	Re1selected = nil;
+	//[super dealloc];
 }
 
 
@@ -1110,7 +1150,8 @@
 	NSInteger iSection = button.tag / GD_SECTION_TIMES;
 	NSInteger iRow = button.tag - (iSection * GD_SECTION_TIMES);
 	//Bug//MpathClip = [NSIndexPath indexPathForRow:iRow inSection:iSection];
-	[MpathClip release], MpathClip = [[NSIndexPath indexPathForRow:iRow inSection:iSection] copy];
+	//[MpathClip release], 
+	MpathClip = [[NSIndexPath indexPathForRow:iRow inSection:iSection] copy];
 	AzLOG(@"cellButtonClip .row=%ld", (long)iRow);
 	
 	CGRect minRect = [self.tableView rectForRowAtIndexPath:MpathClip]; // 指定したインデックスパスの行の描画領域を返す。
@@ -1129,11 +1170,11 @@
 
 - (void)alertWeightOver
 {
-	UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WeightOver",nil)
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WeightOver",nil)
 													 message:NSLocalizedString(@"WeightOver message",nil)
 													delegate:nil 
 										   cancelButtonTitle:nil 
-										   otherButtonTitles:@"OK", nil] autorelease];
+										   otherButtonTitles:@"OK", nil];
 	[alert show];
 }
 
@@ -1251,8 +1292,8 @@
 		// 高さ0非表示用セル　＜＜専用セルを作って高速化＞＞
 		cell = [tableView dequeueReusableCellWithIdentifier:zCellHiddon];
 		if (cell == nil) {
-			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-										   reuseIdentifier:zCellHiddon] autorelease];
+			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+										   reuseIdentifier:zCellHiddon];
 			cell.textLabel.text = @"";
 			cell.detailTextLabel.text = @"";
 			cell.imageView.image = nil;
@@ -1267,8 +1308,8 @@
 			// 高さ0非表示用セル　＜＜専用セルを作って高速化＞＞
 			cell = [tableView dequeueReusableCellWithIdentifier:zCellHiddon];
 			if (cell == nil) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-											   reuseIdentifier:zCellHiddon] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+											   reuseIdentifier:zCellHiddon];
 				cell.textLabel.text = @"";
 				cell.detailTextLabel.text = @"";
 				cell.imageView.image = nil;
@@ -1285,11 +1326,11 @@
 		}
 		if (cell == nil) {
 			if (self.editing) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault     // Default型
-												   reuseIdentifier:zCellAddEdit] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault     // Default型
+												   reuseIdentifier:zCellAddEdit];
 			} else {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault     // Default型
-												   reuseIdentifier:zCellAdd] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault     // Default型
+												   reuseIdentifier:zCellAdd];
 			}
 			cell.tag = TAG_CELL_ADD;
 			cell.textLabel.text = NSLocalizedString(@"New Goods",nil); // ここに追加
@@ -1317,11 +1358,11 @@
 
 		if (cell == nil) {
 			if (self.editing) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle		// サブタイトル型(3.0)
-												reuseIdentifier:zCellItemEdit] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle		// サブタイトル型(3.0)
+												reuseIdentifier:zCellItemEdit];
 			} else {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle		// サブタイトル型(3.0)
-											   reuseIdentifier:zCellItem] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle		// サブタイトル型(3.0)
+											   reuseIdentifier:zCellItem];
 			}
 			// 行毎に変化の無い定義は、ここで最初に1度だけする
 			cell.tag = TAG_CELL_ITEM;
@@ -1540,7 +1581,8 @@
 		[action release];
 		 */
 		// [1.1.0]削除を[Cut]動作同等にした。
-		[MpathClip release], MpathClip = [indexPath copy];
+		//[MpathClip release],
+		MpathClip = [indexPath copy];
 		[self cut:nil];
     }
 }
@@ -1697,7 +1739,7 @@
 		[items insertObject:barButtonItem atIndex:1]; //この位置は、loadView:にある初期定義と一致させること
 	}
 	[Me2toolbar setItems:items animated:YES];
-    [items release];
+   // [items release];
 }
 
 // ヨコになり左が表示される前に呼ばれる  <willShowViewController>
@@ -1708,7 +1750,7 @@
 		[items removeObjectAtIndex:1]; //この位置は、loadView:にある初期定義と一致させること
 	}
     [Me2toolbar setItems:items animated:YES];
-    [items release];
+    //[items release];
 }
 
 

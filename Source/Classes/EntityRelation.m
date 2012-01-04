@@ -35,11 +35,11 @@ NSManagedObjectContext *managedObjectContext()
 	if (![managedObjectContext()  save:&err]) {
 		NSLog(@"MOC commit error %@, %@", err, [err userInfo]);
 		//exit(-1);  // Fail
-		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"MOC CommitErr",nil)
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"MOC CommitErr",nil)
 														 message:NSLocalizedString(@"MOC CommitErrMsg",nil)
 														delegate:nil 
 											   cancelButtonTitle:nil 
-											   otherButtonTitles:@"OK", nil] autorelease];
+											   otherButtonTitles:@"OK", nil];
 		[alert show];
 		return;
 	}
@@ -92,8 +92,8 @@ NSManagedObjectContext *managedObjectContext()
 		maxRow = [[[array objectAtIndex:0] valueForKey:@"maxRow"] integerValue];
 	}
 	
-	[expressionDescription release];
-	[request release];
+	//[expressionDescription release];
+	//[request release];
 	return maxRow;
 }
 

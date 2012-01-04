@@ -16,7 +16,7 @@ void alertBox( NSString *zTitle, NSString *zMsg, NSString *zButton )
 										  cancelButtonTitle:nil
 										  otherButtonTitles:zButton, nil];
 	[alert show];
-	[alert release];
+	//[alert release];
 }
 
 UIColor *GcolorBlue(float percent) 
@@ -73,6 +73,6 @@ NSString *GstringFromNumber( NSNumber *num )
 	NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
 	[formatter setNumberStyle:NSNumberFormatterDecimalStyle];
 	NSString *str = [formatter stringFromNumber:num];
-	[formatter release];
+	//[formatter release];
 	return str; // autorelease
 }

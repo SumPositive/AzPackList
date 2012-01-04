@@ -46,8 +46,8 @@
 @implementation E2viewController
 {
 @private
-	E1		*Re1selected;
-	BOOL	PbSharePlanList;	// SharePlan プレビューモード
+	//E1		*Re1selected;
+	//BOOL	PbSharePlanList;	// SharePlan プレビューモード
 	
 	UIPopoverController*	menuPopover;  //[MENU]にて自身を包むPopover  閉じる為に必要
 	// setPopover:にてセットされる
@@ -62,7 +62,7 @@
 	E2edit				*Me2editView;				// self.navigationControllerがOwnerになる
 	
 	//UINavigationController*		MnaviRightE3;		// 右側(E3)
-	E3viewController*				delegateE3viewController;
+	//E3viewController*				delegateE3viewController;
 	UIPopoverController*			Mpopover;
 	NSIndexPath*						MindexPathEdit;	//[1.1]ポインタ代入注意！copyするように改善した。
 	
@@ -76,9 +76,9 @@
 	NSInteger MiSection0Rows; // E2レコード数　＜高速化＞
 	CGPoint		McontentOffsetDidSelect; // didSelect時のScrollView位置を記録
 }
-@synthesize Re1selected;
-@synthesize PbSharePlanList;
-@synthesize delegateE3viewController;
+@synthesize Re1selected = Re1selected_;
+@synthesize PbSharePlanList = PbSharePlanList_;
+@synthesize delegateE3viewController = delegateE3viewController_;
 
 
 #pragma mark - Delegate
@@ -109,7 +109,7 @@
 	SettingTVC *vi = [[SettingTVC alloc] init];
 	[vi setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 	[self.navigationController pushViewController:vi animated:YES];
-	[vi release];
+	//[vi release];
 }
 
 
@@ -129,21 +129,21 @@
 	}
 	// e2obj.childs を全て削除する  ＜＜managedObjectContext を直接削除している＞＞
 	for (E3 *e3obj in e2objDelete.childs) {
-		[Re1selected.managedObjectContext deleteObject:e3obj];
+		[Re1selected_.managedObjectContext deleteObject:e3obj];
 	}
 	// RrE2arrayの削除はmanagedObjectContextに反映されないため、ここで削除する。
 	e2objDelete.parent = nil;	//[1.0.1]次の集計から除外するためリンク切る ＜＜＜deleteObjectでは切れない＞＞＞
-	[Re1selected.managedObjectContext deleteObject:e2objDelete];
+	[Re1selected_.managedObjectContext deleteObject:e2objDelete];
 	// E1 sum属性　＜高速化＞ 親sum保持させる
-	[Re1selected setValue:[Re1selected valueForKeyPath:@"childs.@sum.sumNoGray"] forKey:@"sumNoGray"];
-	[Re1selected setValue:[Re1selected valueForKeyPath:@"childs.@sum.sumNoCheck"] forKey:@"sumNoCheck"];
-	[Re1selected setValue:[Re1selected valueForKeyPath:@"childs.@sum.sumWeightStk"] forKey:@"sumWeightStk"];
-	[Re1selected setValue:[Re1selected valueForKeyPath:@"childs.@sum.sumWeightNed"] forKey:@"sumWeightNed"];
+	[Re1selected_ setValue:[Re1selected_ valueForKeyPath:@"childs.@sum.sumNoGray"] forKey:@"sumNoGray"];
+	[Re1selected_ setValue:[Re1selected_ valueForKeyPath:@"childs.@sum.sumNoCheck"] forKey:@"sumNoCheck"];
+	[Re1selected_ setValue:[Re1selected_ valueForKeyPath:@"childs.@sum.sumWeightStk"] forKey:@"sumWeightStk"];
+	[Re1selected_ setValue:[Re1selected_ valueForKeyPath:@"childs.@sum.sumWeightNed"] forKey:@"sumWeightNed"];
 	
-	if (PbSharePlanList==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
+	if (PbSharePlanList_==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
 		// SAVE　＜＜万一システム障害で落ちてもデータが残るようにコマメに保存する方針＞＞
 		NSError *error = nil;
-		if (![Re1selected.managedObjectContext save:&error]) {
+		if (![Re1selected_.managedObjectContext save:&error]) {
 			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 			//exit(-1);  // Fail
 		}
@@ -174,7 +174,7 @@
 										  otherButtonTitles:@"OK", nil];
 	alert.tag = ALERT_TAG_ALLZERO;
 	[alert show];
-	[alert release];
+	//[alert release];
 }
 - (void)actionAllZero_OKGO
 {	// 全在庫数量を、ゼロにする
@@ -201,7 +201,7 @@
 				[e3obj setValue:[NSNumber numberWithInteger:0] forKey:@"noCheck"];
 			}
 		}
-		[e3array release];
+		//[e3array release];
 		
 		// E2 sum属性　＜高速化＞ 親sum保持させる
 		[e2obj setValue:[e2obj valueForKeyPath:@"childs.@sum.noGray"] forKey:@"sumNoGray"];
@@ -211,15 +211,15 @@
 	}
 	
 	// E1 sum属性　＜高速化＞ 親sum保持させる
-	[Re1selected setValue:[Re1selected valueForKeyPath:@"childs.@sum.sumNoGray"] forKey:@"sumNoGray"];
-	[Re1selected setValue:[Re1selected valueForKeyPath:@"childs.@sum.sumNoCheck"] forKey:@"sumNoCheck"];
-	[Re1selected setValue:[Re1selected valueForKeyPath:@"childs.@sum.sumWeightStk"] forKey:@"sumWeightStk"];
-	[Re1selected setValue:[Re1selected valueForKeyPath:@"childs.@sum.sumWeightNed"] forKey:@"sumWeightNed"];
+	[Re1selected_ setValue:[Re1selected_ valueForKeyPath:@"childs.@sum.sumNoGray"] forKey:@"sumNoGray"];
+	[Re1selected_ setValue:[Re1selected_ valueForKeyPath:@"childs.@sum.sumNoCheck"] forKey:@"sumNoCheck"];
+	[Re1selected_ setValue:[Re1selected_ valueForKeyPath:@"childs.@sum.sumWeightStk"] forKey:@"sumWeightStk"];
+	[Re1selected_ setValue:[Re1selected_ valueForKeyPath:@"childs.@sum.sumWeightNed"] forKey:@"sumWeightNed"];
 	
-	if (PbSharePlanList==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
+	if (PbSharePlanList_==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
 		// SAVE : e3edit,e2list は ManagedObject だから更新すれば ManagedObjectContext に反映されている
 		NSError *err = nil;
-		if (![Re1selected.managedObjectContext save:&err]) {
+		if (![Re1selected_.managedObjectContext save:&err]) {
 			NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
 			abort();
 		}
@@ -248,11 +248,11 @@
 #endif
 	
 	// Subject: 件名
-	NSString* zSubj = [NSString stringWithFormat:@"%@ : %@ ", NSLocalizedString(@"Product Title",nil), Re1selected.name];
+	NSString* zSubj = [NSString stringWithFormat:@"%@ : %@ ", NSLocalizedString(@"Product Title",nil), Re1selected_.name];
 	[picker setSubject:zSubj];  
 
 	// CSV SAVE
-	NSString *zErr = [FileCsv zSave:Re1selected toLocalFileName:GD_CSVFILENAME4]; // この間、待たされるのが問題になるかも！！
+	NSString *zErr = [FileCsv zSave:Re1selected_ toLocalFileName:GD_CSVFILENAME4]; // この間、待たされるのが問題になるかも！！
 	if (zErr) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
 		UIAlertView *alert = [[UIAlertView alloc] 
@@ -260,7 +260,7 @@
 							  message:zErr
 							  delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
 		[alert show];
-		[alert release];
+		//[alert release];
 		return;
 	}
 	NSString *home_dir = NSHomeDirectory();
@@ -268,7 +268,7 @@
 	NSString *csvPath = [doc_dir stringByAppendingPathComponent:GD_CSVFILENAME4];
 	// Body: 添付ファイル
 	//NSString* fileName = @"attachement.packlist";
-	NSString* fileName = [NSString stringWithFormat:@"%@.packlist", Re1selected.name];
+	NSString* fileName = [NSString stringWithFormat:@"%@.packlist", Re1selected_.name];
 	NSData* fileData = [NSData dataWithContentsOfFile:csvPath];
 	[picker addAttachmentData:fileData mimeType:@"application/packlist" fileName:fileName];
 	
@@ -287,7 +287,7 @@
 	} else {
 		[appDelegate_.mainNC presentModalViewController:picker animated:YES];
 	}
-	[picker release];
+	//[picker release];
 }
 
 - (void)actionSharedPackListUp
@@ -297,7 +297,7 @@
 	}
 
 	SpAppendVC *spAppendVC = [[SpAppendVC alloc] init];
-	spAppendVC.Re1selected = Re1selected;
+	spAppendVC.Re1selected = Re1selected_;
 
 	if (appDelegate_.app_is_iPad) {
 		spAppendVC.title = NSLocalizedString(@"SharePlan Append",nil);
@@ -305,13 +305,15 @@
 			//[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 			[self.navigationController pushViewController:spAppendVC animated:YES];
 		} else {	//ヨコ
-			[Mpopover release], Mpopover = nil;
+			//[Mpopover release], 
+			Mpopover = nil;
 			//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:vc];
 			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:spAppendVC];
 			Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
-			[nc release];
+			//[nc release];
 			Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-			[MindexPathEdit release], MindexPathEdit = nil;
+			//[MindexPathEdit release], 
+			MindexPathEdit = nil;
 			[Mpopover presentPopoverFromRect:CGRectMake(320/2, 768-60, 1,1)	 //ヨコしか通らない。タテならばPopover内になるから
 									  inView:self.navigationController.view
 					permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
@@ -322,7 +324,7 @@
 		[spAppendVC setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 		[self.navigationController pushViewController:spAppendVC animated:YES];
 	}
-	[spAppendVC release];
+	//[spAppendVC release];
 }
 
 - (void)actionBackupDropbox
@@ -332,16 +334,16 @@
 	{	// Dropbox 認証済み
 		if (appDelegate_.app_is_iPad) {
 			DropboxVC *vc = [[DropboxVC alloc] initWithNibName:@"DropboxVC-iPad" bundle:nil];
-			vc.Re1selected = Re1selected;	// [SAVE]
+			vc.Re1selected = Re1selected_;	// [SAVE]
 			[self presentModalViewController:vc animated:YES];
 		} else {
 			DropboxVC *vc = [[DropboxVC alloc] initWithNibName:@"DropboxVC" bundle:nil];
-			vc.Re1selected = Re1selected;	// [SAVE]
+			vc.Re1selected = Re1selected_;	// [SAVE]
 			[self presentModalViewController:vc animated:YES];
 		}
 	} else {
 		// Dropbox 未認証
-		appDelegate_.dropboxSaveE1selected = Re1selected;	// [SAVE]
+		appDelegate_.dropboxSaveE1selected = Re1selected_;	// [SAVE]
 		[[DBSession sharedSession] link];
 	}
 }
@@ -355,7 +357,7 @@
 	
 	GooDocsView *goodocs = [[GooDocsView alloc] initWithStyle:UITableViewStylePlain];
 	goodocs.Rmoc = nil;  // Upでは使用しない
-	goodocs.Re1selected = Re1selected; // E1
+	goodocs.Re1selected = Re1selected_; // E1
 	goodocs.PbUpload = YES;
 
 	if (appDelegate_.app_is_iPad) {
@@ -363,13 +365,15 @@
 		if ([menuPopover isPopoverVisible]) { //タテ
 			[self.navigationController pushViewController:goodocs animated:YES];
 		} else {	//ヨコ
-			[Mpopover release], Mpopover = nil;
+			//[Mpopover release], 
+			Mpopover = nil;
 			//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:goodocs];
 			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:goodocs];
 			Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
-			[nc release];
+			//[nc release];
 			Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-			[MindexPathEdit release], MindexPathEdit = nil;
+			//[MindexPathEdit release], 
+			MindexPathEdit = nil;
 			[Mpopover presentPopoverFromRect:CGRectMake(320/2, 768-60, 1,1)	 //ヨコしか通らない。タテならばPopover内になるから
 									  inView:self.navigationController.view
 					permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
@@ -380,7 +384,7 @@
 		goodocs.title = self.title;
 		[self.navigationController pushViewController:goodocs animated:YES];
 	}
-	[goodocs release];
+	//[goodocs release];
 }
 
 - (void)actionBackupYourPC
@@ -402,7 +406,7 @@
 	[RalertHttpServer show];
 	//[MalertHttpServer release];
 	// CSV SAVE
-	NSString *zErr = [FileCsv zSave:Re1selected toLocalFileName:GD_CSVFILENAME4]; // この間、待たされるのが問題になるかも！！
+	NSString *zErr = [FileCsv zSave:Re1selected_ toLocalFileName:GD_CSVFILENAME4]; // この間、待たされるのが問題になるかも！！
 	if (zErr) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
 		UIAlertView *alert = [[UIAlertView alloc] 
@@ -410,7 +414,7 @@
 							  message:zErr
 							  delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
 		[alert show];
-		[alert release];
+		//[alert release];
 		return;
 	}
 	// if (httpServer) return; <<< didSelectRowAtIndexPath:直後に配置してダブルクリック回避している。
@@ -423,12 +427,12 @@
 	[localhostAddresses performSelectorInBackground:@selector(list) withObject:nil];
 	[RhttpServer setPort:8080];
 	[RhttpServer setBackup:YES]; // BACKUP Mode
-	[RhttpServer setPlanName:Re1selected.name]; // ファイル名を "プラン名.AzPack.csv" にするため
+	[RhttpServer setPlanName:Re1selected_.name]; // ファイル名を "プラン名.AzPack.csv" にするため
 	NSError *error;
 	if(![RhttpServer start:&error])
 	{
 		NSLog(@"Error starting HTTP Server: %@", error);
-		[RhttpServer release];
+		//[RhttpServer release];
 		RhttpServer = nil;
 	}
 }
@@ -445,10 +449,10 @@
 	alert.title = NSLocalizedString(@"Please Wait",nil);
 	[alert show];
 	//---------------------------------------CSV SAVE Start.
-	NSString *zErr = [FileCsv zSave:Re1selected toLocalFileName:nil]; // nil:PasteBoard Copy mode.
+	NSString *zErr = [FileCsv zSave:Re1selected_ toLocalFileName:nil]; // nil:PasteBoard Copy mode.
 	//---------------------------------------CSV SAVE End.
 	[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
-	[alert release];
+	//[alert release];
 	if (zErr) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
 		alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"PBoard Error",nil)
@@ -460,7 +464,7 @@
 		//alert.title = NSLocalizedString(@"PBoard Error",nil);
 		//alert.message = zErr;
 		//[alert addButtonWithTitle:@"OK"];
-		[alert release];
+		//[alert release];
 		return;
 	}
 	alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"PBoard Copy",nil)
@@ -472,7 +476,7 @@
 	//alert.title = NSLocalizedString(@"PBoard Copy",nil);
 	//alert.message = NSLocalizedString(@"PBoard Copy OK",nil);
 	//[alert addButtonWithTitle:@"OK"];
-	[alert release];
+	//[alert release];
 }
 
 
@@ -582,7 +586,7 @@
 			
 		case ALERT_TAG_HTTPServerStop:
 			[RhttpServer stop];
-			[RhttpServer release];
+			//[RhttpServer release];
 			RhttpServer = nil;
 			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LocalhostAdressesResolved" object:nil];
 			break;
@@ -603,25 +607,25 @@
 	E3viewController *e3view;
 	
 	if (appDelegate_.app_is_iPad) {
-		if (PbSharePlanList==NO) {
+		if (PbSharePlanList_==NO) {
 			// 既存Ｅ３更新
-			if ([delegateE3viewController respondsToSelector:@selector(viewWillAppear:)]) {
-				assert(delegateE3viewController);
+			if ([delegateE3viewController_ respondsToSelector:@selector(viewWillAppear:)]) {
+				assert(delegateE3viewController_);
 				if (iSection==(-9)) {
-					delegateE3viewController.PiFirstSection = 0;
-					delegateE3viewController.PiSortType = (-9); // E3初期化（リロード＆再描画、セクション0表示）
+					delegateE3viewController_.PiFirstSection = 0;
+					delegateE3viewController_.PiSortType = (-9); // E3初期化（リロード＆再描画、セクション0表示）
 				}
 				else if (iSection<0) {	// Sort List
-					delegateE3viewController.PiFirstSection = 0;
-					delegateE3viewController.PiSortType = (-1) * iSection;
+					delegateE3viewController_.PiFirstSection = 0;
+					delegateE3viewController_.PiSortType = (-1) * iSection;
 				}
 				else {
-					delegateE3viewController.PiFirstSection = iSection;  //E3で頭出しするセクション
-					delegateE3viewController.PiSortType = (-1); // E3既存データあればリロードしない
+					delegateE3viewController_.PiFirstSection = iSection;  //E3で頭出しするセクション
+					delegateE3viewController_.PiSortType = (-1); // E3既存データあればリロードしない
 				}
-				delegateE3viewController.PbSharePlanList = PbSharePlanList;
+				delegateE3viewController_.PbSharePlanList = PbSharePlanList_;
 				//
-				[delegateE3viewController viewWillAppear:YES];
+				[delegateE3viewController_ viewWillAppear:YES];
 			}
 			return;
 		}
@@ -633,11 +637,11 @@
 	// 以下は、E3viewControllerの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
 
 	if (appDelegate_.app_is_iPad) {
-		e3view.title = Re1selected.name;  //  self.title;  // NSLocalizedString(@"Items", nil);
+		e3view.title = Re1selected_.name;  //  self.title;  // NSLocalizedString(@"Items", nil);
 	} else {
 		e3view.title = self.title;  // PbSharePlanList=YES のとき "Sample" になるように
 	}
-	e3view.Re1selected = Re1selected; // E1
+	e3view.Re1selected = Re1selected_; // E1
 	//e3view.PiFirstSection = indexPath.row;  // Group.ROW ==>> E3で頭出しするセクション
 	//e3view.PiSortType = (-1);
 	if (iSection<0) {
@@ -647,9 +651,9 @@
 		e3view.PiFirstSection = iSection;  //E3で頭出しするセクション
 		e3view.PiSortType = (-1);
 	}
-	e3view.PbSharePlanList = PbSharePlanList;
+	e3view.PbSharePlanList = PbSharePlanList_;
 	[self.navigationController pushViewController:e3view animated:YES];
-	[e3view release];
+	//[e3view release];
 }
 
 
@@ -657,14 +661,14 @@
 {
 	// ContextにE2ノードを追加する　E2edit内でCANCELならば削除している
 	E2 *e2newObj = [NSEntityDescription insertNewObjectForEntityForName:@"E2"
-												 inManagedObjectContext:Re1selected.managedObjectContext];
+												 inManagedObjectContext:Re1selected_.managedObjectContext];
 	//[1.0.1]「新しい・・方式」として名称未定のまま先に進めるようにした
 	e2newObj.name = nil; //(未定)  NSLocalizedString(@"New Index",nil);
 	e2newObj.row = [NSNumber numberWithInteger:MiSection0Rows]; // 末尾に追加：行番号(row) ＝ 現在の行数 ＝ 現在の最大行番号＋1
-	e2newObj.parent = Re1selected;	//親子リンク
+	e2newObj.parent = Re1selected_;	//親子リンク
 	// SAVE
 	NSError *err = nil;
-	if (![Re1selected.managedObjectContext save:&err]) {
+	if (![Re1selected_.managedObjectContext save:&err]) {
 		NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
 		return;
 	}
@@ -679,8 +683,8 @@
 		//NG	[self.tableView scrollToRowAtIndexPath:ip
 		//NG						  atScrollPosition:UITableViewScrollPositionTop animated:NO];
 		// E3.Refresh
-		delegateE3viewController.PiSortType = (-9);	// (-9)E3初期化（リロード＆再描画、セクション0表示）
-		[delegateE3viewController viewWillAppear:YES];
+		delegateE3viewController_.PiSortType = (-9);	// (-9)E3初期化（リロード＆再描画、セクション0表示）
+		[delegateE3viewController_ viewWillAppear:YES];
 		// E3へ
 		[self fromE2toE3:ip.row]; // Ｅ3へドリルダウンする
 	} else {
@@ -703,10 +707,10 @@
 	
 	Me2editView = [[E2edit alloc] init]; // popViewで戻れば解放されているため、毎回alloc必要。
 	Me2editView.title = NSLocalizedString(@"Edit Group",nil);
-	Me2editView.Re1selected = Re1selected;
+	Me2editView.Re1selected = Re1selected_;
 	Me2editView.Re2target = e2obj;
 	Me2editView.PiAddRow = (-1); // Edit mode
-	Me2editView.PbSharePlanList = PbSharePlanList;
+	Me2editView.PbSharePlanList = PbSharePlanList_;
 	
 	if (appDelegate_.app_is_iPad) {
 		if ([menuPopover isPopoverVisible]) {
@@ -714,13 +718,15 @@
 			[self.navigationController pushViewController:Me2editView animated:YES];
 		} else {
 			//ヨコ： E2viewが左ペインにあるとき、E2editを内包するPopoverを閉じる
-			[Mpopover release], Mpopover = nil;
+			//[Mpopover release], 
+			Mpopover = nil;
 			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:Me2editView];
 			Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
-			[nc release];
+			//[nc release];
 			Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
 			//MindexPathEdit = indexPath;
-			[MindexPathEdit release], MindexPathEdit = [indexPath copy];
+			//[MindexPathEdit release], 
+			MindexPathEdit = [indexPath copy];
 			CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
 			rc.origin.x = rc.size.width - 25;	rc.size.width = 1;
 			rc.origin.y += 10;	rc.size.height -= 20;
@@ -733,7 +739,7 @@
 		[Me2editView setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 		[self.navigationController pushViewController:Me2editView animated:YES];
 	}
-	[Me2editView release]; // self.navigationControllerがOwnerになる
+	//[Me2editView release]; // self.navigationControllerがOwnerになる
 }
 
 
@@ -754,21 +760,21 @@
 	{
 		// コンテキストに新規の E2エンティティのオブジェクトを挿入します。
 		e2obj = [NSEntityDescription insertNewObjectForEntityForName:@"E2"
-											  inManagedObjectContext:Re1selected.managedObjectContext];
+											  inManagedObjectContext:Re1selected_.managedObjectContext];
 		
 		[e2obj setValue:[NSString stringWithFormat:@"Group %d",ie2Row] forKey:@"name"];
 		[e2obj setValue:[NSNumber numberWithInteger:ie2Row] forKey:@"row"];
 		MiSection0Rows = ie2Row;
 		
 		// e1selected(E1) の childs に newObj を追加する
-		[Re1selected addChildsObject:e2obj];
+		[Re1selected_ addChildsObject:e2obj];
 		
 		// E3ノード追加
 		for (ie3=0, ie3Row=0 ; ie3 < 10 ; ie3++, ie3Row++)
 		{
 			// コンテキストに新規の E3エンティティのオブジェクトを挿入します。
 			e3obj = [NSEntityDescription insertNewObjectForEntityForName:@"E3"
-												  inManagedObjectContext:Re1selected.managedObjectContext];
+												  inManagedObjectContext:Re1selected_.managedObjectContext];
 			
 			[e3obj setValue:[NSString stringWithFormat:@"Item %d-%d",ie2Row,ie3Row] forKey:@"name"];
 			[e3obj setValue:[NSString stringWithFormat:@"Item %d-%d Note",ie2Row,ie3Row] forKey:@"note"];
@@ -806,14 +812,14 @@
 	}
 	
 	// E1 sum属性　＜高速化＞ 親sum保持させる
-	[Re1selected setValue:[Re1selected valueForKeyPath:@"childs.@sum.sumNoGray"] forKey:@"sumNoGray"];
-	[Re1selected setValue:[Re1selected valueForKeyPath:@"childs.@sum.sumNoCheck"] forKey:@"sumNoCheck"];
-	[Re1selected setValue:[Re1selected valueForKeyPath:@"childs.@sum.sumWeightStk"] forKey:@"sumWeightStk"];
-	[Re1selected setValue:[Re1selected valueForKeyPath:@"childs.@sum.sumWeightNed"] forKey:@"sumWeightNed"];
+	[Re1selected_ setValue:[Re1selected_ valueForKeyPath:@"childs.@sum.sumNoGray"] forKey:@"sumNoGray"];
+	[Re1selected_ setValue:[Re1selected_ valueForKeyPath:@"childs.@sum.sumNoCheck"] forKey:@"sumNoCheck"];
+	[Re1selected_ setValue:[Re1selected_ valueForKeyPath:@"childs.@sum.sumWeightStk"] forKey:@"sumWeightStk"];
+	[Re1selected_ setValue:[Re1selected_ valueForKeyPath:@"childs.@sum.sumWeightNed"] forKey:@"sumWeightNed"];
 	
-	if (PbSharePlanList==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
+	if (PbSharePlanList_==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
 		NSError *err = nil;
-		if (![Re1selected.managedObjectContext save:&err]) {
+		if (![Re1selected_.managedObjectContext save:&err]) {
 			NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
 			abort();
 		}
@@ -835,7 +841,7 @@
 	if (self) {
 		// 初期化成功
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		PbSharePlanList = NO;
+		PbSharePlanList_ = NO;
 	}
 	return self;
 }
@@ -845,9 +851,12 @@
 {	//【Tips】ここでaddSubviewするオブジェクトは全てautoreleaseにすること。メモリ不足時には自動的に解放後、改めてここを通るので、初回同様に生成するだけ。
 	[super loadView];
 	
+	// 背景テクスチャ・タイルペイント
+	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+
 	// その他、初期化
 	if (appDelegate_.app_is_iPad) {
-		if (PbSharePlanList) {
+		if (PbSharePlanList_) {
 			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
 			self.navigationController.toolbarHidden = YES;	// ツールバー不要
 		} else {
@@ -858,12 +867,12 @@
 	}
 
 	// Set up NEXT Left [Back] buttons.
-	self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc]
+	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
 											  initWithTitle:NSLocalizedString(@"Group", nil)
 											  style:UIBarButtonItemStylePlain 
-											  target:nil  action:nil] autorelease];
+											  target:nil  action:nil];
 
-	if (PbSharePlanList==NO) {
+	if (PbSharePlanList_==NO) {
 		// Set up Right [Edit] buttons.
 		self.navigationItem.rightBarButtonItem = self.editButtonItem;
 		self.tableView.allowsSelectionDuringEditing = YES;
@@ -907,19 +916,19 @@
 	
 	// E2 = self.e1selected.childs
 	
-	NSMutableArray *sortArray = [[NSMutableArray alloc] initWithArray:[Re1selected.childs allObjects]];
+	NSMutableArray *sortArray = [[NSMutableArray alloc] initWithArray:[Re1selected_.childs allObjects]];
 	[sortArray sortUsingDescriptors:sortDescriptors];
 	if (RaE2array != sortArray) {
 		//[Me2array release]; ---------▲もし、Me2arrayにsortArrayの要素があれば、先に解放されてしまう危険あり！
 		//Me2array = [sortArray retain];
-		[sortArray retain];	// 先に確保
-		[RaE2array release];	// それから解放
+		//[sortArray retain];	// 先に確保
+		//[RaE2array release];	// それから解放
 		RaE2array = sortArray;
 	}
-	[sortArray release];
+	//[sortArray release];
 	
-	[sortDescriptor release];
-	[sortDescriptors release];
+	//[sortDescriptor release];
+	//[sortDescriptors release];
 	
 	// ＜高速化＞ ここで行数を求めておけば、次回フィッチするまで不変。 ＜＜削除のとき-1している＞＞
 	MiSection0Rows = [RaE2array count];
@@ -968,7 +977,7 @@
 		if (appDelegate_.app_is_iPad) {
 			[appDelegate_ AdRefresh:NO];	//広告禁止  iPadでは、E2とE3を同時表示するため
 		} else {
-			if (PbSharePlanList) {
+			if (PbSharePlanList_) {
 				[appDelegate_ AdRefresh:NO];	//広告禁止 Fix[1.1.0]
 			} else {
 				[appDelegate_ AdRefresh:YES];	//広告許可
@@ -1040,7 +1049,8 @@
 		// E2は、タテになると非表示⇒Popoverになるので、常に閉じる
 		// 回転後のアンカー位置が再現不可なので閉じる
 		[Mpopover dismissPopoverAnimated:YES];
-		[Mpopover release], Mpopover = nil;
+		//[Mpopover release], 
+		Mpopover = nil;
 	}
 	
 	
@@ -1057,11 +1067,15 @@
 	
 	if (RhttpServer) {
 		[RhttpServer stop];
-		[RhttpServer release], RhttpServer = nil;
+		//[RhttpServer release], 
+		RhttpServer = nil;
 	}
-	[RalertHttpServer release], RalertHttpServer = nil;
-	[MdicAddresses release], MdicAddresses = nil;
-	[RaE2array release], RaE2array = nil;
+	//[RalertHttpServer release], 
+	RalertHttpServer = nil;
+	//[MdicAddresses release], 
+	MdicAddresses = nil;
+	//[RaE2array release], 
+	RaE2array = nil;
 }
 
 - (void)viewDidUnload 
@@ -1078,14 +1092,17 @@
 	//[menuPopover]は、setPopover:にて親から渡されたものなので解放しない。
 	self.delegateE3viewController = nil;
 	[Mpopover setDelegate:nil];	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
-	[Mpopover release], Mpopover = nil;
-	[MindexPathEdit release], MindexPathEdit = nil;
+	//[Mpopover release], 
+	Mpopover = nil;
+	//[MindexPathEdit release], 
+	MindexPathEdit = nil;
 
 	[self unloadRelease];
-	[MindexPathActionDelete release], MindexPathActionDelete = nil;
+	//[MindexPathActionDelete release], 
+	MindexPathActionDelete = nil;
 	//--------------------------------@property (retain)
-	[Re1selected release];
-    [super dealloc];
+	//[Re1selected release];
+	//[super dealloc];
 }
 
 
@@ -1112,18 +1129,18 @@
 	NSInteger rows = 0;
 	switch (section) {
 		case 0: // Group
-			if (PbSharePlanList) {
+			if (PbSharePlanList_) {
 				rows = MiSection0Rows; // Addなし
 			} else {
 				rows = MiSection0Rows + 1; // (+1)Add
 			}
 			break;
 		case 1: // Sort list
-			if (!PbSharePlanList && 0 < MiSection0Rows) rows = GD_E2SORTLIST_COUNT;  // (＋1)即ソート廃止
+			if (!PbSharePlanList_ && 0 < MiSection0Rows) rows = GD_E2SORTLIST_COUNT;  // (＋1)即ソート廃止
 			else rows = 0;
 			break;
 		case 2: // Action menu
-			if (!PbSharePlanList && 0 < MiSection0Rows) {
+			if (!PbSharePlanList_ && 0 < MiSection0Rows) {
 				if (appDelegate_.AppEnabled_Dropbox) {
 					rows = 7;
 				} else {
@@ -1146,7 +1163,7 @@
 		case 0:
 			if (MbAzOptShowTotalWeight) {
 				// ＜高速化＞ E3(Item)更新時、その親E2のsum属性、さらにその親E1のsum属性を更新することで整合および参照時の高速化を実現した。
-				long lWeightStk = [[Re1selected valueForKey:@"sumWeightStk"] longValue];
+				long lWeightStk = [[Re1selected_ valueForKey:@"sumWeightStk"] longValue];
 				if (MbAzOptTotlWeightRound) {
 					// 四捨五入　＜＜ %.1f により小数第2位が丸められる＞＞ 
 					dWeightStk = (double)lWeightStk / 1000.0f;
@@ -1157,7 +1174,7 @@
 			}
 			if (MbAzOptShowTotalWeightReq) {
 				// ＜高速化＞ E3(Item)更新時、その親E2のsum属性、さらにその親E1のsum属性を更新することで整合および参照時の高速化を実現した。
-				long lWeightReq = [[Re1selected valueForKey:@"sumWeightNed"] longValue];
+				long lWeightReq = [[Re1selected_ valueForKey:@"sumWeightNed"] longValue];
 				if (MbAzOptTotlWeightRound) {
 					// 四捨五入　＜＜ %.1f により小数第2位が丸められる＞＞ 
 					dWeightReq = (double)lWeightReq / 1000.0f;
@@ -1180,12 +1197,12 @@
 			}
 			break;
 		case 1:
-			if (!PbSharePlanList && 0<MiSection0Rows) {
+			if (!PbSharePlanList_ && 0<MiSection0Rows) {
 				return NSLocalizedString(@"Sort list", @"並び替え");
 			}
 			break;
 		case 2:
-			if (!PbSharePlanList && 0<MiSection0Rows) {
+			if (!PbSharePlanList_ && 0<MiSection0Rows) {
 				return NSLocalizedString(@"Action menu",nil);
 			}
 			break;
@@ -1200,7 +1217,7 @@
 			if (appDelegate_.app_is_iPad) {
 				return @"\n\n\n\n\n\n\n\n\n\n\n\n\n\n";	// 大型AdMobスペースのための下部余白
 			} else {
-				if (PbSharePlanList) {
+				if (PbSharePlanList_) {
 					return NSLocalizedString(@"SharePLAN PreView",nil);
 				}
 				return @"\n\n\n\n\n";	// 広告スペースのための下部余白
@@ -1236,9 +1253,9 @@
 				// 通常のノードセル
 				cell = [tableView dequeueReusableCellWithIdentifier:zCellSubtitle];
 				if (cell == nil) {
-					cell = [[[UITableViewCell alloc] 
+					cell = [[UITableViewCell alloc] 
 							 initWithStyle:UITableViewCellStyleSubtitle
-							 reuseIdentifier:zCellSubtitle] autorelease];
+							 reuseIdentifier:zCellSubtitle];
 				}
 				// e2node
 				E2 *e2obj = [RaE2array objectAtIndex:indexPath.row];
@@ -1333,11 +1350,8 @@
 					UIImage *resultingImage = UIGraphicsGetImageFromCurrentImageContext();  
 					UIGraphicsEndImageContext();  
 					[cell.imageView setImage:resultingImage];
-					AzRETAIN_CHECK(@"E2 lNoCheck:imageView1", imageView1, 1)
-					[imageView1 release];
-					AzRETAIN_CHECK(@"E2 lNoCheck:imageView2", imageView2, 1)
-					[imageView2 release];
-					AzRETAIN_CHECK(@"E2 lNoCheck:resultingImage", resultingImage, 2)
+					//[imageView1 release];
+					//[imageView2 release];
 				}
 				else if (0 < lNoGray) {
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-CircleCheck.png"];
@@ -1346,7 +1360,7 @@
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-CircleGray.png"];
 				}
 				
-				if (PbSharePlanList) {	//サンプル
+				if (PbSharePlanList_) {	//サンプル
 					cell.showsReorderControl = NO;		// Move拒否
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
 				} else {
@@ -1358,9 +1372,9 @@
 				// 追加ボタンセル　(+)Add Group
 				cell = [tableView dequeueReusableCellWithIdentifier:zCellDefault];
 				if (cell == nil) {
-					cell = [[[UITableViewCell alloc] 
+					cell = [[UITableViewCell alloc] 
 							 initWithStyle:UITableViewCellStyleDefault      // Default型
-							 reuseIdentifier:zCellDefault] autorelease];
+							 reuseIdentifier:zCellDefault];
 				}
 				if (indexPath.row == MiSection0Rows) {
 					cell.imageView.image = [UIImage imageNamed:@"Icon24-GreenPlus.png"];
@@ -1386,8 +1400,8 @@
 		case 1:	// section: Sort list
 			cell = [tableView dequeueReusableCellWithIdentifier:zCellSubtitle];
 			if (cell == nil) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle		// サブタイトル型(3.0)
-											   reuseIdentifier:zCellSubtitle] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle		// サブタイトル型(3.0)
+											   reuseIdentifier:zCellSubtitle];
 			}
 
 			if (appDelegate_.app_is_iPad) {
@@ -1429,8 +1443,8 @@
 		case 2:	// section: Action menu
 			cell = [tableView dequeueReusableCellWithIdentifier:zCellSubtitle];
 			if (cell == nil) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle		// サブタイトル型(3.0)
-											   reuseIdentifier:zCellSubtitle] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle		// サブタイトル型(3.0)
+											   reuseIdentifier:zCellSubtitle];
 			}
 
 			if (appDelegate_.app_is_iPad) {
@@ -1578,25 +1592,25 @@
 			{
 				if (appDelegate_.app_is_iPad) {
 					// 既存Ｅ３更新
-					if ([delegateE3viewController respondsToSelector:@selector(viewWillAppear:)]) {
-						assert(delegateE3viewController);
-						delegateE3viewController.PiFirstSection = 0;  // Group.ROW ==>> E3で頭出しするセクション
-						delegateE3viewController.PiSortType = indexPath.row;
-						delegateE3viewController.PbSharePlanList = PbSharePlanList;
-						[delegateE3viewController viewWillAppear:YES];
+					if ([delegateE3viewController_ respondsToSelector:@selector(viewWillAppear:)]) {
+						assert(delegateE3viewController_);
+						delegateE3viewController_.PiFirstSection = 0;  // Group.ROW ==>> E3で頭出しするセクション
+						delegateE3viewController_.PiSortType = indexPath.row;
+						delegateE3viewController_.PbSharePlanList = PbSharePlanList_;
+						[delegateE3viewController_ viewWillAppear:YES];
 					}
 				}
 				else {
 					// E3 へドリルダウン
 					E3viewController *e3view = [[E3viewController alloc] initWithStyle:UITableViewStylePlain];
 					// 以下は、E3viewControllerの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
-					e3view.title = Re1selected.name;  //self.title;  // NSLocalizedString(@"Items", nil);
-					e3view.Re1selected = Re1selected; // E1
+					e3view.title = Re1selected_.name;  //self.title;  // NSLocalizedString(@"Items", nil);
+					e3view.Re1selected = Re1selected_; // E1
 					e3view.PiFirstSection = 0;  // Group.ROW ==>> E3で頭出しするセクション
 					e3view.PiSortType = indexPath.row;
-					e3view.PbSharePlanList = PbSharePlanList;
+					e3view.PbSharePlanList = PbSharePlanList_;
 					[self.navigationController pushViewController:e3view animated:YES];
-					[e3view release];
+					//[e3view release];
 				}
 			}
 			break;
@@ -1650,7 +1664,8 @@
 	
 	if(notification)
 	{
-		[MdicAddresses release], MdicAddresses = nil;
+		//[MdicAddresses release], 
+		MdicAddresses = nil;
 		MdicAddresses = [[notification object] copy];
 		NSLog(@"MdicAddresses: %@", MdicAddresses);
 	}
@@ -1719,7 +1734,8 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
 		// 削除コマンド警告　==>> (void)actionSheet にて処理
 		//Bug//MindexPathActionDelete = indexPath;
-		[MindexPathActionDelete release], MindexPathActionDelete = [indexPath copy];
+		//[MindexPathActionDelete release], 
+		MindexPathActionDelete = [indexPath copy];
 		// 削除コマンド警告
 		UIActionSheet *action = [[UIActionSheet alloc] 
 								 initWithTitle:NSLocalizedString(@"CAUTION", nil)
@@ -1736,7 +1752,7 @@
 			// ヨコ：ToolBar非表示（TabBarも無い）　＜＜ToolBar無しでshowFromToolbarするとFreeze＞＞
 			[action showInView:self.view]; //windowから出すと回転対応しない
 		}
-		[action release];
+		//[action release];
     }
 }
 
@@ -1803,10 +1819,10 @@
 		e2obj.row = [NSNumber numberWithInteger:i];
 	}
 
-	if (PbSharePlanList==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
+	if (PbSharePlanList_==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
 		// SAVE　＜＜万一システム障害で落ちてもデータが残るようにコマメに保存する方針＞＞
 		NSError *error = nil;
-		if (![Re1selected.managedObjectContext save:&error]) {
+		if (![Re1selected_.managedObjectContext save:&error]) {
 			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 			exit(-1);  // Fail
 		}
@@ -1837,7 +1853,7 @@
 		if (self.navigationController.topViewController != self) {
 			//タテ： E2viewが[MENU]でPopover内包されているとき、配下に遷移しておれば戻す
 			[self.navigationController popViewControllerAnimated:NO];	// < 前のViewへ戻る
-			[Re1selected.managedObjectContext rollback]; // 前回のSAVE以降を取り消す
+			[Re1selected_.managedObjectContext rollback]; // 前回のSAVE以降を取り消す
 		}
 	}	
 }

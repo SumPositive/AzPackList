@@ -13,7 +13,10 @@
 #import "SpPOST.h"
 #import "SpListTVC.h"
 #import "SpDetailTVC.h"
+
 #import  <YAJLiOS/YAJL.h>
+//#import <DropboxSDK/JSON.h>  SBJSONでは、読み取りエラー発生した。（多分、CSV部）
+
 
 #define CELL_TAG_NAME		91
 #define CELL_TAG_NOTE		92
@@ -36,6 +39,24 @@
 @end
 
 @implementation SpListTVC
+{
+@private
+	//NSMutableArray		*RaTags;
+	//NSString			*RzSort;
+	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
+	//NSAutoreleasePool	*RautoPool;		// [0.6]autorelease独自解放のため
+	NSMutableArray		*RaSharePlans;
+	NSURLConnection		*RurlConnection;
+	NSMutableData		*RdaResponse;
+	//----------------------------------------------Owner移管につきdealloc時のrelese不要
+	//----------------------------------------------assign
+	AppDelegate		*appDelegate_;
+	//BOOL				MbOptShouldAutorotate;
+	//NSString			*MzUserPass;
+	BOOL				MbSearchOver;
+	BOOL				MbSearching;
+	NSInteger			MiConnectTag;	// (0)Non (1)Search (2)Append (3)Download (4)Delete
+}
 @synthesize	RaTags, RzSort;
 
 
@@ -44,19 +65,22 @@
 	NSLog(@"--- unloadRelease --- SpListTVC");
 
 	[RurlConnection cancel]; // 停止させてから解放する
-	[RurlConnection release],	RurlConnection = nil;
+	//[RurlConnection release],	
+	RurlConnection = nil;
 
-	[RdaResponse release],		RdaResponse = nil;
+	//[RdaResponse release],		
+	RdaResponse = nil;
 }
 
 - (void)dealloc 
 {
 	[self unloadRelease];
-	[RaSharePlans release],		RaSharePlans = nil;
+	//[RaSharePlans release],		
+	RaSharePlans = nil;
 	//--------------------------------@property (retain)
-	[RaTags release];
-	[RzSort release];
-    [super dealloc];
+	//[RaTags release];
+	//[RzSort release];
+    //[super dealloc];
 }
 
 - (void)viewDidUnload 
@@ -93,10 +117,10 @@
 
 	self.tableView.allowsSelectionDuringEditing = YES;
 
-	self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc]
+	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
 											  initWithTitle:NSLocalizedString(@"Back", nil)
 											  style:UIBarButtonItemStylePlain 
-											  target:nil  action:nil] autorelease];
+											  target:nil  action:nil];
 }
 
 /*
@@ -129,7 +153,8 @@
 
 	if (RurlConnection) {
 		[RurlConnection cancel];
-		[RurlConnection release], RurlConnection = nil;
+		//[RurlConnection release], 
+		RurlConnection = nil;
 	}
 	// 非同期通信
 	RurlConnection = [[NSURLConnection alloc] initWithRequest:requestSpPOST(postCmd)
@@ -155,7 +180,7 @@
 		 
 		switch (MiConnectTag) {
 			case 1: { // Search
-				NSArray *jsonArray;
+				 NSArray *jsonArray;
 				@try {
 					jsonArray = [jsonStr yajl_JSON]; // YAJLを使ったJSONデータのパース処理 
 				}
@@ -167,6 +192,20 @@
 					[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
 					break;
 				}
+				/***
+				// JSON --> NSArray   ＜＜＜ Dropbox標準のSBJSONを使用
+				NSError *err = nil;
+				SBJSON	*js = [SBJSON new];
+				NSArray *jsonArray = [js objectWithString:jsonStr error:&err];
+				js = nil;
+				if (err) {
+					NSLog(@"tmpFileLoad: SBJSON: objectWithString: (err=%@) zJson=%@", [err description], jsonStr);
+					alertMsgBox( NSLocalizedString(@"Connection Error",nil), 
+								[err description],
+								NSLocalizedString(@"Roger",nil) );
+					[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
+					break;
+				}***/
 #ifdef DEBUG
 				for (NSDictionary *dic in jsonArray) {
 					NSLog(@"e1key=%@", [dic objectForKey:@"e1key"]);
@@ -183,7 +222,7 @@
 			default:
 				break;
 		}
-		[jsonStr release];
+		//[jsonStr release];
 	}
 	else {
 		// 該当なし
@@ -204,7 +243,8 @@
 					error_str,
 					NSLocalizedString(@"Roger",nil) );
 	}
-	[RdaResponse release], RdaResponse = nil;
+	//[RdaResponse release], 
+	RdaResponse = nil;
 }
 
 
@@ -247,9 +287,9 @@
 
 	if ([RaSharePlans count]<=0) {	
 		// 最初の25個取得
-		NSAutoreleasePool *methodPool = [[NSAutoreleasePool alloc] init];	// return前に [pool release] 必須！
-		[self vSharePlanSearch:0];
-		[methodPool release];
+		@autoreleasepool {
+			[self vSharePlanSearch:0];
+		}
 	}
 }
 
@@ -309,8 +349,8 @@
 	if ([RaSharePlans count] <= indexPath.row) {
 		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:zCellTerm];
 		if (cell == nil) {
-			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-										   reuseIdentifier:zCellTerm] autorelease];
+			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+										   reuseIdentifier:zCellTerm];
 			cell.textLabel.font = [UIFont systemFontOfSize:16];
 		}
 		if ([RaSharePlans count] <= 0) {
@@ -334,8 +374,8 @@
 	// Plans
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:zCellPlan];
 	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-									   reuseIdentifier:zCellPlan] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+									   reuseIdentifier:zCellPlan];
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // >
 		//
 		lb = [[UILabel alloc] init];
@@ -344,7 +384,7 @@
 		lb.textColor = [UIColor blackColor];
 		//lb.backgroundColor = [UIColor lightGrayColor]; // DEBUG
 		lb.tag = CELL_TAG_NAME;
-		[cell.contentView addSubview:lb]; [lb release];
+		[cell.contentView addSubview:lb]; //[lb release];
 		//
 		lb = [[UILabel alloc] init];
 		lb.font = [UIFont systemFontOfSize:12];
@@ -353,7 +393,7 @@
 		lb.textColor = [UIColor blackColor];
 		//lb.backgroundColor = [UIColor lightGrayColor]; // DEBUG
 		lb.tag = CELL_TAG_NOTE;
-		[cell.contentView addSubview:lb]; [lb release];
+		[cell.contentView addSubview:lb]; //[lb release];
 		//
 		lb = [[UILabel alloc] init];
 		lb.font = [UIFont systemFontOfSize:12];
@@ -361,7 +401,7 @@
 		lb.textColor = [UIColor blackColor];
 		lb.backgroundColor = [UIColor lightGrayColor];
 		lb.tag = CELL_TAG_INFO;
-		[cell.contentView addSubview:lb]; [lb release];
+		[cell.contentView addSubview:lb]; //[lb release];
 	}
 	//
 	NSDictionary *dic = [RaSharePlans objectAtIndex:indexPath.row];
@@ -378,7 +418,7 @@
 	[df setLocale:[NSLocale currentLocale]];  // 現在のロケールをセット
 	[df setDateFormat:@"YYYY-MM-dd hh:mm:ss"];
 	NSString *zStamp = [df stringFromDate:utc];
-	[df release];
+	//[df release];
 	
 	// Nickname
 	NSString *zNickname = @"";
@@ -455,22 +495,22 @@
 		vc.RzSharePlanKey = [dic objectForKey:@"e1key"];
 		vc.PbOwner = [[dic objectForKey:@"own"] boolValue];
 		[self.navigationController pushViewController:vc animated:YES];
-		[vc release];
+		//[vc release];
 	}
 	else if (!MbSearchOver) {
 		// Next Search
-		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-		NSString *err = [self vSharePlanSearch:[RaSharePlans count]];
-		if (err) {
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Search Err",nil)
-															message:err
-														   delegate:nil 
-												  cancelButtonTitle:nil 
-												  otherButtonTitles:NSLocalizedString(@"Roger",nil), nil];
-			[alert show];
-			[alert release];
+		@autoreleasepool {
+			NSString *err = [self vSharePlanSearch:[RaSharePlans count]];
+			if (err) {
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Search Err",nil)
+																message:err
+															   delegate:nil 
+													  cancelButtonTitle:nil 
+													  otherButtonTitles:NSLocalizedString(@"Roger",nil), nil];
+				[alert show];
+				//[alert release];
+			}
 		}
-		[pool release];
 	}
 }	
 
@@ -484,7 +524,8 @@
 		case ALERT_TAG_BREAK: // 通信中断する
 			if (RurlConnection) {
 				[RurlConnection cancel];
-				[RurlConnection release], RurlConnection = nil;
+				//[RurlConnection release], 
+				RurlConnection = nil;
 			}
 			[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
 			break;

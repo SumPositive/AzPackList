@@ -35,7 +35,26 @@
 	<array>
 		<string>Icon57s1.png</string>
 		<string>Icon57s1@2x.png</string>
+		<string>Icon57.png</string>
+		<string>Icon57@2x.png</string>
+		<string>Icon72.png</string>
 	</array>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>Icon57s1.png</string>
+				<string>Icon57s1@2x.png</string>
+				<string>Icon57.png</string>
+				<string>Icon57@2x.png</string>
+				<string>Icon72.png</string>
+			</array>
+			<key>UIPrerenderedIcon</key>
+			<false/>
+		</dict>
+	</dict>
 	<key>CFBundleIdentifier</key>
 	<string>com.azukid.${PRODUCT_NAME:identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
