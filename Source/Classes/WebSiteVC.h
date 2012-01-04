@@ -25,6 +25,7 @@
 	UIActivityIndicatorView *MactivityIndicator;
 	UILabel				*MlbMessage;
 	//----------------------------------------------assign
+	AppDelegate		*appDelegate_;
 	BOOL MbOptShouldAutorotate;
 }
 

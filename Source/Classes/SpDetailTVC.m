@@ -76,9 +76,11 @@
 		Re1add = nil;
 		RdaResponse = nil;
 		MiConnectTag = 0;
-#ifdef AzPAD
-		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
-#endif
+
+		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		if (appDelegate_.app_is_iPad) {
+			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
+		}
 	}
 	return self;
 }
@@ -138,13 +140,13 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
-#ifdef AzPAD
-	return NO;
-#else
-	// 回転禁止でも万一ヨコからはじまった場合、タテ（ボタン下部）にはなるようにしてある。
-	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
-#endif
+	if (appDelegate_.app_is_iPad) {
+		return NO;
+	} else {
+		// 回転禁止でも万一ヨコからはじまった場合、タテ（ボタン下部）にはなるようにしてある。
+		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+	}
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation 
@@ -448,19 +450,11 @@
 						[cell.contentView addSubview:lb]; [lb release];
 					}
 					UILabel *lb = (UILabel *)[cell.contentView viewWithTag:CELL_TAG_NOTE];
-/*#ifdef AzPAD
-					if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { // タテ
-						lb.frame = CGRectMake(5, 5, 448-80, 100-10);
-					} else { //ヨコ
-						lb.frame = CGRectMake(5, 3, 704-100, 64-6);
-					}
-#else*/
 					if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { // タテ
 						lb.frame = CGRectMake(5, 5, 320-30, 100-10);
 					} else { //ヨコ
 						lb.frame = CGRectMake(5, 3, 480-30, 64-6);
 					}
-//#endif					
 					//lb.frame = cell.contentView.frame;
 					if (Re1add) { // E1 一時読み込みしたものを表示する
 						lb.text = Re1add.note;
@@ -516,14 +510,7 @@
 			e2view.title = self.title;	// "Sample"
 			e2view.Re1selected = Re1add;
 			e2view.PbSharePlanList = YES; // SharePlan専用モード
-/*#ifdef AzPAD
-			AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-			UINavigationController* naviLeft = [appDelegate.mainVC.viewControllers objectAtIndex:0];
-			[naviLeft pushViewController:e2view animated:YES];
-			// naviRight は、e2view内で生成
-#else*/
 			[self.navigationController pushViewController:e2view animated:YES];
-//#endif
 			[e2view release];
 		}
 	}

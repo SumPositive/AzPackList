@@ -16,9 +16,7 @@
 @private
 	//--------------------------retain
 	E1					*Re1selected;
-#ifdef AzPAD
 	UIPopoverController*	selfPopover;  // 自身を包むPopover  閉じる為に必要
-#endif
 	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
 	NSArray				*RaPickerSource;
 	UIBarButtonItem		*RbarButtonItemDone;
@@ -32,13 +30,12 @@
 	UILabel				*MlbNickname;
 	UIButton			*MbuUpload;
 	//----------------------------------------------assign
+	AppDelegate		*appDelegate_;
 	//BOOL				MbOptShouldAutorotate;
 	NSInteger			MiConnectTag;	// (0)Non (1)Search (2)Append (3)Download (4)Delete
 }
 
 @property (nonatomic, retain) E1	*Re1selected;
-#ifdef AzPAD
 @property (nonatomic, retain) UIPopoverController*	selfPopover;
-#endif
 
 @end

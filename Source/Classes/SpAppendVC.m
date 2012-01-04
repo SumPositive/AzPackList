@@ -25,9 +25,7 @@
 
 @implementation SpAppendVC
 @synthesize Re1selected;
-#ifdef AzPAD
 @synthesize selfPopover;
-#endif
 
 
 - (void)unloadRelease	// dealloc, viewDidUnload から呼び出される
@@ -45,9 +43,7 @@
 - (void)dealloc    // 生成とは逆順に解放するのが好ましい
 {
 	[self unloadRelease];
-#ifdef AzPAD
 	[selfPopover release], selfPopover = nil;
-#endif
 	//--------------------------------@property (retain)
 	[Re1selected.managedObjectContext rollback]; //一時的に修正された可能性がある.name .note を取り消すため
 	[Re1selected release];
@@ -67,10 +63,13 @@
 // IBを使わずにviewオブジェクトをプログラム上でcreateするときに使う（viewDidLoadは、nibファイルでロードされたオブジェクトを初期化するために使う）
 - (void)loadView
 {
-#ifdef AzPAD
-	self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
-#endif
     [super loadView];
+
+	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	if (appDelegate_.app_is_iPad) {
+		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
+	}
+
 	Mpicker = nil;		// ここで生成
 	
 	self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
@@ -225,11 +224,10 @@
 {
 	[super viewDidAppear:animated];
 	
-#ifdef FREE_AD
-	// 各viewDidAppear:にて「許可/禁止」を設定する
-	AppDelegate *apd = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	[apd AdRefresh:NO];	//広告禁止
-#endif
+	if (appDelegate_.app_is_Ad) {
+		// 各viewDidAppear:にて「許可/禁止」を設定する
+		[appDelegate_ AdRefresh:NO];	//広告禁止
+	}
 
 	//viewWillAppearでキーを表示すると画面表示が無いまま待たされてしまうので、viewDidAppearでキー表示するように改良した。
 //	[MtfAmount becomeFirstResponder];  // キーボード表示
@@ -238,13 +236,13 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-#ifdef AzPAD
-	return NO;	//[MENU]Popover内のとき回転禁止にするため
-#else
-	// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
-	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
-#endif
+	if (appDelegate_.app_is_iPad) {
+		return NO;	//[MENU]Popover内のとき回転禁止にするため
+	} else {
+		// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
+		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+	}
 }
 
 // ユーザインタフェースの回転の最後の半分が始まる前にこの処理が呼ばれる　＜＜このタイミングで配置転換すると見栄え良い＞＞
@@ -520,13 +518,13 @@
 {
 	switch (alertView.tag) {
 		case ALERT_TAG_PREVIEW:	// 前画面に戻す
-#ifdef AzPAD
-			if (selfPopover) {
-				[selfPopover dismissPopoverAnimated:YES];
+			if (appDelegate_.app_is_iPad) {
+				if (selfPopover) {
+					[selfPopover dismissPopoverAnimated:YES];
+				}
+			} else {
+				[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
 			}
-#else
-			[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
-#endif
 			break;
 		
 		case ALERT_TAG_PUBLISH: 

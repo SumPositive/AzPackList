@@ -30,9 +30,10 @@
     self = [super initWithStyle:UITableViewStyleGrouped];
 	if (self) {
 		// 初期化成功
-#ifdef AzPAD
-		self.contentSizeForViewInPopover = GD_POPOVER_E3detailTVC_SIZE;
-#endif
+		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		if (appDelegate_.app_is_iPad) {
+			self.contentSizeForViewInPopover = GD_POPOVER_E3detailTVC_SIZE;
+		}
     }
     return self;
 }
@@ -125,11 +126,11 @@
 	else
 		cell.textLabel.text = e2obj.name;
 
-#ifdef AzPAD
-	cell.textLabel.font = [UIFont systemFontOfSize:20];
-#else
-	cell.textLabel.font = [UIFont systemFontOfSize:16];
-#endif
+	if (appDelegate_.app_is_iPad) {
+		cell.textLabel.font = [UIFont systemFontOfSize:20];
+	} else {
+		cell.textLabel.font = [UIFont systemFontOfSize:16];
+	}
 	cell.textLabel.textAlignment = UITextAlignmentLeft;
 	cell.textLabel.textColor = [UIColor blackColor];
 	
@@ -157,6 +158,10 @@
 	}
 	
 #ifdef xxxAzPAD
+	if (appDelegate_.app_is_iPad) {
+	} else {
+	}
+
 	if (Rpopover) {
 		[Rpopover dismissPopoverAnimated:YES];
 	}

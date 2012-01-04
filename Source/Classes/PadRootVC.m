@@ -69,11 +69,7 @@
 	
 	//------------------------------------------アイコン
 	UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(124,124, 72,72)];
-#ifdef AzSTABLE
-	[iv setImage:[UIImage imageNamed:@"Icon72s1.png"]];
-#else
-	[iv setImage:[UIImage imageNamed:@"Icon72Free.png"]];
-#endif
+	[iv setImage:[UIImage imageNamed:@"Icon72"]];
 	[self.view addSubview:iv]; 
 	[iv release], iv = nil;
 }

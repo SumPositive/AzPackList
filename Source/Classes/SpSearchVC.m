@@ -46,9 +46,10 @@
 // IBを使わずにviewオブジェクトをプログラム上でcreateするときに使う（viewDidLoadは、nibファイルでロードされたオブジェクトを初期化するために使う）
 - (void)loadView
 {
-#ifdef AzPAD
-	self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
-#endif
+	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	if (appDelegate_.app_is_iPad) {
+		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
+	}
     [super loadView];
 	// メモリ不足時に self.viewが破棄されると同時に破棄されるオブジェクトを初期化する
 	Mpicker = nil;		// ここで生成
@@ -83,7 +84,7 @@
 	MsegSort.selectedSegmentIndex = 0;
 	[MsegSort addTarget:self action:@selector(vSegSort:) forControlEvents:UIControlEventValueChanged];
 	[self.view addSubview:MsegSort]; [MsegSort release];
-#ifndef AzDEBUG
+#ifndef DEBUG
 	MsegSort.hidden = YES;  //GAE-V1:人気順("-downCount")に不具合あるため保留中
 #endif
 	//------------------------------------------------------
@@ -129,13 +130,13 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
-#ifdef AzPAD
-	return NO;
-#else
-	// 回転禁止でも万一ヨコrPickerSourceからはじまった場合、タテにはなるようにしてある。
-	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
-#endif
+	if (appDelegate_.app_is_iPad) {
+		return NO;
+	} else {
+		// 回転禁止でも万一ヨコrPickerSourceからはじまった場合、タテにはなるようにしてある。
+		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+	}
 }
 
 // ユーザインタフェースの回転の最後の半分が始まる前にこの処理が呼ばれる　＜＜このタイミングで配置転換すると見栄え良い＞＞
@@ -147,23 +148,6 @@
 
 - (void)viewDesign
 {
-/*#ifdef AzPAD
-	CGRect rect = CGRectMake(0,0, 768-320,216);
-	Mpicker.frame = rect;
-	// 常にタテ 左寄せ
-	rect.origin.y += (Mpicker.frame.size.height + 20);
-	rect.size.width = 250;
-	rect.size.height = 40;
-	rect.origin.x = (768-320 - rect.size.width) / 2;
-	MsegSort.frame = rect;
-	
-	rect.origin.y += 70;
-	rect.size.width = 100;
-	rect.size.height = 40;
-	rect.origin.x = (768-320 - rect.size.width) / 2;
-	MbuSearch.frame = rect;
-#else*/
-
 	CGRect rect = self.view.bounds;
 	rect.size.height = 216;  // iOS4.1から高さ可変になったようだが3.0互換のため規定値(216)にする
 	Mpicker.frame = rect;

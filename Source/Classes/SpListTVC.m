@@ -25,7 +25,7 @@
 #define ALERT_TAG_BREAK		811
 
 
-#ifdef AzDEBUG
+#ifdef DEBUG
 #define PAGE_LIMIT			3
 #else
 #define PAGE_LIMIT			20
@@ -77,9 +77,11 @@
 		//RautoPool = [[NSAutoreleasePool alloc] init];	// [0.6]autorelease独自解放のため
 		MbSearching = YES;
 		RaSharePlans = [NSMutableArray new]; // unloadReleaseしないこと
-#ifdef AzPAD
-		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
-#endif
+
+		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		if (appDelegate_.app_is_iPad) {
+			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
+		}
 	}
 	return self;
 }
@@ -165,7 +167,7 @@
 					[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
 					break;
 				}
-#ifdef AzDEBUG
+#ifdef DEBUG
 				for (NSDictionary *dic in jsonArray) {
 					NSLog(@"e1key=%@", [dic objectForKey:@"e1key"]);
 					NSLog(@"name=%@", [dic objectForKey:@"name"]);
@@ -209,13 +211,13 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
-#ifdef AzPAD
-	return NO;
-#else
-	// 回転禁止でも万一ヨコからはじまった場合、タテ（ボタン下部）にはなるようにしてある。
-	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
-#endif
+	if (appDelegate_.app_is_iPad) {
+		return NO;
+	} else {
+		// 回転禁止でも万一ヨコからはじまった場合、タテ（ボタン下部）にはなるようにしてある。
+		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+	}
 }
 
 // ユーザインタフェースの回転の最後の半分が始まる前にこの処理が呼ばれる　＜＜このタイミングで配置転換すると見栄え良い＞＞

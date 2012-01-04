@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 
 #define GAE_Name		@"azpackplan"
-#ifdef AzDEBUG
+#ifdef DEBUG
 #define GAE_Version		@"2"
 #else
 #define GAE_Version		@"1"

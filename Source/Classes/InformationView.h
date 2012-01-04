@@ -10,8 +10,7 @@
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 
-@interface InformationView : UIViewController  <MFMailComposeViewControllerDelegate, UIAlertViewDelegate> {
-}
+@interface InformationView : UIViewController  <MFMailComposeViewControllerDelegate, UIAlertViewDelegate>
 
 // 公開メソッド
 //- (id)initWithFrame:(CGRect)rect;

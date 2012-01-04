@@ -61,7 +61,7 @@ NSMutableURLRequest *requestSpPOST( NSString *PzBody )
 NSString *postCmdAddUserPass( NSString *PzPostCmd )
 {
 	// userPass : デバイスID（UDID）+ zipcode & MD5   （UDIDをそのまま利用するのはセキュリティ上好ましくないため）
-#ifdef AzDEBUG
+#ifdef DEBUG
 	NSString *userPass = DEBUG_userPass;
 #else
 	NSString *userPass = [UIDevice currentDevice].uniqueIdentifier;		// デバイスID文字列

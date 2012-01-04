@@ -46,25 +46,64 @@
 @end
 
 @implementation E3detailTVC
+{
+@private
+	NSMutableArray	*RaE2array;
+	NSMutableArray	*RaE3array;
+	E3						*Re3target;
+	NSInteger			PiAddGroup;		// =(-1)Edit  >=(E2.row)Add Mode
+	NSInteger			PiAddRow;		//(V0.4)Add行の.row ここに追加する
+	BOOL					PbSharePlanList;  // PbSpMode;	// SharePlan プレビューモード
+	
+	id									delegate;
+	UIPopoverController*	selfPopover;  // 自身を包むPopover  閉じる為に必要
+	
+	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
+	//NSAutoreleasePool	*MautoreleasePool;	autoreleaseオブジェクトを「戻り値」にしているため、ここでの破棄禁止
+	//----------------------------------------------Owner移管につきdealloc時のrelese不要
+	UILabel		*MlbGroup;	// .tag = E2.row　　　以下全てcellがOwnerになる
+	UITextField	*MtfName;
+	UITextField	*MtfKeyword;	//[1.1]Shopping keyword
+	UITextView	*MtvNote;
+	//UILabel		*MlbNote;
+	UILabel		*MlbStock;
+	UILabel		*MlbNeed;
+	UILabel		*MlbWeight;
+	//UILabel		*MlbStockMax;
+	//UILabel		*MlbNeedMax;
+	//UISlider			*MsliderStock;
+	//UISlider			*MsliderNeed;
+	AZDial			*mDialStock;
+	AZDial			*mDialNeed;
+#ifdef WEIGHT_DIAL
+	AZDial			*mDialWeight;
+#else
+	UISlider			*MsliderWeight;
+	UILabel		*MlbWeightMax;
+	UILabel		*MlbWeightMin;
+#endif
+	
+	CalcView		*McalcView;
+	
+	//----------------------------------------------assign
+	AppDelegate		*appDelegate_;
+	float						MfTableViewContentY;
+}
 @synthesize RaE2array;
 @synthesize RaE3array;
 @synthesize Re3target;
 @synthesize PiAddGroup;
 @synthesize PiAddRow;
 @synthesize PbSharePlanList;
-#ifdef AzPAD
 @synthesize delegate;
 @synthesize selfPopover;
-#endif
 
 
 #pragma mark - dealloc
 
 - (void)dealloc    // 生成とは逆順に解放するのが好ましい
 {
-#ifdef AzPAD
 	[selfPopover release], selfPopover = nil;
-#endif
 	[Re3target release];
 	[RaE3array release];
 	[RaE2array release];
@@ -79,14 +118,15 @@
 {
 	if ((self = [super initWithStyle:UITableViewStyleGrouped])) {  // セクションありテーブル
 		// 初期化成功
-		appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		appDelegate.AppUpdateSave = NO;
+		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		appDelegate_.AppUpdateSave = NO;
 		PbSharePlanList = NO;
 		MfTableViewContentY = -1;
-#ifdef AzPAD
-		self.contentSizeForViewInPopover = GD_POPOVER_E3detailTVC_SIZE;
-		//[1.1]//[self.tableView setScrollEnabled:NO]; // スクロール禁止
-#endif
+
+		if (appDelegate_.app_is_iPad) {
+			self.contentSizeForViewInPopover = GD_POPOVER_E3detailTVC_SIZE;
+			//[1.1]//[self.tableView setScrollEnabled:NO]; // スクロール禁止
+		}
 	}
 	return self;
 }
@@ -134,7 +174,7 @@
 {
     [super viewWillAppear:animated];
 
-	self.navigationItem.rightBarButtonItem.enabled = appDelegate.AppUpdateSave;
+	self.navigationItem.rightBarButtonItem.enabled = appDelegate_.AppUpdateSave;
 
 	// 電卓が出ておれば消す
 	if (McalcView && [McalcView isShow]) {
@@ -239,10 +279,10 @@
     [super viewDidAppear:animated];
 	[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
 	
-#ifdef FREE_AD
-	// 各viewDidAppear:にて「許可/禁止」を設定する
-	[appDelegate AdRefresh:NO];	//広告禁止
-#endif
+	if (appDelegate_.app_is_Ad) {
+		// 各viewDidAppear:にて「許可/禁止」を設定する
+		[appDelegate_ AdRefresh:NO];	//広告禁止
+	}
 
 	//この時点で MtfName は未生成だから、0.5秒後に処理する
 	[self performSelector:@selector(performNameFirstResponder) withObject:nil afterDelay:0.5f]; // 0.5秒後に呼び出す
@@ -251,15 +291,16 @@
 // ビューが非表示にされる前や解放される前ににこの処理が呼ばれる
 - (void)viewWillDisappear:(BOOL)animated 
 {
-#ifdef AzPAD
-#else
-	if (McalcView) {	// あれば破棄する
-		[McalcView hide];
-		[McalcView removeFromSuperview];  // これでCalcView.deallocされる
-		//[McalcView release]; +1残っているが、viewが破棄されるときにreleseされるので、ここは不要
-		McalcView = nil;
+	if (appDelegate_.app_is_iPad) {
+		//
+	} else {
+		if (McalcView) {	// あれば破棄する
+			[McalcView hide];
+			[McalcView removeFromSuperview];  // これでCalcView.deallocされる
+			//[McalcView release]; +1残っているが、viewが破棄されるときにreleseされるので、ここは不要
+			McalcView = nil;
+		}
 	}
-#endif
 	[super viewWillDisappear:animated];
 }
 
@@ -269,12 +310,12 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
-#ifdef AzPAD
-	return YES;	// Popover内につき回転不要だが、NO にすると Shopping(Web)から戻ると強制的にタテ向きになってしまう。
-#else
-	// 回転禁止の場合、万一ヨコからはじまった場合、タテにはなるようにしてある。
-	return appDelegate.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
-#endif
+	if (appDelegate_.app_is_iPad) {
+		return YES;	// Popover内につき回転不要だが、NO にすると Shopping(Web)から戻ると強制的にタテ向きになってしまう。
+	} else {
+		// 回転禁止の場合、万一ヨコからはじまった場合、タテにはなるようにしてある。
+		return appDelegate_.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+	}
 }
 
 // ユーザインタフェースの回転を始める前にこの処理が呼ばれる。 ＜＜OS 3.0以降の推奨メソッド＞＞
@@ -311,7 +352,7 @@
 {	// E3は、Cancel時、新規ならば破棄、修正ならば復旧、させる
 	if (Re3target && PbSharePlanList==NO) {  // Sample表示のときrollbackすると、一時表示用のE1まで消えてしまうので回避する。
 		// ROLLBACK
-#ifdef xxxAzDEBUG
+#ifdef xxxDEBUG
 		NSManagedObjectContext *moc = Re3target.managedObjectContext;
 		//NSLog(@"--1-- Re3target=%@", Re3target);
 		//[1.0.6]insertされたentityが本当にrollbackされているのかを検証
@@ -328,10 +369,10 @@
 		}
 #endif		
 
-		//[1.0.6]今更ながら、insert後、saveしていない限り、rollbackだけで十分であることが解った。 ＜＜前後のAzDEBUGによる検証済み。
+		//[1.0.6]今更ながら、insert後、saveしていない限り、rollbackだけで十分であることが解った。 ＜＜前後のDEBUGによる検証済み。
 		[Re3target.managedObjectContext rollback]; // 前回のSAVE以降を取り消す
 		
-#ifdef xxxAzDEBUG
+#ifdef xxxDEBUG
 		//NSLog(@"--2-- Re3target=%@", Re3target);
 		//[1.0.6]insertされたentityが本当にrollbackされているのかを検証
 		{
@@ -348,13 +389,14 @@
 #endif		
 		
 	}
-#ifdef AzPAD
-	if (selfPopover) {
-		[selfPopover dismissPopoverAnimated:YES];
+
+	if (appDelegate_.app_is_iPad) {
+		if (selfPopover) {
+			[selfPopover dismissPopoverAnimated:YES];
+		}
+	} else {
+		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
 	}
-#else
-	[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
-#endif
 }
 
 // 編集フィールドの値を self.e3target にセットする
@@ -362,13 +404,13 @@
 {
 	if (PbSharePlanList) return; // [Save]ボタンを消しているので通らないハズだが、念のため。
 	
-#ifdef AzPAD
-#else
-	//[McalcView hide]; // 電卓が出ておれば消す
-	if (McalcView) {	// あれば破棄する
-		[McalcView save]; // 有効値あれば保存
+	if (appDelegate_.app_is_iPad) {
+	} else {
+		//[McalcView hide]; // 電卓が出ておれば消す
+		if (McalcView) {	// あれば破棄する
+			[McalcView save]; // 有効値あれば保存
+		}
 	}
-#endif
 	
 	NSInteger lWeight = [Re3target.weight integerValue];  // MlbWeight.text integerValue];
 	NSInteger lStock = [Re3target.stock integerValue];  // MlbStock.text integerValue];
@@ -546,17 +588,17 @@
 		}
 	}
 	
-#ifdef AzPAD
-	//[(PadNaviCon*)self.navigationController dismissPopoverSaved];  // SAVE: PadNaviCon拡張メソッド
-	if (selfPopover) {
-		if ([delegate respondsToSelector:@selector(refreshE3view)]) {	// メソッドの存在を確認する
-			[delegate refreshE3view];// 親の再描画を呼び出す
+	if (appDelegate_.app_is_iPad) {
+		//[(PadNaviCon*)self.navigationController dismissPopoverSaved];  // SAVE: PadNaviCon拡張メソッド
+		if (selfPopover) {
+			if ([delegate respondsToSelector:@selector(refreshE3view)]) {	// メソッドの存在を確認する
+				[delegate refreshE3view];// 親の再描画を呼び出す
+			}
+			[selfPopover dismissPopoverAnimated:YES];
 		}
-		[selfPopover dismissPopoverAnimated:YES];
+	} else {
+		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
 	}
-#else
-	[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
-#endif
 	
 	// 必要数0が追加された場合、前に戻ったときに追加失敗している錯覚をおこさないように通知する
 	if (lNeed <= 0) 
@@ -573,17 +615,15 @@
 	}
 }
 
-#ifdef xxxxxxxxAzPAD
 - (void)closePopover
 {
-	if (MpopoverView) {	//dismissPopoverCancel
+	if (selfPopover) {	//dismissPopoverCancel
 		if (McalcView && [McalcView isShow]) {
 			[McalcView cancel];  //　ラベル表示を元に戻す
 		}
-		[MpopoverView dismissPopoverAnimated:YES];
+		[selfPopover dismissPopoverAnimated:YES];
 	}
 }
-#endif
 
 #pragma mark - CalcRoll
 
@@ -604,29 +644,30 @@
 	[MtfKeyword resignFirstResponder]; // ファーストレスポンダでなくす ⇒ キーボード非表示
 	
 	CGRect rect = self.view.bounds;
-#ifdef AzPAD
-	//テンキー表示位置
-	rect.origin.y = 400;  //全体が見えるようにした + (iRow-3)*60;  
-#else
-	MfTableViewContentY = self.tableView.contentOffset.y; // Hide時に元の表示に戻すため
-	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) {
-		// 横
-		rect.origin.y = 170 + (iRow-3)*60;
+
+	if (appDelegate_.app_is_iPad) {
+		//テンキー表示位置
+		rect.origin.y = 400;  //全体が見えるようにした + (iRow-3)*60;  
+	} else {
+		MfTableViewContentY = self.tableView.contentOffset.y; // Hide時に元の表示に戻すため
+		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) {
+			// 横
+			rect.origin.y = 170 + (iRow-3)*60;
+		}
+		else {
+			// 縦
+			rect.origin.y = 78 + (iRow-3)*60;
+		}
+		// アニメ準備
+		CGContextRef context = UIGraphicsGetCurrentContext();
+		[UIView beginAnimations:nil context:context];
+		[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+		[UIView setAnimationDuration:0.3]; // 出は早く
+		// アニメ終了位置
+		self.tableView.contentOffset = CGPointMake(0, rect.origin.y);
+		// アニメ実行
+		[UIView commitAnimations];
 	}
-	else {
-		// 縦
-		rect.origin.y = 78 + (iRow-3)*60;
-	}
-	// アニメ準備
-	CGContextRef context = UIGraphicsGetCurrentContext();
-	[UIView beginAnimations:nil context:context];
-	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-	[UIView setAnimationDuration:0.3]; // 出は早く
-	// アニメ終了位置
-	self.tableView.contentOffset = CGPointMake(0, rect.origin.y);
-	// アニメ実行
-	[UIView commitAnimations];
-#endif
 	
 	McalcView = [[CalcView alloc] initWithFrame:rect];
 	McalcView.Rlabel = pLabel;  // MlbAmount.tag にはCalc入力された数値(long)が記録される
@@ -661,7 +702,7 @@
 	[self viewWillAppear:NO]; // スライドバーを再描画するため
 #endif
 	
-	self.navigationItem.rightBarButtonItem.enabled = appDelegate.AppUpdateSave;
+	self.navigationItem.rightBarButtonItem.enabled = appDelegate_.AppUpdateSave;
 }
 
 
@@ -834,22 +875,22 @@
 	if (indexPath.section==0) {
 		switch (indexPath.row) {
 			case 2:
-#ifdef AzPAD
-				return 150; // Note
-#else
+				if (appDelegate_.app_is_iPad) {
+					return 150; // Note
+				}
 				return 110; // Note
-#endif
+
 			case 3:
 			case 4:
 			case 5:
 				return 58;  // etc
 		}
 	}
-#ifdef AzPAD
-	return 50;
-#else
+
+	if (appDelegate_.app_is_iPad) {
+		return 50;
+	}
 	return 44; // デフォルト：44ピクセル
-#endif
 }
 
 // Customize the appearance of table view cells.
@@ -900,15 +941,16 @@
 					label.backgroundColor = [UIColor clearColor];
 					label.font = [UIFont systemFontOfSize:12];
 					[cell.contentView addSubview:label]; [label release];
-#ifdef AzPAD
-					MlbGroup = [[UILabel alloc] initWithFrame:
-								CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
-					MlbGroup.font = [UIFont systemFontOfSize:20];
-#else
-					MlbGroup = [[UILabel alloc] initWithFrame:
-								CGRectMake(20,18, self.tableView.frame.size.width-60,16)];
-					MlbGroup.font = [UIFont systemFontOfSize:14];
-#endif
+
+					if (appDelegate_.app_is_iPad) {
+						MlbGroup = [[UILabel alloc] initWithFrame:
+									CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
+						MlbGroup.font = [UIFont systemFontOfSize:20];
+					} else {
+						MlbGroup = [[UILabel alloc] initWithFrame:
+									CGRectMake(20,18, self.tableView.frame.size.width-60,16)];
+						MlbGroup.font = [UIFont systemFontOfSize:14];
+					}
 											   // cell.frame.size.width ではダメ。初期幅が常に縦になっているため
 					// selectGroupTVC が MlbGroup を参照、変更する
 					if (self.PiAddGroup < 0) {
@@ -935,15 +977,16 @@
 					label.textColor = [UIColor grayColor];
 					label.backgroundColor = [UIColor clearColor];
 					[cell.contentView addSubview:label]; [label release];
-#ifdef AzPAD
-					MtfName = [[UITextField alloc] initWithFrame:
-							   CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
-					MtfName.font = [UIFont systemFontOfSize:20];
-#else
-					MtfName = [[UITextField alloc] initWithFrame:
-							   CGRectMake(20,18, self.tableView.frame.size.width-60,20)];
-					MtfName.font = [UIFont systemFontOfSize:16];
-#endif
+
+					if (appDelegate_.app_is_iPad) {
+						MtfName = [[UITextField alloc] initWithFrame:
+								   CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
+						MtfName.font = [UIFont systemFontOfSize:20];
+					} else {
+						MtfName = [[UITextField alloc] initWithFrame:
+								   CGRectMake(20,18, self.tableView.frame.size.width-60,20)];
+						MtfName.font = [UIFont systemFontOfSize:16];
+					}
 					MtfName.placeholder = NSLocalizedString(@"(New Goods)", nil);
 					MtfName.keyboardType = UIKeyboardTypeDefault;
 					MtfName.autocapitalizationType = UITextAutocapitalizationTypeSentences;
@@ -963,15 +1006,16 @@
 					label.backgroundColor = [UIColor clearColor];
 					label.font = [UIFont systemFontOfSize:12];
 					[cell.contentView addSubview:label]; [label release];
-#ifdef AzPAD
-					MtvNote = [[UITextView alloc] initWithFrame:
-							   CGRectMake(20,15, self.tableView.frame.size.width-60,130)];
-					MtvNote.font = [UIFont systemFontOfSize:20];
-#else
-					MtvNote = [[UITextView alloc] initWithFrame:
-							   CGRectMake(20,15, self.tableView.frame.size.width-60,95)];
-					MtvNote.font = [UIFont systemFontOfSize:16];
-#endif
+
+					if (appDelegate_.app_is_iPad) {
+						MtvNote = [[UITextView alloc] initWithFrame:
+								   CGRectMake(20,15, self.tableView.frame.size.width-60,130)];
+						MtvNote.font = [UIFont systemFontOfSize:20];
+					} else {
+						MtvNote = [[UITextView alloc] initWithFrame:
+								   CGRectMake(20,15, self.tableView.frame.size.width-60,95)];
+						MtvNote.font = [UIFont systemFontOfSize:16];
+					}
 					MtvNote.textAlignment = UITextAlignmentLeft;
 					MtvNote.keyboardType = UIKeyboardTypeDefault;
 					MtvNote.returnKeyType = UIReturnKeyDefault;  //改行有効にする
@@ -989,7 +1033,7 @@
 					break;
 				case 3: // Stock
 				{
-#ifdef AzDEBUG
+#ifdef DEBUG
 					//cell.backgroundColor = [UIColor grayColor]; //範囲チェック用
 #endif
 					{
@@ -1196,15 +1240,16 @@
 					label.textColor = [UIColor grayColor];
 					label.backgroundColor = [UIColor clearColor];
 					[cell.contentView addSubview:label]; [label release];
-#ifdef AzPAD
-					MtfKeyword = [[UITextField alloc] initWithFrame:
-							   CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
-					MtfKeyword.font = [UIFont systemFontOfSize:20];
-#else
-					MtfKeyword = [[UITextField alloc] initWithFrame:
-							   CGRectMake(20,18, self.tableView.frame.size.width-60,20)];
-					MtfKeyword.font = [UIFont systemFontOfSize:16];
-#endif
+
+					if (appDelegate_.app_is_iPad) {
+						MtfKeyword = [[UITextField alloc] initWithFrame:
+									  CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
+						MtfKeyword.font = [UIFont systemFontOfSize:20];
+					} else {
+						MtfKeyword = [[UITextField alloc] initWithFrame:
+									  CGRectMake(20,18, self.tableView.frame.size.width-60,20)];
+						MtfKeyword.font = [UIFont systemFontOfSize:16];
+					}
 					MtfKeyword.placeholder = NSLocalizedString(@"Shop Keyword placeholder", nil);
 					MtfKeyword.keyboardType = UIKeyboardTypeDefault;
 					MtfKeyword.autocapitalizationType = UITextAutocapitalizationTypeSentences;
@@ -1264,8 +1309,8 @@
 {
 	if ([MtfKeyword.text length]<=0) {
 		MtfKeyword.text = MtfName.text;
-		appDelegate.AppUpdateSave = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = appDelegate.AppUpdateSave;
+		appDelegate_.AppUpdateSave = YES; // 変更あり
+		self.navigationItem.rightBarButtonItem.enabled = appDelegate_.AppUpdateSave;
 	}
 	// 日本語を含むURLをUTF8でエンコーディングする
 	// 第3引数のCFSTR(";,/?:@&=+$#")で指定した文字列はエンコードされずにそのまま残る
@@ -1281,18 +1326,18 @@
 	web.RzDomain = zDomain;
 	[zKeyword release], zKeyword = nil;
 
-#ifdef AzPAD
-	UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:web];
-	nc.modalPresentationStyle = UIModalPresentationPageSheet;  // 背景Viewが保持される
-	// FullScreenにするとPopoverが閉じられる。さらに、背後が破棄されてE3viewController:viewWillAppear が呼び出されるようになる。
-	nc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;//	UIModalTransitionStyleFlipHorizontal
-	//[self　 presentModalViewController:nc animated:YES];  NG//回転しない
-	//[self.navigationController presentModalViewController:nc animated:YES];  NG//回転しない
-	[appDelegate.mainVC presentModalViewController:nc animated:YES];  //回転する
-	[nc release];
-#else
-	[self.navigationController pushViewController:web animated:YES];
-#endif
+	if (appDelegate_.app_is_iPad) {
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:web];
+		nc.modalPresentationStyle = UIModalPresentationPageSheet;  // 背景Viewが保持される
+		// FullScreenにするとPopoverが閉じられる。さらに、背後が破棄されてE3viewController:viewWillAppear が呼び出されるようになる。
+		nc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;//	UIModalTransitionStyleFlipHorizontal
+		//[self　 presentModalViewController:nc animated:YES];  NG//回転しない
+		//[self.navigationController presentModalViewController:nc animated:YES];  NG//回転しない
+		[appDelegate_.mainSVC presentModalViewController:nc animated:YES];  //回転する
+		[nc release];
+	} else {
+		[self.navigationController pushViewController:web animated:YES];
+	}
 	[web release];
 }
 
@@ -1340,17 +1385,17 @@
 					break;
 				case 01: // Amazon.co.jp
 				{
-#ifdef AzPAD
-					// PCサイト　　　　URL表示するようになったので長くする＜＜TAGが見えないように
-					// アソシエイトリンク作成方法⇒ https://affiliate.amazon.co.jp/gp/associates/help/t121/a1
-					//www.amazon.co.jp/gp/search?ie=UTF8&keywords=[SEARCH_PARAMETERS]&tag=[ASSOCIATE_TAG]&index=blended&linkCode=ure&creative=6339
-					NSString *zUrl = @"http://www.amazon.co.jp/s/?ie=UTF8&index=blended&linkCode=ure&creative=6339&tag=art063-22&keywords=";
-					
-#else
-					// モバイルサイト　　　　　"ie=UTF8" が無いと日本語キーワードが化ける
-					//www.amazon.co.jp/gp/aw/s/ref=is_s_?__mk_ja_JP=%83J%83%5E%83J%83i&k=[SEARCH_PARAMETERS]&url=search-alias%3Daps
-					NSString *zUrl = @"http://www.amazon.co.jp/gp/aw/s/ref=is_s_?ie=UTF8&__mk_ja_JP=%83J%83%5E%83J%83i&url=search-alias%3Daps&at=art063-22&k=";
-#endif			
+					NSString *zUrl;
+					if (appDelegate_.app_is_iPad) {
+						// PCサイト　　　　URL表示するようになったので長くする＜＜TAGが見えないように
+						// アソシエイトリンク作成方法⇒ https://affiliate.amazon.co.jp/gp/associates/help/t121/a1
+						//www.amazon.co.jp/gp/search?ie=UTF8&keywords=[SEARCH_PARAMETERS]&tag=[ASSOCIATE_TAG]&index=blended&linkCode=ure&creative=6339
+						zUrl = @"http://www.amazon.co.jp/s/?ie=UTF8&index=blended&linkCode=ure&creative=6339&tag=art063-22&keywords=";
+					} else {
+						// モバイルサイト　　　　　"ie=UTF8" が無いと日本語キーワードが化ける
+						//www.amazon.co.jp/gp/aw/s/ref=is_s_?__mk_ja_JP=%83J%83%5E%83J%83i&k=[SEARCH_PARAMETERS]&url=search-alias%3Daps
+						zUrl = @"http://www.amazon.co.jp/gp/aw/s/ref=is_s_?ie=UTF8&__mk_ja_JP=%83J%83%5E%83J%83i&url=search-alias%3Daps&at=art063-22&k=";
+					}
 					[self actionWebTitle:NSLocalizedString(@"Shop Amazon.co.jp", nil)
 									 URL:zUrl
 								  Domain:@".amazon.co.jp"];
@@ -1358,17 +1403,17 @@
 					break;
 				case 02: // Amazon.com
 				{
-					
-#ifdef AzPAD
-					// PCサイト
-					//www.amazon.com/s/?tag=azuk-20&creative=392009&campaign=212361&link_code=wsw&_encoding=UTF-8&search-alias=aps&field-keywords=LEGO&Submit.x=16&Submit.y=14&Submit=Go
-					//NSString *zUrl = @"http://www.amazon.com/s/?tag=azuk-20&_encoding=UTF-8&k="; URL表示するようになったので長くする＜＜TAGが見えないように
-					NSString *zUrl = @"http://www.amazon.com/s/?_encoding=UTF-8&search-alias=aps&creative=392009&campaign=212361&tag=azuk-20&field-keywords=";
-#else
-					// モバイルサイト
-					//www.amazon.com/gp/aw/s/ref=is_box_?k=LEGO
-					NSString *zUrl = @"http://www.amazon.com/gp/aw/s/ref=is_box_?_encoding=UTF-8&link_code=wsw&search-alias=aps&tag=azuk-20&k=";
-#endif			
+					NSString *zUrl;
+					if (appDelegate_.app_is_iPad) {
+						// PCサイト
+						//www.amazon.com/s/?tag=azuk-20&creative=392009&campaign=212361&link_code=wsw&_encoding=UTF-8&search-alias=aps&field-keywords=LEGO&Submit.x=16&Submit.y=14&Submit=Go
+						//NSString *zUrl = @"http://www.amazon.com/s/?tag=azuk-20&_encoding=UTF-8&k="; URL表示するようになったので長くする＜＜TAGが見えないように
+						zUrl = @"http://www.amazon.com/s/?_encoding=UTF-8&search-alias=aps&creative=392009&campaign=212361&tag=azuk-20&field-keywords=";
+					} else {
+						// モバイルサイト
+						//www.amazon.com/gp/aw/s/ref=is_box_?k=LEGO
+						zUrl = @"http://www.amazon.com/gp/aw/s/ref=is_box_?_encoding=UTF-8&link_code=wsw&search-alias=aps&tag=azuk-20&k=";
+					}
 					[self actionWebTitle:NSLocalizedString(@"Shop Amazon.com", nil)
 									 URL:zUrl
 								  Domain:@".amazon.com"];
@@ -1376,14 +1421,15 @@
 					break;
 				case 11: // 楽天 Search
 				{			// アフィリエイトID(β版): &afid=0e4c9297.0f29bc13.0e4c9298.6adf8529
-#ifdef AzPAD
-					// PCサイト
-					NSString *zUrl = @"http://search.rakuten.co.jp/search/mall/?sv=2&p=0&afid=0e4c9297.0f29bc13.0e4c9298.6adf8529&sitem=";
-#else
-					// モバイルサイト
-					//http://search.rakuten.co.jp/search/spmall?sv=2&p=0&sitem=SG7&submit=商品検索&scid=af_ich_link_search&scid=af_ich_link_search
-					NSString *zUrl = @"http://search.rakuten.co.jp/search/spmall/?sv=2&p=0&afid=0e4c9297.0f29bc13.0e4c9298.6adf8529&sitem=";
-#endif			
+					NSString *zUrl;
+					if (appDelegate_.app_is_iPad) {
+						// PCサイト
+						zUrl = @"http://search.rakuten.co.jp/search/mall/?sv=2&p=0&afid=0e4c9297.0f29bc13.0e4c9298.6adf8529&sitem=";
+					} else {
+						// モバイルサイト
+						//http://search.rakuten.co.jp/search/spmall?sv=2&p=0&sitem=SG7&submit=商品検索&scid=af_ich_link_search&scid=af_ich_link_search
+						zUrl = @"http://search.rakuten.co.jp/search/spmall/?sv=2&p=0&afid=0e4c9297.0f29bc13.0e4c9298.6adf8529&sitem=";
+					}
 					[self actionWebTitle:NSLocalizedString(@"Shop Rakuten", nil)
 									 URL:zUrl
 								  Domain:@".rakuten.co.jp"];
@@ -1422,16 +1468,16 @@
 	// スクロールして textField が隠れた状態で resignFirstResponder するとフリースするため
 	self.tableView.scrollEnabled = NO; // スクロール禁止
 	//self.navigationItem.leftBarButtonItem.enabled = NO;
-#ifdef AzPAD
-	//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
-#else
-	// 左[Cancel] 無効にする
-	self.navigationItem.leftBarButtonItem.enabled = NO;
-	// 右[Done]
-	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] 
-											   initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-											   target:self action:@selector(nameDone:)] autorelease];
-#endif
+	if (appDelegate_.app_is_iPad) {
+		//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
+	} else {
+		// 左[Cancel] 無効にする
+		self.navigationItem.leftBarButtonItem.enabled = NO;
+		// 右[Done]
+		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] 
+												   initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+												   target:self action:@selector(nameDone:)] autorelease];
+	}
 }
 
 //  テキストが変更される「直前」に呼び出される。これにより入力文字数制限を行っている。
@@ -1442,8 +1488,8 @@
     [zText replaceCharactersInRange:range withString:string];
 	// 置き換えた後の長さをチェックする
 	if ([zText length] <= TEXTFIELD_MAXLENGTH) {
-		appDelegate.AppUpdateSave = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = appDelegate.AppUpdateSave;
+		appDelegate_.AppUpdateSave = YES; // 変更あり
+		self.navigationItem.rightBarButtonItem.enabled = appDelegate_.AppUpdateSave;
 		return YES;
 	} else {
 		return NO;
@@ -1460,16 +1506,16 @@
 {
 	self.tableView.scrollEnabled = YES; // スクロール許可
 	//self.navigationItem.leftBarButtonItem.enabled = YES;
-#ifdef AzPAD
-	//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
-#else
-	// 左[Cancel] 有効にする
-	self.navigationItem.leftBarButtonItem.enabled = YES;
-	// 右[Save]
-	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] 
-											   initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-											   target:self action:@selector(saveClose:)] autorelease];
-#endif
+	if (appDelegate_.app_is_iPad) {
+		//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
+	} else {
+		// 左[Cancel] 有効にする
+		self.navigationItem.leftBarButtonItem.enabled = YES;
+		// 右[Save]
+		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] 
+												   initWithBarButtonSystemItem:UIBarButtonSystemItemSave
+												   target:self action:@selector(saveClose:)] autorelease];
+	}
 }
 
 
@@ -1488,16 +1534,16 @@
 	}
 	self.tableView.scrollEnabled = NO; // スクロール禁止
 	//self.navigationItem.leftBarButtonItem.enabled = NO;
-#ifdef AzPAD
-	//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
-#else
-	// 左[Cancel] 無効にする
-	self.navigationItem.leftBarButtonItem.enabled = NO;
-	// 右[Done]
-	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] 
-											   initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-											   target:self action:@selector(noteDone:)] autorelease];
-#endif	
+	if (appDelegate_.app_is_iPad) {
+		//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
+	} else {
+		// 左[Cancel] 無効にする
+		self.navigationItem.leftBarButtonItem.enabled = NO;
+		// 右[Done]
+		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] 
+												   initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+												   target:self action:@selector(noteDone:)] autorelease];
+	}
 }
 
 //  テキストが変更される「直前」に呼び出される。これにより入力文字数制限を行っている。
@@ -1509,8 +1555,8 @@
     [zText replaceCharactersInRange:range withString:zReplace];
 	// 置き換えた後の長さをチェックする
 	if ([zText length] <= TEXTVIEW_MAXLENGTH) {
-		appDelegate.AppUpdateSave = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = appDelegate.AppUpdateSave;
+		appDelegate_.AppUpdateSave = YES; // 変更あり
+		self.navigationItem.rightBarButtonItem.enabled = appDelegate_.AppUpdateSave;
 		return YES;
 	} else {
 		return NO;
@@ -1522,16 +1568,16 @@
 {
 	self.tableView.scrollEnabled = YES; // スクロール許可
 	//self.navigationItem.leftBarButtonItem.enabled = YES;
-#ifdef AzPAD
-	//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
-#else
-	// 左[Cancel] 有効にする
-	self.navigationItem.leftBarButtonItem.enabled = YES;
-	// 右[Save]
-	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] 
-											   initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-											   target:self action:@selector(saveClose:)] autorelease];
-#endif
+	if (appDelegate_.app_is_iPad) {
+		//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
+	} else {
+		// 左[Cancel] 有効にする
+		self.navigationItem.leftBarButtonItem.enabled = YES;
+		// 右[Save]
+		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] 
+												   initWithBarButtonSystemItem:UIBarButtonSystemItemSave
+												   target:self action:@selector(saveClose:)] autorelease];
+	}
 }
 
 
@@ -1557,16 +1603,16 @@
 		if ([Re3target.stock longValue] != dial) { // 変更あり
 			MlbStock.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
 			Re3target.stock = [NSNumber numberWithInteger:dial];
-			appDelegate.AppUpdateSave = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = appDelegate.AppUpdateSave;
+			appDelegate_.AppUpdateSave = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.AppUpdateSave;
 		}
 	}
 	else if (sender==mDialNeed) {
 		if ([Re3target.need longValue] != dial) { // 変更あり
 			MlbNeed.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
 			Re3target.need = [NSNumber numberWithInteger:dial];
-			appDelegate.AppUpdateSave = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = appDelegate.AppUpdateSave;
+			appDelegate_.AppUpdateSave = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.AppUpdateSave;
 		}
 	}
 #ifdef WEIGHT_DIAL
@@ -1574,8 +1620,8 @@
 		if ([Re3target.weight longValue] != dial) { // 変更あり
 			MlbWeight.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
 			Re3target.weight = [NSNumber numberWithInteger:dial];
-			appDelegate.AppUpdateSave = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = appDelegate.AppUpdateSave;
+			appDelegate_.AppUpdateSave = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.AppUpdateSave;
 		}
 	}
 #endif

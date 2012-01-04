@@ -8,20 +8,12 @@
 
 //#define AzMAKE_SPLASHFACE  // 起動画面 Default.png を作るための作業オプション
 
-#if defined(AzSTABLE) || defined(AzMAKE_SPLASHFACE)
-	// 広告なし
-#else // AzFREE
-	#define FREE_AD	// iPadも共通
-	#ifdef AzPAD
-		#define AdMobID_PackPAD	@"a14dd004bc6bc0a";		//AdMobパブリッシャー ID  "モチメモ Free iPad"
-	#else
-		#define AdMobID_PackList	@"a14d4cec1e082c1";		//AdMobパブリッシャー ID  "モチメモ Free iPhone"　
-	#endif
-#endif
+#define AdMobID_PackPAD	@"a14dd004bc6bc0a";		//AdMobパブリッシャー ID  "モチメモ Free iPad"
+#define AdMobID_PackList	@"a14d4cec1e082c1";		//AdMobパブリッシャー ID  "モチメモ Free iPhone"　
 
 #define OR  ||
 
-#ifdef AzDEBUG	//--------------------------------------------- DEBUG
+#ifdef DEBUG	//--------------------------------------------- DEBUG
 #define AzLOG(...) NSLog(__VA_ARGS__)
 #define AzRETAIN_CHECK(zName,pObj,iAns)  { if ([pObj retainCount] > iAns) NSLog(@"AzRETAIN_CHECK> %@ %d > %d", zName, [pObj retainCount], iAns); }
 
@@ -90,28 +82,29 @@
 #define GD_DefNickname						@"DefNickname"
 
 // Option Setting Plist KEY     初期値定義は、<applicationDidFinishLaunching>内
-//#define GD_OptStartupWindshield				@"OptStartupWindshield"
+//#define GD_OptStartupWindshield			@"OptStartupWindshield"
 #define GD_OptStartupRestoreLevel			@"OptStartupRestoreLevel"
 #define GD_OptShouldAutorotate				@"OptShouldAutorotate"
 //#define GD_OptDisclosureButtonToEditable	@"OptDisclosureButtonToEditable"
 #define GD_OptPasswordSave					@"OptPasswordSave"
 #define GD_OptTotlWeightRound				@"OptTotlWeightRound"
-#define GD_OptItemsQuickSort				@"OptItemsQuickSort"
+#define GD_OptItemsQuickSort					@"OptItemsQuickSort"
 #define GD_OptShowTotalWeight				@"OptShowTotalWeight"
-#define GD_OptShowTotalWeightReq			@"OptShowTotalWeightReq"
+#define GD_OptShowTotalWeightReq		@"OptShowTotalWeightReq"
 #define GD_OptItemsGrayShow					@"OptItemsGrayShow"
-#define GD_OptCheckingAtEditMode			@"OptCheckingAtEditMode" // 編集モードでチェックする
+#define GD_OptCheckingAtEditMode		@"OptCheckingAtEditMode" // 編集モードでチェックする
 #define GD_OptSearchItemsNote				@"OptSearchItemsNote"	// アイテムのNote内も検索する
+#define GD_OptAdvertising						@"GD_OptAdvertising"		// YES=広告あり／NO=なし
+#define GD_Sponsor									@"GD_Sponsor"					// YES=購入済み／NO=なし
+
 
 #define GD_KeyboardHeightPortrait	216.0f	// タテ向きのときのキーボード高さ
 #define GD_KeyboardHeightLandscape	160.0f	// ヨコ向きのときのキーボード高さ
 
-#ifdef AzPAD
 #define GD_POPOVER_SIZE_INIT		CGSizeMake(480-1, 500-1)	//init初期化時に使用　＜＜＜変化ありにするため1廻り小さくする
 #define GD_POPOVER_SIZE				CGSizeMake(480, 500)			//viewDidAppear時に使用
 
 #define GD_POPOVER_E3detailTVC_SIZE		CGSizeMake(400, 610)	//590		//E3detailTVCおよびその配下に使用　＜＜下余白はテンキーエリア
-#endif
 
 // iCloud NSNotification messages
 #define NFM_REFRESH_ALL_VIEWS			@"RefreshAllViews"

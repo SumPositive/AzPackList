@@ -15,11 +15,9 @@
 #import "SettingTVC.h"
 #import "ItemTouchV.h"
 
-#ifdef AzPAD
 #import "PadRootVC.h"
 #import "E2viewController.h"
 //#import "PadPopoverInNaviCon.h"
-#endif
 
 //#define ACTIONSEET_TAG_DELETEITEM		101
 #define TAG_CELL_ITEM								102
@@ -40,9 +38,7 @@
 - (void)requreyMe3array; //:(NSString *)searchText;
 - (void)viewDesign;
 
-#ifdef AzPAD
 - (void)padE2refresh:(NSInteger)iRow;
-#endif
 @end
 
 @implementation E3viewController
@@ -57,7 +53,6 @@
 
 #pragma mark - Delegate
 
-#ifdef AzPAD
 - (void)refreshE3view
 {
 	if (MindexPathEdit)
@@ -88,7 +83,6 @@
 		[self padE2refresh:(-1)];
 	}
 }
-#endif
 
 
 #pragma mark - View lifecicle
@@ -99,7 +93,7 @@
 	self = [super initWithStyle:UITableViewStylePlain];
 	if (self) {
 		// 初期化成功
-		appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		RaE3array = nil;
 		PbSharePlanList = NO;
 	}
@@ -111,16 +105,16 @@
 {	//【Tips】ここでaddSubviewするオブジェクトは全てautoreleaseにすること。メモリ不足時には自動的に解放後、改めてここを通るので、初回同様に生成するだけ。
 	[super loadView];
 
-#ifdef AzPAD
-	if (PbSharePlanList) {
-		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
-		self.navigationController.toolbarHidden = YES;	// ツールバー不要
-		MbAzOptItemsGrayShow = YES; //グレー全表示
-		return;  // 以下不要
-	} else {
-		//Popover表示なし  self.contentSizeForViewInPopover = CGSizeMake(360, 600);
+	if (appDelegate_.app_is_iPad) {
+		if (PbSharePlanList) {
+			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
+			self.navigationController.toolbarHidden = YES;	// ツールバー不要
+			MbAzOptItemsGrayShow = YES; //グレー全表示
+			return;  // 以下不要
+		} else {
+			//Popover表示なし  self.contentSizeForViewInPopover = CGSizeMake(360, 600);
+		}
 	}
-#endif
 
 	if (PbSharePlanList==NO) {
 		// Set up Right [Edit] buttons.
@@ -128,44 +122,44 @@
 		self.tableView.allowsSelectionDuringEditing = YES;
 	}
 	
-#ifdef AzPAD
-	if (Me2toolbar==nil) {
-		Me2toolbar = [[UIToolbar alloc] init];
-		
-		//[Me2toolbar setItems: [NSArray array]];
-		UIBarButtonItem* buFlexible = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease];
-		
-		UIBarButtonItem* buFixed = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil] autorelease];
-		
-		NSString* str;
-		if (30<[self.title length]) {
-			str = [self.title substringToIndex:30];	//loadView以降でしかセットされない
-		} else {
-			str = self.title;
+	if (appDelegate_.app_is_iPad) {
+		if (Me2toolbar==nil) {
+			Me2toolbar = [[UIToolbar alloc] init];
+			
+			//[Me2toolbar setItems: [NSArray array]];
+			UIBarButtonItem* buFlexible = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease];
+			
+			UIBarButtonItem* buFixed = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil] autorelease];
+			
+			NSString* str;
+			if (30<[self.title length]) {
+				str = [self.title substringToIndex:30];	//loadView以降でしかセットされない
+			} else {
+				str = self.title;
+			}
+			UIBarButtonItem* buTitle = [[[UIBarButtonItem alloc] initWithTitle:str style:UIBarButtonItemStylePlain target:nil action:nil] autorelease];
+			
+			NSMutableArray* buttons = [[NSMutableArray alloc] initWithObjects:
+									   buFixed, buFlexible, buTitle, buFlexible, nil];
+			
+			if (appDelegate_.padRootVC.popoverButtonItem) {
+				appDelegate_.padRootVC.popoverButtonItem.title = NSLocalizedString(@"Index button", nil);
+				[buttons insertObject:appDelegate_.padRootVC.popoverButtonItem atIndex:1]; //この位置は、showPopoverButtonItemなどと一致させること
+			}
+			
+			Me2toolbar.barStyle = UIBarStyleDefault;
+			[Me2toolbar setItems:buttons animated:NO];
+			[Me2toolbar sizeToFit];
+			[buttons release];
+			self.navigationItem.titleView = Me2toolbar;
 		}
-		UIBarButtonItem* buTitle = [[[UIBarButtonItem alloc] initWithTitle:str style:UIBarButtonItemStylePlain target:nil action:nil] autorelease];
-
-		NSMutableArray* buttons = [[NSMutableArray alloc] initWithObjects:
-								   buFixed, buFlexible, buTitle, buFlexible, nil];
-
-		if (appDelegate.padRootVC.popoverButtonItem) {
-			appDelegate.padRootVC.popoverButtonItem.title = NSLocalizedString(@"Index button", nil);
-			[buttons insertObject:appDelegate.padRootVC.popoverButtonItem atIndex:1]; //この位置は、showPopoverButtonItemなどと一致させること
-		}
-		
-		Me2toolbar.barStyle = UIBarStyleDefault;
-		[Me2toolbar setItems:buttons animated:NO];
-		[Me2toolbar sizeToFit];
-		[buttons release];
-		self.navigationItem.titleView = Me2toolbar;
+	} else {
+		// Set up NEXT Left [Back] buttons.
+		self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc]
+												  initWithTitle:NSLocalizedString(@"Back", nil)
+												  style:UIBarButtonItemStylePlain  
+												  target:nil  action:nil] autorelease];
 	}
-#else
-	// Set up NEXT Left [Back] buttons.
-	self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc]
-											  initWithTitle:NSLocalizedString(@"Back", nil)
-											  style:UIBarButtonItemStylePlain  
-											  target:nil  action:nil] autorelease];
-#endif
 	
 	// Search Bar
 	UISearchBar *sb = [[[UISearchBar alloc] initWithFrame:CGRectMake(0,0, self.tableView.bounds.size.width,0)] autorelease];
@@ -269,28 +263,27 @@
 {
     [super viewDidAppear:animated];
 	
-#ifdef AzPAD
-	//loadViewの設定優先　[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
-#else
-	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) { // ヨコ
-		[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
+	if (appDelegate_.app_is_iPad) {
+		//loadViewの設定優先　[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
 	} else {
-		[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
+		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) { // ヨコ
+			[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
+		} else {
+			[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
+		}
 	}
-#endif
 	
 	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 
-#ifdef FREE_AD
-	// 各viewDidAppear:にて「許可/禁止」を設定する
-	[appDelegate AdRefresh:NO];	//広告禁止
-#endif
+	if (appDelegate_.app_is_Ad) {
+		// 各viewDidAppear:にて「許可/禁止」を設定する
+		[appDelegate_ AdRefresh:NO];	//広告禁止
+	}
 }
 
-#ifdef AzPAD
 - (void)padE2refresh:(NSInteger)iRow
 {
-	UINavigationController* MnaviLeftE2 = [appDelegate.mainVC.viewControllers objectAtIndex:0]; //[0]
+	UINavigationController* MnaviLeftE2 = [appDelegate_.mainSVC.viewControllers objectAtIndex:0]; //[0]
 	if ([[MnaviLeftE2 visibleViewController] isMemberOfClass:[E2viewController class]])
 	{	// E2 既存
 		E2viewController* e2vc = (E2viewController*)[MnaviLeftE2 visibleViewController];
@@ -319,30 +312,6 @@
 		}
 	}
 }
-
-/*
-#else
-// カムバック処理（復帰再現）：E2 から呼ばれる
-- (void)viewComeback:(NSArray *)selectionArray
-{
-	NSInteger iSec = [[selectionArray objectAtIndex:4] intValue];
-	NSInteger iRow = [[selectionArray objectAtIndex:5] intValue];
-	if (iSec < 0) return; // この画面表示
-	if (iRow < 0) return; // fail.
-	
-	if ([RaE3array count] <= iSec) return; // 無効セクション
-	if ([[RaE3array objectAtIndex:iSec] count] <= iRow) return; // 無効セル（削除されたとか）
-	
-	// 前回選択したセル位置
-	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:iRow inSection:iSec];
-	// 指定位置までテーブルビューの行をスクロールさせる初期処理
-	[self.tableView scrollToRowAtIndexPath:indexPath
-						  atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
-	// さらに、E3detail まで復元する。
-	[self e3detailView:indexPath];
-}
- */
-#endif
 
 
 - (void)requreyMe3array		//:(NSString *)searchText
@@ -532,17 +501,17 @@
 // この画面が非表示になる直前に呼ばれる
 - (void)viewWillDisappear:(BOOL)animated 
 {
-#ifdef AzPAD
-	if ([Mpopover isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
-		[Mpopover dismissPopoverAnimated:animated];
+	if (appDelegate_.app_is_iPad) {
+		if ([Mpopover isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
+			[Mpopover dismissPopoverAnimated:animated];
+		}
+		// 左側のＥ２を閉じる
+		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) 
+		{	// ヨコでＥ２が表示されている場合　　＜＜＜タテでＥ２が隠れているとき処理すると落ちる --> Ｅ２表示時に処理している＞＞＞
+			UINavigationController* navLeft = [appDelegate_.mainSVC.viewControllers objectAtIndex:0]; //[0]
+			[navLeft popToRootViewControllerAnimated:animated];  // PadRootVC
+		}
 	}
-	// 左側のＥ２を閉じる
-	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) 
-	{	// ヨコでＥ２が表示されている場合　　＜＜＜タテでＥ２が隠れているとき処理すると落ちる --> Ｅ２表示時に処理している＞＞＞
-		UINavigationController* navLeft = [appDelegate.mainVC.viewControllers objectAtIndex:0]; //[0]
-		[navLeft popToRootViewControllerAnimated:animated];  // PadRootVC
-	}
-#endif
 	[super viewWillDisappear:animated];
 }
 
@@ -552,42 +521,39 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-#ifdef AzPAD
-	return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
-#else
-	//[0.8.2]viewWillAppearより先に通るためAppDelegate広域参照にした。
-	if (appDelegate.AppShouldAutorotate==NO) {
-		// 回転禁止にしている場合
-		[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
-		if (interfaceOrientation == UIInterfaceOrientationPortrait)
-		{ // 正面（ホームボタンが画面の下側にある状態）
-			return YES; // この方向だけ常に許可する
-		}
-		return NO; // その他、禁止
-	}
-	
-	// 回転許可
-	if (UIInterfaceOrientationIsPortrait(interfaceOrientation))
-	{	// タテ
-		[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
+	if (appDelegate_.app_is_iPad) {
+		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
 	} else {
-		[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
+		//[0.8.2]viewWillAppearより先に通るためAppDelegate広域参照にした。
+		if (appDelegate_.AppShouldAutorotate==NO) {
+			// 回転禁止にしている場合
+			[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
+			if (interfaceOrientation == UIInterfaceOrientationPortrait)
+			{ // 正面（ホームボタンが画面の下側にある状態）
+				return YES; // この方向だけ常に許可する
+			}
+			return NO; // その他、禁止
+		}
+		
+		// 回転許可
+		if (UIInterfaceOrientationIsPortrait(interfaceOrientation))
+		{	// タテ
+			[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
+		} else {
+			[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
+		}
+		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
 	}
-	return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
-#endif
 }
 
-#ifdef FREE_AD
 // shouldAutorotateToInterfaceOrientation で YES を返すと、回転開始時に呼び出される
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation 
 								duration:(NSTimeInterval)duration
 {
 	// 広告非表示でも回転時に位置調整しておく必要あり ＜＜現れるときの開始位置のため＞＞
-	[appDelegate AdViewWillRotate:toInterfaceOrientation];
+	[appDelegate_ AdViewWillRotate:toInterfaceOrientation];
 }
-#endif
 
-#ifdef AzPAD
 // 回転した後に呼び出される
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {	// Popoverの位置を調整する　＜＜UIPopoverController の矢印が画面回転時にターゲットから外れてはならない＞＞
@@ -615,7 +581,6 @@
 		}
 	}
 }
-#endif
 
 - (void)viewDesign
 {	// 回転によるリサイズ
@@ -637,9 +602,9 @@
 - (void)e3detailView:(NSIndexPath *)indexPath 
 {
 	if (PbSharePlanList) return;  //サンプルモードにつき
-#ifdef AzPAD
-	if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-#endif
+	if (appDelegate_.app_is_iPad) {
+		if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+	}
 
 	// E3detailTVC へドリルダウン
 	E3detailTVC *e3detail = [[E3detailTVC alloc] init];
@@ -666,26 +631,26 @@
 	}
 	e3detail.PbSharePlanList = PbSharePlanList;
 	
-#ifdef  AzPAD
-	//[Mpopover release], Mpopover = nil;
-	//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:e3detail];
-	UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:e3detail];
-	Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
-	[nc release];
-	Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-	//MindexPathEdit = indexPath; Bug!危険　　　下記FIX
-	[MindexPathEdit release], MindexPathEdit = [indexPath copy];
-	CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
-	rc.origin.x += (rc.size.width/2 - 100);	//(-100)ヨコのとき幅が縮小されてテンキーが欠けるため
-	rc.size.width = 1;
-	[Mpopover presentPopoverFromRect:rc
-							  inView:self.tableView  permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-	e3detail.selfPopover = Mpopover;  [Mpopover release]; //(retain)  内から閉じるときに必要になる
-	e3detail.delegate = self;		// refresh callback
-#else
-	[e3detail setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-	[self.navigationController pushViewController:e3detail animated:YES];
-#endif
+	if (appDelegate_.app_is_iPad) {
+		//[Mpopover release], Mpopover = nil;
+		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:e3detail];
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:e3detail];
+		Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
+		[nc release];
+		Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
+		//MindexPathEdit = indexPath; Bug!危険　　　下記FIX
+		[MindexPathEdit release], MindexPathEdit = [indexPath copy];
+		CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
+		rc.origin.x += (rc.size.width/2 - 100);	//(-100)ヨコのとき幅が縮小されてテンキーが欠けるため
+		rc.size.width = 1;
+		[Mpopover presentPopoverFromRect:rc
+								  inView:self.tableView  permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+		e3detail.selfPopover = Mpopover;  [Mpopover release]; //(retain)  内から閉じるときに必要になる
+		e3detail.delegate = self;		// refresh callback
+	} else {
+		[e3detail setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+		[self.navigationController pushViewController:e3detail animated:YES];
+	}
 	[e3detail release];
 }
 
@@ -700,10 +665,10 @@
 	NSLog(@"--- unloadRelease --- E3viewController");
 	[RaE3array release],	RaE3array = nil;
 	
-#ifdef AzPAD
-	self.navigationItem.titleView = nil;  //これなしにE1へ戻ると落ちる
-	[Me2toolbar release], Me2toolbar = nil;
-#endif		
+	if (appDelegate_.app_is_iPad) {
+		self.navigationItem.titleView = nil;  //これなしにE1へ戻ると落ちる
+		[Me2toolbar release], Me2toolbar = nil;
+	}
 }
 
 - (void)viewDidUnload 
@@ -718,10 +683,11 @@
 - (void)dealloc    // 生成とは逆順に解放するのが好ましい
 {
 	[self unloadRelease];
-#ifdef AzPAD
-	Mpopover.delegate = nil;	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
-	[MindexPathEdit release], MindexPathEdit = nil;
-#endif		
+
+	if (appDelegate_.app_is_iPad) {
+		Mpopover.delegate = nil;	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
+		[MindexPathEdit release], MindexPathEdit = nil;
+	}
 	[MindexPathActionDelete release], MindexPathActionDelete = nil;
 	[MpathClip release], MpathClip = nil;
 	//--------------------------------@property (retain)
@@ -934,10 +900,10 @@
 	//[1.0.6]【Tips】結局、これが一番良い。 ＜＜行位置変わらず、表示の乱れも無い
 	[self.tableView reloadData];
 	
-#ifdef AzPAD
-	// 左側 E2 再描画
-	[self padE2refresh:[e2obj.row integerValue]];
-#endif
+	if (appDelegate_.app_is_iPad) {
+		// 左側 E2 再描画
+		[self padE2refresh:[e2obj.row integerValue]];
+	}
 }
 
 //----------------------------------------------------------- Clip Board
@@ -960,7 +926,7 @@
 	if (@selector(paste:) == action) {
 		if (PbSharePlanList) return NO;
 		// クリップボード(clipE3objects) にE3があるか調べる
-		if (0 < [appDelegate.RaClipE3objects count]) return YES; // クリップあり
+		if (0 < [appDelegate_.RaClipE3objects count]) return YES; // クリップあり
 		return NO; // クリップボードが空なのでPaste無効
 	}
 	return NO;
@@ -973,15 +939,15 @@
 	if ([[RaE3array objectAtIndex:MpathClip.section] count] <= MpathClip.row) return;
 	
 	// クリップボード(clipE3objects) 前処理
-	if (MbClipPaste && 0 < [appDelegate.RaClipE3objects count]) { // 未[Paste]ならばPUSHスタックするため
+	if (MbClipPaste && 0 < [appDelegate_.RaClipE3objects count]) { // 未[Paste]ならばPUSHスタックするため
 		// 1回でもPasteしたならば、先ずクリップをクリアする
-		for (E3 *e3 in appDelegate.RaClipE3objects) {
+		for (E3 *e3 in appDelegate_.RaClipE3objects) {
 			if (e3.parent == nil) {
 				// [Cut]されたE3なので削除する
 				[Re1selected.managedObjectContext deleteObject:e3];
 			}
 		}
-		[appDelegate.RaClipE3objects removeAllObjects]; // 全て削除する
+		[appDelegate_.RaClipE3objects removeAllObjects]; // 全て削除する
 	}
 	MbClipPaste = NO;
 	//
@@ -989,7 +955,7 @@
 	E2 *e2obj = e3obj.parent; // 後半のsum更新のため親E2を保持する
 	e3obj.parent = nil; // リンクを切った状態で残す。Pasteできるようにするため。
 	// e3obj をクリップボード(clipE3objects) へ追加する
-	[appDelegate.RaClipE3objects addObject:e3obj];
+	[appDelegate_.RaClipE3objects addObject:e3obj];
 	
 	[[RaE3array objectAtIndex:MpathClip.section] removeObjectAtIndex:MpathClip.row]; // TableViewCell削除
 	// アニメーション付きで、MpathClip行をテーブルから削除する　＜＜表示だけの更新＞＞
@@ -1017,10 +983,11 @@
 	// Commit!
 	[EntityRelation commit];
 	[self.tableView reloadData];
-#ifdef AzPAD
-	// 左側 E2 再描画  ＜＜未チェック数と重量を更新するため
-	[self padE2refresh:MpathClip.section];
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		// 左側 E2 再描画  ＜＜未チェック数と重量を更新するため
+		[self padE2refresh:MpathClip.section];
+	}
 }
 
 - (void)copy:(id)sender {  // これはプロトコルとして予約されている
@@ -1030,21 +997,21 @@
 	if ([[RaE3array objectAtIndex:MpathClip.section] count] <= MpathClip.row) return;
 	
 	// クリップボード(clipE3objects) 前処理
-	if (MbClipPaste && 0 < [appDelegate.RaClipE3objects count]) { // 未[Paste]ならばPUSHスタックするため
+	if (MbClipPaste && 0 < [appDelegate_.RaClipE3objects count]) { // 未[Paste]ならばPUSHスタックするため
 		// 1回でもPasteしたならば、先ずクリップをクリアする
-		for (E3 *e3 in appDelegate.RaClipE3objects) {
+		for (E3 *e3 in appDelegate_.RaClipE3objects) {
 			if (e3.parent == nil) {
 				// [Cut]されたE3なので削除する
 				[Re1selected.managedObjectContext deleteObject:e3];
 			}
 		}
-		[appDelegate.RaClipE3objects removeAllObjects]; // 全て削除する
+		[appDelegate_.RaClipE3objects removeAllObjects]; // 全て削除する
 	}
 	MbClipPaste = NO;
 	//
 	E3 *e3obj = [[RaE3array objectAtIndex:MpathClip.section] objectAtIndex:MpathClip.row];
 	// e3obj をクリップボード(clipE3objects) へ追加する
-	[appDelegate.RaClipE3objects addObject:e3obj];
+	[appDelegate_.RaClipE3objects addObject:e3obj];
 }
 
 - (void)paste:(id)sender {  // これはプロトコルとして予約されている
@@ -1057,7 +1024,7 @@
 	if (e3paste == nil) return;
 	
 	// クリップボード(clipE3objects) の末尾から e3clip を取り出す(POP)
-	E3 *e3clip = [appDelegate.RaClipE3objects lastObject]; // 最後のオブジェクト参照
+	E3 *e3clip = [appDelegate_.RaClipE3objects lastObject]; // 最後のオブジェクト参照
 	if (e3clip == nil) return; // クリップなし
 	
 	// MpathClip位置へ追加する
@@ -1087,13 +1054,13 @@
 		e3new.weightLack = e3clip.weightLack;
 	}
 	
-	if (1 < [appDelegate.RaClipE3objects count]) { // 最後の1個を残すため。それが次にCutやCopyしたものと置き換わる
+	if (1 < [appDelegate_.RaClipE3objects count]) { // 最後の1個を残すため。それが次にCutやCopyしたものと置き換わる
 		// クリップボード(clipE3objects) の末尾を削除し、参照(e3clip)を無効にする
 		if (e3clip.parent == nil) {
 			// [Cut]されたE3なので削除する
 			[Re1selected.managedObjectContext deleteObject:e3clip];
 		}
-		[appDelegate.RaClipE3objects removeLastObject]; // 末尾のオブジェクトを削除する
+		[appDelegate_.RaClipE3objects removeLastObject]; // 末尾のオブジェクトを削除する
 		e3clip = nil;
 	}
 	MbClipPaste = YES;
@@ -1128,10 +1095,11 @@
 	// Commit!
 	[EntityRelation commit];
 	[self.tableView reloadData];
-#ifdef AzPAD
-	// 左側 E2 再描画  ＜＜未チェック数と重量を更新するため
-	[self padE2refresh:MpathClip.section];
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		// 左側 E2 再描画  ＜＜未チェック数と重量を更新するため
+		[self padE2refresh:MpathClip.section];
+	}
 }
 
 - (void)cellButtonClip: (UIButton *)button 
@@ -1258,11 +1226,11 @@
 	else if (0 <= PiSortType && [e3obj.need integerValue]==(-1)) {	// .need=(-1) ⇒ Add行（位置自由になったため）
 		return 0;  // ソートモード時、Add行を非表示
 	}
-#ifdef AzPAD
-	return 50;
-#else
+
+	if (appDelegate_.app_is_iPad) {
+		return 50;
+	}
 	return 44; // デフォルト：44ピクセル
-#endif
 }
 
 // TableView 指定されたセルを生成＆表示
@@ -1325,11 +1293,12 @@
 			}
 			cell.tag = TAG_CELL_ADD;
 			cell.textLabel.text = NSLocalizedString(@"New Goods",nil); // ここに追加
-#ifdef AzPAD
-			cell.textLabel.font = [UIFont systemFontOfSize:18];
-#else
-			cell.textLabel.font = [UIFont systemFontOfSize:14];
-#endif
+
+			if (appDelegate_.app_is_iPad) {
+				cell.textLabel.font = [UIFont systemFontOfSize:18];
+			} else {
+				cell.textLabel.font = [UIFont systemFontOfSize:14];
+			}
 			cell.textLabel.textAlignment = UITextAlignmentCenter; // 中央寄せ
 			cell.textLabel.textColor = [UIColor grayColor];
 			cell.imageView.image = [UIImage imageNamed:@"Icon24-GreenPlus.png"];
@@ -1357,13 +1326,13 @@
 			// 行毎に変化の無い定義は、ここで最初に1度だけする
 			cell.tag = TAG_CELL_ITEM;
 			//Clip表示//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // ＞
-#ifdef AzPAD
-			cell.textLabel.font = [UIFont systemFontOfSize:20];
-			cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
-#else
-			cell.textLabel.font = [UIFont systemFontOfSize:16];
-			cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
-#endif
+			if (appDelegate_.app_is_iPad) {
+				cell.textLabel.font = [UIFont systemFontOfSize:20];
+				cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
+			} else {
+				cell.textLabel.font = [UIFont systemFontOfSize:16];
+				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
+			}
 			cell.textLabel.textAlignment = UITextAlignmentLeft;
 			cell.textLabel.textColor = [UIColor blackColor];
 			cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
@@ -1443,7 +1412,7 @@
 				cell.showsReorderControl = NO;	  // Move禁止
 				break;
 			default:
-#ifdef AzDEBUG
+#ifdef DEBUG
 				cell.detailTextLabel.text = [NSString stringWithFormat:@"%@／%@  %@g  %@ [%d]",
 											 GstringFromNumber(e3obj.stock),
 											 GstringFromNumber(e3obj.need),
@@ -1478,11 +1447,11 @@
 			cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
 			cell.accessoryType = UITableViewCellAccessoryNone; // なし
 		} else {
-#ifdef AzPAD
-			cell.accessoryType = UITableViewCellAccessoryNone; // なし
-#else
-			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // ＞
-#endif
+			if (appDelegate_.app_is_iPad) {
+				cell.accessoryType = UITableViewCellAccessoryNone; // なし
+			} else {
+				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // ＞
+			}
 		}
 	}
 	return cell;
@@ -1709,83 +1678,15 @@
 	{ // セクションヘッダの重量表示を更新する
 		[self.tableView reloadData];
 	}
-#ifdef AzPAD
-	// 左側 E2 再描画  ＜＜未チェック数も更新するため
-	[self padE2refresh:oldPath.section];
-	[self padE2refresh:newPath.section];
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		// 左側 E2 再描画  ＜＜未チェック数も更新するため
+		[self padE2refresh:oldPath.section];
+		[self padE2refresh:newPath.section];
+	}
 }
 
 
-/*[1.1.0]削除を[Cut]動作同等にした。
-#pragma mark - <UIActionSheetDelegate>
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	switch (actionSheet.tag) {
-		case ACTIONSEET_TAG_DELETEITEM: // E3アイテム削除
-			if (buttonIndex == actionSheet.destructiveButtonIndex && PiSortType<0) 
-			{ //========== E3 削除実行 ==========
-				// CoreDataモデル：エンティティ間の削除ルールは双方「無効にする」を指定。（他にするとフリーズ）
-				// 削除対象の ManagedObject をチョイス
-				E3 *e3objDelete = [[RaE3array objectAtIndex:MindexPathActionDelete.section] 
-								   objectAtIndex:MindexPathActionDelete.row];
-				if ([e3objDelete.need integerValue] == (-1)) return; //(V0.4)Add行
-				
-				E2 *e2parent = e3objDelete.parent; //Fix//E3削除後にその親E2を再集計するために保持する
-				
-				// 該当行削除：　e3list 削除 ==>> しかし、managedObjectContextは削除されない！！！後ほど削除
-				[[RaE3array objectAtIndex:MindexPathActionDelete.section] 
-				 removeObjectAtIndex:MindexPathActionDelete.row];  // × removeObject:e3obj];
-				// 該当行以下.row更新：　e3list 更新 ==>> なんと、managedObjectContextも更新される！！！
-				for (NSInteger i = MindexPathActionDelete.row ; 
-					 i < [[RaE3array objectAtIndex:MindexPathActionDelete.section] count] ; i++) {
-					E3 *e3obj = [[RaE3array objectAtIndex:MindexPathActionDelete.section] objectAtIndex:i];
-					e3obj.row = [NSNumber numberWithInteger:i];
-				}
-				// e3listの削除はmanagedObjectContextに反映されないため、ここで削除する。
-				e3objDelete.parent = nil;	//[1.0.1]次の集計から除外するためリンク切る ＜＜＜deleteObjectでは切れない＞＞＞
-				// E3削除実行
-				[e2parent.managedObjectContext deleteObject:e3objDelete];
-				// E2 sum属性　＜高速化＞ 親sum保持させる
-				[e2parent setValue:[e2parent valueForKeyPath:@"childs.@sum.noGray"] forKey:@"sumNoGray"];
-				[e2parent setValue:[e2parent valueForKeyPath:@"childs.@sum.noCheck"] forKey:@"sumNoCheck"];
-				[e2parent setValue:[e2parent valueForKeyPath:@"childs.@sum.weightStk"] forKey:@"sumWeightStk"];
-				[e2parent setValue:[e2parent valueForKeyPath:@"childs.@sum.weightNed"] forKey:@"sumWeightNed"];
-				
-				// E1 sum属性　＜高速化＞ 親sum保持させる
-				[Re1selected setValue:[Re1selected valueForKeyPath:@"childs.@sum.sumNoGray"] forKey:@"sumNoGray"];
-				[Re1selected setValue:[Re1selected valueForKeyPath:@"childs.@sum.sumNoCheck"] forKey:@"sumNoCheck"];
-				[Re1selected setValue:[Re1selected valueForKeyPath:@"childs.@sum.sumWeightStk"] forKey:@"sumWeightStk"];
-				[Re1selected setValue:[Re1selected valueForKeyPath:@"childs.@sum.sumWeightNed"] forKey:@"sumWeightNed"];
-				
-				
-				if (PbSharePlanList==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
-				    // SAVE　＜＜万一システム障害で落ちてもデータが残るようにコマメに保存する方針＞＞
-					NSError *error = nil;
-					if (![Re1selected.managedObjectContext save:&error]) {
-						NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-						exit(-1);  // Fail
-					}
-				}
-				// テーブルビューから選択した行を削除する　　　　　　//[self.tableView reloadData]だとアニメ効果が無いため下記採用
-				[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:MindexPathActionDelete] 
-									  withRowAnimation:UITableViewRowAnimationFade];
-				//[1.0.6]セクションヘッダにある重量も更新されるようにした。
-				NSIndexSet* iset = [NSIndexSet indexSetWithIndex:MindexPathActionDelete.section];
-				[self.tableView reloadSections:iset withRowAnimation:NO]; //セクション単位でリロードする
-#ifdef AzPAD
-				// 左側 E2 再描画  ＜＜未チェック数と重量を更新するため
-				[self padE2refresh:MindexPathActionDelete.section];
-#endif
-			}
-			break;
-		default:
-			break;
-	}
-}*/
-
-
-#ifdef AzPAD
 #pragma mark - <PadRootVC delegate>
 // タテになり左が非表示になる前に呼ばれる  <willHideViewController>
 - (void)showPopoverButtonItem:(UIBarButtonItem *)barButtonItem
@@ -1820,7 +1721,7 @@
 
 	UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
 	if ( [[nc visibleViewController] isMemberOfClass:[E3detailTVC class]] ) {	// E3detailTVC のときだけ、
-		if (appDelegate.AppUpdateSave) { // E3detailTVCにて、変更あるので閉じさせない
+		if (appDelegate_.AppUpdateSave) { // E3detailTVCにて、変更あるので閉じさせない
 			alertBox(NSLocalizedString(@"Cancel or Save",nil), 
 					 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
 			return NO; 
@@ -1864,7 +1765,6 @@
 	[Mpopover release], Mpopover = nil;
 	return;
 }*/
-#endif
 
 
 @end

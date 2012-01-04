@@ -24,9 +24,6 @@
 #import "SpSearchVC.h"
 #import "DropboxVC.h"
 
-#ifdef AzPAD
-//#import "PadPopoverInNaviCon.h"
-#endif
 
 #define ACTIONSEET_TAG_DELETEPACK	901
 #define ACTIONSEET_TAG_BarMenu		910
@@ -45,17 +42,42 @@
 - (void)e1editView:(NSIndexPath *)indexPath;
 @end
 
+
 @implementation E1viewController
+{
+@public		// 外部公開 ＜＜使用禁止！@propertyで外部公開すること＞＞
+@protected	// 自クラスおよびサブクラスから参照できる（無指定時のデフォルト）
+@private	// 自クラス内からだけ参照できる
+	NSManagedObjectContext		*Rmoc;
+	//----------------------------------------------------------------viewDidLoadでnil, dealloc時にrelese
+	NSFetchedResultsController	*RfetchedE1;
+	HTTPServer					*RhttpServer;
+	UIAlertView					*RalertHttpServer;
+	NSDictionary				*MdicAddresses;
+	//UIActivityIndicatorView *activityIndicator_;
+	//----------------------------------------------------------------Owner移管につきdealloc時のrelese不要
+	E1edit						*Me1editView;		// self.navigationControllerがOwnerになる
+	UIBarButtonItem		*MbuInfo;
+	InformationView		*MinformationView;  // self.view.windowがOwnerになる
+
+	UIPopoverController*	Mpopover;
+	NSIndexPath*				MindexPathEdit;	//[1.1]ポインタ代入注意！copyするように改善した。
+	
+	//----------------------------------------------------------------assign
+	AppDelegate		*appDelegate_;
+	BOOL			MbInformationOpen;	//[1.0.2]InformationViewを初回自動表示するため
+	//NSIndexPath	  *MindexPathActionDelete; //NG//ポインタ危険
+	NSUInteger		MactionDeleteRow;		//[1.1]削除するRow
+	BOOL MbAzOptTotlWeightRound;
+	BOOL MbAzOptShowTotalWeight;
+	BOOL MbAzOptShowTotalWeightReq;
+	NSInteger MiSection0Rows; // E1レコード数　＜高速化＞
+	CGPoint		McontentOffsetDidSelect; // didSelect時のScrollView位置を記録
+}
 //@synthesize Rmoc;
 
 
 #pragma mark - Delegate
-
-#ifdef AzPAD
-/*- (void)setPopover:(UIPopoverController*)pc
-{
-	selfPopover = pc;
-}*/
 
 - (void)refreshE1view
 {
@@ -63,7 +85,6 @@
 	//[self viewWillAppear:YES];		// Setting変更後、全域再描画が必要になるので、このようにした。
 	[self viewDidAppear:YES];
 }
-#endif
 
 
 #pragma mark - CoreData - iCloud
@@ -183,107 +204,88 @@
 
 - (void)azInformationView
 {
-#ifdef  AzPAD
-	if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-
-	if (MinformationView) {
-		[MinformationView release], MinformationView = nil;
+	if (appDelegate_.app_is_iPad) {
+		if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+		
+		if (MinformationView) {
+			[MinformationView release], MinformationView = nil;
+		}
+		MinformationView = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
+		//MinformationView.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+		
+		[Mpopover release], Mpopover = nil;
+		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:MinformationView];
+		Mpopover = [[UIPopoverController alloc] initWithContentViewController:MinformationView];
+		//Mpopover.popoverContentSize = CGSizeMake(320, 510);
+		Mpopover.delegate = nil;	// 不要
+		CGRect rcArrow;
+		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //iPad初期、常にタテになる。原因不明
+			rcArrow = CGRectMake(0, 1027-60, 32,32);
+		} else {
+			rcArrow = CGRectMake(0, 768-60, 32,32);
+		}
+		[Mpopover presentPopoverFromRect:rcArrow  inView:self.navigationController.view  
+				permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
+	} 
+	else {
+		if (self.interfaceOrientation != UIInterfaceOrientationPortrait) return; // 正面でなければ禁止
+		// ヨコ非対応につき正面以外は、hideするようにした。
+		/*	if (MinformationView==nil) { // self.view.windowが解放されるまで存在しているため
+		 //MinformationView = [[InformationView alloc] initWithFrame:[self.view.window bounds]];
+		 //[self.view.window addSubview:MinformationView]; //回転しないが、.viewから出すとToolBarが隠れない
+		 MinformationView = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
+		 MinformationView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+		 [self.navigationController pushViewController:MinformationView animated:YES];
+		 [MinformationView release]; // addSubviewにてretain(+1)されるため、こちらはrelease(-1)して解放
+		 }
+		 [MinformationView show];
+		 */
+		// モーダル UIViewController
+		if (MinformationView) {
+			[MinformationView release], MinformationView = nil;
+		}
+		MinformationView = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
+		MinformationView.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+		[self presentModalViewController:MinformationView animated:YES];
+		//[MinformationView release];
 	}
-	MinformationView = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
-	//MinformationView.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-	
-	[Mpopover release], Mpopover = nil;
-	//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:MinformationView];
-	Mpopover = [[UIPopoverController alloc] initWithContentViewController:MinformationView];
-	//Mpopover.popoverContentSize = CGSizeMake(320, 510);
-	Mpopover.delegate = nil;	// 不要
-	CGRect rcArrow;
-	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //iPad初期、常にタテになる。原因不明
-		rcArrow = CGRectMake(0, 1027-60, 32,32);
-	} else {
-		rcArrow = CGRectMake(0, 768-60, 32,32);
-	}
-	[Mpopover presentPopoverFromRect:rcArrow  inView:self.navigationController.view  
-			permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
-#else
-	if (self.interfaceOrientation != UIInterfaceOrientationPortrait) return; // 正面でなければ禁止
-	// ヨコ非対応につき正面以外は、hideするようにした。
-	/*	if (MinformationView==nil) { // self.view.windowが解放されるまで存在しているため
-	 //MinformationView = [[InformationView alloc] initWithFrame:[self.view.window bounds]];
-	 //[self.view.window addSubview:MinformationView]; //回転しないが、.viewから出すとToolBarが隠れない
-	 MinformationView = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
-	 MinformationView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-	 [self.navigationController pushViewController:MinformationView animated:YES];
-	 [MinformationView release]; // addSubviewにてretain(+1)されるため、こちらはrelease(-1)して解放
-	 }
-	 [MinformationView show];
-	 */
-	// モーダル UIViewController
-	if (MinformationView) {
-		[MinformationView release], MinformationView = nil;
-	}
-	MinformationView = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
-	MinformationView.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-	[self presentModalViewController:MinformationView animated:YES];
-	//[MinformationView release];
-#endif
 }
 
 - (void)azSettingView
 {
-#ifdef AzPAD
-	if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-#endif
+	if (appDelegate_.app_is_iPad) {
+		if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+	}
 
 	SettingTVC *vi = [[SettingTVC alloc] init];
 
-#ifdef  AzPAD
-	[Mpopover release], Mpopover = nil;
-	//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:vi];
-	Mpopover = [[UIPopoverController alloc] initWithContentViewController:vi];
-	//Mpopover.popoverContentSize = CGSizeMake(480, 400);
-	Mpopover.delegate = nil;	// 不要
-	CGRect rcArrow;
-	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
-		rcArrow = CGRectMake(768-32, 1027-60, 32,32);
+	if (appDelegate_.app_is_iPad) {
+		[Mpopover release], Mpopover = nil;
+		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:vi];
+		Mpopover = [[UIPopoverController alloc] initWithContentViewController:vi];
+		//Mpopover.popoverContentSize = CGSizeMake(480, 400);
+		Mpopover.delegate = nil;	// 不要
+		CGRect rcArrow;
+		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+			rcArrow = CGRectMake(768-32, 1027-60, 32,32);
+		} else {
+			rcArrow = CGRectMake(1024-320-32, 768-60, 32,32);
+		}
+		[Mpopover presentPopoverFromRect:rcArrow	inView:self.navigationController.view  
+				permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
 	} else {
-		rcArrow = CGRectMake(1024-320-32, 768-60, 32,32);
+		//vi.hidesBottomBarWhenPushed = YES; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+		[vi setHidesBottomBarWhenPushed:YES];
+		[self.navigationController pushViewController:vi animated:YES];
 	}
-	[Mpopover presentPopoverFromRect:rcArrow	inView:self.navigationController.view  
-			permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
-#else
-	//vi.hidesBottomBarWhenPushed = YES; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-	[vi setHidesBottomBarWhenPushed:YES];
-	[self.navigationController pushViewController:vi animated:YES];
-#endif
 	[vi release];
 	
-#ifdef FREE_AD
-	AppDelegate *apd = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	// 各viewDidAppear:にて「許可/禁止」を設定する
-	[apd AdRefresh:NO];	//広告禁止
-#endif
+	if (appDelegate_.app_is_Ad) {
+		// 各viewDidAppear:にて「許可/禁止」を設定する
+		[appDelegate_ AdRefresh:NO];	//広告禁止
+	}
 }
 
-/*
-- (void)azAction
-{
-	UIActionSheet *as = [[[UIActionSheet alloc] init] autorelease];
-	as.delegate = self;
-	as.tag = ACTIONSEET_TAG_MENU;
-	//[as addButtonWithTitle:NSLocalizedString(@"Go to support", nil)];		 (0)
-	[as addButtonWithTitle:NSLocalizedString(@"Import SharePlan", nil)];	// (0)
-	[as addButtonWithTitle:NSLocalizedString(@"Import Google", nil)];		// (1)
-	[as addButtonWithTitle:NSLocalizedString(@"Import YourPC", nil)];		// (2)
-	[as addButtonWithTitle:NSLocalizedString(@"Import PasteBoard", nil)];	// (3)
-	[as addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];				// (4)
-	as.cancelButtonIndex = 4;		// キャンセル
-#ifdef AzPAD
-	[as addButtonWithTitle:@"Dummy"];	// (5) Pad:なぜか？これが無いとCalcelが出ない
-#endif
-	[as showFromToolbar:self.navigationController.toolbar];
-}
-*/
 
 //- (void)actionE1deleteCell:(NSIndexPath*)indexPath
 - (void)actionE1deleteCell:(NSUInteger)uiRow
@@ -337,39 +339,38 @@
 
 - (void)actionImportSharedPackList
 {
-#ifdef AzPAD
-	if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-#endif
+	if (appDelegate_.app_is_iPad) {
+		if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+	}
 	
-#ifdef FREE_AD
-	AppDelegate *apd = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	[apd AdRefresh:NO];	//広告禁止
-#endif
+	if (appDelegate_.app_is_Ad) {
+		[appDelegate_ AdRefresh:NO];	//広告禁止
+	}
 	
 	SpSearchVC *vc = [[SpSearchVC alloc] init];
 	
-#ifdef AzPAD
-	[Mpopover release], Mpopover = nil;
-	//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:vc];
-	UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
-	Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
-	[nc release];
-	Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-	[MindexPathEdit release], MindexPathEdit = nil;
-	
-	CGRect rcArrow;
-	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
-		rcArrow = CGRectMake(768/2-10, 1027-60, 20,20);
+	if (appDelegate_.app_is_iPad) {
+		[Mpopover release], Mpopover = nil;
+		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:vc];
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+		Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
+		[nc release];
+		Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
+		[MindexPathEdit release], MindexPathEdit = nil;
+		
+		CGRect rcArrow;
+		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+			rcArrow = CGRectMake(768/2-10, 1027-60, 20,20);
+		} else {
+			rcArrow = CGRectMake((1024-320)/2-10, 768-60, 20,20);
+		}
+		[Mpopover presentPopoverFromRect:rcArrow  inView:self.navigationController.view
+				permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
 	} else {
-		rcArrow = CGRectMake((1024-320)/2-10, 768-60, 20,20);
+		//vc.hidesBottomBarWhenPushed = YES; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+		[vc setHidesBottomBarWhenPushed:YES];
+		[self.navigationController pushViewController:vc animated:YES];
 	}
-	[Mpopover presentPopoverFromRect:rcArrow  inView:self.navigationController.view
-			permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
-#else
-	//vc.hidesBottomBarWhenPushed = YES; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-	[vc setHidesBottomBarWhenPushed:YES];
-	[self.navigationController pushViewController:vc animated:YES];
-#endif
 	[vc release];
 }
 
@@ -378,25 +379,27 @@
 	// 未認証の場合、認証処理後、AppDelegate:handleOpenURL:から呼び出される
 	if ([[DBSession sharedSession] isLinked]) 
 	{	// Dropbox 認証済み
-#ifdef AzPAD
-		DropboxVC *vc = [[DropboxVC alloc] initWithNibName:@"DropboxVC-iPad" bundle:nil];
-#else
-		DropboxVC *vc = [[DropboxVC alloc] initWithNibName:@"DropboxVC" bundle:nil];
-#endif
-		vc.Re1selected = nil; // 取込専用
-		[self presentModalViewController:vc animated:YES];
+		if (appDelegate_.app_is_iPad) {
+			DropboxVC *vc = [[DropboxVC alloc] initWithNibName:@"DropboxVC-iPad" bundle:nil];
+			vc.Re1selected = nil; // 取込専用
+			[self presentModalViewController:vc animated:YES];
+		} else {
+			DropboxVC *vc = [[DropboxVC alloc] initWithNibName:@"DropboxVC" bundle:nil];
+			vc.Re1selected = nil; // 取込専用
+			[self presentModalViewController:vc animated:YES];
+		}
 	} else {
 		// Dropbox 未認証
-		appDelegate.dropboxSaveE1selected = nil;	// 取込専用
+		appDelegate_.dropboxSaveE1selected = nil;	// 取込専用
 		[[DBSession sharedSession] link];
 	}
 }
 
 - (void)actionImportGoogle
 {
-#ifdef AzPAD
-	if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-#endif
+	if (appDelegate_.app_is_iPad) {
+		if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+	}
 
 	GooDocsView *goodocs = [[GooDocsView alloc] init];
 	// 以下は、GooDocsViewの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
@@ -405,42 +408,43 @@
 	goodocs.Re1selected = nil; // DownloadのときはE1未選択であるから
 	goodocs.PbUpload = NO;
 	goodocs.title = NSLocalizedString(@"Import Google", nil);
-#ifdef AzPAD
-	[Mpopover release], Mpopover = nil;
-	//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:goodocs];
-	UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:goodocs];
-	Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
-	[nc release];
-	Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-	[MindexPathEdit release], MindexPathEdit = nil;
-	CGRect rcArrow;
-	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
-		rcArrow = CGRectMake(768/2-10, 1027-60, 20,20);
-	} else {
-		rcArrow = CGRectMake((1024-320)/2-10, 768-60, 20,20);
+
+	if (appDelegate_.app_is_iPad) {
+		[Mpopover release], Mpopover = nil;
+		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:goodocs];
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:goodocs];
+		Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
+		[nc release];
+		Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
+		[MindexPathEdit release], MindexPathEdit = nil;
+		CGRect rcArrow;
+		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+			rcArrow = CGRectMake(768/2-10, 1027-60, 20,20);
+		} else {
+			rcArrow = CGRectMake((1024-320)/2-10, 768-60, 20,20);
+		}
+		[Mpopover presentPopoverFromRect:rcArrow	  inView:self.navigationController.view
+				permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
+		goodocs.selfPopover = Mpopover;
+		goodocs.delegate = self; //Download後の再描画のため
+	} 
+	else {
+		[goodocs setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+		goodocs.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+		[self.navigationController pushViewController:goodocs animated:YES];
+
+		if (appDelegate_.app_is_Ad) {
+			[appDelegate_ AdRefresh:NO];	//広告禁止
+		}
 	}
-	[Mpopover presentPopoverFromRect:rcArrow	  inView:self.navigationController.view
-			permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
-	goodocs.selfPopover = Mpopover;
-	goodocs.delegate = self; //Download後の再描画のため
-#else
-	[goodocs setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-	goodocs.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-	[self.navigationController pushViewController:goodocs animated:YES];
-#ifdef FREE_AD
-	AppDelegate *apd = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	[apd AdRefresh:NO];	//広告禁止
-#endif
-#endif
 	[goodocs release];
 }
 
 - (void)actionImportYourPC
 {
-#ifdef FREE_AD
-	AppDelegate *apd = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	[apd AdRefresh:NO];	//広告禁止
-#endif
+	if (appDelegate_.app_is_Ad) {
+		[appDelegate_ AdRefresh:NO];	//広告禁止
+	}
 	// HTTP Server Start
 	if (RalertHttpServer == nil) {
 		RalertHttpServer = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"HttpSv RESTORE", nil) 
@@ -522,38 +526,39 @@
 	
 	// E2 へドリルダウン
 	E2viewController *e2view = [[E2viewController alloc] init];
-#ifdef AzPAD
-	e2view.title = NSLocalizedString(@"Product Title",nil);
-#else
-	if ([e1obj.name length]<=0) {
-		e2view.title = NSLocalizedString(@"(New Pack)", nil);
+
+	if (appDelegate_.app_is_iPad) {
+		e2view.title = NSLocalizedString(@"Product Title",nil);
 	} else {
-		e2view.title = e1obj.name;
+		if ([e1obj.name length]<=0) {
+			e2view.title = NSLocalizedString(@"(New Pack)", nil);
+		} else {
+			e2view.title = e1obj.name;
+		}
 	}
-#endif
 	
 	e2view.Re1selected = e1obj;
 	e2view.PbSharePlanList = NO;
 	
-#ifdef AzPAD
-	//Split Right
-	E3viewController* e3view = [[E3viewController alloc] init];
-	// 以下は、E3viewControllerの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
-	e3view.title = e1obj.name;  //  self.title;  // NSLocalizedString(@"Items", nil);
-	e3view.Re1selected = e1obj; // E1
-	e3view.PiFirstSection = 0;
-	e3view.PiSortType = (-1);
-	e3view.PbSharePlanList = NO;
-	//[1]Right
-	[[appDelegate.mainVC.viewControllers objectAtIndex:1] pushViewController:e3view animated:YES]; 
-	//[0]Left
-	e2view.delegateE3viewController = e3view;		// E2からE3を更新するため
-	[[appDelegate.mainVC.viewControllers objectAtIndex:0] pushViewController:e2view animated:YES]; 
-	
-	[e3view release];
-#else
-	[self.navigationController pushViewController:e2view animated:YES];
-#endif
+	if (appDelegate_.app_is_iPad) {
+		//Split Right
+		E3viewController* e3view = [[E3viewController alloc] init];
+		// 以下は、E3viewControllerの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
+		e3view.title = e1obj.name;  //  self.title;  // NSLocalizedString(@"Items", nil);
+		e3view.Re1selected = e1obj; // E1
+		e3view.PiFirstSection = 0;
+		e3view.PiSortType = (-1);
+		e3view.PbSharePlanList = NO;
+		//[1]Right
+		[[appDelegate_.mainSVC.viewControllers objectAtIndex:1] pushViewController:e3view animated:YES]; 
+		//[0]Left
+		e2view.delegateE3viewController = e3view;		// E2からE3を更新するため
+		[[appDelegate_.mainSVC.viewControllers objectAtIndex:0] pushViewController:e2view animated:YES]; 
+		
+		[e3view release];
+	} else {
+		[self.navigationController pushViewController:e2view animated:YES];
+	}
 	
 	[e2view release];
 }
@@ -598,9 +603,10 @@
 - (void)e1editView:(NSIndexPath *)indexPath
 {
 	if (MiSection0Rows <= indexPath.row) return;  // Addボタン行などの場合パスする
-#ifdef AzPAD
-	if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+	}
 	
 	// E1 : NSManagedObject
 	E1 *e1obj = [RfetchedE1 objectAtIndexPath:indexPath];
@@ -610,26 +616,27 @@
 	Me1editView.Re1target = e1obj;
 	Me1editView.PiAddRow = (-1); // Edit mode.
 	
-#ifdef  AzPAD
-	[Mpopover release], Mpopover = nil;
-	//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:Me1editView];
-	UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:Me1editView];
-	Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
-	[nc release];
-	Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-	//MindexPathEdit = indexPath;
-	[MindexPathEdit release], MindexPathEdit = [indexPath copy];
-	CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
-	rc.origin.x = rc.size.width - 65;	rc.size.width = 1;
-	rc.origin.y += 10;	rc.size.height -= 20;
-	[Mpopover presentPopoverFromRect:rc
-							  inView:self.view  permittedArrowDirections:UIPopoverArrowDirectionRight  animated:YES];
-	Me1editView.selfPopover = Mpopover;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
-	Me1editView.delegate = self;		// refresh callback
-#else
-	[Me1editView setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-	[self.navigationController pushViewController:Me1editView animated:YES];
-#endif
+	if (appDelegate_.app_is_iPad) {
+		[Mpopover release], Mpopover = nil;
+		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:Me1editView];
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:Me1editView];
+		Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
+		[nc release];
+		Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
+		//MindexPathEdit = indexPath;
+		[MindexPathEdit release], MindexPathEdit = [indexPath copy];
+		CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
+		rc.origin.x = rc.size.width - 65;	rc.size.width = 1;
+		rc.origin.y += 10;	rc.size.height -= 20;
+		[Mpopover presentPopoverFromRect:rc
+								  inView:self.view  permittedArrowDirections:UIPopoverArrowDirectionRight  animated:YES];
+		Me1editView.selfPopover = Mpopover;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
+		Me1editView.delegate = self;		// refresh callback
+	}
+	else {
+		[Me1editView setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+		[self.navigationController pushViewController:Me1editView animated:YES];
+	}
 	[Me1editView release]; // self.navigationControllerがOwnerになる
 }
 
@@ -745,7 +752,7 @@
 	self = [super initWithStyle:UITableViewStyleGrouped];  // セクションあり
 	if (self) {
 		// 初期化成功
-		appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		Me1editView = nil;		// e1addで生成 [self.navigationController pushViewController:]
 		MinformationView = nil; // azInformationViewで生成 [self.view.window addSubview:]
 		
@@ -789,13 +796,13 @@
 	self.tableView.allowsSelectionDuringEditing = YES; // 編集モードに入ってる間にユーザがセルを選択できる
 #endif	
 	
-#ifdef FREE_AD
-	UIImageView* iv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Icon24-Free.png"]];
-	UIBarButtonItem* bui = [[UIBarButtonItem alloc] initWithCustomView:iv];
-	self.navigationItem.leftBarButtonItem	= bui;
-	[bui release];
-	[iv release];
-#endif
+	if (appDelegate_.app_is_Ad) {
+		UIImageView* iv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Icon24-Free.png"]];
+		UIBarButtonItem* bui = [[UIBarButtonItem alloc] initWithCustomView:iv];
+		self.navigationItem.leftBarButtonItem	= bui;
+		[bui release];
+		[iv release];
+	}
 	
 	//------------------------------------------Adより上層になるように
 	// Tool Bar Button
@@ -827,11 +834,11 @@
 	
 	// observe the app delegate telling us when it's finished asynchronously setting up the persistent store
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refetcheAllData:)
-												 name:NFM_REFETCH_ALL_DATA   object:appDelegate];
+												 name:NFM_REFETCH_ALL_DATA   object:appDelegate_];
 	
 	// listen to our app delegates notification that we might want to refresh our detail view
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAllViews:) 
-												 name:NFM_REFRESH_ALL_VIEWS  object:appDelegate];
+												 name:NFM_REFRESH_ALL_VIEWS  object:appDelegate_];
 }
 
 - (void)viewWillAppear:(BOOL)animated 
@@ -847,7 +854,7 @@
 	self.title = NSLocalizedString(@"Product Title",nil);
 	
 	if (Rmoc==nil) {
-		Rmoc = [appDelegate managedObjectContext];
+		Rmoc = [appDelegate_ managedObjectContext];
 	}
 	// CoreData 読み込み
 	[self refetcheAllData];	//この中で処理済み [self.tableView reloadData];
@@ -864,21 +871,15 @@
 {
     [super viewDidAppear:animated];
 	
-	if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0"]==NSOrderedAscending) { // ＜ "5.0"
-		// iOS5.0より前
-		alertBox(@"! STOP !", @"Need more iOS 5.0", nil);
-		exit(0);
-	}
-	
-#ifdef AzPAD
-	[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
-#else
-	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) { // ヨコ
-		[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
-	} else {
+	if (appDelegate_.app_is_iPad) {
 		[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
+	} else {
+		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) { // ヨコ
+			[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
+		} else {
+			[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
+		}
 	}
-#endif
 	
 	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 
@@ -887,21 +888,21 @@
 		[self azInformationView];  //[1.0.2]最初に表示する。バックグランド復帰時には通らない
 	}
 	
-#if defined (FREE_AD) 
-	//【Tips】タテから始まるとき、willRotateToInterfaceOrientation:を通らずに、ここを通る　⇒ AdRefresh：にて初期タテ配置となる
-	//【Tips】ヨコから始まるとき、ここよりもloadView：よりも先に willRotateToInterfaceOrientation: を通る ⇒ willRotateにてヨコ配置となる
-	[appDelegate AdRefresh:YES];	//広告許可
-#endif
+	if (appDelegate_.app_is_Ad) {
+		//【Tips】タテから始まるとき、willRotateToInterfaceOrientation:を通らずに、ここを通る　⇒ AdRefresh：にて初期タテ配置となる
+		//【Tips】ヨコから始まるとき、ここよりもloadView：よりも先に willRotateToInterfaceOrientation: を通る ⇒ willRotateにてヨコ配置となる
+		[appDelegate_ AdRefresh:YES];	//広告許可
+	}
 }
 
 // この画面が非表示になる直前に呼ばれる
 - (void)viewWillDisappear:(BOOL)animated 
 {
-#ifdef AzPAD
-	if ([Mpopover isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
-		[Mpopover dismissPopoverAnimated:animated];
+	if (appDelegate_.app_is_iPad) {
+		if ([Mpopover isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
+			[Mpopover dismissPopoverAnimated:animated];
+		}
 	}
-#endif
 	[super viewWillDisappear:animated];
 }
 
@@ -913,54 +914,53 @@
 //				回転後に didRotateFromInterfaceOrientation が呼び出される。
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-#ifdef AzPAD
-	return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
-#else
-	if (appDelegate.AppShouldAutorotate==NO) {
-		// 回転禁止にしている場合
-		[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
-		if (interfaceOrientation == UIInterfaceOrientationPortrait)
-		{ // 正面（ホームボタンが画面の下側にある状態）
-			return YES; // この方向だけ常に許可する
-		}
-		return NO; // その他、禁止
-	}
-	
-	// 回転許可
-	if (UIInterfaceOrientationIsPortrait(interfaceOrientation))
-	{	// タテ
-		[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
+	if (appDelegate_.app_is_iPad) {
+		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
 	} else {
-		[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
-		if (MinformationView) {
-			[MinformationView hide]; // 正面でなければhide
-			[MinformationView release], MinformationView = nil;
+		if (appDelegate_.AppShouldAutorotate==NO) {
+			// 回転禁止にしている場合
+			[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
+			if (interfaceOrientation == UIInterfaceOrientationPortrait)
+			{ // 正面（ホームボタンが画面の下側にある状態）
+				return YES; // この方向だけ常に許可する
+			}
+			return NO; // その他、禁止
 		}
+		
+		// 回転許可
+		if (UIInterfaceOrientationIsPortrait(interfaceOrientation))
+		{	// タテ
+			[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
+		} else {
+			[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
+			if (MinformationView) {
+				[MinformationView hide]; // 正面でなければhide
+				[MinformationView release], MinformationView = nil;
+			}
+		}
+		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
 	}
-	return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
-#endif
 }
 
 // shouldAutorotateToInterfaceOrientation で YES を返すと、回転開始時に呼び出される
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation 
 													duration:(NSTimeInterval)duration
 {
-#ifdef AzPAD
-	MbuInfo.enabled = YES;
-#else
-	// InformationViewボタン：正面のときだけ有効にする
-	MbuInfo.enabled = (toInterfaceOrientation == UIInterfaceOrientationPortrait);
-#endif
+	if (appDelegate_.app_is_iPad) {
+		MbuInfo.enabled = YES;
+	} else {
+		// InformationViewボタン：正面のときだけ有効にする
+		MbuInfo.enabled = (toInterfaceOrientation == UIInterfaceOrientationPortrait);
+	}
 
-#ifdef FREE_AD
-	// 広告非表示でも回転時に位置調整しておく必要あり ＜＜現れるときの開始位置のため＞＞
-	// ここが最初の生成となる。この後、loadView: よりも先に willRotateToInterfaceOrientation: を通り、回転位置セットされる。
-	[appDelegate AdRefresh];	//広告生成のみ
-	[appDelegate AdViewWillRotate:toInterfaceOrientation];
-#endif
+	if (appDelegate_.app_is_Ad) {
+		// 広告非表示でも回転時に位置調整しておく必要あり ＜＜現れるときの開始位置のため＞＞
+		// ここが最初の生成となる。この後、loadView: よりも先に willRotateToInterfaceOrientation: を通り、回転位置セットされる。
+		[appDelegate_ AdRefresh];	//広告生成のみ
+		[appDelegate_ AdViewWillRotate:toInterfaceOrientation];
+	}
 }
 
-#ifdef AzPAD
 // 回転した後に呼び出される
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {	// Popoverの位置を調整する　＜＜UIPopoverController の矢印が画面回転時にターゲットから外れてはならない＞＞
@@ -978,7 +978,6 @@
 		}
 	}
 }
-#endif
 
 #pragma mark  View Unload
 
@@ -1019,11 +1018,12 @@
 - (void)dealloc    // 生成とは逆順に解放するのが好ましい
 {
 	[self unloadRelease];
-#ifdef AzPAD
-	Mpopover.delegate = nil;	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
-	[Mpopover release], Mpopover = nil;
-	[MindexPathEdit release], MindexPathEdit = nil;
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		Mpopover.delegate = nil;	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
+		[Mpopover release], Mpopover = nil;
+		[MindexPathEdit release], MindexPathEdit = nil;
+	}
 	//--------------------------------@property (retain)
 	[Rmoc release];
     [super dealloc];
@@ -1047,7 +1047,7 @@
 		case 0:
 			return MiSection0Rows + 1; // +1:Add行
 		case 1:
-			if (appDelegate.AppEnabled_Dropbox) {
+			if (appDelegate_.AppEnabled_Dropbox) {
 				return 5;	//Action menu
 			}
 			return 4;	//Action menu
@@ -1060,19 +1060,20 @@
 {
 	switch (section) {
 		case 0:
-#if defined(FREE_AD) && defined(AzPAD)
-			if (MiSection0Rows <= 0) {
-				return [NSString stringWithFormat:@"\n\n\n%@", 
-										NSLocalizedString(@"Plan Nothing",nil)];
+			if (appDelegate_.app_is_iPad  &&  appDelegate_.app_is_Ad) {
+				if (MiSection0Rows <= 0) {
+					return [NSString stringWithFormat:@"\n\n\n%@", 
+							NSLocalizedString(@"Plan Nothing",nil)];
+				}
+				return @"\n\n";	// iAd上部スペース
+			} else {
+				if (MiSection0Rows <= 0) {
+					return NSLocalizedString(@"Plan Nothing",nil);
+				}
+				//[1.0.1]//return NSLocalizedString(@"Plan",nil);
 			}
-			return @"\n\n";	// iAd上部スペース
-#else
-			if (MiSection0Rows <= 0) {
-				return NSLocalizedString(@"Plan Nothing",nil);
-			}
-			//[1.0.1]//return NSLocalizedString(@"Plan",nil);
-#endif
 			break;
+			
 		case 1:
 			return NSLocalizedString(@"Action menu",nil);
 			break;
@@ -1086,14 +1087,14 @@
 	switch (section) {
 		case 1: {
 			NSString *zz = @"";  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
-			if (appDelegate.AppEnabled_iCloud) {
+			if (appDelegate_.AppEnabled_iCloud) {
 				zz = NSLocalizedString(@"iCloud ON",nil); //@"<<< Will syncronize with iCloud >>>";
 			}
-#ifdef AzPAD
-			return [zz stringByAppendingString:@"\n\n\n\n\n\n\n\n\nAzukiSoft Project\n©1995-2011 Azukid\n\n\n\n"];
-#else
-			return [zz stringByAppendingString:@"\n\n\n\nAzukiSoft Project\n©1995-2011 Azukid\n"];
-#endif
+			if (appDelegate_.app_is_iPad) {
+				return [zz stringByAppendingString:@"\n\n\n\n\n\n\n\n\nAzukiSoft Project\n©1995-2011 Azukid\n\n\n\n"];
+			} else {
+				return [zz stringByAppendingString:@"\n\n\n\nAzukiSoft Project\n©1995-2011 Azukid\n"];
+			}
 		} break;
 	}
 	return nil;
@@ -1103,11 +1104,11 @@
 // セルの高さを指示する
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-#ifdef AzPAD
-	return 50;
-#else
-	return 44; // デフォルト：44ピクセル
-#endif
+	if (appDelegate_.app_is_iPad) {
+		return 50;
+	} else {
+		return 44; // デフォルト：44ピクセル
+	}
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1129,7 +1130,7 @@
 			// E1 : NSManagedObject
 			E1 *e1obj = [RfetchedE1 objectAtIndexPath:indexPath];
 			
-#ifdef AzDEBUG
+#ifdef DEBUG
 			if ([e1obj.name length] <= 0) 
 				cell.textLabel.text = NSLocalizedString(@"(New Pack)", nil);
 			else
@@ -1142,13 +1143,13 @@
 				cell.textLabel.text = e1obj.name;
 #endif
 
-#ifdef AzPAD
-			cell.textLabel.font = [UIFont systemFontOfSize:20];
-			cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
-#else
-			cell.textLabel.font = [UIFont systemFontOfSize:18];
-			cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
-#endif
+			if (appDelegate_.app_is_iPad) {
+				cell.textLabel.font = [UIFont systemFontOfSize:20];
+				cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
+			} else {
+				cell.textLabel.font = [UIFont systemFontOfSize:18];
+				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
+			}
 			cell.textLabel.textAlignment = UITextAlignmentLeft;
 			cell.textLabel.textColor = [UIColor blackColor];
 			
@@ -1242,11 +1243,12 @@
 				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault      // Default型
 											   reuseIdentifier:zCellDefault] autorelease];
 			}
-#ifdef AzPAD
-			cell.textLabel.font = [UIFont systemFontOfSize:18];
-#else
-			cell.textLabel.font = [UIFont systemFontOfSize:14];
-#endif
+
+			if (appDelegate_.app_is_iPad) {
+				cell.textLabel.font = [UIFont systemFontOfSize:18];
+			} else {
+				cell.textLabel.font = [UIFont systemFontOfSize:14];
+			}
 			cell.textLabel.textAlignment = UITextAlignmentCenter; // 中央寄せ
 			cell.textLabel.textColor = [UIColor darkGrayColor];
 			
@@ -1257,19 +1259,7 @@
 					cell.showsReorderControl = NO;
 					cell.textLabel.text = NSLocalizedString(@"New Pack",nil);
 				}	break;
-
-/*				case -1: { // Share PLAN
-					cell.imageView.image = [UIImage imageNamed:@"Icon24-GreenPlus.png"];
-#ifdef AzPAD
-					cell.accessoryType = UITableViewCellAccessoryNone;
-#else
-					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
-#endif
-					cell.showsReorderControl = NO;
-					cell.textLabel.text = NSLocalizedString(@"Import SharePlan",nil);
-				}	break;*/
 			}
-			
 		}
 	}
 	else { //-----------------------------------------------------------Section(1) Action menu
@@ -1278,15 +1268,16 @@
 			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
 										   reuseIdentifier:zCellSubtitle] autorelease];
 		}
-#ifdef AzPAD
-		cell.textLabel.font = [UIFont systemFontOfSize:18];
-		cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
-		cell.accessoryType = UITableViewCellAccessoryNone;
-#else
-		cell.textLabel.font = [UIFont systemFontOfSize:14];
-		cell.detailTextLabel.font = [UIFont systemFontOfSize:10];
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
-#endif
+
+		if (appDelegate_.app_is_iPad) {
+			cell.textLabel.font = [UIFont systemFontOfSize:18];
+			cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
+			cell.accessoryType = UITableViewCellAccessoryNone;
+		} else {
+			cell.textLabel.font = [UIFont systemFontOfSize:14];
+			cell.detailTextLabel.font = [UIFont systemFontOfSize:10];
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
+		}
 		cell.textLabel.textAlignment = UITextAlignmentLeft; 
 		cell.textLabel.textColor = [UIColor darkGrayColor];
 		cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
@@ -1294,7 +1285,7 @@
 		cell.showsReorderControl = NO;
 
 		NSInteger iRow = indexPath.row;
-		if (appDelegate.AppEnabled_Dropbox==NO && 1<=iRow) iRow++; // Dropbox無効
+		if (appDelegate_.AppEnabled_Dropbox==NO && 1<=iRow) iRow++; // Dropbox無効
 		switch (iRow) {
 			case 0:
 				cell.imageView.image = [UIImage imageNamed:@"Icon32-SharedAdd"];
@@ -1376,7 +1367,7 @@
 	}
 	else if (indexPath.section == 1) {
 		NSInteger iRow = indexPath.row;
-		if (appDelegate.AppEnabled_Dropbox==NO && 1<=iRow) iRow++; // Dropbox無効
+		if (appDelegate_.AppEnabled_Dropbox==NO && 1<=iRow) iRow++; // Dropbox無効
 		switch (iRow) {
 			case 0: // SharePlan Search
 				[self	actionImportSharedPackList];
@@ -1520,7 +1511,6 @@
 	}
 }
 
-#ifdef AzPAD
 #pragma mark - delegate UIPopoverController
 - (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController
 {	// Popoverの外部をタップして閉じる前に通知
@@ -1529,7 +1519,7 @@
 
 	UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
 	if ( [[nc visibleViewController] isMemberOfClass:[E1edit class]] ) {	// E1edit のときだけ、
-		if (appDelegate.AppUpdateSave) { // E1editにて、変更あるので閉じさせない
+		if (appDelegate_.AppUpdateSave) { // E1editにて、変更あるので閉じさせない
 			alertBox(NSLocalizedString(@"Cancel or Save",nil), 
 					 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
 			return NO; 
@@ -1544,9 +1534,6 @@
 	[self refreshE1view];
 	return;
 }
-
-#endif
-
 
 @end
 

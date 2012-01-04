@@ -24,12 +24,25 @@
 @end
 
 @implementation E1edit   // ViewController
+{
+@private
+	E1			*Re1target;  // IはInstance、aはassign を示す
+	NSInteger	PiAddRow;    // (>=0)Add  (-1)Edit
+	
+	id									delegate;
+	UIPopoverController*	selfPopover;  // 自身を包むPopover  閉じる為に必要
+	
+	//----------------------------------------------------------------viewDidLoadでnil, dealloc時にrelese
+	//----------------------------------------------------------------Owner移管につきdealloc時のrelese不要
+	UITextField		*MtfName;  // self.viewがOwner
+	UITextView		*MtvNote;  // self.viewがOwner
+	//----------------------------------------------------------------assign
+	AppDelegate		*appDelegate_;
+}
 @synthesize Re1target;
 @synthesize PiAddRow;
-#ifdef AzPAD
 @synthesize delegate;
 @synthesize selfPopover;
-#endif
 
 
 #pragma mark - View lifecycle
@@ -39,11 +52,12 @@
 	self = [super init];
 	if (self) {
 		// 初期化処理：インスタンス生成時に1回だけ通る
-		appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		appDelegate.AppUpdateSave = NO;
-#ifdef AzPAD
-		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
-#endif
+		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		appDelegate_.AppUpdateSave = NO;
+
+		if (appDelegate_.app_is_iPad) {
+			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
+		}
 	}
 	return self;
 }
@@ -58,11 +72,13 @@
 	
 	// E1.name
 	MtfName = [[[UITextField alloc] init] autorelease]; // 位置はviewDesignで決定
-#ifdef AzPAD
-	MtfName.font = [UIFont systemFontOfSize:20];
-#else
-	MtfName.font = [UIFont systemFontOfSize:16];
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		MtfName.font = [UIFont systemFontOfSize:20];
+	} else {
+		MtfName.font = [UIFont systemFontOfSize:16];
+	}
+
 	MtfName.textColor = [UIColor blackColor];
 	MtfName.borderStyle = UITextBorderStyleRoundedRect;
 	MtfName.placeholder = NSLocalizedString(@"(New Pack)",nil);  //(@"Plan name", @"AzPack名称");
@@ -73,11 +89,13 @@
 	
 	// E1.note
 	MtvNote = [[[UITextView alloc] init] autorelease];
-#ifdef AzPAD
-	MtvNote.font = [UIFont systemFontOfSize:20];
-#else
-	MtvNote.font = [UIFont systemFontOfSize:14];
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		MtvNote.font = [UIFont systemFontOfSize:20];
+	} else {
+		MtvNote.font = [UIFont systemFontOfSize:14];
+	}
+
 	MtvNote.textColor = [UIColor brownColor];
 	MtvNote.keyboardType = UIKeyboardTypeDefault;
 	MtvNote.delegate = self;
@@ -148,12 +166,12 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
-#ifdef AzPAD
-	return NO;	// Popover内につき回転不要
-#else
-	// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
-	return appDelegate.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
-#endif
+	if (appDelegate_.app_is_iPad) {
+		return NO;	// Popover内につき回転不要
+	} else {
+		// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
+		return appDelegate_.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+	}
 }
 
 // ユーザインタフェースの回転の最後の半分が始まる前にこの処理が呼ばれる　＜＜このタイミングで配置転換すると見栄え良い＞＞
@@ -166,51 +184,49 @@
 
 - (void)viewDesign
 {
-#ifdef AzPAD
-	CGRect rect;
-	rect.origin.x = 10;
-	rect.origin.y = 5;
-	rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
-	rect.size.height = 40;
-	MtfName.frame = rect;
-	
-	rect.origin.x = 15;
-	rect.origin.y = 48;
-	rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
-	rect.size.height = self.view.frame.size.height - rect.origin.y - 10;
-	MtvNote.frame = rect;
-#else
-	float fKeyHeight;
-	float fHeightOfsset;
-	if (self.interfaceOrientation == UIInterfaceOrientationPortrait 
-		OR self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-		fKeyHeight = GD_KeyboardHeightPortrait;	 // タテ
-		fHeightOfsset = 15; // タテ： MtfNameの高さを少しでも高くして操作しやすくする
+	if (appDelegate_.app_is_iPad) {
+		CGRect rect;
+		rect.origin.x = 10;
+		rect.origin.y = 5;
+		rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
+		rect.size.height = 40;
+		MtfName.frame = rect;
+		
+		rect.origin.x = 15;
+		rect.origin.y = 48;
+		rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
+		rect.size.height = self.view.frame.size.height - rect.origin.y - 10;
+		MtvNote.frame = rect;
 	} else {
-		fKeyHeight = GD_KeyboardHeightLandscape; // ヨコ
-		fHeightOfsset = 0; // ヨコ： MtvNoteの高さをできるだけ確保しなければ入力しにくくなる
+		float fKeyHeight;
+		float fHeightOfsset;
+		if (self.interfaceOrientation == UIInterfaceOrientationPortrait 
+			OR self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+			fKeyHeight = GD_KeyboardHeightPortrait;	 // タテ
+			fHeightOfsset = 15; // タテ： MtfNameの高さを少しでも高くして操作しやすくする
+		} else {
+			fKeyHeight = GD_KeyboardHeightLandscape; // ヨコ
+			fHeightOfsset = 0; // ヨコ： MtvNoteの高さをできるだけ確保しなければ入力しにくくなる
+		}
+		
+		CGRect rect;
+		rect.origin.x = 10;
+		rect.origin.y = 5;
+		rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
+		rect.size.height = 25 + fHeightOfsset;
+		MtfName.frame = rect;
+		
+		rect.origin.x = 15;
+		rect.origin.y = 33 + fHeightOfsset;
+		rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
+		rect.size.height = self.view.frame.size.height - rect.origin.y - 5 - fKeyHeight;
+		MtvNote.frame = rect;
 	}
-
-	CGRect rect;
-	rect.origin.x = 10;
-	rect.origin.y = 5;
-	rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
-	rect.size.height = 25 + fHeightOfsset;
-	MtfName.frame = rect;
-	
-	rect.origin.x = 15;
-	rect.origin.y = 33 + fHeightOfsset;
-	rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
-	rect.size.height = self.view.frame.size.height - rect.origin.y - 5 - fKeyHeight;
-	MtvNote.frame = rect;
-#endif
 }
 
 - (void)dealloc 
 {
-#ifdef AzPAD
 	[selfPopover release], selfPopover = nil;
-#endif
 	// @property (retain)
 	[Re1target release];
     [super dealloc];
@@ -237,7 +253,7 @@
     [text replaceCharactersInRange:range withString:string];
 	// 置き換えた後の長さをチェックする
 	if ([text length] <= AzMAX_NAME_LENGTH) {
-		appDelegate.AppUpdateSave = YES; // 変更あり
+		appDelegate_.AppUpdateSave = YES; // 変更あり
 		self.navigationItem.rightBarButtonItem.enabled = YES; // 変更あり [Save]有効
 		return YES;
 	} else {
@@ -254,7 +270,7 @@
     [zText replaceCharactersInRange:range withString:zReplace];
 	// 置き換えた後の長さをチェックする
 	if ([zText length] <= AzMAX_NOTE_LENGTH) {
-		appDelegate.AppUpdateSave = YES; // 変更あり
+		appDelegate_.AppUpdateSave = YES; // 変更あり
 		self.navigationItem.rightBarButtonItem.enabled = YES; // 変更あり [Save]有効
 		return YES;
 	} else {
@@ -267,28 +283,28 @@
 
 - (void)cancel:(id)sender
 {
-#ifdef AzPAD
-	//Cancelでも「新しい・・」を削除しない。Rootに戻ったときに配下クリーン処理している。
-	//[(PadNaviCon*)self.navigationController dismissPopoverCancel];  // PadNaviCon拡張メソッド
-	if (selfPopover) {
-		[selfPopover dismissPopoverAnimated:YES];
+	if (appDelegate_.app_is_iPad) {
+		//Cancelでも「新しい・・」を削除しない。Rootに戻ったときに配下クリーン処理している。
+		//[(PadNaviCon*)self.navigationController dismissPopoverCancel];  // PadNaviCon拡張メソッド
+		if (selfPopover) {
+			[selfPopover dismissPopoverAnimated:YES];
+		}
+	} else {
+		/*	Cancelでも「新しい・・」を削除しない。Rootに戻ったときに配下クリーン処理している。
+		 if (Re1target && 0 <= PiAddRow) 
+		 {	// SAVEしたときには、Re1target=nil にしているので通らない。
+		 // 新オブジェクトのキャンセルなので、呼び出し元で挿入したオブジェクトを削除する
+		 NSManagedObjectContext *ct = Re1target.managedObjectContext;
+		 [ct deleteObject:Re1target];
+		 Re1target = nil;
+		 NSError *err = nil;
+		 if (![ct save:&err]) {
+		 NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
+		 abort();
+		 }
+		 }*/
+		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
 	}
-#else
-	/*	Cancelでも「新しい・・」を削除しない。Rootに戻ったときに配下クリーン処理している。
-	 if (Re1target && 0 <= PiAddRow) 
-	 {	// SAVEしたときには、Re1target=nil にしているので通らない。
-	 // 新オブジェクトのキャンセルなので、呼び出し元で挿入したオブジェクトを削除する
-	 NSManagedObjectContext *ct = Re1target.managedObjectContext;
-	 [ct deleteObject:Re1target];
-	 Re1target = nil;
-	 NSError *err = nil;
-	 if (![ct save:&err]) {
-	 NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
-	 abort();
-	 }
-	 }*/
-	[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
-#endif
 }
 
 - (void)save:(id)sender 
@@ -309,16 +325,16 @@
 		//abort();
 	}
 	
-#ifdef AzPAD
-	if (selfPopover) {
-		if ([delegate respondsToSelector:@selector(refreshE1view)]) {	// メソッドの存在を確認する
-			[delegate refreshE1view];// 親の再描画を呼び出す
+	if (appDelegate_.app_is_iPad) {
+		if (selfPopover) {
+			if ([delegate respondsToSelector:@selector(refreshE1view)]) {	// メソッドの存在を確認する
+				[delegate refreshE1view];// 親の再描画を呼び出す
+			}
+			[selfPopover dismissPopoverAnimated:YES];
 		}
-		[selfPopover dismissPopoverAnimated:YES];
+	} else {
+		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
 	}
-#else
-	[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
-#endif
 }
 
 @end

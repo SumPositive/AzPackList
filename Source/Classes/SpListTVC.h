@@ -23,6 +23,7 @@
 	NSMutableData		*RdaResponse;
 	//----------------------------------------------Owner移管につきdealloc時のrelese不要
 	//----------------------------------------------assign
+	AppDelegate		*appDelegate_;
 	//BOOL				MbOptShouldAutorotate;
 	//NSString			*MzUserPass;
 	BOOL				MbSearchOver;

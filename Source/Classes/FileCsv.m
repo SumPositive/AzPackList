@@ -260,7 +260,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		[aStrings addObject:@""]; //補助項目が無くて[改行]で終わった場合でも最大項目を保持しておく。読み出したときエラーにならないように。
 	}
 
-#ifdef xxxAzDEBUG
+#ifdef xxxDEBUG
 	for (int i = 0; i < [aStrings count]; i++) {
 		AzLOG(@"csvLineSplit[%d]=[%@]", i, [aStrings objectAtIndex:i]);
 	}

@@ -50,10 +50,8 @@
 @synthesize Re1selected;
 @synthesize PiSelectedRow;  // Uploadの対象行 ／ Downloadの新規追加される行になる
 @synthesize PbUpload;
-#ifdef AzPAD
 @synthesize delegate;
 @synthesize selfPopover;
-#endif
 
 
 - (void)unloadRelease	// dealloc, viewDidUnload から呼び出される
@@ -81,9 +79,8 @@
 - (void)dealloc 
 {
 	[self unloadRelease];
-#ifdef AzPAD
+
 	[selfPopover release], selfPopover = nil;
-#endif
 	//--------------------------------@property (retain)
 	[Re1selected release];
 	[Rmoc release];
@@ -112,9 +109,11 @@
 		mDocListFetchTicket = nil;
 		mUploadTicket = nil;
 		self.tableView.allowsSelectionDuringEditing = YES;
-#ifdef AzPAD
-		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
-#endif
+
+		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		if (appDelegate_.app_is_iPad) {
+			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
+		}
 	}
 	return self;
 }
@@ -230,13 +229,13 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
 {	
-#ifdef AzPAD
-	return NO;	//[MENU]Popover内のとき回転禁止にするため
-#else
-	// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
-	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
-#endif
+	if (appDelegate_.app_is_iPad) {
+		return NO;	//[MENU]Popover内のとき回転禁止にするため
+	} else {
+		// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
+		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+	}
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation 
@@ -248,17 +247,18 @@
 - (void)viewDesign
 {
 	CGRect rect;
-#ifdef AzPAD
-	rect.origin.x = 80;
-	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { // タテ
-		rect.size.width = 448 -80 - rect.origin.x;
-	} else { //ヨコ
-		rect.size.width = 704 -100 - rect.origin.x;
+
+	if (appDelegate_.app_is_iPad) {
+		rect.origin.x = 80;
+		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { // タテ
+			rect.size.width = 448 -80 - rect.origin.x;
+		} else { //ヨコ
+			rect.size.width = 704 -100 - rect.origin.x;
+		}
+	} else {
+		rect.origin.x = 120;
+		rect.size.width = self.view.frame.size.width - rect.origin.x - 30;
 	}
-#else
-	rect.origin.x = 120;
-	rect.size.width = self.view.frame.size.width - rect.origin.x - 30;
-#endif
 	rect.origin.y = 10;
 	rect.size.height = 25;
 	
@@ -558,28 +558,29 @@
 - (void)alertView:(UIAlertView *)alert clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if (alert.tag == 101) {
 		// (101) Download Compleat! OK
-#ifdef AzPAD
-		//[(PadNaviCon*)self.navigationController dismissPopoverSaved];  // E1再描画させるためSaved
-		if (selfPopover) {
-			if ([delegate respondsToSelector:@selector(refreshE1view)]) {	// メソッドの存在を確認する
-				[delegate refreshE1view];// 親の再描画を呼び出す
+
+		if (appDelegate_.app_is_iPad) {
+			//[(PadNaviCon*)self.navigationController dismissPopoverSaved];  // E1再描画させるためSaved
+			if (selfPopover) {
+				if ([delegate respondsToSelector:@selector(refreshE1view)]) {	// メソッドの存在を確認する
+					[delegate refreshE1view];// 親の再描画を呼び出す
+				}
+				[selfPopover dismissPopoverAnimated:YES]; 
 			}
-			[selfPopover dismissPopoverAnimated:YES]; 
+		} else {
+			//そのまま [self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
 		}
-#else
-		//そのまま [self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
-#endif
 	}
 	else if (alert.tag == 201) {
 		// (201) Upload Compleat! OK
-#ifdef AzPAD
-		//[(PadNaviCon*)self.navigationController dismissPopoverCancel];  // PadNaviCon拡張メソッド
-		if (selfPopover) {
-			[selfPopover dismissPopoverAnimated:YES];
+		if (appDelegate_.app_is_iPad) {
+			//[(PadNaviCon*)self.navigationController dismissPopoverCancel];  // PadNaviCon拡張メソッド
+			if (selfPopover) {
+				[selfPopover dismissPopoverAnimated:YES];
+			}
+		} else {
+			[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
 		}
-#else
-		[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
-#endif
 	}
 }
 

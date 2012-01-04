@@ -23,10 +23,6 @@
 #import "SpAppendVC.h"
 #import "DropboxVC.h"
 
-#ifdef AzPAD
-//#import "PadPopoverInNaviCon.h"
-#endif
-
 
 #define ACTIONSEET_TAG_DELETEGROUP	901 // 適当な重複しない識別数値を割り当てている
 #define ACTIONSEET_TAG_MENU			910
@@ -48,16 +44,45 @@
 @end
 
 @implementation E2viewController
+{
+@private
+	E1		*Re1selected;
+	BOOL	PbSharePlanList;	// SharePlan プレビューモード
+	
+	UIPopoverController*	menuPopover;  //[MENU]にて自身を包むPopover  閉じる為に必要
+	// setPopover:にてセットされる
+	
+	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
+	//NSAutoreleasePool	*RautoPool;		// [0.6]autorelease独自解放のため
+	NSMutableArray		*RaE2array;   // Rrは local alloc につき release 必須を示す
+	HTTPServer			*RhttpServer;
+	UIAlertView			*RalertHttpServer;
+	NSDictionary		*MdicAddresses;
+	//----------------------------------------------Owner移管につきdealloc時のrelese不要
+	E2edit				*Me2editView;				// self.navigationControllerがOwnerになる
+	
+	//UINavigationController*		MnaviRightE3;		// 右側(E3)
+	E3viewController*				delegateE3viewController;
+	UIPopoverController*			Mpopover;
+	NSIndexPath*						MindexPathEdit;	//[1.1]ポインタ代入注意！copyするように改善した。
+	
+	//----------------------------------------------assign
+	AppDelegate		*appDelegate_;
+	NSIndexPath	  *MindexPathActionDelete;	//[1.1]ポインタ代入注意！copyするように改善した。
+	//BOOL MbOptShouldAutorotate;
+	BOOL MbAzOptTotlWeightRound;
+	BOOL MbAzOptShowTotalWeight;
+	BOOL MbAzOptShowTotalWeightReq;
+	NSInteger MiSection0Rows; // E2レコード数　＜高速化＞
+	CGPoint		McontentOffsetDidSelect; // didSelect時のScrollView位置を記録
+}
 @synthesize Re1selected;
 @synthesize PbSharePlanList;
-#ifdef AzPAD
 @synthesize delegateE3viewController;
-#endif
 
 
 #pragma mark - Delegate
 
-#ifdef AzPAD
 - (void)setPopover:(UIPopoverController*)pc
 {
 	menuPopover = pc;
@@ -75,7 +100,6 @@
 		[self fromE2toE3:MindexPathEdit.row];
 	}
 }
-#endif
 
 
 #pragma mark - Action
@@ -88,34 +112,6 @@
 	[vi release];
 }
 
-/*
-- (void)azAction
-{
-	UIActionSheet *as = [[[UIActionSheet alloc] init] autorelease];
-	as.delegate = self;
-	as.tag = ACTIONSEET_TAG_MENU;
-	[as addButtonWithTitle:NSLocalizedString(@"All ZERO",nil)];				// (0)
-	as.destructiveButtonIndex = 0;	// 赤色(注意)ボタン
-	[as addButtonWithTitle:NSLocalizedString(@"Email send",nil)];				// (1)[1.1]
-	[as addButtonWithTitle:NSLocalizedString(@"SharePlan Append",nil)];	// (2)[0.7]
-	[as addButtonWithTitle:NSLocalizedString(@"Backup Google",nil)];		// (3)
-	[as addButtonWithTitle:NSLocalizedString(@"Backup YourPC",nil)];		// (4)
-	[as addButtonWithTitle:NSLocalizedString(@"Copied to PasteBoard",nil)];	// (5)
-	[as addButtonWithTitle:NSLocalizedString(@"Cancel",nil)];				// (6)
-	as.cancelButtonIndex = 6;		// キャンセル
-#ifdef AzPAD
-	//if (!menuPopover) {
-	if (![menuPopover isPopoverVisible]) {
-		[as addButtonWithTitle:@"Dummy"];	// (6) Pad:なぜか？これが無いとCancelが出ない
-	}
-#else
-#ifdef AzDEBUG
-	[as addButtonWithTitle:@"Test ADD 10x10"];	// (7)
-#endif
-#endif
-	[as showFromToolbar:self.navigationController.toolbar];
-}
-*/
 
  // E2グループ削除
 - (void)actionE2delateCell:(NSIndexPath*)indexPath
@@ -161,10 +157,11 @@
 		[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] 
 							  withRowAnimation:UITableViewRowAnimationFade];		//アニメ効果のため
 	}
-#ifdef AzPAD
-	// 右ナビ E3 を更新する
-	[self fromE2toE3:(-9)]; // (-9)E3初期化（リロード＆再描画、セクション0表示）
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		// 右ナビ E3 を更新する
+		[self fromE2toE3:(-9)]; // (-9)E3初期化（リロード＆再描画、セクション0表示）
+	}
 }
 
 // All Zero  全在庫数量を、ゼロにする
@@ -232,10 +229,11 @@
 	// 先頭を表示する
 	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
 	[self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
-#ifdef AzPAD
-	// 右ナビ E3 を更新する
-	[self fromE2toE3:(-9)]; // (-9)E3初期化（リロード＆再描画、セクション0表示）
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		// 右ナビ E3 を更新する
+		[self fromE2toE3:(-9)]; // (-9)E3初期化（リロード＆再描画、セクション0表示）
+	}
 }
 
 - (void)actionEmailSend
@@ -243,7 +241,7 @@
 	MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
 	picker.mailComposeDelegate = self;
 	
-#ifdef AzDEBUG
+#ifdef DEBUG
 	// To: 宛先
 	NSArray *toRecipients = [NSArray arrayWithObject:@"m@azukid.com"];
 	[picker setToRecipients:toRecipients];
@@ -284,42 +282,46 @@
 	[picker setMessageBody:zBody isHTML:YES];
 	
 	// Email オープン
-	[appDelegate.mainVC presentModalViewController:picker animated:YES];
+	if (appDelegate_.app_is_iPad) {
+		[appDelegate_.mainSVC presentModalViewController:picker animated:YES];
+	} else {
+		[appDelegate_.mainNC presentModalViewController:picker animated:YES];
+	}
 	[picker release];
 }
 
 - (void)actionSharedPackListUp
 {
-#ifdef AzPAD
-	if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-#endif
+	if (appDelegate_.app_is_iPad) {
+		if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+	}
 
 	SpAppendVC *spAppendVC = [[SpAppendVC alloc] init];
 	spAppendVC.Re1selected = Re1selected;
 
-#ifdef AzPAD
-	spAppendVC.title = NSLocalizedString(@"SharePlan Append",nil);
-	if ([menuPopover isPopoverVisible]) { //タテ
-		//[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+	if (appDelegate_.app_is_iPad) {
+		spAppendVC.title = NSLocalizedString(@"SharePlan Append",nil);
+		if ([menuPopover isPopoverVisible]) { //タテ
+			//[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+			[self.navigationController pushViewController:spAppendVC animated:YES];
+		} else {	//ヨコ
+			[Mpopover release], Mpopover = nil;
+			//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:vc];
+			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:spAppendVC];
+			Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
+			[nc release];
+			Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
+			[MindexPathEdit release], MindexPathEdit = nil;
+			[Mpopover presentPopoverFromRect:CGRectMake(320/2, 768-60, 1,1)	 //ヨコしか通らない。タテならばPopover内になるから
+									  inView:self.navigationController.view
+					permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
+			spAppendVC.selfPopover = Mpopover;
+			//spAppendVC.delegate = nil; //Uploadだから再描画不要
+		}
+	} else {
+		[spAppendVC setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 		[self.navigationController pushViewController:spAppendVC animated:YES];
-	} else {	//ヨコ
-		[Mpopover release], Mpopover = nil;
-		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:vc];
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:spAppendVC];
-		Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
-		[nc release];
-		Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-		[MindexPathEdit release], MindexPathEdit = nil;
-		[Mpopover presentPopoverFromRect:CGRectMake(320/2, 768-60, 1,1)	 //ヨコしか通らない。タテならばPopover内になるから
-								  inView:self.navigationController.view
-				permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
-		spAppendVC.selfPopover = Mpopover;
-		//spAppendVC.delegate = nil; //Uploadだから再描画不要
 	}
-#else
-	[spAppendVC setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-	[self.navigationController pushViewController:spAppendVC animated:YES];
-#endif
 	[spAppendVC release];
 }
 
@@ -328,16 +330,18 @@
 	// 未認証の場合、認証処理後、AppDelegate:handleOpenURL:から呼び出される
 	if ([[DBSession sharedSession] isLinked]) 
 	{	// Dropbox 認証済み
-#ifdef AzPAD
-		DropboxVC *vc = [[DropboxVC alloc] initWithNibName:@"DropboxVC-iPad" bundle:nil];
-#else
-		DropboxVC *vc = [[DropboxVC alloc] initWithNibName:@"DropboxVC" bundle:nil];
-#endif
-		vc.Re1selected = Re1selected;	// [SAVE]
-		[self presentModalViewController:vc animated:YES];
+		if (appDelegate_.app_is_iPad) {
+			DropboxVC *vc = [[DropboxVC alloc] initWithNibName:@"DropboxVC-iPad" bundle:nil];
+			vc.Re1selected = Re1selected;	// [SAVE]
+			[self presentModalViewController:vc animated:YES];
+		} else {
+			DropboxVC *vc = [[DropboxVC alloc] initWithNibName:@"DropboxVC" bundle:nil];
+			vc.Re1selected = Re1selected;	// [SAVE]
+			[self presentModalViewController:vc animated:YES];
+		}
 	} else {
 		// Dropbox 未認証
-		appDelegate.dropboxSaveE1selected = Re1selected;	// [SAVE]
+		appDelegate_.dropboxSaveE1selected = Re1selected;	// [SAVE]
 		[[DBSession sharedSession] link];
 	}
 }
@@ -345,47 +349,47 @@
 - (void)actionBackupGoogle
 {
 	if (MiSection0Rows <=0) return;
-#ifdef AzPAD
-	if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-#endif
+	if (appDelegate_.app_is_iPad) {
+		if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+	}
 	
 	GooDocsView *goodocs = [[GooDocsView alloc] initWithStyle:UITableViewStylePlain];
 	goodocs.Rmoc = nil;  // Upでは使用しない
 	goodocs.Re1selected = Re1selected; // E1
 	goodocs.PbUpload = YES;
 
-#ifdef AzPAD
-	goodocs.title = NSLocalizedString(@"Backup Google",nil);
-	if ([menuPopover isPopoverVisible]) { //タテ
+	if (appDelegate_.app_is_iPad) {
+		goodocs.title = NSLocalizedString(@"Backup Google",nil);
+		if ([menuPopover isPopoverVisible]) { //タテ
+			[self.navigationController pushViewController:goodocs animated:YES];
+		} else {	//ヨコ
+			[Mpopover release], Mpopover = nil;
+			//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:goodocs];
+			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:goodocs];
+			Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
+			[nc release];
+			Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
+			[MindexPathEdit release], MindexPathEdit = nil;
+			[Mpopover presentPopoverFromRect:CGRectMake(320/2, 768-60, 1,1)	 //ヨコしか通らない。タテならばPopover内になるから
+									  inView:self.navigationController.view
+					permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
+			goodocs.selfPopover = Mpopover;
+			goodocs.delegate = nil; //Uploadだから再描画不要
+		}
+	} else {
+		goodocs.title = self.title;
 		[self.navigationController pushViewController:goodocs animated:YES];
-	} else {	//ヨコ
-		[Mpopover release], Mpopover = nil;
-		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:goodocs];
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:goodocs];
-		Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
-		[nc release];
-		Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-		[MindexPathEdit release], MindexPathEdit = nil;
-		[Mpopover presentPopoverFromRect:CGRectMake(320/2, 768-60, 1,1)	 //ヨコしか通らない。タテならばPopover内になるから
-								  inView:self.navigationController.view
-				permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
-		goodocs.selfPopover = Mpopover;
-		goodocs.delegate = nil; //Uploadだから再描画不要
 	}
-#else
-	goodocs.title = self.title;
-	[self.navigationController pushViewController:goodocs animated:YES];
-#endif
 	[goodocs release];
 }
 
 - (void)actionBackupYourPC
 {
-#ifdef AzPAD
-	if ([menuPopover isPopoverVisible]) {	//選択後、Popoverならば閉じる
-		[menuPopover dismissPopoverAnimated:YES];
+	if (appDelegate_.app_is_iPad) {
+		if ([menuPopover isPopoverVisible]) {	//選択後、Popoverならば閉じる
+			[menuPopover dismissPopoverAnimated:YES];
+		}
 	}
-#endif
 	// HTTP Server Start
 	if (RalertHttpServer == nil) {
 		RalertHttpServer = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"HttpSv BACKUP", nil) 
@@ -431,11 +435,11 @@
 
 - (void)actionCopiedPasteBoard
 {
-#ifdef AzPAD
-	if ([menuPopover isPopoverVisible]) {	//選択後、Popoverならば閉じる
-		[menuPopover dismissPopoverAnimated:YES];
+	if (appDelegate_.app_is_iPad) {
+		if ([menuPopover isPopoverVisible]) {	//選択後、Popoverならば閉じる
+			[menuPopover dismissPopoverAnimated:YES];
+		}
 	}
-#endif
 	// PasteBoard SAVE
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.title = NSLocalizedString(@"Please Wait",nil);
@@ -496,8 +500,12 @@
         default:
             break;
     }
-	// [self dismissModalViewControllerAnimated:YES];
-	[appDelegate.mainVC dismissModalViewControllerAnimated:YES];
+
+	if (appDelegate_.app_is_iPad) {
+		[appDelegate_.mainSVC dismissModalViewControllerAnimated:YES];
+	} else {
+		[appDelegate_.mainNC dismissModalViewControllerAnimated:YES];
+	}
 }
 
 
@@ -594,40 +602,41 @@
 {													// (-9)E3初期化（リロード＆再描画、セクション0表示）
 	E3viewController *e3view;
 	
-#ifdef AzPAD
-	if (PbSharePlanList==NO) {
-		// 既存Ｅ３更新
-		if ([delegateE3viewController respondsToSelector:@selector(viewWillAppear:)]) {
-			assert(delegateE3viewController);
-			if (iSection==(-9)) {
-				delegateE3viewController.PiFirstSection = 0;
-				delegateE3viewController.PiSortType = (-9); // E3初期化（リロード＆再描画、セクション0表示）
+	if (appDelegate_.app_is_iPad) {
+		if (PbSharePlanList==NO) {
+			// 既存Ｅ３更新
+			if ([delegateE3viewController respondsToSelector:@selector(viewWillAppear:)]) {
+				assert(delegateE3viewController);
+				if (iSection==(-9)) {
+					delegateE3viewController.PiFirstSection = 0;
+					delegateE3viewController.PiSortType = (-9); // E3初期化（リロード＆再描画、セクション0表示）
+				}
+				else if (iSection<0) {	// Sort List
+					delegateE3viewController.PiFirstSection = 0;
+					delegateE3viewController.PiSortType = (-1) * iSection;
+				}
+				else {
+					delegateE3viewController.PiFirstSection = iSection;  //E3で頭出しするセクション
+					delegateE3viewController.PiSortType = (-1); // E3既存データあればリロードしない
+				}
+				delegateE3viewController.PbSharePlanList = PbSharePlanList;
+				//
+				[delegateE3viewController viewWillAppear:YES];
 			}
-			else if (iSection<0) {	// Sort List
-				delegateE3viewController.PiFirstSection = 0;
-				delegateE3viewController.PiSortType = (-1) * iSection;
-			}
-			else {
-				delegateE3viewController.PiFirstSection = iSection;  //E3で頭出しするセクション
-				delegateE3viewController.PiSortType = (-1); // E3既存データあればリロードしない
-			}
-			delegateE3viewController.PbSharePlanList = PbSharePlanList;
-			//
-			[delegateE3viewController viewWillAppear:YES];
+			return;
 		}
-		return;
 	}
-#endif
 	
 	//AzPad でも PbSharePlanList=YES のとき、通る。
 	// E3 へドリルダウン
 	e3view = [[E3viewController alloc] init];
 	// 以下は、E3viewControllerの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
-#ifdef AzPAD
-	e3view.title = Re1selected.name;  //  self.title;  // NSLocalizedString(@"Items", nil);
-#else
-	e3view.title = self.title;  // PbSharePlanList=YES のとき "Sample" になるように
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		e3view.title = Re1selected.name;  //  self.title;  // NSLocalizedString(@"Items", nil);
+	} else {
+		e3view.title = self.title;  // PbSharePlanList=YES のとき "Sample" になるように
+	}
 	e3view.Re1selected = Re1selected; // E1
 	//e3view.PiFirstSection = indexPath.row;  // Group.ROW ==>> E3で頭出しするセクション
 	//e3view.PiSortType = (-1);
@@ -663,31 +672,32 @@
 	[RaE2array addObject:e2newObj];
 	MiSection0Rows = [RaE2array count];
 	
-#ifdef AzPAD
-	//MindexPathEdit = [NSIndexPath indexPathForRow:0 inSection:MiSection0Rows];	//新しい目次の行
-	[self.tableView reloadData];
-	NSIndexPath* ip = [NSIndexPath indexPathForRow:[e2newObj.row integerValue]  inSection:0]; //Row,0
-	//NG	[self.tableView scrollToRowAtIndexPath:ip
-	//NG						  atScrollPosition:UITableViewScrollPositionTop animated:NO];
-	// E3.Refresh
-	delegateE3viewController.PiSortType = (-9);	// (-9)E3初期化（リロード＆再描画、セクション0表示）
-	[delegateE3viewController viewWillAppear:YES];
-	// E3へ
-	[self fromE2toE3:ip.row]; // Ｅ3へドリルダウンする
-#else	
-	// E3:Itemへ
-	//NSIndexPath* ip = [NSIndexPath indexPathForRow:[e2newObj.row integerValue]  inSection:0];
-	[self fromE2toE3:[e2newObj.row integerValue]]; // 次回の画面復帰のための状態記録をしてからＥ２へドリルダウンする
-#endif
+	if (appDelegate_.app_is_iPad) {
+		//MindexPathEdit = [NSIndexPath indexPathForRow:0 inSection:MiSection0Rows];	//新しい目次の行
+		[self.tableView reloadData];
+		NSIndexPath* ip = [NSIndexPath indexPathForRow:[e2newObj.row integerValue]  inSection:0]; //Row,0
+		//NG	[self.tableView scrollToRowAtIndexPath:ip
+		//NG						  atScrollPosition:UITableViewScrollPositionTop animated:NO];
+		// E3.Refresh
+		delegateE3viewController.PiSortType = (-9);	// (-9)E3初期化（リロード＆再描画、セクション0表示）
+		[delegateE3viewController viewWillAppear:YES];
+		// E3へ
+		[self fromE2toE3:ip.row]; // Ｅ3へドリルダウンする
+	} else {
+		// E3:Itemへ
+		//NSIndexPath* ip = [NSIndexPath indexPathForRow:[e2newObj.row integerValue]  inSection:0];
+		[self fromE2toE3:[e2newObj.row integerValue]]; // 次回の画面復帰のための状態記録をしてからＥ２へドリルダウンする
+	}
 }
 
 - (void)e2editView:(NSIndexPath *)indexPath
 {
 	if (indexPath.section != 0) return;  // ここを通るのはセクション0だけ。
 	if (MiSection0Rows <= indexPath.row) return;  // Addボタン行などの場合パスする
-#ifdef AzPAD
-	if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+	}
 	
 	E2 *e2obj = [RaE2array objectAtIndex:indexPath.row];
 	
@@ -698,36 +708,36 @@
 	Me2editView.PiAddRow = (-1); // Edit mode
 	Me2editView.PbSharePlanList = PbSharePlanList;
 	
-#ifdef AzPAD
-	if ([menuPopover isPopoverVisible]) {
-		//タテ： E2viewが[MENU]でPopover内包されているとき、E2editはiPhone同様にNavi遷移するだけ
-		[self.navigationController pushViewController:Me2editView animated:YES];
+	if (appDelegate_.app_is_iPad) {
+		if ([menuPopover isPopoverVisible]) {
+			//タテ： E2viewが[MENU]でPopover内包されているとき、E2editはiPhone同様にNavi遷移するだけ
+			[self.navigationController pushViewController:Me2editView animated:YES];
+		} else {
+			//ヨコ： E2viewが左ペインにあるとき、E2editを内包するPopoverを閉じる
+			[Mpopover release], Mpopover = nil;
+			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:Me2editView];
+			Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
+			[nc release];
+			Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
+			//MindexPathEdit = indexPath;
+			[MindexPathEdit release], MindexPathEdit = [indexPath copy];
+			CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
+			rc.origin.x = rc.size.width - 25;	rc.size.width = 1;
+			rc.origin.y += 10;	rc.size.height -= 20;
+			[Mpopover presentPopoverFromRect:rc
+									  inView:self.view  permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
+			Me2editView.selfPopover = Mpopover;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
+			Me2editView.delegate = self;		// refresh callback
+		}
 	} else {
-		//ヨコ： E2viewが左ペインにあるとき、E2editを内包するPopoverを閉じる
-		[Mpopover release], Mpopover = nil;
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:Me2editView];
-		Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
-		[nc release];
-		Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-		//MindexPathEdit = indexPath;
-		[MindexPathEdit release], MindexPathEdit = [indexPath copy];
-		CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
-		rc.origin.x = rc.size.width - 25;	rc.size.width = 1;
-		rc.origin.y += 10;	rc.size.height -= 20;
-		[Mpopover presentPopoverFromRect:rc
-								  inView:self.view  permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
-		Me2editView.selfPopover = Mpopover;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
-		Me2editView.delegate = self;		// refresh callback
+		[Me2editView setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+		[self.navigationController pushViewController:Me2editView animated:YES];
 	}
-#else
-	[Me2editView setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-	[self.navigationController pushViewController:Me2editView animated:YES];
-#endif
 	[Me2editView release]; // self.navigationControllerがOwnerになる
 }
 
 
-#ifdef AzDEBUG
+#ifdef DEBUG
 - (void)addTestData
 {
 	// TEST DATA ADD 10x10
@@ -824,7 +834,7 @@
 	self = [super initWithStyle:UITableViewStyleGrouped];  // セクションありテーブル
 	if (self) {
 		// 初期化成功
-		appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		PbSharePlanList = NO;
 	}
 	return self;
@@ -836,17 +846,16 @@
 	[super loadView];
 	
 	// その他、初期化
-	
-#ifdef AzPAD
-	if (PbSharePlanList) {
-		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
-		self.navigationController.toolbarHidden = YES;	// ツールバー不要
-	} else {
-		self.contentSizeForViewInPopover = GD_POPOVER_SIZE; //アクションメニュー配下(Share,Googleなど）においてサイズ統一
-		self.navigationItem.hidesBackButton = YES;	// E3側に統一したので不要になった。
-		self.navigationController.toolbarHidden = NO;	// ツールバー表示する
+	if (appDelegate_.app_is_iPad) {
+		if (PbSharePlanList) {
+			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
+			self.navigationController.toolbarHidden = YES;	// ツールバー不要
+		} else {
+			self.contentSizeForViewInPopover = GD_POPOVER_SIZE; //アクションメニュー配下(Share,Googleなど）においてサイズ統一
+			self.navigationItem.hidesBackButton = YES;	// E3側に統一したので不要になった。
+			self.navigationController.toolbarHidden = NO;	// ツールバー表示する
+		}
 	}
-#endif
 
 	// Set up NEXT Left [Back] buttons.
 	self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc]
@@ -918,23 +927,23 @@
 	// テーブルビューを更新します。
     [self.tableView reloadData];	// これにより修正結果が表示される
 	
-#ifdef AzPAD
-	// ここ以前の箇所でE2が非表示のときにpop処理すると落ちる。どうやらE2を表示してから処理する必要があるようだ
-	UINavigationController* navRight = [appDelegate.mainVC.viewControllers objectAtIndex:1]; //[1]
-	if (navRight.topViewController == [navRight.viewControllers objectAtIndex:0]) {
-		UINavigationController* navLeft = [appDelegate.mainVC.viewControllers objectAtIndex:0]; //[0]
-		[navLeft popToRootViewControllerAnimated:NO];  // PadRootVC
+	if (appDelegate_.app_is_iPad) {
+		// ここ以前の箇所でE2が非表示のときにpop処理すると落ちる。どうやらE2を表示してから処理する必要があるようだ
+		UINavigationController* navRight = [appDelegate_.mainSVC.viewControllers objectAtIndex:1]; //[1]
+		if (navRight.topViewController == [navRight.viewControllers objectAtIndex:0]) {
+			UINavigationController* navLeft = [appDelegate_.mainSVC.viewControllers objectAtIndex:0]; //[0]
+			[navLeft popToRootViewControllerAnimated:NO];  // PadRootVC
+		}
+	} else {
+		if (0 < McontentOffsetDidSelect.y) {
+			// app.Me3dateUse=nil のときや、メモリ不足発生時に元の位置に戻すための処理。
+			// McontentOffsetDidSelect は、didSelectRowAtIndexPath にて記録している。
+			self.tableView.contentOffset = McontentOffsetDidSelect;
+		}
+		else {
+			[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
+		}
 	}
-#else
-	if (0 < McontentOffsetDidSelect.y) {
-		// app.Me3dateUse=nil のときや、メモリ不足発生時に元の位置に戻すための処理。
-		// McontentOffsetDidSelect は、didSelectRowAtIndexPath にて記録している。
-		self.tableView.contentOffset = McontentOffsetDidSelect;
-	}
-	else {
-		[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
-	}
-#endif
 }
 
 // ビューが最後まで描画された後やアニメーションが終了した後にこの処理が呼ばれる
@@ -942,40 +951,40 @@
 {
     [super viewDidAppear:animated];
 
-#ifdef AzPAD
-	//loadViewの設定優先　[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
-#else
-	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) { // ヨコ
-		[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
+	if (appDelegate_.app_is_iPad) {
+		//loadViewの設定優先　[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
 	} else {
-		[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
+		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) { // ヨコ
+			[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
+		} else {
+			[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
+		}
 	}
-#endif
 
-#ifdef FREE_AD
-	// E3で回転してから戻った場合に対応するため ＜＜E3以下全てに回転対応するのが面倒だから
-	//[apd AdViewWillRotate:self.interfaceOrientation];
-	// 各viewDidAppear:にて「許可/禁止」を設定する
-#ifdef AzPAD
-	[appDelegate AdRefresh:NO];	//広告禁止  iPadでは、E2とE3を同時表示するため
-#else
-	if (PbSharePlanList) {
-		[appDelegate AdRefresh:NO];	//広告禁止 Fix[1.1.0]
-	} else {
-		[appDelegate AdRefresh:YES];	//広告許可
+	if (appDelegate_.app_is_Ad) {
+		// E3で回転してから戻った場合に対応するため ＜＜E3以下全てに回転対応するのが面倒だから
+		//[apd AdViewWillRotate:self.interfaceOrientation];
+		// 各viewDidAppear:にて「許可/禁止」を設定する
+		if (appDelegate_.app_is_iPad) {
+			[appDelegate_ AdRefresh:NO];	//広告禁止  iPadでは、E2とE3を同時表示するため
+		} else {
+			if (PbSharePlanList) {
+				[appDelegate_ AdRefresh:NO];	//広告禁止 Fix[1.1.0]
+			} else {
+				[appDelegate_ AdRefresh:YES];	//広告許可
+			}
+		}
 	}
-#endif
-#endif
 }
 
 // この画面が非表示になる直前に呼ばれる
 - (void)viewWillDisappear:(BOOL)animated 
 {
-#ifdef AzPAD
-	if ([Mpopover isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
-		[Mpopover dismissPopoverAnimated:animated];
+	if (appDelegate_.app_is_iPad) {
+		if ([Mpopover isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
+			[Mpopover dismissPopoverAnimated:animated];
+		}
 	}
-#endif
 	[super viewWillDisappear:animated];
 }
 
@@ -985,46 +994,45 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-#ifdef AzPAD
-	return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
-#else
-	if (appDelegate.AppShouldAutorotate==NO) {
-		// 回転禁止にしている場合
-		[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
-		if (interfaceOrientation == UIInterfaceOrientationPortrait)
-		{ // 正面（ホームボタンが画面の下側にある状態）
-			return YES; // この方向だけ常に許可する
-		}
-		return NO; // その他、禁止
-	}
-	
-	// 回転許可
-	if (UIInterfaceOrientationIsPortrait(interfaceOrientation))
-	{	// タテ
-		[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
+	if (appDelegate_.app_is_iPad) {
+		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
 	} else {
-		[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
+		if (appDelegate_.AppShouldAutorotate==NO) {
+			// 回転禁止にしている場合
+			[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
+			if (interfaceOrientation == UIInterfaceOrientationPortrait)
+			{ // 正面（ホームボタンが画面の下側にある状態）
+				return YES; // この方向だけ常に許可する
+			}
+			return NO; // その他、禁止
+		}
+		
+		// 回転許可
+		if (UIInterfaceOrientationIsPortrait(interfaceOrientation))
+		{	// タテ
+			[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
+		} else {
+			[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
+		}
+		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
 	}
-	return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
-#endif
 }
 
 // shouldAutorotateToInterfaceOrientation で YES を返すと、回転開始時に呼び出される
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation 
 								duration:(NSTimeInterval)duration
 {
-#ifdef AzPAD
-	//　E1が消えてE2が表示されてからは、ここから呼び出す必要あり。
-	[appDelegate.padRootVC willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-#endif
+	if (appDelegate_.app_is_iPad) {
+		//　E1が消えてE2が表示されてからは、ここから呼び出す必要あり。
+		[appDelegate_.padRootVC willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+	}
 
-#ifdef FREE_AD
-	// 広告非表示でも回転時に位置調整しておく必要あり ＜＜現れるときの開始位置のため＞＞
-	[appDelegate AdViewWillRotate:toInterfaceOrientation];
-#endif
+	if (appDelegate_.app_is_Ad) {
+		// 広告非表示でも回転時に位置調整しておく必要あり ＜＜現れるときの開始位置のため＞＞
+		[appDelegate_ AdViewWillRotate:toInterfaceOrientation];
+	}
 }
 
-#ifdef AzPAD
 // 回転した後に呼び出される
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {	// Popoverの位置を調整する　＜＜UIPopoverController の矢印が画面回転時にターゲットから外れてはならない＞＞
@@ -1037,7 +1045,6 @@
 	
 	
 }
-#endif
 
 #pragma mark View Unload
 
@@ -1068,13 +1075,12 @@
 
 - (void)dealloc     // 生成とは逆順に解放するのが好ましい
 {
-#ifdef AzPAD
 	//[menuPopover]は、setPopover:にて親から渡されたものなので解放しない。
 	self.delegateE3viewController = nil;
-	Mpopover.delegate = nil;	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
+	[Mpopover setDelegate:nil];	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
 	[Mpopover release], Mpopover = nil;
 	[MindexPathEdit release], MindexPathEdit = nil;
-#endif
+
 	[self unloadRelease];
 	[MindexPathActionDelete release], MindexPathActionDelete = nil;
 	//--------------------------------@property (retain)
@@ -1118,7 +1124,7 @@
 			break;
 		case 2: // Action menu
 			if (!PbSharePlanList && 0 < MiSection0Rows) {
-				if (appDelegate.AppEnabled_Dropbox) {
+				if (appDelegate_.AppEnabled_Dropbox) {
 					rows = 7;
 				} else {
 					rows = 6;
@@ -1191,16 +1197,14 @@
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
 	switch (section) {
 		case 2:
-#ifdef FREE_AD
-#ifdef AzPAD
-			return @"\n\n\n\n\n\n\n\n\n\n\n\n\n\n";	// 大型AdMobスペースのための下部余白
-#else
-			if (PbSharePlanList) {
-				return NSLocalizedString(@"SharePLAN PreView",nil);
+			if (appDelegate_.app_is_iPad) {
+				return @"\n\n\n\n\n\n\n\n\n\n\n\n\n\n";	// 大型AdMobスペースのための下部余白
+			} else {
+				if (PbSharePlanList) {
+					return NSLocalizedString(@"SharePLAN PreView",nil);
+				}
+				return @"\n\n\n\n\n";	// 広告スペースのための下部余白
 			}
-			return @"\n\n\n\n\n";	// 広告スペースのための下部余白
-#endif
-#endif
 			break;
 	}
 	return nil;
@@ -1209,11 +1213,11 @@
 // セルの高さを指示する
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-#ifdef AzPAD
-	return 50;
-#else
-	return 44; // デフォルト：44ピクセル
-#endif
+	if (appDelegate_.app_is_iPad) {
+		return 50;
+	} else {
+		return 44; // デフォルト：44ピクセル
+	}
 }
 
 // TableView 指定されたセルを生成＆表示
@@ -1239,7 +1243,7 @@
 				// e2node
 				E2 *e2obj = [RaE2array objectAtIndex:indexPath.row];
 				
-#ifdef AzDEBUG
+#ifdef DEBUG
 				if ([e2obj.name length] <= 0) 
 					cell.textLabel.text = NSLocalizedString(@"(New Index)", nil);
 				else
@@ -1252,13 +1256,13 @@
 					cell.textLabel.text = e2obj.name;
 #endif
 				
-#ifdef AzPAD
-				cell.textLabel.font = [UIFont systemFontOfSize:20];
-				cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
-#else
-				cell.textLabel.font = [UIFont systemFontOfSize:18];
-				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
-#endif
+				if (appDelegate_.app_is_iPad) {
+					cell.textLabel.font = [UIFont systemFontOfSize:20];
+					cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
+				} else {
+					cell.textLabel.font = [UIFont systemFontOfSize:18];
+					cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
+				}
 				cell.textLabel.textAlignment = UITextAlignmentLeft;
 				cell.textLabel.textColor = [UIColor blackColor];
 
@@ -1366,11 +1370,12 @@
 					cell.imageView.image = [UIImage imageNamed:@"Icon24-GreenPlus.png"];
 					cell.textLabel.text = NSLocalizedString(@"Copy Group",nil);
 				}
-#ifdef AzPAD
-				cell.textLabel.font = [UIFont systemFontOfSize:18];
-#else
-				cell.textLabel.font = [UIFont systemFontOfSize:14];
-#endif
+
+				if (appDelegate_.app_is_iPad) {
+					cell.textLabel.font = [UIFont systemFontOfSize:18];
+				} else {
+					cell.textLabel.font = [UIFont systemFontOfSize:14];
+				}
 				cell.textLabel.textAlignment = UITextAlignmentCenter; // 中央寄せ
 				cell.textLabel.textColor = [UIColor darkGrayColor];
 				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
@@ -1384,13 +1389,14 @@
 				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle		// サブタイトル型(3.0)
 											   reuseIdentifier:zCellSubtitle] autorelease];
 			}
-#ifdef AzPAD
-			cell.textLabel.font = [UIFont systemFontOfSize:18];
-			cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
-#else
-			cell.textLabel.font = [UIFont systemFontOfSize:16];
-			cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
-#endif
+
+			if (appDelegate_.app_is_iPad) {
+				cell.textLabel.font = [UIFont systemFontOfSize:18];
+				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
+			} else {
+				cell.textLabel.font = [UIFont systemFontOfSize:16];
+				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
+			}
 			cell.textLabel.textAlignment = UITextAlignmentLeft;
 			cell.textLabel.textColor = [UIColor blackColor];
 
@@ -1426,13 +1432,14 @@
 				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle		// サブタイトル型(3.0)
 											   reuseIdentifier:zCellSubtitle] autorelease];
 			}
-#ifdef AzPAD
-			cell.textLabel.font = [UIFont systemFontOfSize:18];
-			cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
-#else
-			cell.textLabel.font = [UIFont systemFontOfSize:16];
-			cell.detailTextLabel.font = [UIFont systemFontOfSize:10];
-#endif
+
+			if (appDelegate_.app_is_iPad) {
+				cell.textLabel.font = [UIFont systemFontOfSize:18];
+				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
+			} else {
+				cell.textLabel.font = [UIFont systemFontOfSize:16];
+				cell.detailTextLabel.font = [UIFont systemFontOfSize:10];
+			}
 			cell.textLabel.textAlignment = UITextAlignmentLeft;
 			cell.textLabel.textColor = [UIColor darkGrayColor];
 			
@@ -1444,7 +1451,7 @@
 			cell.showsReorderControl = NO;		// Move禁止
 			
 			NSInteger iRow = indexPath.row;
-			if (appDelegate.AppEnabled_Dropbox==NO && 3<=iRow) iRow++; // Dropbox無効
+			if (appDelegate_.AppEnabled_Dropbox==NO && 3<=iRow) iRow++; // Dropbox無効
 			switch (iRow) {
 				case 0:
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-CircleCheckClear"];
@@ -1569,34 +1576,34 @@
 		case 1: // Sort list
 			if (0 < MiSection0Rows && indexPath.row < GD_E2SORTLIST_COUNT) 
 			{
-#ifdef AzPAD
-				// 既存Ｅ３更新
-				if ([delegateE3viewController respondsToSelector:@selector(viewWillAppear:)]) {
-					assert(delegateE3viewController);
-					delegateE3viewController.PiFirstSection = 0;  // Group.ROW ==>> E3で頭出しするセクション
-					delegateE3viewController.PiSortType = indexPath.row;
-					delegateE3viewController.PbSharePlanList = PbSharePlanList;
-					[delegateE3viewController viewWillAppear:YES];
+				if (appDelegate_.app_is_iPad) {
+					// 既存Ｅ３更新
+					if ([delegateE3viewController respondsToSelector:@selector(viewWillAppear:)]) {
+						assert(delegateE3viewController);
+						delegateE3viewController.PiFirstSection = 0;  // Group.ROW ==>> E3で頭出しするセクション
+						delegateE3viewController.PiSortType = indexPath.row;
+						delegateE3viewController.PbSharePlanList = PbSharePlanList;
+						[delegateE3viewController viewWillAppear:YES];
+					}
 				}
-				break; // Popover Close
-#else
-				// E3 へドリルダウン
-				E3viewController *e3view = [[E3viewController alloc] initWithStyle:UITableViewStylePlain];
-				// 以下は、E3viewControllerの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
-				e3view.title = Re1selected.name;  //self.title;  // NSLocalizedString(@"Items", nil);
-				e3view.Re1selected = Re1selected; // E1
-				e3view.PiFirstSection = 0;  // Group.ROW ==>> E3で頭出しするセクション
-				e3view.PiSortType = indexPath.row;
-				e3view.PbSharePlanList = PbSharePlanList;
-				[self.navigationController pushViewController:e3view animated:YES];
-				[e3view release];
-#endif
+				else {
+					// E3 へドリルダウン
+					E3viewController *e3view = [[E3viewController alloc] initWithStyle:UITableViewStylePlain];
+					// 以下は、E3viewControllerの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
+					e3view.title = Re1selected.name;  //self.title;  // NSLocalizedString(@"Items", nil);
+					e3view.Re1selected = Re1selected; // E1
+					e3view.PiFirstSection = 0;  // Group.ROW ==>> E3で頭出しするセクション
+					e3view.PiSortType = indexPath.row;
+					e3view.PbSharePlanList = PbSharePlanList;
+					[self.navigationController pushViewController:e3view animated:YES];
+					[e3view release];
+				}
 			}
 			break;
 			
 		case 2: { // Action Menu
 			NSInteger iRow = indexPath.row;
-			if (appDelegate.AppEnabled_Dropbox==NO && 3<=iRow) iRow++; // Dropbox無効
+			if (appDelegate_.AppEnabled_Dropbox==NO && 3<=iRow) iRow++; // Dropbox無効
 			switch (iRow) {
 				case 0: // All Zero  全在庫数量を、ゼロにする
 					[self	actionAllZero];
@@ -1628,11 +1635,12 @@
 			}
 		}	break;
 	}
-#ifdef AzPAD
-	if ([menuPopover isPopoverVisible]) {	//選択後、Popoverならば閉じる
-		[menuPopover dismissPopoverAnimated:YES];
+
+	if (appDelegate_.app_is_iPad) {
+		if ([menuPopover isPopoverVisible]) {	//選択後、Popoverならば閉じる
+			[menuPopover dismissPopoverAnimated:YES];
+		}
 	}
-#endif
 }
 
 // HTTP Server Address Display
@@ -1698,10 +1706,11 @@
 	// [self.tableView reloadData]だとアニメ効果が消される。　(OS 3.0 Function)を使って解決した。
 	NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 1)]; // [0]セクションから1個
 	[self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationFade]; // (OS 3.0 Function)
-#ifdef AzPAD
-	// 右ナビ E3 を更新する
-	[self fromE2toE3:(-9)]; // (-9)E3初期化（リロード＆再描画、セクション0表示）
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		// 右ナビ E3 を更新する
+		[self fromE2toE3:(-9)]; // (-9)E3初期化（リロード＆再描画、セクション0表示）
+	}
 }
 
 // TableView Editモード処理
@@ -1805,7 +1814,6 @@
 }
 
 
-#ifdef AzPAD
 #pragma mark - delegate UIPopoverController
 - (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController
 {	// Popoverの外部をタップして閉じる前に通知
@@ -1814,7 +1822,7 @@
 
 	UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
 	if ( [[nc visibleViewController] isMemberOfClass:[E2edit class]] ) {	// E2edit のときだけ、
-		if (appDelegate.AppUpdateSave) { // E2editにて、変更あるので閉じさせない
+		if (appDelegate_.AppUpdateSave) { // E2editにて、変更あるので閉じさせない
 			alertBox(NSLocalizedString(@"Cancel or Save",nil), 
 					 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
 			return NO; 
@@ -1834,6 +1842,5 @@
 	}	
 }
 
-#endif
 
 @end

@@ -17,6 +17,9 @@
 
 
 @implementation InformationView
+{
+	AppDelegate		*appDelegate_;
+}
 
 static UIColor *MpColorBlue(float percent) {
 	float red = percent * 255.0f;
@@ -45,13 +48,14 @@ static UIColor *MpColorBlue(float percent) {
 	switch (alertView.tag) 
 	{
 		case ALERT_TAG_GoAppStore: {	// Paid App Store
-#ifdef AzPAD
-			//iPad//																																					モチメモ for iPad	439606448
-			NSURL *url = [NSURL URLWithString:@"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=439606448&mt=8"];
-#else
-			//iPhone//																																							モチメモ	431276623
-			NSURL *url = [NSURL URLWithString:@"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=431276623&mt=8"];
-#endif
+			NSURL *url;
+			if (appDelegate_.app_is_iPad) {
+				//iPad//																																					モチメモ for iPad	439606448
+				url = [NSURL URLWithString:@"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=439606448&mt=8"];
+			} else {
+				//iPhone//																																							モチメモ	431276623
+				url = [NSURL URLWithString:@"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=431276623&mt=8"];
+			}
 			[[UIApplication sharedApplication] openURL:url];
 		}	break;
 			
@@ -69,27 +73,22 @@ static UIColor *MpColorBlue(float percent) {
 
 			// Subject: 件名
 			NSString* zSubj = NSLocalizedString(@"Product Title",nil);
-#ifdef AzSTABLE
-			//zSubj = [zSubj stringByAppendingString:@" Stable"];
-#else
-			zSubj = [zSubj stringByAppendingString:@" Free"];
-#endif
-#ifdef AzPAD
-			zSubj = [zSubj stringByAppendingString:@" for iPad"];
-#else
-			zSubj = [zSubj stringByAppendingString:@" for iPhone"];
-#endif
+			if (appDelegate_.app_is_iPad) {
+				zSubj = [zSubj stringByAppendingString:@" for iPad"];
+			} else {
+				zSubj = [zSubj stringByAppendingString:@" for iPhone"];
+			}
+			
+			if (appDelegate_.app_is_sponsor) {
+				zSubj = [zSubj stringByAppendingString:@"  (Sponsor)"];
+			}
 			[picker setSubject:zSubj];  
 			
 			// Body: 本文
 			NSString *zVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]; //（リリース バージョン）は、ユーザーに公開した時のレベルを表現したバージョン表記
 			NSString *zBuild = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]; //（ビルド回数 バージョン）は、ユーザーに非公開のレベルも含めたバージョン表記
 			NSString* zBody = [NSString stringWithFormat:@"Product: %@\n",  zSubj];
-#ifdef AzSTABLE
-			zBody = [zBody stringByAppendingFormat:@"Version: %@ (%@) Stable\n",  zVersion, zBuild];
-#else
 			zBody = [zBody stringByAppendingFormat:@"Version: %@ (%@)\n",  zVersion, zBuild];
-#endif
 			UIDevice *device = [UIDevice currentDevice];
 			NSString* deviceID = [device platformString];	
 			zBody = [zBody stringByAppendingFormat:@"Device: %@   iOS: %@\n", 
@@ -105,8 +104,11 @@ static UIColor *MpColorBlue(float percent) {
 			[picker setMessageBody:zBody isHTML:NO];
 
 
-			AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-			[app.mainVC presentModalViewController:picker animated:YES];
+			if (appDelegate_.app_is_iPad) {
+				[appDelegate_.mainSVC presentModalViewController:picker animated:YES];
+			} else {
+				[appDelegate_.mainNC presentModalViewController:picker animated:YES];
+			}
 			[picker release];
 			//Bug//[self hide]; 上のアニメと競合してメール画面が表示されない。これより先にhideするように改めた。
 		}	break;
@@ -179,36 +181,32 @@ static UIColor *MpColorBlue(float percent) {
 // if (!(self = [super initWithFrame:rect])) return self;
 	self = [super init];
 	if (!self) return nil;
+	// 初期化成功
+	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
 	// 小豆色 RGB(152,81,75) #98514B
 	self.view.backgroundColor = [UIColor colorWithRed:152/255.0f 
 												green:81/255.0f 
 												 blue:75/255.0f
 												alpha:1.0f];
-#ifdef AzPAD
-	// Popover
-	self.contentSizeForViewInPopover = CGSizeMake(320, 480);
-#else	
-	self.view.userInteractionEnabled = YES; //タッチの可否
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		// Popover
+		self.contentSizeForViewInPopover = CGSizeMake(320, 480);
+	} else {
+		self.view.userInteractionEnabled = YES; //タッチの可否
+	}
 	
 	//------------------------------------------アイコン
-#ifdef AzPAD
-	UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(20, 35, 72, 72)];
-#ifdef AzSTABLE
-	[iv setImage:[UIImage imageNamed:@"Icon72s1.png"]];
-#else
-	[iv setImage:[UIImage imageNamed:@"Icon72Free.png"]];
-#endif
-#else	
-	UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(20, 50, 57, 57)];
-#ifdef AzSTABLE
-	[iv setImage:[UIImage imageNamed:@"Icon57s1.png"]];
-#else
-	[iv setImage:[UIImage imageNamed:@"Icon57.png"]];
-#endif
-#endif
-	[self.view addSubview:iv]; [iv release];
+	if (appDelegate_.app_is_iPad) {
+		UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(20, 35, 72, 72)];
+		[iv setImage:[UIImage imageNamed:@"Icon72"]];
+		[self.view addSubview:iv]; //[iv release];
+	} else {
+		UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(20, 50, 57, 57)];
+		[iv setImage:[UIImage imageNamed:@"Icon57"]];
+		[self.view addSubview:iv]; //[iv release];
+	}
 	
 	UILabel *label;
 	//------------------------------------------Lable:タイトル
@@ -226,16 +224,13 @@ static UIColor *MpColorBlue(float percent) {
 	
 	//------------------------------------------Lable:Version
 	label = [[UILabel alloc] initWithFrame:CGRectMake(100, 80, 200, 45)];
-#ifdef AzSTABLE
 	NSString *zFree = @"PackList";
-#else	
-	NSString *zFree = @"PackList Free";
-#endif
-#ifdef AzPAD
-	NSString *zDevice = @"for iPad";
-#else	
-	NSString *zDevice = @"for iPhone";
-#endif
+	NSString *zDevice;
+	if (appDelegate_.app_is_iPad) {
+		zDevice = @"for iPad";
+	} else {
+		zDevice = @"for iPhone";
+	}
 	NSString *zVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]; //（リリース バージョン）は、ユーザーに公開した時のレベルを表現したバージョン表記
 	label.text = [NSString stringWithFormat:@"%@\n%@\nVersion %@", zFree, zDevice, zVersion];
 	label.numberOfLines = 3;
@@ -263,8 +258,8 @@ static UIColor *MpColorBlue(float percent) {
 	//------------------------------------------Lable:著作権表示
 	label = [[UILabel alloc] initWithFrame:CGRectMake(100, 130, 200, 60)];
 	label.text =	@"Born on March 2\n"
-						@"© 1995-2011 Azukid\n"
-						@"Creator Sum Positive\n"
+						@"© 1995-2012 Azukid\n"
+						@"Author: Sum Positive\n"
 						@"All Rights Reserved.";
 	label.numberOfLines = 4;
 	label.textAlignment = UITextAlignmentCenter;
@@ -281,15 +276,15 @@ static UIColor *MpColorBlue(float percent) {
 	[bu addTarget:self action:@selector(buGoSupportSite:) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:bu];  //autorelease
 
-#if defined(AzFREE)
-	//------------------------------------------Go to App Store
-	bu = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-	bu.titleLabel.font = [UIFont boldSystemFontOfSize:10];
-	bu.frame = CGRectMake(150, 210, 150,26);
-	[bu setTitle:NSLocalizedString(@"GoAppStore Paid",nil) forState:UIControlStateNormal];
-	[bu addTarget:self action:@selector(buGoAppStore:) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:bu];  //autorelease
-#endif
+	if (appDelegate_.app_is_sponsor==NO) {
+		//------------------------------------------Go to App Store
+		bu = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+		bu.titleLabel.font = [UIFont boldSystemFontOfSize:10];
+		bu.frame = CGRectMake(150, 210, 150,26);
+		[bu setTitle:NSLocalizedString(@"GoAppStore Paid",nil) forState:UIControlStateNormal];
+		[bu addTarget:self action:@selector(buGoAppStore:) forControlEvents:UIControlEventTouchUpInside];
+		[self.view addSubview:bu];  //autorelease
+	}
 	
 	//------------------------------------------Post Comment
 	bu = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -321,11 +316,11 @@ static UIColor *MpColorBlue(float percent) {
 
 	//------------------------------------------CLOSE
 	label = [[UILabel alloc] initWithFrame:CGRectMake(20, 435, 280, 25)];
-#ifdef AzPAD
-	label.text = NSLocalizedString(@"Infomation Open Pad",nil);
-#else
-	label.text = NSLocalizedString(@"Infomation Open",nil);
-#endif
+	if (appDelegate_.app_is_iPad) {
+		label.text = NSLocalizedString(@"Infomation Open Pad",nil);
+	} else {
+		label.text = NSLocalizedString(@"Infomation Open",nil);
+	}
 	label.textAlignment = UITextAlignmentCenter;
 	label.textColor = [UIColor whiteColor];
 	label.backgroundColor = [UIColor clearColor]; //背景透明
@@ -339,21 +334,17 @@ static UIColor *MpColorBlue(float percent) {
 - (void)viewWillAppear:(BOOL)animated 
 {
 	[super viewWillAppear:animated];
-
-#ifdef AzPAD
-	self.title = NSLocalizedString(@"Information", nil);
-#endif
 }
  */
 
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-#ifdef AzPAD
-	return YES;
-#else
-	return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面のみ許可
-#endif
+	if (appDelegate_.app_is_iPad) {
+		return YES;
+	} else {
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面のみ許可
+	}
 }
 
 /*
@@ -444,9 +435,12 @@ static UIColor *MpColorBlue(float percent) {
         default:
             break;
     }
-	// [self dismissModalViewControllerAnimated:YES];
-	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	[app.mainVC dismissModalViewControllerAnimated:YES];
+
+	if (appDelegate_.app_is_iPad) {
+		[appDelegate_.mainSVC dismissModalViewControllerAnimated:YES];
+	} else {
+		[appDelegate_.mainNC dismissModalViewControllerAnimated:YES];
+	}
 }
 
 

@@ -17,12 +17,7 @@
 - (void)calcViewWillDisappear;
 @end
 
-#ifdef xxxAzPAD
-									// Popoverに内蔵するためControllerにする
-@interface CalcView : UIViewController <UITextFieldDelegate>
-#else
 @interface CalcView : UIView <UITextFieldDelegate>
-#endif
 {
 @private
 	//--------------------------retain
@@ -30,9 +25,6 @@
 	id			Rentity;		// NSNumber
 	NSString	*RzKey;			// @"nAmount"
 	NSString	*RzLabelText;	// 初期時の Rlabel.text を保持 ⇒ 中止時に戻す
-#ifdef xxxAzPAD
-	UIPopoverController*	Rpopover;
-#endif
 	//----------------------------------------------assign
 	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
 	NSDecimalNumberHandler	*MbehaviorDefault;	// 通貨既定の丸め処理
@@ -44,6 +36,7 @@
 	CGRect				MrectInit;
 	UITextField			*MtextField;
 	//----------------------------------------------assign
+	AppDelegate		*appDelegate_;
 	NSInteger			maxValue;
 	NSInteger			MiRoundingScale;
 	BOOL				MbShow;
@@ -56,9 +49,6 @@
 @property (nonatomic, retain) id			Rentity;
 @property (nonatomic, retain) NSString		*RzKey;	
 @property (nonatomic, assign) NSInteger		maxValue;
-#ifdef xxxAzPAD
-@property (nonatomic, retain) UIPopoverController*	Rpopover;
-#endif
 
 // 公開メソッド
 - (id)initWithFrame:(CGRect)rect;

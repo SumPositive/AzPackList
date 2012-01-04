@@ -19,6 +19,7 @@
 	UISegmentedControl	*MsegSort;
 	UIButton			*MbuSearch;
 	//----------------------------------------------assign
+	AppDelegate		*appDelegate_;
 	//BOOL				MbOptShouldAutorotate;
 }
 

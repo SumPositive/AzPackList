@@ -13,15 +13,10 @@
 @class E2;
 @class E3edit;
 @class ItemTouchView;
-#ifdef AzPAD
 @class E2viewController;
-#endif
 
 @interface E3viewController : UITableViewController <UIActionSheetDelegate, UISearchBarDelegate
-#ifdef AzPAD
-	,UIPopoverControllerDelegate
-#endif
->
+	,UIPopoverControllerDelegate>
 {
 
 @private
@@ -36,13 +31,11 @@
 	NSMutableArray		*RaE2array;			//[1.0.2]E2から受け取るのではなく、ここで生成するようにした。
 	NSMutableArray		*RaE3array;
 	//----------------------------------------------Owner移管につきdealloc時のrelese不要
-#ifdef AzPAD
 	UIPopoverController*	Mpopover;
 	NSIndexPath*				MindexPathEdit;	//[1.1]ポインタ代入注意！copyするように改善した。
 	UIToolbar*					Me2toolbar;
-#endif
 	//----------------------------------------------assign
-	AppDelegate *appDelegate;
+	AppDelegate *appDelegate_;
 	NSIndexPath		*MpathClip;					//[1.1]ポインタ代入注意！copyするように改善した。
 	NSIndexPath	  *MindexPathActionDelete;	//[1.1]ポインタ代入注意！copyするように改善した。
 	//BOOL MbFirstOne;
@@ -67,8 +60,6 @@
 @property (nonatomic, assign) BOOL		PbSharePlanList;
 
 //- (void)viewComeback:(NSArray *)selectionArray;  // Comeback 再現復帰処理用
-#ifdef AzPAD
 - (void)refreshE3view;
-#endif
 
 @end

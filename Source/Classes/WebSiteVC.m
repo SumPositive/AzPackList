@@ -7,6 +7,7 @@
 //
 
 #import "Global.h"
+#import "AppDelegate.h"
 #import "WebSiteVC.h"
 
 
@@ -81,12 +82,12 @@
 
 - (void)close:(id)sender 
 {
-#ifdef AzPAD
-	//[self.navigationController dismissModalViewControllerAnimated:YES];
-	[self dismissModalViewControllerAnimated:YES];
-#else
-	[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
-#endif
+	if (appDelegate_.app_is_iPad) {
+		//[self.navigationController dismissModalViewControllerAnimated:YES];
+		[self dismissModalViewControllerAnimated:YES];
+	} else {
+		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
+	}
 }
 
 - (void)updateToolBar {
@@ -101,6 +102,7 @@
 
 - (void)loadView {
     [super loadView];
+	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
 	//NSLog(@"frameWeb=(%f,%f)-(%f,%f)", frameWeb.origin.x,frameWeb.origin.y, frameWeb.size.width,frameWeb.size.height);
 	//MwebView = [[UIWebView alloc] initWithFrame:frameWeb];

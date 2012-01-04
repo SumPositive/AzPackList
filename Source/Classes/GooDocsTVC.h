@@ -35,10 +35,9 @@
 	E1 *Re1selected;
 	NSInteger PiSelectedRow;  // Uploadの対象行 ／ Downloadの新規追加される行になる
 	BOOL	PbUpload;		// YES=Upload  NO=Download
-#ifdef AzPAD
+
 	id									delegate;
 	UIPopoverController*	selfPopover;  // 自身を包むPopover  閉じる為に必要
-#endif
 
 	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
 	GDataFeedDocList *mDocListFeed;
@@ -52,6 +51,7 @@
 	//----------------------------------------------Owner移管につきdealloc時のrelese不要
 	UIActionSheet  *MactionProgress;
 	//----------------------------------------------assign
+	AppDelegate *appDelegate_;
 	BOOL	MbLogin;
 	GDataHTTPFetcher *MfetcherActive;  // STOPのため保持
 	NSInteger  MiRowDownload;		// Download対象行
@@ -62,10 +62,8 @@
 @property (nonatomic, retain) E1 *Re1selected;
 @property NSInteger PiSelectedRow;
 @property BOOL	 PbUpload; 
-#ifdef AzPAD
 @property (nonatomic, assign) id									delegate;
 @property (nonatomic, retain) UIPopoverController*	selfPopover;
-#endif
 
 @end
 

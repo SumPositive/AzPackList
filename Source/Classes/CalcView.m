@@ -46,9 +46,6 @@
 @synthesize RzKey;
 @synthesize delegate;
 @synthesize maxValue;
-#ifdef xxxAzPAD
-@synthesize Rpopover;
-#endif
 
 - (void)dealloc 
 {
@@ -74,16 +71,20 @@
 	NSLog(@"CalcView: rect=(%f,%f)-(%f,%f)", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
 
 	MrectInit = rect;		// 表示位置を記録　showにて復元に使う
-#ifdef AzPAD
-	// 位置はそのままで、透明から現れるようにする
-#else
-	// 下部から現れるようにする
-	rect.origin.y += 500;	// 最初、下部に隠れている状態
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		// 位置はそのままで、透明から現れるようにする
+	} else {
+		// 下部から現れるようにする
+		rect.origin.y += 500;	// 最初、下部に隠れている状態
+	}
 
 	// UIView
 	self = [super initWithFrame:rect ];
 	if (self==nil) return self;
+	
+	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
 	self.backgroundColor = [UIColor clearColor];	// 透明でもTouchイベントが受け取れるようだ。
 	self.userInteractionEnabled = YES; // このViewがタッチを受けるか
 	self.alpha = 0; // 透明
@@ -118,12 +119,13 @@
 	MscrollView.scrollsToTop = NO;
 	MscrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	MscrollView.backgroundColor = [UIColor blackColor];
-#ifdef AzPAD
-	MscrollView.delaysContentTouches = NO; //iPadではスクロール不要なのでＮＯにし、タッチ感度を向上させる。
-	//UIScrollView を止めて UIViewを試したが、ボタン隙間のタッチで touchesBegan:が呼び出されて閉じてしまう不具合により没。
-#else
-	MscrollView.delaysContentTouches = YES; //default//ボタンより先に 0.5s タッチを監視してスクロール操作であるか判断する
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		MscrollView.delaysContentTouches = NO; //iPadではスクロール不要なのでＮＯにし、タッチ感度を向上させる。
+		//UIScrollView を止めて UIViewを試したが、ボタン隙間のタッチで touchesBegan:が呼び出されて閉じてしまう不具合により没。
+	} else {
+		MscrollView.delaysContentTouches = YES; //default//ボタンより先に 0.5s タッチを監視してスクロール操作であるか判断する
+	}
 	[self addSubview:MscrollView];
 	[MscrollView release];
 	
@@ -442,56 +444,56 @@ replacementString:(NSString *)text
 	float fW;
 	float fH;
 
-#ifdef AzPAD
-	fy = 0;
-	MtextField.frame = CGRectMake(5,fy, rect.size.width-10,30);	// 1行
-	fy += MtextField.frame.size.height;
-	MscrollView.frame = CGRectMake(5,fy, rect.size.width-10, 178);
-	fW = (rect.size.width-10 - fxGap) / 6 - fxGap; //Pad//6列まで全部表示
-	MscrollView.contentSize = MscrollView.frame.size; //同じ＝1ページのみ固定
-	// 以下、MscrollView座標
-	fyGap = 5;	// Yボタン間隔
-	fy = 0;
-	fH = fW / GOLDENPER; // 黄金比
-	fyTop = fy + fyGap;
-#else
-	if (rect.size.width < rect.size.height)
-	{	// タテ
-		//MlbCalc.frame = CGRectMake(fx,fy, 320-fx-fx,20);	// 3行
-		fy = 170;
-		MtextField.frame = CGRectMake(5,fy, 320-10,30);	// 1行
+	if (appDelegate_.app_is_iPad) {
+		fy = 0;
+		MtextField.frame = CGRectMake(5,fy, rect.size.width-10,30);	// 1行
 		fy += MtextField.frame.size.height;
-		MscrollView.frame = CGRectMake(0,fy, 320,480-20-44-fy);
-		//fW = (320 - fxGap) / 4 - fxGap; // 1ページ4列まで表示、5列目は2ページ目へ
-		fW = (320 - fxGap) / 5 - fxGap; // 1ページ5列まで表示、6列目は2ページ目へ
-																								  //↓2ページ目の列数=1
-		MscrollView.contentSize = CGSizeMake(320+(fW+fxGap)*1, MscrollView.frame.size.height);
+		MscrollView.frame = CGRectMake(5,fy, rect.size.width-10, 178);
+		fW = (rect.size.width-10 - fxGap) / 6 - fxGap; //Pad//6列まで全部表示
+		MscrollView.contentSize = MscrollView.frame.size; //同じ＝1ページのみ固定
 		// 以下、MscrollView座標
 		fyGap = 5;	// Yボタン間隔
 		fy = 0;
-		//fH = (MscrollView.frame.size.height - fyGap) / 4 - fyGap;
-		//fH = fW / GOLDENPER; // 黄金比
-		fH = fW / 1.30;
+		fH = fW / GOLDENPER; // 黄金比
 		fyTop = fy + fyGap;
+	} else {
+		if (rect.size.width < rect.size.height)
+		{	// タテ
+			//MlbCalc.frame = CGRectMake(fx,fy, 320-fx-fx,20);	// 3行
+			fy = 170;
+			MtextField.frame = CGRectMake(5,fy, 320-10,30);	// 1行
+			fy += MtextField.frame.size.height;
+			MscrollView.frame = CGRectMake(0,fy, 320,480-20-44-fy);
+			//fW = (320 - fxGap) / 4 - fxGap; // 1ページ4列まで表示、5列目は2ページ目へ
+			fW = (320 - fxGap) / 5 - fxGap; // 1ページ5列まで表示、6列目は2ページ目へ
+			//↓2ページ目の列数=1
+			MscrollView.contentSize = CGSizeMake(320+(fW+fxGap)*1, MscrollView.frame.size.height);
+			// 以下、MscrollView座標
+			fyGap = 5;	// Yボタン間隔
+			fy = 0;
+			//fH = (MscrollView.frame.size.height - fyGap) / 4 - fyGap;
+			//fH = fW / GOLDENPER; // 黄金比
+			fH = fW / 1.30;
+			fyTop = fy + fyGap;
+		}
+		else {	// ヨコ
+			//MlbCalc.frame = CGRectMake(fx,fy, 480-fx-fx,20);	// 1行
+			fy = 75;
+			MtextField.frame = CGRectMake(5,fy, 480-10,30);	// 1行
+			fy += MtextField.frame.size.height;
+			MscrollView.frame = CGRectMake(0,fy, 480,320-20-32-fy);
+			//fW = (480 - fxGap) / 5 - fxGap; // 5列まで表示
+			MscrollView.contentSize = MscrollView.frame.size;
+			// 以下、MscrollView座標
+			fyGap = 4;	// Yボタン間隔
+			fy = 0;
+			fH = (MscrollView.frame.size.height - fyGap) / 4 - fyGap;
+			fW = fH * GOLDENPER; // 黄金比
+			fx = (480 - (fxGap + (fW+fxGap)*6 + fxGap)) / 2;
+			fx += fxGap;
+			fyTop = fy + fyGap;
+		}
 	}
-	else {	// ヨコ
-		//MlbCalc.frame = CGRectMake(fx,fy, 480-fx-fx,20);	// 1行
-		fy = 75;
-		MtextField.frame = CGRectMake(5,fy, 480-10,30);	// 1行
-		fy += MtextField.frame.size.height;
-		MscrollView.frame = CGRectMake(0,fy, 480,320-20-32-fy);
-		//fW = (480 - fxGap) / 5 - fxGap; // 5列まで表示
-		MscrollView.contentSize = MscrollView.frame.size;
-		// 以下、MscrollView座標
-		fyGap = 4;	// Yボタン間隔
-		fy = 0;
-		fH = (MscrollView.frame.size.height - fyGap) / 4 - fyGap;
-		fW = fH * GOLDENPER; // 黄金比
-		fx = (480 - (fxGap + (fW+fxGap)*6 + fxGap)) / 2;
-		fx += fxGap;
-		fyTop = fy + fyGap;
-	}
-#endif
 	
 	NSInteger iIndex = 0;
 	for (int iCol=0; iCol<6; iCol++)
@@ -562,13 +564,14 @@ replacementString:(NSString *)text
 	
 	// アニメ終了状態
 	self.alpha = 0;	// 透明
-#ifdef AzPAD
-	[self setFrame:MrectInit];	// 位置はそのまま
-#else
-	CGRect rect = MrectInit;
-	rect.origin.y += 500;  // rect.size.height; 横向きからタテにしても完全に隠れるようにするため。
-	[self setFrame:rect];
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		[self setFrame:MrectInit];	// 位置はそのまま
+	} else {
+		CGRect rect = MrectInit;
+		rect.origin.y += 500;  // rect.size.height; 横向きからタテにしても完全に隠れるようにするため。
+		[self setFrame:rect];
+	}
 
 	[delegate calcViewWillDisappear];	// CalcViewDelegate: スライダーなど再表示
 
@@ -610,11 +613,12 @@ replacementString:(NSString *)text
 	CGContextRef context = UIGraphicsGetCurrentContext();
 	[UIView beginAnimations:nil context:context];
 	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-#ifdef AzPAD
-	[UIView setAnimationDuration:0.6];
-#else
-	[UIView setAnimationDuration:0.2]; // 0.15 出は早く
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		[UIView setAnimationDuration:0.6];
+	} else {
+		[UIView setAnimationDuration:0.2]; // 0.15 出は早く
+	}
 
 	// アニメ終了状態
 	[self setFrame:MrectInit];	// 規定位置
@@ -779,7 +783,7 @@ int levelOperator( NSString *zOpe )  // 演算子の優先順位
 			@throw NSLocalizedString(@"Unclosed parenthesis", nil); // 括弧が閉じていない
 		}
 		
-#ifdef AzDEBUG
+#ifdef DEBUG
 		for (int index = 0; index < [maRpn count]; index++) 
 		{
 			AzLOG(@"maRpn[%d]='%@'", index, [maRpn objectAtIndex:index]);

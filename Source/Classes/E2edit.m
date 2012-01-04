@@ -26,16 +26,12 @@
 @synthesize Re2target;
 @synthesize PiAddRow;
 @synthesize PbSharePlanList;
-#ifdef AzPAD
 @synthesize delegate;
 @synthesize selfPopover;
-#endif
 
 - (void)dealloc 
 {
-#ifdef AzPAD
 	[selfPopover release], selfPopover = nil;
-#endif
 	// @property (retain)
 	[Re2target release];
 	[Re1selected release];
@@ -47,12 +43,13 @@
 	self = [super init];
 	if (self) {
 		// 初期化処理：インスタンス生成時に1回だけ通る
-		appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		appDelegate.AppUpdateSave = NO;
+		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		appDelegate_.AppUpdateSave = NO;
 		PbSharePlanList = NO;
-#ifdef AzPAD
-		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
-#endif
+
+		if (appDelegate_.app_is_iPad) {
+			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
+		}
 	}
 	return self;
 }
@@ -67,11 +64,12 @@
 
 	// E2.name
 	MtfName = [[[UITextField alloc] init] autorelease];
-#ifdef AzPAD
-	MtfName.font = [UIFont systemFontOfSize:20];
-#else
-	MtfName.font = [UIFont systemFontOfSize:16];
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		MtfName.font = [UIFont systemFontOfSize:20];
+	} else {
+		MtfName.font = [UIFont systemFontOfSize:16];
+	}
 	MtfName.textColor = [UIColor blackColor];
 	MtfName.borderStyle = UITextBorderStyleRoundedRect;
 	MtfName.placeholder = NSLocalizedString(@"(New Index)",nil);  //(@"Group name", @"グループ名称");
@@ -81,11 +79,12 @@
 	[self.view addSubview:MtfName]; //[MtfName release]; // self.viewがOwnerになる
 	// E2.note
 	MtvNote = [[[UITextView alloc] init] autorelease];
-#ifdef AzPAD
-	MtvNote.font = [UIFont systemFontOfSize:20];
-#else
-	MtvNote.font = [UIFont systemFontOfSize:14];
-#endif
+
+	if (appDelegate_.app_is_iPad) {
+		MtvNote.font = [UIFont systemFontOfSize:20];
+	} else {
+		MtvNote.font = [UIFont systemFontOfSize:14];
+	}
 	MtvNote.textColor = [UIColor brownColor];
 	MtvNote.keyboardType = UIKeyboardTypeDefault;
 	MtvNote.delegate = self;  // textViewDidBeginEditingなどが呼び出されるように
@@ -160,66 +159,67 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
-#ifdef AzPAD
-	return NO;	//[MENU]Popover内のとき回転禁止にするため
-#else
-	// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
-	return appDelegate.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
-#endif
+	if (appDelegate_.app_is_iPad) {
+		return NO;	//[MENU]Popover内のとき回転禁止にするため
+	} else {
+		// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
+		return appDelegate_.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+	}
 }
 
 // ユーザインタフェースの回転の最後の半分が始まる前にこの処理が呼ばれる　＜＜このタイミングで配置転換すると見栄え良い＞＞
 - (void)willAnimateSecondHalfOfRotationFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation 
 													   duration:(NSTimeInterval)duration
 {
-#ifdef AzPAD
-	[self cancel:nil];	//回転すればキャンセル
-#else
-	//[self viewWillAppear:NO];没：これを呼ぶと、回転の都度、編集がキャンセルされてしまう。
-	[self viewDesign]; // これで回転しても編集が継続されるようになった。
-#endif
+	if (appDelegate_.app_is_iPad) {
+		[self cancel:nil];	//回転すればキャンセル
+	} else {
+		//[self viewWillAppear:NO];没：これを呼ぶと、回転の都度、編集がキャンセルされてしまう。
+		[self viewDesign]; // これで回転しても編集が継続されるようになった。
+	}
 }
 
 - (void)viewDesign
 {
-#ifdef AzPAD
-	CGRect rect;
-	rect.origin.x = 10;
-	rect.origin.y = 5;
-	rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
-	rect.size.height = 40;
-	MtfName.frame = rect;
-	
-	rect.origin.x = 15;
-	rect.origin.y = 48;
-	rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
-	rect.size.height = self.view.frame.size.height - rect.origin.y - 10;
-	MtvNote.frame = rect;
-#else
-	float fKeyHeight;
-	float fHeightOfsset;
-	if (self.interfaceOrientation == UIInterfaceOrientationPortrait 
-		OR self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-		fKeyHeight = GD_KeyboardHeightPortrait;	 // タテ
-		fHeightOfsset = 15; // タテ： MtfNameの高さを少しでも高くして操作しやすくする
-	} else {
-		fKeyHeight = GD_KeyboardHeightLandscape; // ヨコ
-		fHeightOfsset = 0; // ヨコ： MtvNoteの高さをできるだけ確保しなければ入力しにくくなる
+	if (appDelegate_.app_is_iPad) {
+		CGRect rect;
+		rect.origin.x = 10;
+		rect.origin.y = 5;
+		rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
+		rect.size.height = 40;
+		MtfName.frame = rect;
+		
+		rect.origin.x = 15;
+		rect.origin.y = 48;
+		rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
+		rect.size.height = self.view.frame.size.height - rect.origin.y - 10;
+		MtvNote.frame = rect;
 	}
-	
-	CGRect rect;
-	rect.origin.x = 10;
-	rect.origin.y = 5;
-	rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
-	rect.size.height = 25 + fHeightOfsset;
-	MtfName.frame = rect;
-	
-	rect.origin.x = 15;
-	rect.origin.y = 33 + fHeightOfsset;
-	rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
-	rect.size.height = self.view.frame.size.height - rect.origin.y - 5 - fKeyHeight;
-	MtvNote.frame = rect;
-#endif
+	else {
+		float fKeyHeight;
+		float fHeightOfsset;
+		if (self.interfaceOrientation == UIInterfaceOrientationPortrait 
+			OR self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+			fKeyHeight = GD_KeyboardHeightPortrait;	 // タテ
+			fHeightOfsset = 15; // タテ： MtfNameの高さを少しでも高くして操作しやすくする
+		} else {
+			fKeyHeight = GD_KeyboardHeightLandscape; // ヨコ
+			fHeightOfsset = 0; // ヨコ： MtvNoteの高さをできるだけ確保しなければ入力しにくくなる
+		}
+		
+		CGRect rect;
+		rect.origin.x = 10;
+		rect.origin.y = 5;
+		rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
+		rect.size.height = 25 + fHeightOfsset;
+		MtfName.frame = rect;
+		
+		rect.origin.x = 15;
+		rect.origin.y = 33 + fHeightOfsset;
+		rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
+		rect.size.height = self.view.frame.size.height - rect.origin.y - 5 - fKeyHeight;
+		MtvNote.frame = rect;
+	}
 }
 
 
@@ -243,7 +243,7 @@ replacementString:(NSString *)string
     [text replaceCharactersInRange:range withString:string];
 	// 置き換えた後の長さをチェックする
 	if ([text length] <= AzMAX_NAME_LENGTH) {
-		appDelegate.AppUpdateSave = YES; // 変更あり
+		appDelegate_.AppUpdateSave = YES; // 変更あり
 		self.navigationItem.rightBarButtonItem.enabled = YES; // 変更あり [Save]有効
 		return YES;
 	} else {
@@ -260,7 +260,7 @@ replacementString:(NSString *)string
     [zText replaceCharactersInRange:range withString:zReplace];
 	// 置き換えた後の長さをチェックする
 	if ([zText length] <= AzMAX_NOTE_LENGTH) {
-		appDelegate.AppUpdateSave = YES; // 変更あり
+		appDelegate_.AppUpdateSave = YES; // 変更あり
 		self.navigationItem.rightBarButtonItem.enabled = YES; // 変更あり [Save]有効
 		return YES;
 	} else {
@@ -271,14 +271,14 @@ replacementString:(NSString *)string
 
 - (void)cancel:(id)sender 
 {
-#ifdef AzPAD
-	if (selfPopover) 
-	{	//ヨコ： E2viewが左ペインにあるとき、E2editを内包するPopoverを閉じる
-		[selfPopover dismissPopoverAnimated:YES];
-		return;
+	if (appDelegate_.app_is_iPad) {
+		if (selfPopover) 
+		{	//ヨコ： E2viewが左ペインにあるとき、E2editを内包するPopoverを閉じる
+			[selfPopover dismissPopoverAnimated:YES];
+			return;
+		}
+		//タテ： E2viewが[MENU]でPopover内包されているとき、E2editはiPhone同様にNavi遷移するだけ
 	}
-	//タテ： E2viewが[MENU]でPopover内包されているとき、E2editはiPhone同様にNavi遷移するだけ
-#endif
 	[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
 }
 
@@ -303,17 +303,17 @@ replacementString:(NSString *)string
 		}
 	}
 
-#ifdef AzPAD		
-	if (selfPopover) 
-	{	//ヨコ： E2viewが左ペインにあるとき、E2editを内包するPopoverを閉じる
-		if ([delegate respondsToSelector:@selector(refreshE2view)]) {	// メソッドの存在を確認する
-			[delegate refreshE2view];// 親の再描画を呼び出す
+	if (appDelegate_.app_is_iPad) {
+		if (selfPopover) 
+		{	//ヨコ： E2viewが左ペインにあるとき、E2editを内包するPopoverを閉じる
+			if ([delegate respondsToSelector:@selector(refreshE2view)]) {	// メソッドの存在を確認する
+				[delegate refreshE2view];// 親の再描画を呼び出す
+			}
+			[selfPopover dismissPopoverAnimated:YES];
+			return;
 		}
-		[selfPopover dismissPopoverAnimated:YES];
-		return;
+		//タテ： E2viewが[MENU]でPopover内包されているとき、E2editはiPhone同様にNavi遷移するだけ
 	}
-	//タテ： E2viewが[MENU]でPopover内包されているとき、E2editはiPhone同様にNavi遷移するだけ
-#endif
 	[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
 }
 

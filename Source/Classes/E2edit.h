@@ -18,26 +18,24 @@
 	NSInteger PiAddRow;  // (>=0)Add  (-1)Edit
 	BOOL	PbSharePlanList;	// SharePlan プレビューモード
 
-#ifdef AzPAD		// E2viewが左ペインにあるとき、E2editをPopover内包するために使う。
+	// E2viewが左ペインにあるとき、E2editをPopover内包するために使う。
 	id									delegate;
 	UIPopoverController*	selfPopover;  // 自身を包むPopover  閉じる為に必要
-#endif
 	
 	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
 	//----------------------------------------------Owner移管につきdealloc時のrelese不要
 	UITextField *MtfName;
 	UITextView	*MtvNote;
 	//----------------------------------------------assign
-	AppDelegate		*appDelegate;
+	AppDelegate		*appDelegate_;
 }
 
 @property (nonatomic, retain) E1 *Re1selected;
 @property (nonatomic, retain) E2 *Re2target;
 @property (nonatomic, assign) NSInteger PiAddRow;
 @property (nonatomic, assign) BOOL	PbSharePlanList;
-#ifdef AzPAD
+
 @property (nonatomic, assign) id									delegate;
 @property (nonatomic, retain) UIPopoverController*	selfPopover;
-#endif
 
 @end

@@ -36,10 +36,12 @@
 - (id)initWithStyle:(UITableViewStyle)style 
 {
 	if ((self = [super initWithStyle:UITableViewStyleGrouped])) {  // セクションありテーブル
-#ifdef AzPAD
-		self.contentSizeForViewInPopover = CGSizeMake(420, 360);
-		self.navigationItem.hidesBackButton = YES;
-#endif
+
+		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		if (appDelegate_.app_is_iPad) {
+			self.contentSizeForViewInPopover = CGSizeMake(420, 360);
+			self.navigationItem.hidesBackButton = YES;
+		}
 	}
 	return self;
 }
@@ -55,13 +57,13 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
-#ifdef AzPAD
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);	// Popover内につき回転不要 <正面は常に許可>
-#else
-	// 回転禁止でも、正面は常に許可しておくこと。
-	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
-#endif
+	if (appDelegate_.app_is_iPad) {
+		return (interfaceOrientation == UIInterfaceOrientationPortrait);	// Popover内につき回転不要 <正面は常に許可>
+	} else {
+		// 回転禁止でも、正面は常に許可しておくこと。
+		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+	}
 }
 
 // ユーザインタフェースの回転の最後の半分が始まる前にこの処理が呼ばれる　＜＜このタイミングで配置転換すると見栄え良い＞＞
@@ -133,11 +135,11 @@
 {
 	switch (section) {
 		case 0: // 
-#ifdef AzPAD
-			return 5;	// (0)回転は不要
-#else
-			return 6;
-#endif
+			if (appDelegate_.app_is_iPad) {
+				return 5;	// (0)回転は不要
+			} else {
+				return 6;
+			}
 			break;
 	}
     return 0;
@@ -175,14 +177,15 @@
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	
-#ifdef AzPAD
-	float fX = self.tableView.frame.size.width - 60 - 120;
-	int  iCase = indexPath.row + 1;
-#else
-	float fX = cell.frame.size.width - 120;
-	//float fX = self.tableView.frame.size.width - 120;
-	int  iCase = indexPath.row;
-#endif
+	float fX;
+	int  iCase;
+	if (appDelegate_.app_is_iPad) {
+		fX = self.tableView.frame.size.width - 60 - 120;
+		 iCase = indexPath.row + 1;
+	} else {
+		fX = cell.frame.size.width - 120;
+		 iCase = indexPath.row;
+	}
 
 	switch (iCase) {
 		case 0:
