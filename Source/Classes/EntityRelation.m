@@ -16,23 +16,25 @@
 
 @implementation EntityRelation
 
-static NSManagedObjectContext *scMoc = nil;
+static NSManagedObjectContext *scMoc_ = nil;
 
-NSManagedObjectContext *managedObjectContext() 
++ (void)setMoc:(NSManagedObjectContext*)moc
 {
-	if (scMoc==nil) {
-		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		scMoc = appDelegate.managedObjectContext;
-	}
-	return scMoc;
+	scMoc_ = moc;
 }
 
++ (NSManagedObjectContext*)getMoc
+{
+	assert(scMoc_);
+	return scMoc_;
+}
 
 + (void)commit
 {
+	assert(scMoc_);
 	// SAVE
 	NSError *err = nil;
-	if (![managedObjectContext()  save:&err]) {
+	if (![scMoc_  save:&err]) {
 		NSLog(@"MOC commit error %@, %@", err, [err userInfo]);
 		//exit(-1);  // Fail
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"MOC CommitErr",nil)
@@ -47,19 +49,19 @@ NSManagedObjectContext *managedObjectContext()
 
 + (void)rollBack
 {
+	assert(scMoc_);
 	// ROLLBACK
-	[managedObjectContext() rollback]; // 前回のSAVE以降を取り消す
+	[scMoc_ rollback]; // 前回のSAVE以降を取り消す
 }
 
 
 + (NSInteger)E1_maxRow
 {
-	NSManagedObjectContext *moc = managedObjectContext();
-	
+	assert(scMoc_);
 	NSFetchRequest* request = [[NSFetchRequest alloc] init];
 
 	// entity
-	NSEntityDescription* entity = [NSEntityDescription entityForName:@"E1" inManagedObjectContext:moc];
+	NSEntityDescription* entity = [NSEntityDescription entityForName:@"E1" inManagedObjectContext:scMoc_];
 	[request setEntity:entity]; 
 	
 	// expression
@@ -83,7 +85,7 @@ NSManagedObjectContext *managedObjectContext()
 	
 	// execution
 	NSError *error = nil;
-	NSArray *array = [moc executeFetchRequest:request error:&error];
+	NSArray *array = [scMoc_ executeFetchRequest:request error:&error];
 	NSInteger maxRow = 0;
 	
 	if (error) {

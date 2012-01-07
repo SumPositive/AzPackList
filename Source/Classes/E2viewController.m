@@ -22,6 +22,7 @@
 #import "WebSiteVC.h"
 #import "SpAppendVC.h"
 #import "DropboxVC.h"
+#import "PatternImageView.h"
 
 
 #define ACTIONSEET_TAG_DELETEGROUP	901 // 適当な重複しない識別数値を割り当てている
@@ -842,6 +843,19 @@
 		// 初期化成功
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		PbSharePlanList_ = NO;
+		
+		// 背景テクスチャ・タイルペイント
+		if (appDelegate_.app_is_iPad) {
+			//self.view.backgroundColor = //iPad1では無効
+			UIView* view = self.tableView.backgroundView;
+			if (view) {
+				PatternImageView *tv = [[PatternImageView alloc] initWithFrame:view.frame
+																  patternImage:[UIImage imageNamed:@"Tx-Back"]]; // タイルパターン生成
+				[view addSubview:tv];
+			}
+		} else {
+			self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+		}
 	}
 	return self;
 }
@@ -850,8 +864,6 @@
 - (void)loadView
 {	//【Tips】ここでaddSubviewするオブジェクトは全てautoreleaseにすること。メモリ不足時には自動的に解放後、改めてここを通るので、初回同様に生成するだけ。
 	[super loadView];
-	// 背景テクスチャ・タイルペイント
-	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 
 	// その他、初期化
 	if (appDelegate_.app_is_iPad) {

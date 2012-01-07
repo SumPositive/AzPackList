@@ -11,18 +11,17 @@
 #import <iAd/iAd.h>
 #import "GADBannerView.h"
 
-@interface AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate
-									,ADBannerViewDelegate	,GADBannerViewDelegate> 
+#import <StoreKit/StoreKit.h>
+#define STORE_PRODUCTID_UNLOCK		@"com.azukid.AzPackList.Unlock"		// In-App Purchase ProductIdentifier
 
-//@property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
-//@property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-//@property (nonatomic, retain) NSMetadataQuery *ubiquitousQuery;
+@interface AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate
+									,ADBannerViewDelegate	,GADBannerViewDelegate, SKPaymentTransactionObserver> 
 
 @property (nonatomic, retain) UIWindow		*window;
 @property (nonatomic, retain) UINavigationController		*mainNC;		//for iPhone
 @property (nonatomic, retain) UISplitViewController		*mainSVC;	//for iPad
 @property (nonatomic, retain) PadRootVC	*padRootVC;  //解放されないようにretain
+@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
 
 @property (nonatomic, retain) NSMutableArray *RaClipE3objects;  // 外部から参照されるため
 @property (nonatomic, assign) BOOL	AppShouldAutorotate;
@@ -36,6 +35,9 @@
 @property (nonatomic, assign) BOOL	app_is_sponsor;		// YES=購入済み（スポンサー）
 @property (nonatomic, assign) BOOL	app_is_Ad;	// YES=広告表示する
 
+
+- (void)alertProgressOff;
+- (void)alertProgressOn:(NSString*)zTitle;
 
 //- (NSURL *)applicationDocumentsDirectory;
 - (NSString *)applicationDocumentsDirectory;

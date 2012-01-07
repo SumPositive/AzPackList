@@ -93,10 +93,10 @@ static NSString *csvToStr( NSString *inCsv ) {
 		
 		@try {
 			//----------------------------------------------------------------------------Header
-			//str = GD_PRODUCTNAME  @",CSV,UTF-8,Copyright,(C)2011,Azukid,,,\n";
-			//[1.1.0]これまでLoad時には、GD_PRODUCTNAME だけ比較チェックしている。
+			//str = GD_CSV_HEADER_ID  @",CSV,UTF-8,Copyright,(C)2011,Azukid,,,\n";
+			//[1.1.0]これまでLoad時には、GD_CSV_HEADER_ID だけ比較チェックしている。
 			//[1.1.0],CSV,の次に,4,を追加。 4 は、xcdatamodel 4 を示している。　　近未来JSON対応すれば、,CSV,⇒,JSON, とする。
-			str = GD_PRODUCTNAME  @",UTF-8,CSV,4,,,Copyright,(C)2011,Azukid,,\n";
+			str = GD_CSV_HEADER_ID  @",UTF-8,CSV,4,,,Copyright,(C)2012,Azukid,,\n";
 			[PzCsv appendString:str];
 			
 			//----------------------------------------------------------------------------Structure
@@ -312,15 +312,15 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 			if (csvHandle) {
 				@try {
 					[csvHandle seekToFileOffset:0];
-					NSData *data = [csvHandle readDataOfLength:[GD_PRODUCTNAME length]*3];
-					if ([data length] != [GD_PRODUCTNAME length]*3) {
+					NSData *data = [csvHandle readDataOfLength:[GD_CSV_HEADER_ID length]*3];
+					if ([data length] != [GD_CSV_HEADER_ID length]*3) {
 						[csvHandle closeFile];
 						// File size too small.
 						//[methodPool release];
 						return NSLocalizedString(@"File error",nil);
 					}
 					NSString *csvStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-					if (![csvStr hasPrefix:GD_PRODUCTNAME]) { 
+					if (![csvStr hasPrefix:GD_CSV_HEADER_ID]) { 
 						// 先頭部分が一致しない
 						//[csvStr release];
 						[csvHandle closeFile];
@@ -373,7 +373,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		error:(NSError **)Perror;
 {
 	@autoreleasepool {
-		NSManagedObjectContext *moc = managedObjectContext();
+		NSManagedObjectContext *moc = [EntityRelation getMoc];
 		NSInteger iErrLine = 0;
 		E1 *e1node = nil;
 		E2 *e2node = nil;
@@ -391,7 +391,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 				if (csvLineSplit(PzCsv, aSplit) < 0 OR 10 < iErrLine) { // 10行以内に無ければ中断
 					@throw NSLocalizedString(@"Err CsvHeaderNG",nil);
 				}
-				if ([[aSplit objectAtIndex:0] isEqualToString:GD_PRODUCTNAME]) {
+				if ([[aSplit objectAtIndex:0] isEqualToString:GD_CSV_HEADER_ID]) {
 					break; // OK
 				} 
 			}
@@ -625,9 +625,9 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 				//[dic release];
 			}
 		}
-		@finally {
-			//[aSplit release];
-		}	
+		//@finally {
+		//	[aSplit release];
+		//}	
 		return e1node; // moc(Entity)インスタンス
 	}
 }

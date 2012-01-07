@@ -8,12 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-NSManagedObjectContext *managedObjectContext();
+//NSManagedObjectContext *managedObjectContext();
 
-@interface EntityRelation : NSObject {
-}
+@interface EntityRelation : NSObject 
 
 // クラスメソッド（グローバル関数）
++ (void)setMoc:(NSManagedObjectContext*)moc;
++ (NSManagedObjectContext*)getMoc;
 + (void)commit;
 + (void)rollBack;
 + (NSInteger)E1_maxRow;

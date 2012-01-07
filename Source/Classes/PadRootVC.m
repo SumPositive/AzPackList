@@ -90,7 +90,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-	[self.navigationController setToolbarHidden:NO animated:NO]; // ツールバー表示 ＜＜目次メニューボタンがあるため
+	[self.navigationController setToolbarHidden:NO animated:NO]; // ツールバー表示
 }
 
 /* SplitViewは、透明なので通らない！

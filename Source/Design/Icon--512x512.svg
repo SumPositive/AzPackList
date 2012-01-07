@@ -16,9 +16,9 @@
    version="1.1"
    inkscape:version="0.48.1 r9760"
    sodipodi:docname="Icon--512x512.svg"
-   inkscape:export-filename="/Users/masa/AzukiSoft/AzPacking/Source/Icon72Free.png"
-   inkscape:export-xdpi="12.66"
-   inkscape:export-ydpi="12.66"
+   inkscape:export-filename="/Users/masa/AzukiSoft/AzPackList/Source/Icon512.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90"
    style="display:inline">
   <defs
      id="defs4">
@@ -470,10 +470,14 @@
     </marker>
     <filter
        id="filter5699"
-       inkscape:label="Diffuse light"
+       inkscape:label="Drop shadow"
        inkscape:menu="ABCs"
        inkscape:menu-tooltip="Basic diffuse bevel to use for building textures"
-       color-interpolation-filters="sRGB">
+       color-interpolation-filters="sRGB"
+       width="1.5"
+       height="1.5"
+       x="-0.25"
+       y="-0.25">
       <feGaussianBlur
          id="feGaussianBlur5701"
          stdDeviation="6"
@@ -494,11 +498,41 @@
          in2="SourceGraphic"
          k1="1"
          in="result5"
-         result="result4"
+         result="fbSourceGraphic"
          operator="arithmetic"
          k2="0"
          k3="0.6"
          k4="0" />
+      <feColorMatrix
+         result="fbSourceGraphicAlpha"
+         in="fbSourceGraphic"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         id="feColorMatrix3214" />
+      <feGaussianBlur
+         id="feGaussianBlur3216"
+         in="fbSourceGraphicAlpha"
+         stdDeviation="2"
+         result="blur" />
+      <feColorMatrix
+         id="feColorMatrix3218"
+         result="bluralpha"
+         type="matrix"
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.5 0 " />
+      <feOffset
+         id="feOffset3220"
+         in="bluralpha"
+         dx="4"
+         dy="4"
+         result="offsetBlur" />
+      <feMerge
+         id="feMerge3222">
+        <feMergeNode
+           id="feMergeNode3224"
+           in="offsetBlur" />
+        <feMergeNode
+           id="feMergeNode3226"
+           in="fbSourceGraphic" />
+      </feMerge>
     </filter>
     <filter
        id="filter3965"
@@ -529,7 +563,8 @@
          result="result4"
          operator="arithmetic"
          k2="0"
-         k3="0.6" />
+         k3="0.6"
+         k4="0" />
     </filter>
     <filter
        id="filter3975"
@@ -560,7 +595,8 @@
          result="result4"
          operator="arithmetic"
          k2="0"
-         k3="0.6" />
+         k3="0.6"
+         k4="0" />
     </filter>
   </defs>
   <sodipodi:namedview
@@ -571,7 +607,7 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4726562"
-     inkscape:cx="294.70557"
+     inkscape:cx="206.76923"
      inkscape:cy="256"
      inkscape:document-units="px"
      inkscape:current-layer="layer9"
@@ -705,7 +741,7 @@
          sodipodi:open="true"
          sodipodi:end="6.271214"
          sodipodi:start="0"
-         d="m 454.85715,124.57143 c 0,50.28421 -40.59284,91.04762 -90.66666,91.04762 -50.07382,0 -90.66666,-40.76341 -90.66666,-91.04762 0,-50.284217 40.59284,-91.047626 90.66666,-91.047626 49.65047,0 90.0658,40.102178 90.66017,89.957686"
+         d="m 454.85715,124.57143 a 90.666664,91.047623 0 1 1 -0.006,-1.08994"
          sodipodi:ry="91.047623"
          sodipodi:rx="90.666664"
          sodipodi:cy="124.57143"
@@ -1147,7 +1183,7 @@
     <g
        id="g5130"
        style="fill:#fffafa;filter:url(#filter5699)"
-       transform="matrix(0.93750001,0,0,0.93750001,13.254389,19.904864)">
+       transform="matrix(1.0855522,0,0,1.0855522,-26.459865,1.165603)">
       <path
          id="path2768"
          d="m 231.45989,82.556055 c -14.98202,0 -27.56489,8.923905 -27.56489,22.970745 l 0,38.6205 -53.8553,0 0,269.24682 220.5192,0 0,-269.24682 -54.29989,0 0,-38.6205 c 0,-14.04684 -12.3754,-22.970745 -27.35742,-22.970745 l -57.4417,0 z m -7.76559,21.755525 72.08369,0 0,39.83572 -72.08369,0 0,-39.83572 z"
@@ -1166,40 +1202,11 @@
     </g>
   </g>
   <g
-     style="display:inline"
-     inkscape:label="Free"
-     id="g3956"
-     inkscape:groupmode="layer"
-     sodipodi:insensitive="true">
-    <flowRoot
-       transform="matrix(32.529346,0.02979749,-0.05989517,30.625733,-10075.13,-1334.7202)"
-       style="font-size:3.40804172px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffdab9;fill-opacity:1;stroke:none;font-family:Hiragino Kaku Gothic Std;-inkscape-font-specification:Hiragino Kaku Gothic Std Bold Italic"
-       id="flowRoot3958"
-       xml:space="preserve"><flowRegion
-         id="flowRegion3960"><rect
-           style="font-size:3.40804172px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffdab9;font-family:Hiragino Kaku Gothic Std;-inkscape-font-specification:Hiragino Kaku Gothic Std Bold Italic"
-           y="57.904762"
-           x="313.14285"
-           height="36.57143"
-           width="123.42857"
-           id="rect3962" /></flowRegion><flowPara
-         id="flowPara3966">Free</flowPara></flowRoot>  </g>
-  <g
      inkscape:groupmode="layer"
      id="layer9"
-     inkscape:label="iPad"
+     inkscape:label="iCloud"
      style="display:inline"
      sodipodi:insensitive="true">
-    <rect
-       style="fill:#4169e1;fill-rule:evenodd;stroke:none;filter:url(#filter3965)"
-       id="rect3180"
-       width="22.408489"
-       height="255.32097"
-       x="131.73474"
-       y="153.46419"
-       rx="0"
-       ry="0"
-       transform="matrix(1.041272,0,0,1.0020067,-5.3444773,-0.84013562)" />
     <rect
        ry="0"
        rx="0"
@@ -1208,7 +1215,17 @@
        height="256"
        width="22.408489"
        id="rect3963"
-       style="fill:#4169e1;fill-rule:evenodd;stroke:none;filter:url(#filter3975)"
-       transform="matrix(1.041272,0,0,0.99934896,-14.620943,0.31431688)" />
+       style="fill:#87ceeb;fill-rule:evenodd;stroke:none;filter:url(#filter3975)"
+       transform="matrix(0.93050592,0,0,1.1549169,44.867014,-20.685265)" />
+    <rect
+       transform="matrix(0.93050592,0,0,1.1549169,-217.13299,-20.685265)"
+       style="fill:#87ceeb;fill-rule:evenodd;stroke:none;filter:url(#filter3975)"
+       id="rect3192"
+       width="22.408489"
+       height="256"
+       x="356.49866"
+       y="152.78514"
+       rx="0"
+       ry="0" />
   </g>
 </svg>

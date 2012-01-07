@@ -1,6 +1,6 @@
 //
 //  Global.h
-//  AzPacking
+//  AzPackList
 //
 //  Created by 松山 和正 on 09/12/03.
 //  Copyright __MyCompanyName__ 2009. All rights reserved.
@@ -8,56 +8,13 @@
 
 //#define AzMAKE_SPLASHFACE  // 起動画面 Default.png を作るための作業オプション
 
+#define COPYRIGHT		@"©1995-2012 Azukid"
+
+#define GD_PRODUCTNAME	@"AzPackList"	// IMPORTANT PRODUCT NAME  和名「モチメモ」
+
 #define AdMobID_PackPAD	@"a14dd004bc6bc0a";		//AdMobパブリッシャー ID  "モチメモ Free iPad"
 #define AdMobID_PackList	@"a14d4cec1e082c1";		//AdMobパブリッシャー ID  "モチメモ Free iPhone"　
 
-#define OR  ||
-
-#ifdef DEBUG	//--------------------------------------------- DEBUG
-#define AzLOG(...) NSLog(__VA_ARGS__)
-#define AzRETAIN_CHECK(zName,pObj,iAns)  { if ([pObj retainCount] > iAns) NSLog(@"AzRETAIN_CHECK> %@ %d > %d", zName, [pObj retainCount], iAns); }
-
-#else	//----------------------------------------------------- RELEASE
-		// その他のフラグ：-DNS_BLOCK_ASSERTIONS=1　（NSAssertが除去される）
-#define AzLOG(...) 
-#define NSLog(...) 
-#define AzRETAIN_CHECK(...) 
-#endif
-
-// iOS VERSION		http://goddess-gate.com/dc2/index.php/post/452
-#define IOS_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
-#define IOS_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
-#define IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
-#define IOS_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
-#define IOS_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
-
-
-#define GD_PRODUCTNAME	@"AzPacking"	// IMPORTANT PRODUCT NAME  和名「モチメモ」
-/*----- GD_PRODUCTNAME を変更するときに必要となる作業の覚書 -------------------------------
-
- ＊ソース変更
-	AppDelegete.m にて NSBundle名に GD_PRODUCTNAME が渡されている。以下適切に変更しなければ、ここでフリーズする
-
- *実体ファイル名変更と同時に、XCODEから各ファイルの情報を開いて、実体を再指定(リンク)する
-	AzPacking					ルートフォルダ名
-	AzPacking_Prefix.pch		プリコンパイルヘッダ
-	AzPacking.xcmappingmodel	データマッピング
-	AzPacking.xcdatamodeld		データモデル
-
- ＊XCODE＞プロジェクト＞アクティブターゲット"AzPacking"を編集
-		＞一般＞名前を変更
-		＞ビルド＞プリダクト名、GCC_PREFIX_HEADRER を変更
-		＞プロパティ＞旧名があれば変更
-
- *iPhoneシニュレータ＞コンテンツと設定をリセット
-
- *XCODE＞キャッシュを空にする
-
- *XCODE＞ビルド＞すべてのターゲットをクリーニング
-
- *XCODE＞ビルドして進行
-
- -----------------------------------------------------------------------*/
 
 //#define AzMAX_PLANS		 20		// 最大PLAN数
 //#define AzMAX_GROUPS	100		// 最大GROUP数
@@ -66,7 +23,8 @@
 #define AzMAX_NAME_LENGTH		50		//[0.2c] .name 最大文字数
 #define AzMAX_NOTE_LENGTH		200		//[0.2c] .note 最大文字数
 
-#define GD_COREDATANAME	@"AzPack.sqlite"	// CoreData Saved SQLlite File name
+#define GD_CSV_HEADER_ID	@"AzPacking"		// CSV Version.1
+//#define GD_COREDATANAME	@"AzPack.sqlite"	// CoreData Saved SQLlite File name
 //#define GD_CSVFILENAME			@"AzPack.csv"		// Local Save file name
 #define GD_GDOCS_EXT			@".AzPack"			// Google Document Spredseet.拡張子
 #define GD_CSVFILENAME4		@"AzPack.packlist"	//[1.1.0:xcdatamodel-4]以降 HOME/tmp/file name
@@ -118,5 +76,28 @@ UIColor *GcolorBlue(float percent);
 UIImage *GimageFromString(float Pfx, float Pfy, float PfSize, NSString* str);
 NSString *GstringFromNumber( NSNumber *num );
 
+
+
+//-------------------------------------------------------------------以下、定型定義
+
+#define OR  ||
+
+#ifdef DEBUG	//--------------------------------------------- DEBUG
+#define AzLOG(...) NSLog(__VA_ARGS__)
+#define AzRETAIN_CHECK(zName,pObj,iAns)  { if ([pObj retainCount] > iAns) NSLog(@"AzRETAIN_CHECK> %@ %d > %d", zName, [pObj retainCount], iAns); }
+
+#else	//----------------------------------------------------- RELEASE
+		// その他のフラグ：-DNS_BLOCK_ASSERTIONS=1　（NSAssertが除去される）
+#define AzLOG(...) 
+#define NSLog(...) 
+#define AzRETAIN_CHECK(...) 
+#endif
+
+// iOS VERSION		http://goddess-gate.com/dc2/index.php/post/452
+#define IOS_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
+#define IOS_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+#define IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define IOS_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define IOS_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
 

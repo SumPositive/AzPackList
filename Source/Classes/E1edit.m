@@ -54,10 +54,11 @@
 		// 初期化処理：インスタンス生成時に1回だけ通る
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		appDelegate_.AppUpdateSave = NO;
-
 		if (appDelegate_.app_is_iPad) {
 			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
 		}
+		// 背景テクスチャ・タイルペイント
+		self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 	}
 	return self;
 }
@@ -115,8 +116,6 @@
 - (void)viewDidLoad 
 {
 	[super viewDidLoad];
-	// 背景テクスチャ・タイルペイント
-	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 
 	// listen to our app delegates notification that we might want to refresh our detail view
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAllViews:) name:NFM_REFRESH_ALL_VIEWS

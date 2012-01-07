@@ -10,12 +10,13 @@
 #import "Global.h"
 #import "AppDelegate.h"
 #import "Elements.h"
+#import "EntityRelation.h"
 #import "FileCsv.h"
+#import "padRootVC.h"
 #import "E1viewController.h"
 #import "E2viewController.h"
 #import "DropboxVC.h"
 
-#import "padRootVC.h"
 
 
 @interface AppDelegate (PrivateMethods) // メソッドのみ記述：ここに変数を書くとグローバルになる。他に同じ名称があると不具合発生する
@@ -31,9 +32,6 @@
 @public		// 外部公開 ＜＜使用禁止！@propertyで外部公開すること＞＞
 @protected	// 自クラスおよびサブクラスから参照できる（無指定時のデフォルト）
 @private	// 自クラス内からだけ参照できる
-    //NSManagedObjectModel *managedObjectModel__;
-    //NSManagedObjectContext *managedObjectContext__;	    
-    //NSPersistentStoreCoordinator *persistentStoreCoordinator__;
 	NSManagedObjectModel				*moModel_;
 	NSPersistentStoreCoordinator		*persistentStoreCoordinator_;
 	
@@ -45,8 +43,10 @@
 	
 	// Clip Borad
 	NSMutableArray		*RaClipE3objects; //(V0.4.4) [Cut][Copy]されたE3をPUSHスタックする。[Paste]でPOPする
+
+	UIAlertView						*alertProgress_;
+	UIActivityIndicatorView	*alertIndicator_;
 }
-//@synthesize window;
 @synthesize window = window_;
 @synthesize managedObjectContext = moc_;
 @synthesize mainNC = mainNC_;
@@ -55,9 +55,6 @@
 @synthesize RaClipE3objects;
 @synthesize AppShouldAutorotate, AppUpdateSave;
 @synthesize dropboxSaveE1selected = dropboxSaveE1selected_;
-//@synthesize AppEnabled_iCloud = AppEnabled_iCloud_;
-//@synthesize AppEnabled_Dropbox = AppEnabled_Dropbox_;
-
 @synthesize app_is_iPad = app_is_iPad_;
 @synthesize app_is_sponsor = app_is_sponsor_;
 @synthesize app_is_Ad = app_is_Ad_;
@@ -92,6 +89,41 @@
     //[persistentStoreCoordinator_ release];
     //[moModel_ release];
 	//[super dealloc];
+}
+
+
+#pragma mark - alertProgressOn/Off
+
+- (void)alertProgressOff
+{
+	[alertIndicator_ stopAnimating];
+	[alertProgress_ dismissWithClickedButtonIndex:alertProgress_.cancelButtonIndex animated:YES];
+}
+
+- (void)alertProgressOn:(NSString*)zTitle
+{
+	if (alertProgress_==nil) {
+		// alertIndicatorOn/Off: のための準備
+		alertProgress_ = [[UIAlertView alloc] initWithTitle:zTitle  message:@" " delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
+		alertIndicator_ = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+		alertIndicator_.frame = CGRectMake(0, 0, 50, 50);
+		[alertProgress_  addSubview:alertIndicator_];
+	}
+	
+	[alertProgress_ setTitle:zTitle];
+	[alertProgress_ show];
+	
+	/*
+	 NSLog(@"*** frame  x=%f  y=%f  width=%f  height=%f", alertProgress_.frame.origin.x, alertProgress_.frame.origin.y,
+	 alertProgress_.frame.size.width, alertProgress_.frame.size.height);
+	 */
+	NSLog(@"*** bounds  x=%f  y=%f  width=%f  height=%f", alertProgress_.bounds.origin.x, alertProgress_.bounds.origin.y,
+		  alertProgress_.bounds.size.width, alertProgress_.bounds.size.height);
+	
+	// タイトルが変わるとサイズが変わり、インジケータの位置が変わるため、毎回以下の処理する必要あり
+	[alertIndicator_ setFrame:CGRectMake((	alertProgress_.bounds.size.width-50)/2, 
+										 alertProgress_.bounds.size.height-75, 50, 50)];
+	[alertIndicator_ startAnimating];
 }
 
 
@@ -154,6 +186,10 @@
 		}
 	}
 	
+#ifdef DEBUG
+	app_is_sponsor_ = NO;	// 購入中止で YES に変えてテストするため
+#endif
+
 	//-------------------------------------------------
 	if (app_is_iPad_) {
 		padRootVC_ = [[PadRootVC alloc] init]; // retainされる
@@ -161,17 +197,13 @@
 											initWithRootViewController:padRootVC_];
 		
 		E1viewController *e1viewCon = [[E1viewController alloc] init];
-		//e1viewCon.Rmoc = self.managedObjectContext;  //self.メソッド呼び出し ＜CoreData生成：はじまり＞
 		UINavigationController* naviRight = [[UINavigationController alloc] initWithRootViewController:e1viewCon];
-		//[e1viewCon release];
 		
 		// e1viewCon を splitViewCon へ登録
 		//mainVC = [[PadSplitVC alloc] init]; タテ2分割のための実装だったがRejectされたので没
 		mainSVC_ = [[UISplitViewController alloc] init];
 		mainSVC_.viewControllers = [NSArray arrayWithObjects:naviLeft, naviRight, nil];
 		mainSVC_.delegate = padRootVC_;
-		//[naviRight release];
-		//[naviLeft release];
 		// mainVC を window へ登録
 		[window addSubview:mainSVC_.view];
 	}
@@ -180,7 +212,6 @@
 		//e1viewCon.Rmoc = self.managedObjectContext; ＜＜待ちを減らすため、E1viewController:内で生成するように改めた。
 		// e1viewCon を naviCon へ登録
 		mainNC_ = [[UINavigationController alloc] initWithRootViewController:e1viewCon];
-		//[e1viewCon release];
 		// mainVC を window へ登録
 		[window addSubview:mainNC_.view];
 	}
@@ -201,6 +232,9 @@
 							root:kDBRootAppFolder]; // either kDBRootAppFolder or kDBRootDropbox
 	[DBSession setSharedSession:dbSession];
 
+	// 初期生成
+	[EntityRelation setMoc:[self managedObjectContext]];
+	
 	return;  // YES;  //iOS4
 }
 
@@ -343,23 +377,6 @@
         } 
     }
 }
-
-
-#pragma mark - Saving
-
-/**
- Performs the save action for the application, which is to send the save:
- message to the application's managed object context.
-- (IBAction)saveAction:(id)sender {
-	
-    NSError *error;
-    if (![[self managedObjectContext] save:&error]) {
-		// Handle error
-		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-		exit(-1);  // Fail
-    }
-}
- */
 
 
 #pragma mark - iCloud
@@ -541,6 +558,127 @@
 }
 
 
+#pragma mark - StoreKit <SKPaymentTransactionObserver>
+- (BOOL)purchasedCompleate:(SKPaymentTransaction*)tran
+{
+	if ([tran.payment.productIdentifier isEqualToString:STORE_PRODUCTID_UNLOCK]) {
+		// Unlock
+		app_is_sponsor_ = YES;
+		// UserDefへ記録する （iOS5未満のため）
+		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:GD_Sponsor];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+		// iCloud-KVS に記録する
+		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+		[kvs setBool:YES forKey:GD_Sponsor];
+		[kvs synchronize];
+		// Compleate !
+		[[SKPaymentQueue defaultQueue] finishTransaction:tran]; // 処理完了
+
+		// iCloud対応： NSPersistentStoreCoordinator, NSManagedObjectModel 再生成してiCloud対応する
+		// Commit!
+		NSError *error;
+		if (moc_ != nil) {
+			if ([moc_ hasChanges] && ![moc_ save:&error]) {
+				// Handle error.
+				NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+				assert(NO); //DEBUGでは落とす
+			} 
+		}
+		moc_ = nil;
+		persistentStoreCoordinator_ = nil;
+		// 再生成
+		[EntityRelation setMoc:[self managedObjectContext]];
+		
+		// 再フィッチ＆画面リフレッシュ通知
+		[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFETCH_ALL_DATA
+															object:self userInfo:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFRESH_ALL_VIEWS
+															object:self userInfo:nil];
+		
+		// インジケータ消す
+		[self alertProgressOff];
+		return YES;
+	}
+	// インジケータ消す
+	[self alertProgressOff];
+	alertBox(	NSLocalizedString(@"SK Failed",nil), NSLocalizedString(@"SK Failed msg",nil), @"OK" );
+	return NO;
+}
+
+- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions
+{	// Observer: 
+	for (SKPaymentTransaction *tran in transactions)
+	{
+		switch (tran.transactionState) {
+			case SKPaymentTransactionStatePurchasing: // 購入中
+				NSLog(@"SKPaymentTransactionStatePurchasing: tran=%@", tran);
+				// インジケータ開始
+				[self	alertProgressOn: NSLocalizedString(@"SK Progress",nil)];
+				break;
+				
+			case SKPaymentTransactionStateFailed: // 購入失敗
+			{
+				NSLog(@"SKPaymentTransactionStateFailed: tran=%@", tran);
+				[[SKPaymentQueue defaultQueue] finishTransaction:tran]; // 処理完了
+				// インジケータ消す
+				[self alertProgressOff];
+				
+				if (tran.error.code == SKErrorUnknown) {
+					// クレジットカード情報入力画面に移り、購入処理が強制的に終了したとき
+					//alertBox(	NSLocalizedString(@"SK Cancel",nil), [tran.error localizedDescription], @"OK" );
+					// 途中で止まった処理を再開する Consumable アイテムにも有効
+					[[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
+				} else {
+					alertBox(	NSLocalizedString(@"SK Failed",nil), nil, @"OK" );
+				}
+#ifdef DEBUG
+				// 購入成功と見なしてテストする
+				NSLog(@"DEBUG: SKPaymentTransactionStatePurchased: tran=%@", tran);
+				if ([self purchasedCompleate:tran]) {
+					alertBox(	NSLocalizedString(@"SK Compleate",nil), NSLocalizedString(@"SK Compleate msg",nil), @"OK" );
+				}
+#endif
+			} break;
+				
+			case SKPaymentTransactionStatePurchased:	// 購入完了
+			{
+				NSLog(@"SKPaymentTransactionStatePurchased: tran=%@", tran);
+				if ([self purchasedCompleate:tran]) {
+					alertBox(	NSLocalizedString(@"SK Compleate",nil), NSLocalizedString(@"SK Compleate msg",nil), @"OK" );
+				}
+			} break;
+				
+			case SKPaymentTransactionStateRestored:		// 購入済み
+			{
+				NSLog(@"SKPaymentTransactionStateRestored: tran=%@", tran);
+				if ([self purchasedCompleate:tran]) {
+					alertBox(	NSLocalizedString(@"SK Restored",nil), NSLocalizedString(@"SK Restored msg",nil), @"OK" );
+				}
+			} break;
+				
+			default:
+				NSLog(@"SKPaymentTransactionState: default: tran=%@", tran);
+				break;
+		}
+	}
+}
+
+- (void)paymentQueue:(SKPaymentQueue *)queue removedTransactions:(NSArray *)transactions 
+{
+	[[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
+}
+
+- (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error
+{	// リストアの失敗
+	NSLog(@"paymentQueue: restoreCompletedTransactionsFailedWithError: ");
+}
+
+- (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue 
+{	// 全てのリストア処理が終了
+	NSLog(@"paymentQueueRestoreCompletedTransactionsFinished: ");
+}
+
+
 #pragma mark - Ad
 
 - (void)AdRefresh:(BOOL)bCanVisible
@@ -563,12 +701,12 @@
 		RoAdMobView.delegate = self;
 		if (app_is_iPad_) {
 			RoAdMobView.adUnitID = AdMobID_PackPAD;	//iPad//
-			RoAdMobView.frame = CGRectMake( 0, 0,  GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);
+			RoAdMobView.frame = CGRectMake( 0, 800,  GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);
 			RoAdMobView.rootViewController = mainSVC_;
 			[mainSVC_.view addSubview:RoAdMobView];
 		} else {
 			RoAdMobView.adUnitID = AdMobID_PackList;	//iPhone//
-			RoAdMobView.frame = CGRectMake( 0, 0, GAD_SIZE_320x50.width, GAD_SIZE_320x50.height);
+			RoAdMobView.frame = CGRectMake( 0, 500, GAD_SIZE_320x50.width, GAD_SIZE_320x50.height);
 			RoAdMobView.rootViewController = mainNC_;
 			[mainNC_.view addSubview:RoAdMobView];
 		}
@@ -670,7 +808,7 @@
 			CGRect rc = RoAdMobView.frame;
 			if (MbAdCanVisible && RoAdMobView.tag==1 && MbannerView.alpha==0) { //iAdが非表示のときだけAdMob表示
 				if (RoAdMobView.alpha==0) {
-					rc.origin.y = 480 - 44 - 50;		//AdMobはヨコ向き常に非表示 ＜＜これはタテの配置なのでヨコだと何もしなくても範囲外で非表示になる
+					rc.origin.y = 480 - 50;		//AdMobはヨコ向き常に非表示 ＜＜これはタテの配置なのでヨコだと何もしなくても範囲外で非表示になる
 					RoAdMobView.frame = rc;
 					RoAdMobView.alpha = 1;
 				}
@@ -745,13 +883,13 @@
 			if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
 				MbannerView.frame = CGRectMake(0, 320-32,  0,0);	//ヨコ：下部に表示
 			} else {
-				MbannerView.frame = CGRectMake(0, 480-44-50,  0,0);	//タテ：下部に表示
+				MbannerView.frame = CGRectMake(0, 480-50,  0,0);	//タテ：下部に表示
 			}
 		} else {
 			if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
 				MbannerView.frame = CGRectMake(0, 320-32 + FREE_AD_OFFSET_Y,  0,0);		//ヨコ：下へ隠す
 			} else {
-				MbannerView.frame = CGRectMake(0, 480-44-50 + FREE_AD_OFFSET_Y,  0,0);	//タテ：下へ隠す
+				MbannerView.frame = CGRectMake(0, 480-50 + FREE_AD_OFFSET_Y,  0,0);	//タテ：下へ隠す
 			}
 		}
 	}

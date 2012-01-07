@@ -560,8 +560,10 @@ replacementString:(NSString *)text
 			else if (self.maxValue < lAns) { // Over
 				lAns = (long)self.maxValue;
 			}
-			[Rentity setValue:[NSNumber numberWithLong:lAns] forKey:RzKey];
-			Rlabel.text = [NSString stringWithFormat:@"%ld", lAns];
+			//Rlabel.text = [NSString stringWithFormat:@"%ld", lAns];
+			NSNumber *num = [NSNumber numberWithLong:lAns];
+			[Rentity setValue:num forKey:RzKey];
+			Rlabel.text = GstringFromNumber(num); // 3桁コンマ付加
 			
 			AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 			appDelegate.AppUpdateSave = YES; // 変更あり

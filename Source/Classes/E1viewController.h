@@ -7,17 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <StoreKit/StoreKit.h>
 
-@class E1edit;
-@class InformationView;
-@class HTTPServer;
 
 @interface E1viewController : UITableViewController 
-	<NSFetchedResultsControllerDelegate, UIActionSheetDelegate	,UIPopoverControllerDelegate>
+	<NSFetchedResultsControllerDelegate, UIActionSheetDelegate	,UIPopoverControllerDelegate, SKProductsRequestDelegate>
 
-//@property (nonatomic, retain) NSManagedObjectContext *Rmoc;
-
-//- (void)setPopover:(UIPopoverController*)pc;
 - (void)refreshE1view;
 
 @end

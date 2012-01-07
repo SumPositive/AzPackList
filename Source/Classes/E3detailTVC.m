@@ -12,10 +12,11 @@
 #import "E3viewController.h"
 #import "E3detailTVC.h"
 #import "selectGroupTVC.h"
-#import "editLabelTextVC.h"
+//#import "editLabelTextVC.h"
 #import "editLabelNumberVC.h"
 #import "CalcView.h"
 #import "WebSiteVC.h"
+#import "PatternImageView.h"
 
 
 //#define LABEL_NOTE_SUFFIX   @"\n\n\n\n\n"  // UILabel *MlbNoteを上寄せするための改行（5行）
@@ -124,9 +125,20 @@
 		PbSharePlanList = NO;
 		MfTableViewContentY = -1;
 
+		// 背景テクスチャ・タイルペイント
 		if (appDelegate_.app_is_iPad) {
+			//self.view.backgroundColor = //iPad1では無効
+			UIView* view = self.tableView.backgroundView;
+			if (view) {
+				PatternImageView *tv = [[PatternImageView alloc] initWithFrame:view.frame
+																  patternImage:[UIImage imageNamed:@"Tx-Back"]]; // タイルパターン生成
+				[view addSubview:tv];
+			}
 			self.contentSizeForViewInPopover = GD_POPOVER_E3detailTVC_SIZE;
 			//[1.1]//[self.tableView setScrollEnabled:NO]; // スクロール禁止
+		}
+		else {
+			self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 		}
 	}
 	return self;
@@ -136,8 +148,6 @@
 - (void)loadView
 {	//【Tips】ここでaddSubviewするオブジェクトは全てautoreleaseにすること。メモリ不足時には自動的に解放後、改めてここを通るので、初回同様に生成するだけ。
 	[super loadView];
-	// 背景テクスチャ・タイルペイント
-	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 
 	// Set up NEXT Left [Back] buttons.
 	self.navigationItem.backBarButtonItem  = [[UIBarButtonItem alloc]
@@ -1035,13 +1045,13 @@
 					cell.accessoryType = UITableViewCellAccessoryNone; // なし
 				}
 					break;
-				case 3: // Stock
+				case 3: // Stock Qty.
 				{
 #ifdef DEBUG
 					//cell.backgroundColor = [UIColor grayColor]; //範囲チェック用
 #endif
 					{
-						UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(30,2, 90,20)]; //(30,3, 90,20)
+						UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(120,2, 90,20)];
 						label.text = NSLocalizedString(@"StockQty", nil);
 						label.textAlignment = UITextAlignmentLeft;
 						label.textColor = [UIColor grayColor];
@@ -1051,54 +1061,19 @@
 					}
 					long lVal = (long)[Re3target.stock integerValue];
 					{
-						MlbStock = [[UILabel alloc] initWithFrame:
-									CGRectMake(self.tableView.frame.size.width-30-90,1, 90,20)];
+						MlbStock = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
+									//CGRectMake(self.tableView.frame.size.width-30-90,1, 90,20)];
 						MlbStock.backgroundColor = [UIColor clearColor];
-						MlbStock.textAlignment = UITextAlignmentRight;
-						MlbStock.font = [UIFont systemFontOfSize:22];
-						[cell.contentView addSubview:MlbStock]; //[MlbStock release];
-						//MlbStock.text = [NSString stringWithFormat:@"%5ld", lVal];
+						MlbStock.textAlignment = UITextAlignmentCenter;
+						MlbStock.font = [UIFont systemFontOfSize:24];
+						[cell.contentView addSubview:MlbStock];
 						// 3桁コンマ付加
-						//NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-						//[formatter setNumberStyle:NSNumberFormatterDecimalStyle]; // CurrencyStyle]; // 通貨スタイル
-						//MlbStock.text = [formatter stringFromNumber:Pe3target.stock];
-						//[formatter release];
 						MlbStock.text = GstringFromNumber(Re3target.stock);
 					}
-			/*		{
-						MsliderStock = [[UISlider alloc] initWithFrame:
-										CGRectMake(10,0, self.tableView.frame.size.width-80,60)];
-						[MsliderStock addTarget:self action:@selector(slidStock:) forControlEvents:UIControlEventValueChanged];
-						[MsliderStock addTarget:self action:@selector(slidStockUp:) forControlEvents:UIControlEventTouchUpInside];
-						[cell.contentView addSubview:MsliderStock]; [MsliderStock release];
-						MsliderStock.minimumValue = 0;
-						MsliderStock.maximumValue = 10 + (lVal / 10) * 10;
-						MsliderStock.value = lVal;
-					}{
-						UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10,40, 40,15)];
-						label.textAlignment = UITextAlignmentLeft;
-						label.textColor = [UIColor grayColor];
-						label.backgroundColor = [UIColor clearColor];
-						label.backgroundColor = [UIColor clearColor];
-						label.font = [UIFont systemFontOfSize:12];
-						label.text = @"0";
-						[cell.contentView addSubview:label]; [label release];
-					}{
-						MlbStockMax = [[UILabel alloc] initWithFrame:
-									   CGRectMake(self.tableView.frame.size.width-OFSX1,40, 40,15)];
-						MlbStockMax.textAlignment = UITextAlignmentRight;
-						MlbStockMax.textColor = [UIColor grayColor];
-						MlbStockMax.backgroundColor = [UIColor clearColor];
-						MlbStockMax.font = [UIFont systemFontOfSize:12];
-						[cell.contentView addSubview:MlbStockMax]; [MlbStockMax release];
-						MlbStockMax.text = [NSString stringWithFormat:@"%4ld", (long)MsliderStock.maximumValue];
-					}*/
-					
 					mDialStock = [[AZDial alloc] initWithFrame:CGRectMake(10,16, self.tableView.frame.size.width-80,44)
 																		delegate:self  dial:lVal  min:0  max:9999  step:1  stepper:YES];
 					mDialStock.backgroundColor = [UIColor clearColor];
 					[cell.contentView addSubview:mDialStock];
-					//[mDialStock release];
 				}
 					break;
 				case 4: // Need
@@ -1119,43 +1094,14 @@
 						MlbNeed.backgroundColor = [UIColor clearColor];
 						MlbNeed.textAlignment = UITextAlignmentCenter;
 						MlbNeed.font = [UIFont systemFontOfSize:24];
-						[cell.contentView addSubview:MlbNeed]; //[MlbNeed release];
-						//MlbNeed.text = [NSString stringWithFormat:@"%5ld", lVal];
+						[cell.contentView addSubview:MlbNeed];
 						// 3桁コンマ付加
 						MlbNeed.text = GstringFromNumber(Re3target.need);
 					}
-			/*		{
-						MsliderNeed = [[UISlider alloc] initWithFrame:
-									   CGRectMake(10,0, self.tableView.frame.size.width-80,60)];
-						[MsliderNeed addTarget:self action:@selector(slidNeed:) forControlEvents:UIControlEventValueChanged];
-						[MsliderNeed addTarget:self action:@selector(slidNeedUp:) forControlEvents:UIControlEventTouchUpInside];
-						[cell.contentView addSubview:MsliderNeed]; [MsliderNeed release];
-						MsliderNeed.minimumValue = 0;
-						MsliderNeed.maximumValue = 10 + (lVal / 10) * 10;;
-						MsliderNeed.value = lVal;
-					}{
-						UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10,40, 40,15)];
-						label.textAlignment = UITextAlignmentLeft;
-						label.textColor = [UIColor grayColor];
-						label.backgroundColor = [UIColor clearColor];
-						label.font = [UIFont systemFontOfSize:12];
-						label.text = @"0";
-						[cell.contentView addSubview:label]; [label release];
-					}{
-						MlbNeedMax = [[UILabel alloc] initWithFrame:
-									  CGRectMake(self.tableView.frame.size.width-OFSX1,40, 40,15)];
-						MlbNeedMax.textAlignment = UITextAlignmentRight;
-						MlbNeedMax.textColor = [UIColor grayColor];
-						MlbNeedMax.backgroundColor = [UIColor clearColor];
-						MlbNeedMax.font = [UIFont systemFontOfSize:12];
-						[cell.contentView addSubview:MlbNeedMax]; [MlbNeedMax release];
-						MlbNeedMax.text = [NSString stringWithFormat:@"%4ld", (long)MsliderNeed.maximumValue];
-					}*/
 					mDialNeed = [[AZDial alloc] initWithFrame:CGRectMake(10,16, self.tableView.frame.size.width-80,44)
 													  delegate:self  dial:lVal  min:0  max:9999  step:1  stepper:YES];
 					mDialNeed.backgroundColor = [UIColor clearColor];
 					[cell.contentView addSubview:mDialNeed];
-					//[mDialNeed release];
 				}
 					break;
 				case 5: // Weight
@@ -1170,7 +1116,7 @@
 						label.adjustsFontSizeToFitWidth = YES;
 						label.minimumFontSize = 8;
 						label.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-						[cell.contentView addSubview:label]; //[label release];
+						[cell.contentView addSubview:label];
 					}
 					long lVal = (long)[Re3target.weight integerValue];
 					{
@@ -1179,8 +1125,7 @@
 						MlbWeight.backgroundColor = [UIColor clearColor];
 						MlbWeight.textAlignment = UITextAlignmentCenter;
 						MlbWeight.font = [UIFont systemFontOfSize:24];
-						[cell.contentView addSubview:MlbWeight]; //[MlbWeight release];
-						//MlbWeight.text = [NSString stringWithFormat:@"%5ld", lVal];
+						[cell.contentView addSubview:MlbWeight];
 						// 3桁コンマ付加
 						MlbWeight.text = GstringFromNumber(Re3target.weight);
 					}
@@ -1190,7 +1135,6 @@
 					mDialWeight.backgroundColor = [UIColor clearColor];
 					//[mDialWeight setStepperMagnification:10.0];
 					[cell.contentView addSubview:mDialWeight];
-					//[mDialWeight release];
 #else				
 					{
 						MsliderWeight = [[UISlider alloc] initWithFrame:
