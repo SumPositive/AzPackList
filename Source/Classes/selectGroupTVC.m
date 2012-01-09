@@ -91,7 +91,7 @@
 {
 	// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
 	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+	return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 
@@ -161,7 +161,7 @@
 		RlbGroup.tag = indexPath.row;
 		RlbGroup.text = cell.textLabel.text;
 		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		appDelegate.AppUpdateSave = YES; // 変更あり
+		appDelegate.app_UpdateSave = YES; // 変更あり
 	}
 	
 #ifdef xxxAzPAD

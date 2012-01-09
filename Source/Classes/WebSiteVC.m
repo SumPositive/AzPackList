@@ -169,7 +169,7 @@
     [super viewWillAppear:animated];
 	// 画面表示に関係する Option Setting を取得する
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	MbOptShouldAutorotate = [defaults boolForKey:GD_OptShouldAutorotate];
+	MbOptShouldAutorotate = [defaults boolForKey:UD_OptShouldAutorotate];
 	
 	MwebView.frame = self.view.bounds;
 	MwebView.contentMode = UIViewContentModeCenter;

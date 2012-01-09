@@ -11,15 +11,27 @@
 #import <UIKit/UIKit.h>
 #import <StoreKit/StoreKit.h>
 
+// ProductID
+#define SK_PID_UNLOCK		@"com.azukid.AzPackList.Unlock"		// In-App Purchase ProductIdentifier
+
 
 @interface AZStoreVC : UIViewController <UITableViewDelegate, UITableViewDataSource, 
 																		UITextFieldDelegate, UIActionSheetDelegate,
 																		SKProductsRequestDelegate, SKPaymentTransactionObserver>
+{
+	//IBOutlet UILabel			*ibLbInviteTitle;
+	//IBOutlet UILabel			*ibLbInviteMsg;
+	IBOutlet UITextField	*ibTfInvitePass;
+	//IBOutlet UIButton		*ibBuClose;
+	IBOutlet UITableView	*ibTableView;
+}
 
-@property (nonatomic, assign) id							delegate;
-@property (nonatomic, retain, readonly) NSSet	*productIDs;
+@property (nonatomic, assign) id			delegate;
+@property (nonatomic, retain) NSSet	*productIDs;
 
 - (IBAction)ibBuClose:(UIButton *)button;
+
+- (id)initWithUnLock:(BOOL)unlock;
 
 @end
 

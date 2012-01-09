@@ -913,10 +913,11 @@
 	[super viewWillAppear:animated];
 	
 	// 画面表示に関係する Option Setting を取得する
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	MbAzOptTotlWeightRound = [defaults boolForKey:GD_OptTotlWeightRound]; // YES=四捨五入 NO=切り捨て
-	MbAzOptShowTotalWeight = [defaults boolForKey:GD_OptShowTotalWeight];
-	MbAzOptShowTotalWeightReq = [defaults boolForKey:GD_OptShowTotalWeightReq];
+	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+	MbAzOptTotlWeightRound = [kvs boolForKey:KV_OptWeightRound]; // YES=四捨五入 NO=切り捨て
+	MbAzOptShowTotalWeight = [kvs boolForKey:KV_OptShowTotalWeight];
+	MbAzOptShowTotalWeightReq = [kvs boolForKey:KV_OptShowTotalWeightReq];
 	
 	//self.title = ;　呼び出す側でセット済み。　変化させるならばココで。
 	
@@ -981,7 +982,7 @@
 		}
 	}
 
-	if (appDelegate_.app_is_Ad) {
+	if (appDelegate_.app_opt_Ad) {
 		// E3で回転してから戻った場合に対応するため ＜＜E3以下全てに回転対応するのが面倒だから
 		//[apd AdViewWillRotate:self.interfaceOrientation];
 		// 各viewDidAppear:にて「許可/禁止」を設定する
@@ -1017,7 +1018,7 @@
 	if (appDelegate_.app_is_iPad) {
 		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
 	} else {
-		if (appDelegate_.AppShouldAutorotate==NO) {
+		if (appDelegate_.app_opt_Autorotate==NO) {
 			// 回転禁止にしている場合
 			[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
 			if (interfaceOrientation == UIInterfaceOrientationPortrait)
@@ -1047,7 +1048,7 @@
 		[appDelegate_.padRootVC willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 	}
 
-	if (appDelegate_.app_is_Ad) {
+	if (appDelegate_.app_opt_Ad) {
 		// 広告非表示でも回転時に位置調整しておく必要あり ＜＜現れるときの開始位置のため＞＞
 		[appDelegate_ AdViewWillRotate:toInterfaceOrientation];
 	}
@@ -1514,15 +1515,16 @@
 	return cell;
 }
 
+/*
 // UISwitch Action
 - (void)switchAction: (UISwitch *)sender
 {
 	if (sender.tag != 999) return;
-
+ 
 	BOOL bQuickSort = [sender isOn];
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	[defaults setBool:bQuickSort forKey:GD_OptItemsQuickSort];
-}
+}*/
 
 // TableView Editボタンスタイル
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1838,7 +1840,7 @@
 
 	UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
 	if ( [[nc visibleViewController] isMemberOfClass:[E2edit class]] ) {	// E2edit のときだけ、
-		if (appDelegate_.AppUpdateSave) { // E2editにて、変更あるので閉じさせない
+		if (appDelegate_.app_UpdateSave) { // E2editにて、変更あるので閉じさせない
 			alertBox(NSLocalizedString(@"Cancel or Save",nil), 
 					 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
 			return NO; 

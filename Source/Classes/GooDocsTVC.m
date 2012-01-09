@@ -272,7 +272,7 @@
 	} else {
 		// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
 		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+		return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
 	}
 }
 
@@ -997,7 +997,7 @@
 	// UISwitchが1つしか無いので、区別処理なしに処理している
 	BOOL passwordSave = [sender isOn];
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setBool:passwordSave forKey:GD_OptPasswordSave]; // スイッチ状態を保存
+	[defaults setBool:passwordSave forKey:UD_OptPasswordSave]; // スイッチ状態を保存
 
 	NSError *error; // nilを渡すと異常終了するので注意
 	if (passwordSave) {
@@ -1065,7 +1065,7 @@
 						
 						UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectMake(20, 18, 40, 20)];
 						//switchView.delegate = self;
-						BOOL passwordSave = [[NSUserDefaults standardUserDefaults] boolForKey:GD_OptPasswordSave];
+						BOOL passwordSave = [[NSUserDefaults standardUserDefaults] boolForKey:UD_OptPasswordSave];
 						[switchView setOn:passwordSave animated:NO]; // 初期値セット
 						[switchView addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 						[cell.contentView addSubview:switchView];
@@ -1279,7 +1279,7 @@
 	}
 	else if (textField == MtfPassword) {
 		// Passwordは Remember Password == YES のときだけ保存
-		if ([defaults boolForKey:GD_OptPasswordSave]) {
+		if ([defaults boolForKey:UD_OptPasswordSave]) {
 			// PasswordをKeyChainに保存する
 			[SFHFKeychainUtils storeUsername:MtfUsername.text andPassword:MtfPassword.text 
 							  forServiceName:GD_PRODUCTNAME updateExisting:YES error:&error];

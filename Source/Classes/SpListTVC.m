@@ -256,7 +256,7 @@
 	} else {
 		// 回転禁止でも万一ヨコからはじまった場合、タテ（ボタン下部）にはなるようにしてある。
 		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+		return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
 	}
 }
 

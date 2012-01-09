@@ -10,7 +10,7 @@
 #import "AppDelegate.h"
 #import "SettingTVC.h"
 
-#define TAG_OptShouldAutorotate				998  // GD_OptShouldAutorotate
+#define TAG_OptShouldAutorotate				998  // UD_OptShouldAutorotate
 #define TAG_OptStartupRestoreLevel			997
 #define TAG_OptCheckingAtEditMode			996
 #define TAG_OptTotlWeightRound				995
@@ -62,7 +62,7 @@
 	} else {
 		// 回転禁止でも、正面は常に許可しておくこと。
 		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+		return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
 	}
 }
 
@@ -176,6 +176,7 @@
 	}
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
 	
 	float fX;
 	int  iCase;
@@ -189,12 +190,12 @@
 
 	switch (iCase) {
 		case 0:
-		{ // GD_OptShouldAutorotate
+		{ // UD_OptShouldAutorotate
 			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptShouldAutorotate];
 			if (sw==nil) {
 				// add UISwitch
 				sw = [[UISwitch alloc] init];
-				BOOL bOpt = [userDefaults boolForKey:GD_OptShouldAutorotate];
+				BOOL bOpt = [userDefaults boolForKey:UD_OptShouldAutorotate];
 				[sw setOn:bOpt animated:NO]; // 初期値セット
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptShouldAutorotate;
@@ -207,12 +208,12 @@
 		}	break;
 		
 		case 1:
-		{ // GD_OptShowTotalWeight
+		{ // KV_OptShowTotalWeight
 			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptShowTotalWeight];
 			if (sw==nil) {
 				// add UISwitch
 				sw = [[UISwitch alloc] init];
-				BOOL bOpt = [userDefaults boolForKey:GD_OptShowTotalWeight];
+				BOOL bOpt = [kvs boolForKey:KV_OptShowTotalWeight];
 				[sw setOn:bOpt animated:NO]; // 初期値セット
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptShowTotalWeight;
@@ -225,12 +226,12 @@
 		}	break;
 		
 		case 2:
-		{ // GD_OptShowTotalWeightReq
+		{ // KV_OptShowTotalWeightReq
 			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptShowTotalWeightReq];
 			if (sw==nil) {
 				// add UISwitch
 				sw = [[UISwitch alloc] init];
-				BOOL bOpt = [userDefaults boolForKey:GD_OptShowTotalWeightReq];
+				BOOL bOpt = [kvs boolForKey:KV_OptShowTotalWeightReq];
 				[sw setOn:bOpt animated:NO]; // 初期値セット
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptShowTotalWeightReq;
@@ -243,12 +244,12 @@
 		}	break;
 		
 		case 3:
-		{ // GD_OptTotlWeightRound
+		{ // KV_OptWeightRound
 			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptTotlWeightRound];
 			if (sw==nil) {
 				// add UISwitch
 				sw = [[UISwitch alloc] init];
-				BOOL bOpt = [userDefaults boolForKey:GD_OptTotlWeightRound];
+				BOOL bOpt = [kvs boolForKey:KV_OptWeightRound];
 				[sw setOn:bOpt animated:NO]; // 初期値セット
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptTotlWeightRound;
@@ -261,12 +262,12 @@
 		}	break;
 		
 		case 4:
-		{ // GD_OptCheckingAtEditMode
+		{ // KV_OptCheckingAtEditMode
 			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptCheckingAtEditMode];
 			if (sw==nil) {
 				// add UISwitch
 				sw = [[UISwitch alloc] init];
-				BOOL bOpt = [userDefaults boolForKey:GD_OptCheckingAtEditMode];
+				BOOL bOpt = [kvs boolForKey:KV_OptCheckingAtEditMode];
 				[sw setOn:bOpt animated:NO]; // 初期値セット
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptCheckingAtEditMode;
@@ -279,12 +280,12 @@
 		}	break;
 		
 		case 5:
-		{ // GD_OptSearchItemsNote
+		{ // KV_OptSearchItemsNote
 			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptSearchItemsNote];
 			if (sw==nil) {
 				// add UISwitch
 				sw = [[UISwitch alloc] init];
-				BOOL bOpt = [userDefaults boolForKey:GD_OptSearchItemsNote];
+				BOOL bOpt = [kvs boolForKey:KV_OptSearchItemsNote];
 				[sw setOn:bOpt animated:NO]; // 初期値セット
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptSearchItemsNote;
@@ -309,26 +310,27 @@
 - (void)switchAction: (UISwitch *)sender
 {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
 	switch (sender.tag) {  // .tag は UIView にて NSInteger で存在する、　
 		case TAG_OptShouldAutorotate: {
 			AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-			app.AppShouldAutorotate = [sender isOn];
-			[defaults setBool:app.AppShouldAutorotate forKey:GD_OptShouldAutorotate];
+			app.app_opt_Autorotate = [sender isOn];
+			[defaults setBool:app.app_opt_Autorotate forKey:UD_OptShouldAutorotate];
 		}	break;
 		case TAG_OptTotlWeightRound:
-			[defaults setBool:[sender isOn] forKey:GD_OptTotlWeightRound];
+			[kvs setBool:[sender isOn] forKey:KV_OptWeightRound];
 			break;
 		case TAG_OptShowTotalWeight:
-			[defaults setBool:[sender isOn] forKey:GD_OptShowTotalWeight];
+			[kvs setBool:[sender isOn] forKey:KV_OptShowTotalWeight];
 			break;
 		case TAG_OptShowTotalWeightReq:
-			[defaults setBool:[sender isOn] forKey:GD_OptShowTotalWeightReq];
+			[kvs setBool:[sender isOn] forKey:KV_OptShowTotalWeightReq];
 			break;
 		case TAG_OptCheckingAtEditMode:
-			[defaults setBool:[sender isOn] forKey:GD_OptCheckingAtEditMode];
+			[kvs setBool:[sender isOn] forKey:KV_OptCheckingAtEditMode];
 			break;
 		case TAG_OptSearchItemsNote:
-			[defaults setBool:[sender isOn] forKey:GD_OptSearchItemsNote];
+			[kvs setBool:[sender isOn] forKey:KV_OptSearchItemsNote];
 			break;
 	}
 }

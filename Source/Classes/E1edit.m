@@ -53,7 +53,7 @@
 	if (self) {
 		// 初期化処理：インスタンス生成時に1回だけ通る
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		appDelegate_.AppUpdateSave = NO;
+		appDelegate_.app_UpdateSave = NO;
 		if (appDelegate_.app_is_iPad) {
 			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
 		}
@@ -171,7 +171,7 @@
 		return NO;	// Popover内につき回転不要
 	} else {
 		// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
-		return appDelegate_.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+		return appDelegate_.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
 	}
 }
 
@@ -252,7 +252,7 @@
     [text replaceCharactersInRange:range withString:string];
 	// 置き換えた後の長さをチェックする
 	if ([text length] <= AzMAX_NAME_LENGTH) {
-		appDelegate_.AppUpdateSave = YES; // 変更あり
+		appDelegate_.app_UpdateSave = YES; // 変更あり
 		self.navigationItem.rightBarButtonItem.enabled = YES; // 変更あり [Save]有効
 		return YES;
 	} else {
@@ -269,7 +269,7 @@
     [zText replaceCharactersInRange:range withString:zReplace];
 	// 置き換えた後の長さをチェックする
 	if ([zText length] <= AzMAX_NOTE_LENGTH) {
-		appDelegate_.AppUpdateSave = YES; // 変更あり
+		appDelegate_.app_UpdateSave = YES; // 変更あり
 		self.navigationItem.rightBarButtonItem.enabled = YES; // 変更あり [Save]有効
 		return YES;
 	} else {

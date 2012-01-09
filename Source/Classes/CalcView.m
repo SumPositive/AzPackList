@@ -566,7 +566,7 @@ replacementString:(NSString *)text
 			Rlabel.text = GstringFromNumber(num); // 3桁コンマ付加
 			
 			AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-			appDelegate.AppUpdateSave = YES; // 変更あり
+			appDelegate.app_UpdateSave = YES; // 変更あり
 		}
 	}
 }

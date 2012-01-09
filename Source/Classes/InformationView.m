@@ -79,7 +79,7 @@ static UIColor *MpColorBlue(float percent) {
 				zSubj = [zSubj stringByAppendingString:@" for iPhone"];
 			}
 			
-			if (appDelegate_.app_is_sponsor) {
+			if (appDelegate_.app_pid_UnLock) {
 				zSubj = [zSubj stringByAppendingString:@"  (Sponsor)"];
 			}
 			[picker setSubject:zSubj];  
@@ -260,7 +260,7 @@ static UIColor *MpColorBlue(float percent) {
 	label.textColor = [UIColor whiteColor];
 	label.backgroundColor = [UIColor clearColor]; //背景透明
 	label.font = [UIFont systemFontOfSize:12];
-	[self.view addSubview:label]; //[label release];	
+	[self.view addSubview:label];
 	
 	//------------------------------------------Go to Support blog.
 	UIButton *bu = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -268,16 +268,16 @@ static UIColor *MpColorBlue(float percent) {
 	bu.frame = CGRectMake(20, 210, 120,26);
 	[bu setTitle:NSLocalizedString(@"GoSupportSite",nil) forState:UIControlStateNormal];
 	[bu addTarget:self action:@selector(buGoSupportSite:) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:bu];  //autorelease
+	[self.view addSubview:bu];
 
-	if (appDelegate_.app_is_sponsor==NO) {
+	if (appDelegate_.app_pid_UnLock==NO) {
 		//------------------------------------------Go to App Store
 		bu = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 		bu.titleLabel.font = [UIFont boldSystemFontOfSize:10];
 		bu.frame = CGRectMake(150, 210, 150,26);
 		[bu setTitle:NSLocalizedString(@"GoAppStore Paid",nil) forState:UIControlStateNormal];
 		[bu addTarget:self action:@selector(buGoAppStore:) forControlEvents:UIControlEventTouchUpInside];
-		[self.view addSubview:bu];  //autorelease
+		[self.view addSubview:bu];
 	}
 	
 	//------------------------------------------Post Comment
@@ -286,7 +286,7 @@ static UIColor *MpColorBlue(float percent) {
 	bu.frame = CGRectMake(20, 255, 280, 30); //  110, 240, 180,30);
 	[bu setTitle:NSLocalizedString(@"Contact mail",nil) forState:UIControlStateNormal];
 	[bu addTarget:self action:@selector(buPostComment:) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:bu];  //autorelease
+	[self.view addSubview:bu];
 	
 	//------------------------------------------免責
 	label = [[UILabel alloc] initWithFrame:CGRectMake(20, 300, 280, 50)];
@@ -296,7 +296,7 @@ static UIColor *MpColorBlue(float percent) {
 	label.textColor = [UIColor whiteColor];
 	label.backgroundColor = [UIColor clearColor]; //背景透明
 	label.font = [UIFont fontWithName:@"Courier" size:10];
-	[self.view addSubview:label]; //[label release];	
+	[self.view addSubview:label];
 	
 	//------------------------------------------注意
 	label = [[UILabel alloc] initWithFrame:CGRectMake(20, 360, 280, 65)];
@@ -306,7 +306,7 @@ static UIColor *MpColorBlue(float percent) {
 	label.textColor = [UIColor whiteColor];
 	label.backgroundColor = [UIColor clearColor]; //背景透明
 	label.font = [UIFont fontWithName:@"Courier" size:10];
-	[self.view addSubview:label]; //[label release];	
+	[self.view addSubview:label];
 
 	//------------------------------------------CLOSE
 	label = [[UILabel alloc] initWithFrame:CGRectMake(20, 435, 280, 25)];
@@ -319,7 +319,7 @@ static UIColor *MpColorBlue(float percent) {
 	label.textColor = [UIColor whiteColor];
 	label.backgroundColor = [UIColor clearColor]; //背景透明
 	label.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-	[self.view addSubview:label]; //[label release];	
+	[self.view addSubview:label];
 
     return self;
 }

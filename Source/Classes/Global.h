@@ -34,26 +34,23 @@
 #define GD_E2SORTLIST_COUNT		3				// E2 Sort Listの有効行数
 //#define	GD_ADD_E3_NAME		@"\nAdd\n"			//(V0.4)Add行（セクション内の行移動可能）（CSV保存しない）
 
-// standardUserDefaults Setting Plist KEY
-#define GD_DefPassword						@"DefPassword"
-#define GD_DefUsername						@"DefUsername"
-#define GD_DefNickname						@"DefNickname"
+// UserDefaults: UD_KEY   機種個別設定   初期値定義は、<applicationDidFinishLaunching>内
+#define UD_OptShouldAutorotate				@"UD_OptShouldAutorotate"
+#define UD_OptPasswordSave					@"UD_OptPasswordSave"
+#define UD_CurrentVersion						@"UD_CurrentVersion"
+#define GD_DefPassword							@"DefPassword"
+#define GD_DefUsername							@"DefUsername"
+#define GD_DefNickname							@"DefNickname"
 
-// Option Setting Plist KEY     初期値定義は、<applicationDidFinishLaunching>内
-//#define GD_OptStartupWindshield			@"OptStartupWindshield"
-#define GD_OptStartupRestoreLevel			@"OptStartupRestoreLevel"
-#define GD_OptShouldAutorotate				@"OptShouldAutorotate"
-//#define GD_OptDisclosureButtonToEditable	@"OptDisclosureButtonToEditable"
-#define GD_OptPasswordSave					@"OptPasswordSave"
-#define GD_OptTotlWeightRound				@"OptTotlWeightRound"
-#define GD_OptItemsQuickSort					@"OptItemsQuickSort"
-#define GD_OptShowTotalWeight				@"OptShowTotalWeight"
-#define GD_OptShowTotalWeightReq		@"OptShowTotalWeightReq"
-#define GD_OptItemsGrayShow					@"OptItemsGrayShow"
-#define GD_OptCheckingAtEditMode		@"OptCheckingAtEditMode" // 編集モードでチェックする
-#define GD_OptSearchItemsNote				@"OptSearchItemsNote"	// アイテムのNote内も検索する
-#define GD_OptAdvertising						@"GD_OptAdvertising"		// YES=広告あり／NO=なし
-#define GD_Sponsor									@"GD_Sponsor"					// YES=購入済み／NO=なし
+// iCloud-KVS: KV_KEY  全機種共有設定
+#define KV_OptWeightRound					@"KV_OptWeightRound"
+#define KV_OptShowTotalWeight				@"KV_OptShowTotalWeight"
+#define KV_OptShowTotalWeightReq		@"KV_OptShowTotalWeightReq"
+#define KV_OptItemsGrayShow					@"KV_OptItemsGrayShow"
+#define KV_OptCheckingAtEditMode		@"KV_OptCheckingAtEditMode" // 編集モードでチェックする
+#define KV_OptSearchItemsNote				@"KV_OptSearchItemsNote"	// アイテムのNote内も検索する
+#define KV_OptAdvertising						@"KV_OptAdvertising"		// YES=広告あり／NO=なし
+//#define KV_UnLock									@"KV_UnLock"					// YES=購入済み／NO=なし
 
 
 #define GD_KeyboardHeightPortrait	216.0f	// タテ向きのときのキーボード高さ

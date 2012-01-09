@@ -67,7 +67,7 @@
 	BOOL MbAzOptShowTotalWeight;
 	BOOL MbAzOptShowTotalWeightReq;
 	BOOL MbAzOptItemsGrayShow;
-	BOOL MbAzOptItemsQuickSort;
+	//BOOL MbAzOptItemsQuickSort;
 	BOOL MbAzOptCheckingAtEditMode;
 	BOOL MbAzOptSearchItemsNote;
 	BOOL MbClipPaste;
@@ -199,10 +199,11 @@
 	//[sb release];
 	
 	// ここで参照しているため。 基本的には、viewWillAppearで取得すること
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	MbAzOptItemsGrayShow = [defaults boolForKey:GD_OptItemsGrayShow];
+	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	//MbAzOptItemsQuickSort = [defaults boolForKey:GD_OptItemsQuickSort];  [1.0.3]廃止
-	MbAzOptItemsQuickSort = NO;
+	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+	MbAzOptItemsGrayShow = [kvs boolForKey:KV_OptItemsGrayShow];
+	//MbAzOptItemsQuickSort = NO;
 	
 	// Tool Bar Button
 	UIBarButtonItem *buFlex = [[UIBarButtonItem alloc] 
@@ -244,12 +245,13 @@
     [super viewWillAppear:animated];
 
 	// 画面表示に関係する Option Setting を取得する
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	MbAzOptTotlWeightRound = [defaults boolForKey:GD_OptTotlWeightRound]; // YES=四捨五入 NO=切り捨て
-	MbAzOptShowTotalWeight = [defaults boolForKey:GD_OptShowTotalWeight];
-	MbAzOptShowTotalWeightReq = [defaults boolForKey:GD_OptShowTotalWeightReq]; // [0.3]Fix:抜けていた
-	MbAzOptCheckingAtEditMode = [defaults boolForKey:GD_OptCheckingAtEditMode];
-	MbAzOptSearchItemsNote = [defaults boolForKey:GD_OptSearchItemsNote];
+	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+	MbAzOptTotlWeightRound = [kvs boolForKey:KV_OptWeightRound]; // YES=四捨五入 NO=切り捨て
+	MbAzOptShowTotalWeight = [kvs boolForKey:KV_OptShowTotalWeight];
+	MbAzOptShowTotalWeightReq = [kvs boolForKey:KV_OptShowTotalWeightReq]; // [0.3]Fix:抜けていた
+	MbAzOptCheckingAtEditMode = [kvs boolForKey:KV_OptCheckingAtEditMode];
+	MbAzOptSearchItemsNote = [kvs boolForKey:KV_OptSearchItemsNote];
 	
 	//self.title = ;　呼び出す側でセット済み。　変化させるならばココで。
 	
@@ -258,7 +260,7 @@
 		PiSortType = (-1);
 		[self requreyMe3array];
 	}
-	else if (RaE3array && siSortType==PiSortType && 0<=PiSortType && MbAzOptItemsQuickSort==NO) {
+	else if (RaE3array && siSortType==PiSortType && 0<=PiSortType) {
 		// 読み込み(ソート)せずに、既存テーブルビューを更新します。
 		[self.tableView reloadData];  // これがないと、次のセクションスクロールでエラーになる
 	}
@@ -307,7 +309,7 @@
 	
 	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 
-	if (appDelegate_.app_is_Ad) {
+	if (appDelegate_.app_opt_Ad) {
 		// 各viewDidAppear:にて「許可/禁止」を設定する
 		[appDelegate_ AdRefresh:NO];	//広告禁止
 	}
@@ -558,7 +560,7 @@
 		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
 	} else {
 		//[0.8.2]viewWillAppearより先に通るためAppDelegate広域参照にした。
-		if (appDelegate_.AppShouldAutorotate==NO) {
+		if (appDelegate_.app_opt_Autorotate==NO) {
 			// 回転禁止にしている場合
 			[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
 			if (interfaceOrientation == UIInterfaceOrientationPortrait)
@@ -749,12 +751,8 @@
 
 - (void)azReflesh
 {
-	if (MbAzOptItemsQuickSort == NO) {
-		MbAzOptItemsQuickSort = YES; // viewWillAppear内でデータ取得(ソート)を通るようにするため
-		// 再表示: データ再取得（ソート）して表示する
-		[self viewWillAppear:YES];
-		MbAzOptItemsQuickSort = NO; // 戻しておく
-	}
+	// 再表示: データ再取得（ソート）して表示する
+	[self viewWillAppear:YES];
 }
 
 - (void)azItemsGrayHide: (UIBarButtonItem *)sender 
@@ -767,8 +765,9 @@
 		sender.image = [UIImage imageNamed:@"Icon16-ItemGrayHide.png"]; // Gray Hide
 	}
 	
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setBool:MbAzOptItemsGrayShow forKey:GD_OptItemsGrayShow];
+	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+	[kvs setBool:MbAzOptItemsGrayShow forKey:KV_OptItemsGrayShow];
 	
 	// 再表示 -------------------------------------------------------------------
 	// 表示行数が変化するための処理　　 表示最上行を取得する
@@ -963,7 +962,7 @@
 	if (@selector(paste:) == action) {
 		if (PbSharePlanList) return NO;
 		// クリップボード(clipE3objects) にE3があるか調べる
-		if (0 < [appDelegate_.RaClipE3objects count]) return YES; // クリップあり
+		if (0 < [appDelegate_.clipE3objects_ count]) return YES; // クリップあり
 		return NO; // クリップボードが空なのでPaste無効
 	}
 	return NO;
@@ -976,15 +975,15 @@
 	if ([[RaE3array objectAtIndex:MpathClip.section] count] <= MpathClip.row) return;
 	
 	// クリップボード(clipE3objects) 前処理
-	if (MbClipPaste && 0 < [appDelegate_.RaClipE3objects count]) { // 未[Paste]ならばPUSHスタックするため
+	if (MbClipPaste && 0 < [appDelegate_.clipE3objects_ count]) { // 未[Paste]ならばPUSHスタックするため
 		// 1回でもPasteしたならば、先ずクリップをクリアする
-		for (E3 *e3 in appDelegate_.RaClipE3objects) {
+		for (E3 *e3 in appDelegate_.clipE3objects_) {
 			if (e3.parent == nil) {
 				// [Cut]されたE3なので削除する
 				[Re1selected.managedObjectContext deleteObject:e3];
 			}
 		}
-		[appDelegate_.RaClipE3objects removeAllObjects]; // 全て削除する
+		[appDelegate_.clipE3objects_ removeAllObjects]; // 全て削除する
 	}
 	MbClipPaste = NO;
 	//
@@ -992,7 +991,7 @@
 	E2 *e2obj = e3obj.parent; // 後半のsum更新のため親E2を保持する
 	e3obj.parent = nil; // リンクを切った状態で残す。Pasteできるようにするため。
 	// e3obj をクリップボード(clipE3objects) へ追加する
-	[appDelegate_.RaClipE3objects addObject:e3obj];
+	[appDelegate_.clipE3objects_ addObject:e3obj];
 	
 	[[RaE3array objectAtIndex:MpathClip.section] removeObjectAtIndex:MpathClip.row]; // TableViewCell削除
 	// アニメーション付きで、MpathClip行をテーブルから削除する　＜＜表示だけの更新＞＞
@@ -1034,21 +1033,21 @@
 	if ([[RaE3array objectAtIndex:MpathClip.section] count] <= MpathClip.row) return;
 	
 	// クリップボード(clipE3objects) 前処理
-	if (MbClipPaste && 0 < [appDelegate_.RaClipE3objects count]) { // 未[Paste]ならばPUSHスタックするため
+	if (MbClipPaste && 0 < [appDelegate_.clipE3objects_ count]) { // 未[Paste]ならばPUSHスタックするため
 		// 1回でもPasteしたならば、先ずクリップをクリアする
-		for (E3 *e3 in appDelegate_.RaClipE3objects) {
+		for (E3 *e3 in appDelegate_.clipE3objects_) {
 			if (e3.parent == nil) {
 				// [Cut]されたE3なので削除する
 				[Re1selected.managedObjectContext deleteObject:e3];
 			}
 		}
-		[appDelegate_.RaClipE3objects removeAllObjects]; // 全て削除する
+		[appDelegate_.clipE3objects_ removeAllObjects]; // 全て削除する
 	}
 	MbClipPaste = NO;
 	//
 	E3 *e3obj = [[RaE3array objectAtIndex:MpathClip.section] objectAtIndex:MpathClip.row];
 	// e3obj をクリップボード(clipE3objects) へ追加する
-	[appDelegate_.RaClipE3objects addObject:e3obj];
+	[appDelegate_.clipE3objects_ addObject:e3obj];
 }
 
 - (void)paste:(id)sender {  // これはプロトコルとして予約されている
@@ -1061,7 +1060,7 @@
 	if (e3paste == nil) return;
 	
 	// クリップボード(clipE3objects) の末尾から e3clip を取り出す(POP)
-	E3 *e3clip = [appDelegate_.RaClipE3objects lastObject]; // 最後のオブジェクト参照
+	E3 *e3clip = [appDelegate_.clipE3objects_ lastObject]; // 最後のオブジェクト参照
 	if (e3clip == nil) return; // クリップなし
 	
 	// MpathClip位置へ追加する
@@ -1091,13 +1090,13 @@
 		e3new.weightLack = e3clip.weightLack;
 	}
 	
-	if (1 < [appDelegate_.RaClipE3objects count]) { // 最後の1個を残すため。それが次にCutやCopyしたものと置き換わる
+	if (1 < [appDelegate_.clipE3objects_ count]) { // 最後の1個を残すため。それが次にCutやCopyしたものと置き換わる
 		// クリップボード(clipE3objects) の末尾を削除し、参照(e3clip)を無効にする
 		if (e3clip.parent == nil) {
 			// [Cut]されたE3なので削除する
 			[Re1selected.managedObjectContext deleteObject:e3clip];
 		}
-		[appDelegate_.RaClipE3objects removeLastObject]; // 末尾のオブジェクトを削除する
+		[appDelegate_.clipE3objects_ removeLastObject]; // 末尾のオブジェクトを削除する
 		e3clip = nil;
 	}
 	MbClipPaste = YES;
@@ -1760,7 +1759,7 @@
 
 	UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
 	if ( [[nc visibleViewController] isMemberOfClass:[E3detailTVC class]] ) {	// E3detailTVC のときだけ、
-		if (appDelegate_.AppUpdateSave) { // E3detailTVCにて、変更あるので閉じさせない
+		if (appDelegate_.app_UpdateSave) { // E3detailTVCにて、変更あるので閉じさせない
 			alertBox(NSLocalizedString(@"Cancel or Save",nil), 
 					 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
 			return NO; 

@@ -229,7 +229,7 @@
 {
 	[super viewDidAppear:animated];
 	
-	if (appDelegate_.app_is_Ad) {
+	if (appDelegate_.app_opt_Ad) {
 		// 各viewDidAppear:にて「許可/禁止」を設定する
 		[appDelegate_ AdRefresh:NO];	//広告禁止
 	}
@@ -246,7 +246,7 @@
 	} else {
 		// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
 		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+		return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
 	}
 }
 
@@ -396,9 +396,9 @@
 		[MtfNickname becomeFirstResponder];
 		return;
 	}
-	NSUserDefaults *stDef = [NSUserDefaults standardUserDefaults];
-	[stDef setObject:MtfNickname.text forKey:GD_DefNickname];
-	[stDef synchronize]; // plistへ書き出す
+	NSUserDefaults *uds = [NSUserDefaults standardUserDefaults];
+	[uds setObject:MtfNickname.text forKey:GD_DefNickname];
+	[uds synchronize]; // plistへ書き出す
 			
 	// Tag
 	for (int comp=0; comp<3; comp++) {

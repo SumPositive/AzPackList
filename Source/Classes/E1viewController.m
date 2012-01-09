@@ -25,6 +25,7 @@
 #import "SpSearchVC.h"
 #import "DropboxVC.h"
 #import "PatternImageView.h"
+#import "AZStoreVC.h"
 
 
 #define ACTIONSEET_TAG_DELETEPACK	901
@@ -50,41 +51,35 @@
 @public		// 外部公開 ＜＜使用禁止！@propertyで外部公開すること＞＞
 @protected	// 自クラスおよびサブクラスから参照できる（無指定時のデフォルト）
 @private	// 自クラス内からだけ参照できる
-	NSManagedObjectContext		*Rmoc;
-	//----------------------------------------------------------------viewDidLoadでnil, dealloc時にrelese
-	NSFetchedResultsController	*RfetchedE1;
-	HTTPServer					*RhttpServer;
-	UIAlertView					*RalertHttpServer;
-	NSDictionary				*MdicAddresses;
-	//UIActivityIndicatorView *activityIndicator_;
-	//----------------------------------------------------------------Owner移管につきdealloc時のrelese不要
-	E1edit						*Me1editView;		// self.navigationControllerがOwnerになる
-	//UIBarButtonItem		*MbuInfo;
-	InformationView		*MinformationView;  // self.view.windowがOwnerになる
+	NSManagedObjectContext		*moc_;
+	NSFetchedResultsController	*fetchedE1_;
+	HTTPServer								*httpServer_;
+	UIAlertView								*alertHttpServer_;
+	NSDictionary							*dicAddresses_;
 
-	UIPopoverController*	Mpopover;
-	NSIndexPath*				MindexPathEdit;	//[1.1]ポインタ代入注意！copyするように改善した。
+	E1edit							*e1editView_;		// self.navigationControllerがOwnerになる
+	InformationView			*informationView_;  // self.view.windowがOwnerになる
+
+	UIPopoverController	*popOver_;
+	NSIndexPath*				indexPathEdit_;	//[1.1]ポインタ代入注意！copyするように改善した。
 	
-	//----------------------------------------------------------------assign
 	AppDelegate		*appDelegate_;
-	BOOL			MbInformationOpen;	//[1.0.2]InformationViewを初回自動表示するため
-	//NSIndexPath	  *MindexPathActionDelete; //NG//ポインタ危険
-	NSUInteger		MactionDeleteRow;		//[1.1]削除するRow
-	BOOL MbAzOptTotlWeightRound;
-	BOOL MbAzOptShowTotalWeight;
-	BOOL MbAzOptShowTotalWeightReq;
-	NSInteger MiSection0Rows; // E1レコード数　＜高速化＞
-	CGPoint		McontentOffsetDidSelect; // didSelect時のScrollView位置を記録
+	BOOL					bInformationOpen_;	//[1.0.2]InformationViewを初回自動表示するため
+	NSUInteger			actionDeleteRow_;		//[1.1]削除するRow
+	BOOL					bOptWeightRound_;
+	BOOL					bOptShowTotalWeight_;
+	BOOL					bOptShowTotalWeightReq_;
+	NSInteger			section0Rows_; // E1レコード数　＜高速化＞
+	CGPoint				contentOffsetDidSelect_; // didSelect時のScrollView位置を記録
 	SKProduct			*productUnlock_;
 }
-//@synthesize Rmoc;
 
 
 #pragma mark - Delegate
 
 - (void)refreshE1view
 {
-	McontentOffsetDidSelect.y = 0;  // 直前のdidSelectRowAtIndexPath位置に戻らないようにクリアしておく
+	contentOffsetDidSelect_.y = 0;  // 直前のdidSelectRowAtIndexPath位置に戻らないようにクリアしておく
 	//[self viewWillAppear:YES];		// Setting変更後、全域再描画が必要になるので、このようにした。
 	[self viewDidAppear:YES];
 }
@@ -94,40 +89,37 @@
 
 - (void)refetcheAllData
 {
-	if (RfetchedE1 == nil) 
+	if (fetchedE1_ == nil) 
 	{
 		// Create and configure a fetch request with the Book entity.
 		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 		NSEntityDescription *entity = [NSEntityDescription entityForName:@"E1" 
-												  inManagedObjectContext:Rmoc];
+												  inManagedObjectContext:moc_];
 		[fetchRequest setEntity:entity];
 		// Sorting
 		NSSortDescriptor *sortRow = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
 		NSArray *sortArray = [[NSArray alloc] initWithObjects:sortRow, nil];
 		[fetchRequest setSortDescriptors:sortArray];
-		//[sortArray release];
-		//[sortRow release];
 		// Create and initialize the fetch results controller.
-		RfetchedE1 = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest 
-														 managedObjectContext:Rmoc 
+		fetchedE1_ = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest 
+														 managedObjectContext:moc_ 
 														   sectionNameKeyPath:nil cacheName:@"E1nodes"];
-		//[fetchRequest release];
 	}
 	
 	// 読み込み
 	NSError *error = nil;
-	if (![RfetchedE1 performFetch:&error]) {
+	if (![fetchedE1_ performFetch:&error]) {
 		// Update to handle the error appropriately.
 		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 		return; //exit(-1);  // Fail
 	}
-	NSLog(@"RfetchedE1=%@", RfetchedE1);
+	NSLog(@"RfetchedE1=%@", fetchedE1_);
 	
 	// 高速化のため、ここでE1レコード数（行数）を求めてしまう
-    MiSection0Rows = 0;
-	if (0 < [[RfetchedE1 sections] count]) {
-		id <NSFetchedResultsSectionInfo> sectionInfo = [[RfetchedE1 sections] objectAtIndex:0];
-		MiSection0Rows = [sectionInfo numberOfObjects];
+    section0Rows_ = 0;
+	if (0 < [[fetchedE1_ sections] count]) {
+		id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedE1_ sections] objectAtIndex:0];
+		section0Rows_ = [sectionInfo numberOfObjects];
 		
 		//[1.0.1]末尾の「新しい・・」空レコードがあれば削除する
 		BOOL bRefetch = NO;
@@ -149,7 +141,7 @@
 								) {
 								// 「新しいアイテム」かつ「未編集」 なので削除する
 								e3.parent = nil;
-								[Rmoc deleteObject:e3];
+								[moc_ deleteObject:e3];
 								bRefetch = YES;
 							}
 						}
@@ -157,28 +149,28 @@
 					if ([e2.name length]<=0 && [e2.childs count]<=0) {
 						//配下E3なし & 「新しいグループ」 なので削除する
 						e2.parent = nil;
-						[Rmoc deleteObject:e2];
+						[moc_ deleteObject:e2];
 						bRefetch = YES;
 					}
 				}
 			}
 			if ([e1last.name length]<=0 && [e1last.childs count]<=0) {
 				//配下E2なし & 「新しいプラン」 なので削除する
-				[Rmoc deleteObject:e1last];
+				[moc_ deleteObject:e1last];
 				bRefetch = YES;
 			}
 			if (bRefetch) {
 				NSError *err = nil;
-				if (![Rmoc save:&err]) {
+				if (![moc_ save:&err]) {
 					NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
 				}
 				error = nil;
-				if (![RfetchedE1 performFetch:&error]) {
+				if (![fetchedE1_ performFetch:&error]) {
 					NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 					return; //exit(-1);  // Fail
 				}
-				id <NSFetchedResultsSectionInfo> sectionInfo = [[RfetchedE1 sections] objectAtIndex:0];
-				MiSection0Rows = [sectionInfo numberOfObjects];
+				id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedE1_ sections] objectAtIndex:0];
+				section0Rows_ = [sectionInfo numberOfObjects];
 			}
 		}
 	}
@@ -188,7 +180,7 @@
 
 - (void)refetcheAllData:(NSNotification*)note 
 {	// iCloud-CoreData に変更（追加や削除）があれば呼び出される
-	Rmoc = [EntityRelation getMoc]; //購入後、再生成された場合のため
+	moc_ = [EntityRelation getMoc]; //購入後、再生成された場合のため
 	[self refetcheAllData];
 }
 
@@ -207,45 +199,45 @@
 	//         そのため、pppIndexPathActionDelete を使っている。
 	// ＜注意＞ CoreDataモデルは、エンティティ間の削除ルールは双方「無効にする」を指定。（他にするとフリーズ）
 	// 削除対象の ManagedObject をチョイス
-	NSLog(@"RfetchedE1=%@", RfetchedE1);
+	NSLog(@"RfetchedE1=%@", fetchedE1_);
 	NSLog(@"uiRow=%ld", (long)uiRow);
 	NSIndexPath *ixp = [NSIndexPath indexPathForRow:uiRow inSection:0];
-	E1 *e1objDelete = [RfetchedE1 objectAtIndexPath:ixp];
+	E1 *e1objDelete = [fetchedE1_ objectAtIndexPath:ixp];
 	// CoreDataモデル：削除ルール「無効にする」につき末端ノードより独自に削除する
 	for (E2 *e2obj in e1objDelete.childs) {
 		for (E3 *e3obj in e2obj.childs) {
-			[Rmoc deleteObject:e3obj];
+			[moc_ deleteObject:e3obj];
 		}
-		[Rmoc deleteObject:e2obj];
+		[moc_ deleteObject:e2obj];
 	}
 	// 注意！performFetchするまで RrFetchedE1 は不変、削除もされていない！
 	// 削除行の次の行以下 E1.row 更新
-	for (NSUInteger i= uiRow + 1 ; i < MiSection0Rows ; i++) {  // .row + 1 削除行の次から
+	for (NSUInteger i= uiRow + 1 ; i < section0Rows_ ; i++) {  // .row + 1 削除行の次から
 		ixp = [NSIndexPath indexPathForRow:i inSection:0];
-		E1 *e1obj = [RfetchedE1 objectAtIndexPath:ixp];
+		E1 *e1obj = [fetchedE1_ objectAtIndexPath:ixp];
 		e1obj.row = [NSNumber numberWithInteger:i-1];     // .row--; とする
 	}
 	// E1 削除
-	[Rmoc deleteObject:e1objDelete];
-	MiSection0Rows--; // この削除により1つ減
+	[moc_ deleteObject:e1objDelete];
+	section0Rows_--; // この削除により1つ減
 	// SAVE　＜＜万一システム障害で落ちてもデータが残るようにコマメに保存する方針＞＞
 	NSError *error = nil;
-	if (![Rmoc save:&error]) {
+	if (![moc_ save:&error]) {
 		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 		exit(-1);  // Fail
 	}
 	// 上で並び替えられた結果を再フィッチする（performFetch）  コンテキスト変更したときは再抽出する
 	//NSError *error = nil;
-	if (![RfetchedE1 performFetch:&error]) {
+	if (![fetchedE1_ performFetch:&error]) {
 		NSLog(@"%@", error);
 		exit(-1);  // Fail
 	}
 	// テーブルビューから選択した行を削除します。
 	// ＜高速化＞　改めて削除後のE1レコード数（行数）を求める
-	MiSection0Rows = 0;
-	if (0 < [[RfetchedE1 sections] count]) {
-		id <NSFetchedResultsSectionInfo> sectionInfo = [[RfetchedE1 sections] objectAtIndex:0];
-		MiSection0Rows = [sectionInfo numberOfObjects];
+	section0Rows_ = 0;
+	if (0 < [[fetchedE1_ sections] count]) {
+		id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedE1_ sections] objectAtIndex:0];
+		section0Rows_ = [sectionInfo numberOfObjects];
 	}
 	[self.tableView reloadData];
 }
@@ -253,10 +245,10 @@
 - (void)actionImportSharedPackList
 {
 	if (appDelegate_.app_is_iPad) {
-		if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 	}
 	
-	if (appDelegate_.app_is_Ad) {
+	if (appDelegate_.app_opt_Ad) {
 		[appDelegate_ AdRefresh:NO];	//広告禁止
 	}
 	
@@ -264,14 +256,14 @@
 	
 	if (appDelegate_.app_is_iPad) {
 		//[Mpopover release], 
-		Mpopover = nil;
+		popOver_ = nil;
 		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:vc];
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
-		Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
+		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
 		//[nc release];
-		Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
+		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
 		//[MindexPathEdit release], 
-		MindexPathEdit = nil;
+		indexPathEdit_ = nil;
 		
 		CGRect rcArrow;
 		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
@@ -279,7 +271,7 @@
 		} else {
 			rcArrow = CGRectMake((1024-320)/2-10, 768-60, 20,20);
 		}
-		[Mpopover presentPopoverFromRect:rcArrow  inView:self.navigationController.view
+		[popOver_ presentPopoverFromRect:rcArrow  inView:self.navigationController.view
 				permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
 	} else {
 		//vc.hidesBottomBarWhenPushed = YES; // 現在のToolBar状態をPushした上で、次画面では非表示にする
@@ -313,36 +305,36 @@
 - (void)actionImportGoogle
 {
 	if (appDelegate_.app_is_iPad) {
-		if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 	}
 
 	GooDocsView *goodocs = [[GooDocsView alloc] init];
 	// 以下は、GooDocsViewの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
-	goodocs.Rmoc = Rmoc;
-	goodocs.PiSelectedRow = MiSection0Rows;  // Downloadの結果、新規追加される.row ＝ 現在のPlan行数
+	goodocs.Rmoc = moc_;
+	goodocs.PiSelectedRow = section0Rows_;  // Downloadの結果、新規追加される.row ＝ 現在のPlan行数
 	goodocs.Re1selected = nil; // DownloadのときはE1未選択であるから
 	goodocs.PbUpload = NO;
 	goodocs.title = NSLocalizedString(@"Import Google", nil);
 
 	if (appDelegate_.app_is_iPad) {
 		//[Mpopover release], 
-		Mpopover = nil;
+		popOver_ = nil;
 		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:goodocs];
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:goodocs];
-		Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
+		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
 		//[nc release];
-		Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
+		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
 		//[MindexPathEdit release], 
-		MindexPathEdit = nil;
+		indexPathEdit_ = nil;
 		CGRect rcArrow;
 		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
 			rcArrow = CGRectMake(768/2-10, 1027-60, 20,20);
 		} else {
 			rcArrow = CGRectMake((1024-320)/2-10, 768-60, 20,20);
 		}
-		[Mpopover presentPopoverFromRect:rcArrow	  inView:self.navigationController.view
+		[popOver_ presentPopoverFromRect:rcArrow	  inView:self.navigationController.view
 				permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
-		goodocs.selfPopover = Mpopover;
+		goodocs.selfPopover = popOver_;
 		goodocs.delegate = self; //Download後の再描画のため
 	} 
 	else {
@@ -350,7 +342,7 @@
 		goodocs.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 		[self.navigationController pushViewController:goodocs animated:YES];
 
-		if (appDelegate_.app_is_Ad) {
+		if (appDelegate_.app_opt_Ad) {
 			[appDelegate_ AdRefresh:NO];	//広告禁止
 		}
 	}
@@ -359,38 +351,38 @@
 
 - (void)actionImportYourPC
 {
-	if (appDelegate_.app_is_Ad) {
+	if (appDelegate_.app_opt_Ad) {
 		[appDelegate_ AdRefresh:NO];	//広告禁止
 	}
 	// HTTP Server Start
-	if (RalertHttpServer == nil) {
-		RalertHttpServer = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"HttpSv RESTORE", nil) 
+	if (alertHttpServer_ == nil) {
+		alertHttpServer_ = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"HttpSv RESTORE", nil) 
 													  message:NSLocalizedString(@"HttpSv Wait", nil) 
 													 delegate:self 
 											cancelButtonTitle:nil  //@"CANCEL" 
 											otherButtonTitles:NSLocalizedString(@"HttpSv stop", nil) , nil];
 	}
-	RalertHttpServer.tag = ALERT_TAG_HTTPServerStop;
-	[RalertHttpServer show];
+	alertHttpServer_.tag = ALERT_TAG_HTTPServerStop;
+	[alertHttpServer_ show];
 	//[MalertHttpServer release];
 	// if (httpServer) return; <<< didSelectRowAtIndexPath:直後に配置してダブルクリック回避している。
 	NSString *root = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
-	RhttpServer = [HTTPServer new];
-	[RhttpServer setType:@"_http._tcp."];
-	[RhttpServer setConnectionClass:[MyHTTPConnection class]];
-	[RhttpServer setDocumentRoot:[NSURL fileURLWithPath:root]];
+	httpServer_ = [HTTPServer new];
+	[httpServer_ setType:@"_http._tcp."];
+	[httpServer_ setConnectionClass:[MyHTTPConnection class]];
+	[httpServer_ setDocumentRoot:[NSURL fileURLWithPath:root]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(httpInfoUpdate:) name:@"LocalhostAdressesResolved" object:nil];
 	[localhostAddresses performSelectorInBackground:@selector(list) withObject:nil];
-	[RhttpServer setPort:8080];
-	[RhttpServer setBackup:NO]; // RESTORE Mode
-	[RhttpServer setManagedObjectContext:Rmoc];
-	[RhttpServer setAddRow:MiSection0Rows];
+	[httpServer_ setPort:8080];
+	[httpServer_ setBackup:NO]; // RESTORE Mode
+	[httpServer_ setManagedObjectContext:moc_];
+	[httpServer_ setAddRow:section0Rows_];
 	NSError *error;
-	if(![RhttpServer start:&error])
+	if(![httpServer_ start:&error])
 	{
 		NSLog(@"Error starting HTTP Server: %@", error);
 		//[RhttpServer release];
-		RhttpServer = nil;
+		httpServer_ = nil;
 	}
 	// Upload成功後、CSV LOAD する  ＜＜連続リストアできるように httpResponseForMethod 内で処理＞＞
 }
@@ -440,28 +432,28 @@
 - (void)actionInformation
 {
 	if (appDelegate_.app_is_iPad) {
-		if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 		
-		if (MinformationView) {
+		if (informationView_) {
 			//[MinformationView release], 
-			MinformationView = nil;
+			informationView_ = nil;
 		}
-		MinformationView = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
+		informationView_ = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
 		//MinformationView.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
 		
 		//[Mpopover release], 
-		Mpopover = nil;
+		popOver_ = nil;
 		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:MinformationView];
-		Mpopover = [[UIPopoverController alloc] initWithContentViewController:MinformationView];
+		popOver_ = [[UIPopoverController alloc] initWithContentViewController:informationView_];
 		//Mpopover.popoverContentSize = CGSizeMake(320, 510);
-		Mpopover.delegate = nil;	// 不要
+		popOver_.delegate = nil;	// 不要
 		CGRect rcArrow;
 		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //iPad初期、常にタテになる。原因不明
 			rcArrow = CGRectMake(0, 1027-60, 32,32);
 		} else {
 			rcArrow = CGRectMake(0, 768-60, 32,32);
 		}
-		[Mpopover presentPopoverFromRect:rcArrow  inView:self.navigationController.view  
+		[popOver_ presentPopoverFromRect:rcArrow  inView:self.navigationController.view  
 				permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
 	} 
 	else {
@@ -478,13 +470,13 @@
 		 [MinformationView show];
 		 */
 		// モーダル UIViewController
-		if (MinformationView) {
+		if (informationView_) {
 			//[MinformationView release], 
-			MinformationView = nil;
+			informationView_ = nil;
 		}
-		MinformationView = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
-		MinformationView.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-		[self presentModalViewController:MinformationView animated:YES];
+		informationView_ = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
+		informationView_.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+		[self presentModalViewController:informationView_ animated:YES];
 		//[MinformationView release];
 	}
 }
@@ -492,25 +484,25 @@
 - (void)actionSetting
 {
 	if (appDelegate_.app_is_iPad) {
-		if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 	}
 	
 	SettingTVC *vi = [[SettingTVC alloc] init];
 	
 	if (appDelegate_.app_is_iPad) {
 		//[Mpopover release], 
-		Mpopover = nil;
+		popOver_ = nil;
 		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:vi];
-		Mpopover = [[UIPopoverController alloc] initWithContentViewController:vi];
+		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vi];
 		//Mpopover.popoverContentSize = CGSizeMake(480, 400);
-		Mpopover.delegate = nil;	// 不要
+		popOver_.delegate = nil;	// 不要
 		CGRect rcArrow;
 		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
 			rcArrow = CGRectMake(768-32, 1027-60, 32,32);
 		} else {
 			rcArrow = CGRectMake(1024-320-32, 768-60, 32,32);
 		}
-		[Mpopover presentPopoverFromRect:rcArrow	inView:self.navigationController.view  
+		[popOver_ presentPopoverFromRect:rcArrow	inView:self.navigationController.view  
 				permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
 	} else {
 		//vi.hidesBottomBarWhenPushed = YES; // 現在のToolBar状態をPushした上で、次画面では非表示にする
@@ -519,7 +511,7 @@
 	}
 	//[vi release];
 	
-	if (appDelegate_.app_is_Ad) {
+	if (appDelegate_.app_opt_Ad) {
 		// 各viewDidAppear:にて「許可/禁止」を設定する
 		[appDelegate_ AdRefresh:NO];	//広告禁止
 	}
@@ -527,25 +519,30 @@
 
 - (void)actionIPurchase
 {
-	if (appDelegate_.app_is_sponsor) return;
-
-	// インジケータ開始
-	[appDelegate_ alertProgressOn: NSLocalizedString(@"SK Progress",nil)];
-	// PAID 広告＆制限解除
-	if ([SKPaymentQueue canMakePayments]) { // 課金可能であるか確認する
-		// 課金可能
-		// 商品情報リクエスト 
-		NSSet *set = [NSSet setWithObjects:STORE_PRODUCTID_UNLOCK, nil]; // 商品が複数ある場合は列記
-		SKProductsRequest *req = [[SKProductsRequest alloc] initWithProductIdentifiers:set];
-		req.delegate = self;
-		[req start];  //---> productsRequest:didReceiveResponse:が呼び出される
+	//if (appDelegate_.app_pid_UnLock) return;
+	AZStoreVC *vc;
+	if (appDelegate_.app_is_iPad) {
+		vc = [[AZStoreVC alloc] initWithNibName:@"AZStoreVC-iPad" bundle:nil];
 	} else {
-		// 購入が禁止されています。
-		[appDelegate_ alertProgressOff];
-		alertBox(NSLocalizedString(@"SK Prohibited",nil), NSLocalizedString(@"SK Prohibited msg",nil), NSLocalizedString(@"Roger",nil));
+		vc = [[AZStoreVC alloc] initWithNibName:@"AZStoreVC" bundle:nil];
+	}
+	vc.delegate = self; //--> azStorePurchesed:
+	vc.productIDs = [NSSet setWithObjects:SK_PID_UNLOCK, nil]; // 商品が複数ある場合は列記
+	[self presentModalViewController:vc animated:YES];
+}
+// <AZStoreDelegate>
+- (void)azStorePurchesed:(NSString*)productID
+{
+	if ([productID isEqualToString:SK_PID_UNLOCK]) 
+	{	// iCloud対応： NSPersistentStoreCoordinator, NSManagedObjectModel 再生成してiCloud対応する
+		//[EntityRelation commit];
+		appDelegate_.app_pid_UnLock = YES;
+		[appDelegate_ managedObjectContextReset]; // iCloud対応の moc再生成する。
+		// 再フィッチ＆画面リフレッシュ通知
+		[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFETCH_ALL_DATA		// 再フィッチ（レコード増減あったとき）
+															object:self userInfo:nil];
 	}
 }
-
 
 - (void)toE2fromE1:(E1*)e1obj  withIndex:(NSIndexPath *)indexPath 
 {	// 次回の画面復帰のための状態記録
@@ -592,7 +589,7 @@
 - (void)e1add 
 {
 	// ContextにE1ノードを追加する　E1edit内でCANCELならば削除している
-	E1 *e1newObj = [NSEntityDescription insertNewObjectForEntityForName:@"E1" inManagedObjectContext:Rmoc];
+	E1 *e1newObj = [NSEntityDescription insertNewObjectForEntityForName:@"E1" inManagedObjectContext:moc_];
 	/*
 	 Me1editView = [[E1edit alloc] init]; // popViewで戻れば解放されているため、毎回alloc必要。
 	 Me1editView.title = NSLocalizedString(@"Add Plan", @"PLAN追加");
@@ -604,18 +601,18 @@
 	 */
 	//[1.0.1]「新しい・・方式」として名称未定のまま先に進めるようにした
 	e1newObj.name = nil; //(未定)  NSLocalizedString(@"New Pack",nil);
-	e1newObj.row = [NSNumber numberWithInteger:MiSection0Rows]; // 末尾に追加：行番号(row) ＝ 現在の行数 ＝ 現在の最大行番号＋1
+	e1newObj.row = [NSNumber numberWithInteger:section0Rows_]; // 末尾に追加：行番号(row) ＝ 現在の行数 ＝ 現在の最大行番号＋1
 	
 	//[1.0.3]E1新規追加と同時にE2にも1レコード追加する。空のまま戻れば、viewWillAppearにて削除される
 	//[1.0.3]特にPADの場合、タテにするとE1の次にE3が表示されるので、新しい目次が少なくとも1つ必要になる。
-	E2 *e2newObj = [NSEntityDescription insertNewObjectForEntityForName:@"E2" inManagedObjectContext:Rmoc];
+	E2 *e2newObj = [NSEntityDescription insertNewObjectForEntityForName:@"E2" inManagedObjectContext:moc_];
 	e2newObj.row = [NSNumber numberWithInt:0];
 	e2newObj.name = nil; //(未定)
 	e2newObj.parent = e1newObj; // 親子リンク
 	
 	// SAVE
 	NSError *err = nil;
-	if (![Rmoc save:&err]) {
+	if (![moc_ save:&err]) {
 		NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
 		return;
 	}
@@ -628,42 +625,42 @@
 // E1edit View Call
 - (void)e1editView:(NSIndexPath *)indexPath
 {
-	if (MiSection0Rows <= indexPath.row) return;  // Addボタン行などの場合パスする
+	if (section0Rows_ <= indexPath.row) return;  // Addボタン行などの場合パスする
 
 	if (appDelegate_.app_is_iPad) {
-		if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 	}
 	
 	// E1 : NSManagedObject
-	E1 *e1obj = [RfetchedE1 objectAtIndexPath:indexPath];
+	E1 *e1obj = [fetchedE1_ objectAtIndexPath:indexPath];
 	
-	Me1editView = [[E1edit alloc] init]; // popViewで戻れば解放されているため、毎回alloc必要。
-	Me1editView.title = NSLocalizedString(@"Edit Plan",nil);
-	Me1editView.Re1target = e1obj;
-	Me1editView.PiAddRow = (-1); // Edit mode.
+	e1editView_ = [[E1edit alloc] init]; // popViewで戻れば解放されているため、毎回alloc必要。
+	e1editView_.title = NSLocalizedString(@"Edit Plan",nil);
+	e1editView_.Re1target = e1obj;
+	e1editView_.PiAddRow = (-1); // Edit mode.
 	
 	if (appDelegate_.app_is_iPad) {
 		//[Mpopover release], 
-		Mpopover = nil;
+		popOver_ = nil;
 		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:Me1editView];
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:Me1editView];
-		Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:e1editView_];
+		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
 	//	[nc release];
-		Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
+		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
 		//MindexPathEdit = indexPath;
 		//[MindexPathEdit release], 
-		MindexPathEdit = [indexPath copy];
+		indexPathEdit_ = [indexPath copy];
 		CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
 		rc.origin.x = rc.size.width - 65;	rc.size.width = 1;
 		rc.origin.y += 10;	rc.size.height -= 20;
-		[Mpopover presentPopoverFromRect:rc
+		[popOver_ presentPopoverFromRect:rc
 								  inView:self.view  permittedArrowDirections:UIPopoverArrowDirectionRight  animated:YES];
-		Me1editView.selfPopover = Mpopover;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
-		Me1editView.delegate = self;		// refresh callback
+		e1editView_.selfPopover = popOver_;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
+		e1editView_.delegate = self;		// refresh callback
 	}
 	else {
-		[Me1editView setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-		[self.navigationController pushViewController:Me1editView animated:YES];
+		[e1editView_ setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+		[self.navigationController pushViewController:e1editView_ animated:YES];
 	}
 	//[Me1editView release]; // self.navigationControllerがOwnerになる
 }
@@ -672,9 +669,9 @@
 {
 	switch (alertView.tag) {
 		case ALERT_TAG_HTTPServerStop:
-			[RhttpServer stop];
+			[httpServer_ stop];
 			//[RhttpServer release];
-			RhttpServer = nil;
+			httpServer_ = nil;
 			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LocalhostAdressesResolved" object:nil];
 			// 再表示
 			//[self.tableView reloadData]; これだけではダメ
@@ -698,8 +695,8 @@
 		case ACTIONSEET_TAG_DELETEPACK: // E1削除
 			if (buttonIndex == actionSheet.destructiveButtonIndex) 
 			{	//========== E1 削除実行 ==========
-				NSLog(@"MactionDeleteRow=%ld", (long)MactionDeleteRow);
-				[self actionE1deleteCell:MactionDeleteRow];
+				NSLog(@"MactionDeleteRow=%ld", (long)actionDeleteRow_);
+				[self actionE1deleteCell:actionDeleteRow_];
 			}
 			break;
 			
@@ -733,24 +730,24 @@
 	if(notification)
 	{
 		//[MdicAddresses release], 
-		MdicAddresses = nil;
-		MdicAddresses = [[notification object] copy];
-		NSLog(@"MdicAddresses: %@", MdicAddresses);
+		dicAddresses_ = nil;
+		dicAddresses_ = [[notification object] copy];
+		NSLog(@"MdicAddresses: %@", dicAddresses_);
 	}
 	
-	if(MdicAddresses == nil)
+	if(dicAddresses_ == nil)
 	{
 		return;
 	}
 	
 	NSString *info;
-	UInt16 port = [RhttpServer port];
+	UInt16 port = [httpServer_ port];
 	
 	NSString *localIP = nil;
-	localIP = [MdicAddresses objectForKey:@"en0"];
+	localIP = [dicAddresses_ objectForKey:@"en0"];
 	if (!localIP)
 	{
-		localIP = [MdicAddresses objectForKey:@"en1"];
+		localIP = [dicAddresses_ objectForKey:@"en1"];
 	}
 	
 	if (!localIP)
@@ -766,9 +763,9 @@
 	 info = [info stringByAppendingString:@"Web: Unable to determine external IP\n"]; */
 	
 	//displayInfo.text = info;
-	if (RalertHttpServer) {
-		RalertHttpServer.message = info;
-		[RalertHttpServer show];
+	if (alertHttpServer_) {
+		alertHttpServer_.message = info;
+		[alertHttpServer_ show];
 	}
 }
 
@@ -782,8 +779,8 @@
 	if (self) {
 		// 初期化成功
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		Me1editView = nil;		// e1addで生成 [self.navigationController pushViewController:]
-		MinformationView = nil; // azInformationViewで生成 [self.view.window addSubview:]
+		e1editView_ = nil;		// e1addで生成 [self.navigationController pushViewController:]
+		informationView_ = nil; // azInformationViewで生成 [self.view.window addSubview:]
 		
 		// 背景テクスチャ・タイルペイント
 		if (appDelegate_.app_is_iPad) {
@@ -801,12 +798,12 @@
 		// インストールやアップデート後、1度だけ処理する
 		NSString *zNew = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]; //（リリース バージョン）は、ユーザーに公開した時のレベルを表現したバージョン表記
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-		NSString* zDef = [defaults valueForKey:@"DefVersion"];
+		NSString* zDef = [defaults valueForKey:UD_CurrentVersion];
 		if (zDef==nil || ![zDef isEqualToString:zNew]) {
-			[defaults setValue:zNew forKey:@"DefVersion"];
-			MbInformationOpen = YES; // Informationを自動オープンする
+			[defaults setValue:zNew forKey:UD_CurrentVersion];
+			bInformationOpen_ = YES; // Informationを自動オープンする
 		} else {
-			MbInformationOpen = NO;
+			bInformationOpen_ = NO;
 		}
 	}
 	return self;
@@ -838,7 +835,7 @@
 	self.tableView.allowsSelectionDuringEditing = YES; // 編集モードに入ってる間にユーザがセルを選択できる
 #endif	
 	
-	if (appDelegate_.app_is_Ad) {
+	if (appDelegate_.app_opt_Ad) {
 		UIImageView* iv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Icon24-Free.png"]];
 		UIBarButtonItem* bui = [[UIBarButtonItem alloc] initWithCustomView:iv];
 		self.navigationItem.leftBarButtonItem	= bui;
@@ -867,23 +864,24 @@
 	[super viewWillAppear:animated];
 
 	// 画面表示に関係する Option Setting を取得する
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	MbAzOptTotlWeightRound = [defaults boolForKey:GD_OptTotlWeightRound]; // YES=四捨五入 NO=切り捨て
-	MbAzOptShowTotalWeight = [defaults boolForKey:GD_OptShowTotalWeight];
-	MbAzOptShowTotalWeightReq = [defaults boolForKey:GD_OptShowTotalWeightReq];
+	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+	bOptWeightRound_ = [kvs boolForKey:KV_OptWeightRound]; // YES=四捨五入 NO=切り捨て
+	bOptShowTotalWeight_ = [kvs boolForKey:KV_OptShowTotalWeight];
+	bOptShowTotalWeightReq_ = [kvs boolForKey:KV_OptShowTotalWeightReq];
 	
 	self.title = NSLocalizedString(@"Product Title",nil);
 	
-	if (Rmoc==nil) {
-		Rmoc = [appDelegate_ managedObjectContext];
+	if (moc_==nil) {
+		moc_ = [appDelegate_ managedObjectContext];
 	}
 	// CoreData 読み込み
 	[self refetcheAllData];	//この中で処理済み [self.tableView reloadData];
 	
-	if (0 < McontentOffsetDidSelect.y) {
+	if (0 < contentOffsetDidSelect_.y) {
 		// app.Me3dateUse=nil のときや、メモリ不足発生時に元の位置に戻すための処理。
 		// McontentOffsetDidSelect は、didSelectRowAtIndexPath にて記録している。
-		self.tableView.contentOffset = McontentOffsetDidSelect;
+		self.tableView.contentOffset = contentOffsetDidSelect_;
 	}
 }
 
@@ -900,12 +898,12 @@
 
 	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 
-	if (MbInformationOpen) {	//initWithStyleにて判定処理している
-		MbInformationOpen = NO;	// 以後、自動初期表示しない。
+	if (bInformationOpen_) {	//initWithStyleにて判定処理している
+		bInformationOpen_ = NO;	// 以後、自動初期表示しない。
 		[self actionInformation];  //[1.0.2]最初に表示する。バックグランド復帰時には通らない
 	}
 	
-	if (appDelegate_.app_is_Ad) {
+	if (appDelegate_.app_opt_Ad) {
 		//【Tips】タテから始まるとき、willRotateToInterfaceOrientation:を通らずに、ここを通る　⇒ AdRefresh：にて初期タテ配置となる
 		//【Tips】ヨコから始まるとき、ここよりもloadView：よりも先に willRotateToInterfaceOrientation: を通る ⇒ willRotateにてヨコ配置となる
 		[appDelegate_ AdRefresh:YES];	//広告許可
@@ -916,8 +914,8 @@
 - (void)viewWillDisappear:(BOOL)animated 
 {
 	if (appDelegate_.app_is_iPad) {
-		if ([Mpopover isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
-			[Mpopover dismissPopoverAnimated:animated];
+		if ([popOver_ isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
+			[popOver_ dismissPopoverAnimated:animated];
 		}
 	}
 	[super viewWillDisappear:animated];
@@ -934,7 +932,7 @@
 	if (appDelegate_.app_is_iPad) {
 		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
 	} else {
-		if (appDelegate_.AppShouldAutorotate==NO) {
+		if (appDelegate_.app_opt_Autorotate==NO) {
 			// 回転禁止にしている場合
 			//[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
 			if (interfaceOrientation == UIInterfaceOrientationPortrait)
@@ -950,10 +948,10 @@
 			//[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
 		} else {
 			//[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
-			if (MinformationView) {
-				[MinformationView hide]; // 正面でなければhide
+			if (informationView_) {
+				[informationView_ hide]; // 正面でなければhide
 				//[MinformationView release], 
-				MinformationView = nil;
+				informationView_ = nil;
 			}
 		}
 		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
@@ -971,7 +969,7 @@
 		MbuInfo.enabled = (toInterfaceOrientation == UIInterfaceOrientationPortrait);
 	}*/
 
-	if (appDelegate_.app_is_Ad) {
+	if (appDelegate_.app_opt_Ad) {
 		// 広告非表示でも回転時に位置調整しておく必要あり ＜＜現れるときの開始位置のため＞＞
 		// ここが最初の生成となる。この後、loadView: よりも先に willRotateToInterfaceOrientation: を通り、回転位置セットされる。
 		[appDelegate_ AdRefresh];	//広告生成のみ
@@ -982,18 +980,18 @@
 // 回転した後に呼び出される
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {	// Popoverの位置を調整する　＜＜UIPopoverController の矢印が画面回転時にターゲットから外れてはならない＞＞
-	if ([Mpopover isPopoverVisible]) {
-		if (MindexPathEdit) { 
+	if ([popOver_ isPopoverVisible]) {
+		if (indexPathEdit_) { 
 			//NSLog(@"MindexPathEdit=%@", MindexPathEdit);
-			[self.tableView scrollToRowAtIndexPath:MindexPathEdit 
+			[self.tableView scrollToRowAtIndexPath:indexPathEdit_ 
 								  atScrollPosition:UITableViewScrollPositionMiddle animated:NO]; // YESだと次の座標取得までにアニメーションが終了せずに反映されない
-			[Mpopover presentPopoverFromRect:[self.tableView rectForRowAtIndexPath:MindexPathEdit]
+			[popOver_ presentPopoverFromRect:[self.tableView rectForRowAtIndexPath:indexPathEdit_]
 									  inView:self.view  permittedArrowDirections:UIPopoverArrowDirectionAny  animated:YES];
 		} else {
 			// Information, Setting などで、回転後のアンカー位置が再現不可なので閉じる
-			[Mpopover dismissPopoverAnimated:YES];
+			[popOver_ dismissPopoverAnimated:YES];
 			//[Mpopover release], 
-			Mpopover = nil;
+			popOver_ = nil;
 		}
 	}
 }
@@ -1009,22 +1007,22 @@
 	
 	//[activityIndicator_ release], activityIndicator_ = nil;
 	
-	if (RhttpServer) {
-		[RhttpServer stop];
+	if (httpServer_) {
+		[httpServer_ stop];
 		//[RhttpServer release], 
-		RhttpServer = nil;
+		httpServer_ = nil;
 	}
 	//[RalertHttpServer release], 
-	RalertHttpServer = nil;
+	alertHttpServer_ = nil;
 	//[MdicAddresses release], 
-	MdicAddresses = nil;
+	dicAddresses_ = nil;
 	//[RfetchedE1 release],		
-	RfetchedE1 = nil;
+	fetchedE1_ = nil;
 	
-	if (MinformationView) {
-		[MinformationView hide]; // 正面でなければhide
+	if (informationView_) {
+		[informationView_ hide]; // 正面でなければhide
 		//[MinformationView release], 
-		MinformationView = nil;
+		informationView_ = nil;
 	}
 }
 
@@ -1044,11 +1042,11 @@
 	[self unloadRelease];
 
 	if (appDelegate_.app_is_iPad) {
-		Mpopover.delegate = nil;	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
+		popOver_.delegate = nil;	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
 		//[Mpopover release], 
-		Mpopover = nil;
+		popOver_ = nil;
 		//[MindexPathEdit release], 
-		MindexPathEdit = nil;
+		indexPathEdit_ = nil;
 	}
 	//--------------------------------@property (retain)
 	//[Rmoc release];
@@ -1071,7 +1069,7 @@
 {
 	switch (section) {
 		case 0:
-			return MiSection0Rows + 1; // +1:Add行
+			return section0Rows_ + 1; // +1:Add行
 		case 1:
 			return 5;	//Import menu
 		case 2:
@@ -1085,14 +1083,14 @@
 {
 	switch (section) {
 		case 0:
-			if (appDelegate_.app_is_iPad  &&  appDelegate_.app_is_Ad) {
-				if (MiSection0Rows <= 0) {
+			if (appDelegate_.app_is_iPad  &&  appDelegate_.app_opt_Ad) {
+				if (section0Rows_ <= 0) {
 					return [NSString stringWithFormat:@"\n\n\n%@", 
 							NSLocalizedString(@"Plan Nothing",nil)];
 				}
 				return @"\n\n";	// iAd上部スペース
 			} else {
-				if (MiSection0Rows <= 0) {
+				if (section0Rows_ <= 0) {
 					return NSLocalizedString(@"Plan Nothing",nil);
 				}
 				//[1.0.1]//return NSLocalizedString(@"Plan",nil);
@@ -1116,7 +1114,7 @@
 	switch (section) {
 		case 2: {
 			NSString *zz = @"";  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
-			if (appDelegate_.app_is_sponsor) {
+			if (appDelegate_.app_pid_UnLock) {
 				zz = NSLocalizedString(@"iCloud ON",nil); //@"<<< Will syncronize with iCloud >>>";
 			}
 			if (appDelegate_.app_is_iPad) {
@@ -1147,7 +1145,7 @@
     UITableViewCell *cell = nil;
 
 	if (indexPath.section == 0) { //-----------------------------------------------------------Section(0) PackList
-		NSInteger rows = MiSection0Rows - indexPath.row;
+		NSInteger rows = section0Rows_ - indexPath.row;
 		if (0 < rows) {
 			// E1ノードセル
 			cell = [tableView dequeueReusableCellWithIdentifier:zCellSubtitle];
@@ -1157,7 +1155,7 @@
 						 reuseIdentifier:zCellSubtitle];
 			}
 			// E1 : NSManagedObject
-			E1 *e1obj = [RfetchedE1 objectAtIndexPath:indexPath];
+			E1 *e1obj = [fetchedE1_ objectAtIndexPath:indexPath];
 			
 #ifdef DEBUG
 			if ([e1obj.name length] <= 0) 
@@ -1191,9 +1189,9 @@
 			// 重量
 			double dWeightStk;
 			double dWeightReq;
-			if (MbAzOptShowTotalWeight) {
+			if (bOptShowTotalWeight_) {
 				NSInteger lWeightStk = [e1obj.sumWeightStk integerValue];
-				if (MbAzOptTotlWeightRound) {
+				if (bOptWeightRound_) {
 					// 四捨五入　＜＜ %.1f により小数第2位が丸められる＞＞ 
 					dWeightStk = (double)lWeightStk / 1000.0f;
 				} else {
@@ -1201,9 +1199,9 @@
 					dWeightStk = (double)(lWeightStk / 100) / 10.0f;
 				}
 			}
-			if (MbAzOptShowTotalWeightReq) {
+			if (bOptShowTotalWeightReq_) {
 				NSInteger lWeightReq = [e1obj.sumWeightNed integerValue];
-				if (MbAzOptTotlWeightRound) {
+				if (bOptWeightRound_) {
 					// 四捨五入　＜＜ %.1f により小数第2位が丸められる＞＞ 
 					dWeightReq = (double)lWeightReq / 1000.0f;
 				} else {
@@ -1217,13 +1215,13 @@
 				zNote = NSLocalizedString(@"Name Change",nil);
 			}
 			
-			if (MbAzOptShowTotalWeight && MbAzOptShowTotalWeightReq) {
+			if (bOptShowTotalWeight_ && bOptShowTotalWeightReq_) {
 				cell.detailTextLabel.text = [NSString stringWithFormat:@"%.1f／%.1fKg  %@", 
 											 dWeightStk, dWeightReq, zNote];
-			} else if (MbAzOptShowTotalWeight) {
+			} else if (bOptShowTotalWeight_) {
 				cell.detailTextLabel.text = [NSString stringWithFormat:@"%.1fKg  %@", 
 											 dWeightStk, zNote];
-			} else if (MbAzOptShowTotalWeightReq) {
+			} else if (bOptShowTotalWeightReq_) {
 				cell.detailTextLabel.text = [NSString stringWithFormat:@"／%.1fKg  %@", 
 											 dWeightReq, zNote];
 			} else {
@@ -1358,7 +1356,7 @@
 					
 				case 2:
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-ExtParts"];
-					if (appDelegate_.app_is_sponsor) {
+					if (appDelegate_.app_pid_UnLock) {
 						cell.textLabel.text = [NSString stringWithFormat:@"%@  【%@】", NSLocalizedString(@"menu Purchase",nil), 
 											   NSLocalizedString(@"Purchased",nil)];
 						cell.detailTextLabel.text = NSLocalizedString(@"Thank you",nil);
@@ -1385,7 +1383,7 @@
 		   editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
 	if (indexPath.section == 0) {
-		NSInteger rows = MiSection0Rows - indexPath.row;
+		NSInteger rows = section0Rows_ - indexPath.row;
 		if (0 < rows) {
 			return UITableViewCellEditingStyleDelete;
 		}
@@ -1398,16 +1396,16 @@
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];	// 非選択状態に戻す
 
 	// didSelect時のScrollView位置を記録する（viewWillAppearにて再現するため）
-	McontentOffsetDidSelect = [tableView contentOffset];
+	contentOffsetDidSelect_ = [tableView contentOffset];
 
 	if (indexPath.section == 0) {
-		NSInteger rows = MiSection0Rows - indexPath.row;
+		NSInteger rows = section0Rows_ - indexPath.row;
 		if (0 < rows) {
 			if (self.editing) {
 				[self e1editView:indexPath];
 			} else {
 				// E1 : NSManagedObject
-				E1 *e1obj = [RfetchedE1 objectAtIndexPath:indexPath];
+				E1 *e1obj = [fetchedE1_ objectAtIndexPath:indexPath];
 				[self toE2fromE1:e1obj withIndex:indexPath]; // 次回の画面復帰のための状態記録をしてからＥ２へドリルダウンする
 			}
 		}
@@ -1476,7 +1474,7 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
 		// 削除コマンド警告　==>> (void)actionSheet にて処理
 		//NG//MindexPathActionDelete = indexPath;  retainが必要になる
-		MactionDeleteRow = indexPath.row;
+		actionDeleteRow_ = indexPath.row;
 		// 削除コマンド警告
 		UIActionSheet *action = [[UIActionSheet alloc] 
 								  initWithTitle:NSLocalizedString(@"CAUTION", nil)
@@ -1519,7 +1517,7 @@
 // Editモード時の行移動の可否　　＜＜最終行のAdd専用行を移動禁止にしている＞＞
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-	if (indexPath.section==0 && indexPath.row < MiSection0Rows) return YES;
+	if (indexPath.section==0 && indexPath.row < section0Rows_) return YES;
 	return NO;  // 最終行のAdd行は移動禁止
 }
 
@@ -1528,7 +1526,7 @@
 															toProposedIndexPath:(NSIndexPath *)newPath {
     NSIndexPath *target = newPath;
     // Add行が異動先になった場合、その1つ前の通常行を返すことにより、Add行への移動禁止となる。
-	NSInteger rows = MiSection0Rows - 1; // 移動可能な行数（Add行を除く）
+	NSInteger rows = section0Rows_ - 1; // 移動可能な行数（Add行を除く）
 	// セクション０限定仕様
 	if (newPath.section != 0 || rows < newPath.row  ) {
         target = [NSIndexPath indexPathForRow:rows inSection:0];
@@ -1544,7 +1542,7 @@
 
 	// e1だけNSFetchedResultsControllerを使っているので、e2,e3とは異なる
 	// E1 : NSManagedObject
-	E1 *e1obj = [RfetchedE1 objectAtIndexPath:oldPath];
+	E1 *e1obj = [fetchedE1_ objectAtIndexPath:oldPath];
 	e1obj.row = [NSNumber numberWithInteger:newPath.row];  // 指定セルを先に移動
 	// 移動行間のE1エンティティ属性(row)を書き換える
 	NSInteger i;
@@ -1553,26 +1551,26 @@
 		// 後(下)へ移動
 		for ( i=oldPath.row ; i < newPath.row ; i++) {
 			ip = [NSIndexPath indexPathForRow:(NSUInteger)i+1 inSection:newPath.section];
-			e1obj = [RfetchedE1 objectAtIndexPath:ip];
+			e1obj = [fetchedE1_ objectAtIndexPath:ip];
 			e1obj.row = [NSNumber numberWithInteger:i];
 		}
 	} else {
 		// 前(上)へ移動
 		for (i = newPath.row ; i < oldPath.row ; i++) {
 			ip = [NSIndexPath indexPathForRow:(NSUInteger)i inSection:newPath.section];
-			e1obj = [RfetchedE1 objectAtIndexPath:ip];
+			e1obj = [fetchedE1_ objectAtIndexPath:ip];
 			e1obj.row = [NSNumber numberWithInteger:i+1];
 		}
 	}
 	// SAVE　＜＜万一システム障害で落ちてもデータが残るようにコマメに保存する方針である＞＞
 	NSError *error = nil;
-	if (![Rmoc save:&error]) {
+	if (![moc_ save:&error]) {
 		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 		exit(-1);  // Fail
 	}
 	// 上で並び替えられた結果を再フィッチする（performFetch）  コンテキスト変更したときは再抽出する
 	//NSError *error = nil;
-	if (![RfetchedE1 performFetch:&error]) {
+	if (![fetchedE1_ performFetch:&error]) {
 		NSLog(@"%@", error);
 		exit(-1);  // Fail
 	}
@@ -1586,13 +1584,13 @@
 
 	UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
 	if ( [[nc visibleViewController] isMemberOfClass:[E1edit class]] ) {	// E1edit のときだけ、
-		if (appDelegate_.AppUpdateSave) { // E1editにて、変更あるので閉じさせない
+		if (appDelegate_.app_UpdateSave) { // E1editにて、変更あるので閉じさせない
 			alertBox(NSLocalizedString(@"Cancel or Save",nil), 
 					 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
 			return NO; 
 		}
 	}
-	[Rmoc rollback]; // 前回のSAVE以降を取り消す。＜＜サンプルの一時取込をクリアするために必要
+	[moc_ rollback]; // 前回のSAVE以降を取り消す。＜＜サンプルの一時取込をクリアするために必要
 	return YES; // 閉じることを許可
 }
 

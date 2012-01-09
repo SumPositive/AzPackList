@@ -117,10 +117,11 @@
     [super viewWillAppear:animated];
 
 	// 画面表示に関係する Option Setting を取得する
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	MbOptTotlWeightRound = [defaults boolForKey:GD_OptTotlWeightRound]; // YES=四捨五入 NO=切り捨て
-	MbOptShowTotalWeight = [defaults boolForKey:GD_OptShowTotalWeight];
-	MbOptShowTotalWeightReq = [defaults boolForKey:GD_OptShowTotalWeightReq];
+	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+	MbOptTotlWeightRound = [kvs boolForKey:KV_OptWeightRound]; // YES=四捨五入 NO=切り捨て
+	MbOptShowTotalWeight = [kvs boolForKey:KV_OptShowTotalWeight];
+	MbOptShowTotalWeightReq = [kvs boolForKey:KV_OptShowTotalWeightReq];
 	
 	self.title = NSLocalizedString(@"Sample Display",nil);
 
@@ -150,7 +151,7 @@
 	} else {
 		// 回転禁止でも万一ヨコからはじまった場合、タテ（ボタン下部）にはなるようにしてある。
 		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		return app.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+		return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
 	}
 }
 

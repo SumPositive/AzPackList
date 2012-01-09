@@ -14,26 +14,17 @@
 
 @implementation AZStoreVC
 {
-	IBOutlet UILabel			*ibLbInviteTitle;
-	IBOutlet UILabel			*ibLbInviteMsg;
-	IBOutlet UITextField	*ibTfInvitePass;
-	
-	IBOutlet UIButton		*ibBuClose;
-
-	IBOutlet UITableView	*ibTableView;
-
 	UIAlertView						*alertActivity_;
 	UIActivityIndicatorView	*alertActivityIndicator_;
 	
-	BOOL							sponsor_;
-	NSSet							*productIDs_;
+	BOOL							unLock_;
 	NSMutableArray			*products_;
 }
 @synthesize delegate = delegate_;
 @synthesize productIDs = productIDs_;
 
 #define SK_INIT				@"Init"
-#define SK_NO_SALE		@"NoSale"
+#define SK_NoSALE		@"NoSale"
 #define SK_CLOSED		@"Closed"
 
 
@@ -68,22 +59,27 @@
 
 
 #pragma mark - View lifecycle
-
-- (id)initWithSponsor:(BOOL)sponsor
+/*
+- (id)initWithUnLock:(BOOL)unlock
 {
-    self = [super init];
+	if ([[[UIDevice currentDevice] model] hasPrefix:@"iPad"]) {	// iPad
+		self = [super initWithNibName:@"AZStoreVC-iPad" bundle:nil];
+	} else {
+		self = [super initWithNibName:@"AZStoreVC" bundle:nil];
+	}
     if (self) {
         // Custom initialization
-		sponsor_ = sponsor;
+		
+		unLock_ = unlock;
     }
     return self;
 }
-
+*/
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	
-	if (sponsor_) 
+	if (unLock_) 
 	{	// Version 1.2 購入済み
 		//ibLbInviteTitle.hidden = YES;
 		//ibLbInviteMsg.hidden = YES;
@@ -228,6 +224,15 @@ replacementString:(NSString *)string
 	}
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section 
+{
+	if (section==0) {
+		return NSLocalizedString(@"SK Product", nil);
+	} else {
+		return NSLocalizedString(@"SK AzukiSoft", nil);
+	}
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
@@ -250,6 +255,10 @@ replacementString:(NSString *)string
 					cell.detailTextLabel.text = [NSString stringWithFormat:@"%@  %@", 
 												 [prod.price descriptionWithLocale: [NSLocale currentLocale]] ,
 												 prod.localizedDescription];
+					
+					if ([prod.productIdentifier isEqualToString: SK_PID_UNLOCK]) {
+						
+					}
 				}
 				else {
 					// 販売停止中
@@ -264,7 +273,7 @@ replacementString:(NSString *)string
 				[cell.contentView addSubview:ai];
 				cell.textLabel.text = NSLocalizedString(@"SK Progress", nil);
 			}
-			else if ([[products_ objectAtIndex: indexPath.row] isEqualToString:SK_NO_SALE])
+			else if ([[products_ objectAtIndex: indexPath.row] isEqualToString:SK_NoSALE])
 			{
 				cell.imageView.image = [UIImage imageNamed:@"Icon32-ExtParts"];
 				cell.textLabel.text = NSLocalizedString(@"SK No Sale", nil);
@@ -314,6 +323,7 @@ replacementString:(NSString *)string
 	{
 		SKProduct *prod = [products_ objectAtIndex: indexPath.row];
 		if (prod) {
+			[self alertActivityOn:NSLocalizedString(@"SK Progress",nil)];
 			// アドオン購入処理開始　　　　　　　<SKPaymentTransactionObserver>は、AzBodyNoteAppDelegateに実装
 			[[SKPaymentQueue defaultQueue] addTransactionObserver: self];
 			SKPayment *payment = [SKPayment paymentWithProduct: prod];
@@ -322,7 +332,7 @@ replacementString:(NSString *)string
 		else {
 			// 販売停止中
 			alertBox(NSLocalizedString(@"SK Closed",nil), NSLocalizedString(@"SK Closed msg",nil), NSLocalizedString(@"Roger",nil));
-			[products_ replaceObjectAtIndex:indexPath.row withObject:SK_NO_SALE];
+			[products_ replaceObjectAtIndex:indexPath.row withObject:SK_NoSALE];
 			[ibTableView reloadData];
 		}
 	}
@@ -347,53 +357,23 @@ replacementString:(NSString *)string
 }
 
 
-
 #pragma mark - <SKPaymentTransactionObserver>  販売処理
 
-- (BOOL)purchasedCompleate:(SKPaymentTransaction*)tran
+- (void)purchasedCompleate:(SKPaymentTransaction*)tran
 {
-	if ([tran.payment.productIdentifier isEqualToString:STORE_PRODUCTID_UNLOCK]) {
-		// Unlock
-		app_is_sponsor_ = YES;
-		// UserDefへ記録する （iOS5未満のため）
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:GD_Sponsor];
-		[[NSUserDefaults standardUserDefaults] synchronize];
-		// iCloud-KVS に記録する
-		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
-		[kvs setBool:YES forKey:GD_Sponsor];
-		[kvs synchronize];
-		// Compleate !
-		[[SKPaymentQueue defaultQueue] finishTransaction:tran]; // 処理完了
-		
-		// iCloud対応： NSPersistentStoreCoordinator, NSManagedObjectModel 再生成してiCloud対応する
-		// Commit!
-		NSError *error;
-		if (moc_ != nil) {
-			if ([moc_ hasChanges] && ![moc_ save:&error]) {
-				// Handle error.
-				NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-				assert(NO); //DEBUGでは落とす
-			} 
-		}
-		moc_ = nil;
-		persistentStoreCoordinator_ = nil;
-		// 再生成
-		[EntityRelation setMoc:[self managedObjectContext]];
-		
-		// 再フィッチ＆画面リフレッシュ通知
-		[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFETCH_ALL_DATA		// 再フィッチ（レコード増減あったとき）
-															object:self userInfo:nil];
-		//[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFRESH_ALL_VIEWS		// 再描画（レコード変更だけのとき）
-		//													object:self userInfo:nil];
-		
-		// インジケータ消す
-		[self alertProgressOff];
-		return YES;
+	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+	[kvs setBool:YES forKey: tran.payment.productIdentifier];
+	[kvs synchronize];
+
+	if ([delegate_ respondsToSelector:@selector(azStorePurchesed:)]) {
+		[delegate_ azStorePurchesed: tran.payment.productIdentifier];	// 呼び出し側にて、再描画など実施
 	}
+	
+	// Compleate !
+	[[SKPaymentQueue defaultQueue] finishTransaction:tran]; // 処理完了
 	// インジケータ消す
-	[self alertProgressOff];
-	alertBox(	NSLocalizedString(@"SK Failed",nil), NSLocalizedString(@"SK Failed msg",nil), @"OK" );
-	return NO;
+	[self alertActivityOff];
+	alertBox(	NSLocalizedString(@"SK Compleate",nil), NSLocalizedString(@"SK Compleate msg",nil), @"OK" );
 }
 
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions
@@ -404,7 +384,7 @@ replacementString:(NSString *)string
 			case SKPaymentTransactionStatePurchasing: // 購入中
 				NSLog(@"SKPaymentTransactionStatePurchasing: tran=%@", tran);
 				// インジケータ開始
-				[self	alertProgressOn: NSLocalizedString(@"SK Progress",nil)];
+				[self	alertActivityOn:NSLocalizedString(@"SK Progress",nil)];
 				break;
 				
 			case SKPaymentTransactionStateFailed: // 購入失敗
@@ -412,7 +392,7 @@ replacementString:(NSString *)string
 				NSLog(@"SKPaymentTransactionStateFailed: tran=%@", tran);
 				[[SKPaymentQueue defaultQueue] finishTransaction:tran]; // 処理完了
 				// インジケータ消す
-				[self alertProgressOff];
+				[self alertActivityOff];
 				
 				if (tran.error.code == SKErrorUnknown) {
 					// クレジットカード情報入力画面に移り、購入処理が強制的に終了したとき
@@ -425,26 +405,20 @@ replacementString:(NSString *)string
 #ifdef DEBUG
 				// 購入成功と見なしてテストする
 				NSLog(@"DEBUG: SKPaymentTransactionStatePurchased: tran=%@", tran);
-				if ([self purchasedCompleate:tran]) {
-					alertBox(	NSLocalizedString(@"SK Compleate",nil), NSLocalizedString(@"SK Compleate msg",nil), @"OK" );
-				}
+				[self purchasedCompleate:tran];
 #endif
 			} break;
 				
 			case SKPaymentTransactionStatePurchased:	// 購入完了
 			{
 				NSLog(@"SKPaymentTransactionStatePurchased: tran=%@", tran);
-				if ([self purchasedCompleate:tran]) {
-					alertBox(	NSLocalizedString(@"SK Compleate",nil), NSLocalizedString(@"SK Compleate msg",nil), @"OK" );
-				}
+				[self purchasedCompleate:tran];
 			} break;
 				
 			case SKPaymentTransactionStateRestored:		// 購入済み
 			{
 				NSLog(@"SKPaymentTransactionStateRestored: tran=%@", tran);
-				if ([self purchasedCompleate:tran]) {
-					alertBox(	NSLocalizedString(@"SK Restored",nil), NSLocalizedString(@"SK Restored msg",nil), @"OK" );
-				}
+				[self purchasedCompleate:tran];
 			} break;
 				
 			default:

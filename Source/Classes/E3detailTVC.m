@@ -121,7 +121,7 @@
 	if ((self = [super initWithStyle:UITableViewStyleGrouped])) {  // セクションありテーブル
 		// 初期化成功
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		appDelegate_.AppUpdateSave = NO;
+		appDelegate_.app_UpdateSave = NO;
 		PbSharePlanList = NO;
 		MfTableViewContentY = -1;
 
@@ -188,7 +188,7 @@
 {
     [super viewWillAppear:animated];
 
-	self.navigationItem.rightBarButtonItem.enabled = appDelegate_.AppUpdateSave;
+	self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 
 	// 電卓が出ておれば消す
 	if (McalcView && [McalcView isShow]) {
@@ -293,7 +293,7 @@
     [super viewDidAppear:animated];
 	[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
 	
-	if (appDelegate_.app_is_Ad) {
+	if (appDelegate_.app_opt_Ad) {
 		// 各viewDidAppear:にて「許可/禁止」を設定する
 		[appDelegate_ AdRefresh:NO];	//広告禁止
 	}
@@ -328,7 +328,7 @@
 		return YES;	// Popover内につき回転不要だが、NO にすると Shopping(Web)から戻ると強制的にタテ向きになってしまう。
 	} else {
 		// 回転禁止の場合、万一ヨコからはじまった場合、タテにはなるようにしてある。
-		return appDelegate_.AppShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+		return appDelegate_.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
 	}
 }
 
@@ -614,7 +614,8 @@
 	// 必要数0が追加された場合、前に戻ったときに追加失敗している錯覚をおこさないように通知する
 	if (lNeed <= 0) 
 	{
-		if ([[NSUserDefaults standardUserDefaults] boolForKey:GD_OptItemsGrayShow] == NO) 
+		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+		if ([kvs boolForKey:KV_OptItemsGrayShow] == NO) 
 		{
 			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Added Item",nil)
 															 message:NSLocalizedString(@"GrayHiddon Alert",nil)
@@ -713,7 +714,7 @@
 	[self viewWillAppear:NO]; // スライドバーを再描画するため
 #endif
 	
-	self.navigationItem.rightBarButtonItem.enabled = appDelegate_.AppUpdateSave;
+	self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 }
 
 
@@ -1254,8 +1255,8 @@
 {
 	if ([MtfKeyword.text length]<=0) {
 		MtfKeyword.text = MtfName.text;
-		appDelegate_.AppUpdateSave = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = appDelegate_.AppUpdateSave;
+		appDelegate_.app_UpdateSave = YES; // 変更あり
+		self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 	}
 	// 日本語を含むURLをUTF8でエンコーディングする
 	// 第3引数のCFSTR(";,/?:@&=+$#")で指定した文字列はエンコードされずにそのまま残る
@@ -1441,8 +1442,8 @@
     [zText replaceCharactersInRange:range withString:string];
 	// 置き換えた後の長さをチェックする
 	if ([zText length] <= TEXTFIELD_MAXLENGTH) {
-		appDelegate_.AppUpdateSave = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = appDelegate_.AppUpdateSave;
+		appDelegate_.app_UpdateSave = YES; // 変更あり
+		self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 		return YES;
 	} else {
 		return NO;
@@ -1508,8 +1509,8 @@
     [zText replaceCharactersInRange:range withString:zReplace];
 	// 置き換えた後の長さをチェックする
 	if ([zText length] <= TEXTVIEW_MAXLENGTH) {
-		appDelegate_.AppUpdateSave = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = appDelegate_.AppUpdateSave;
+		appDelegate_.app_UpdateSave = YES; // 変更あり
+		self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 		return YES;
 	} else {
 		return NO;
@@ -1556,16 +1557,16 @@
 		if ([Re3target.stock longValue] != dial) { // 変更あり
 			MlbStock.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
 			Re3target.stock = [NSNumber numberWithInteger:dial];
-			appDelegate_.AppUpdateSave = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.AppUpdateSave;
+			appDelegate_.app_UpdateSave = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 		}
 	}
 	else if (sender==mDialNeed) {
 		if ([Re3target.need longValue] != dial) { // 変更あり
 			MlbNeed.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
 			Re3target.need = [NSNumber numberWithInteger:dial];
-			appDelegate_.AppUpdateSave = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.AppUpdateSave;
+			appDelegate_.app_UpdateSave = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 		}
 	}
 #ifdef WEIGHT_DIAL
@@ -1573,8 +1574,8 @@
 		if ([Re3target.weight longValue] != dial) { // 変更あり
 			MlbWeight.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
 			Re3target.weight = [NSNumber numberWithInteger:dial];
-			appDelegate_.AppUpdateSave = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.AppUpdateSave;
+			appDelegate_.app_UpdateSave = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 		}
 	}
 #endif
