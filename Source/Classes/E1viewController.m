@@ -187,20 +187,14 @@
 }
 
 - (void)refetcheAllData:(NSNotification*)note 
-{	// iCloud-CoreData に変更があれば呼び出される
-	if (note) {
-		Rmoc = [EntityRelation getMoc]; //購入後、再生成された場合のため
-		[self refetcheAllData];
-	}
+{	// iCloud-CoreData に変更（追加や削除）があれば呼び出される
+	Rmoc = [EntityRelation getMoc]; //購入後、再生成された場合のため
+	[self refetcheAllData];
 }
 
 - (void)refreshAllViews:(NSNotification*)note 
 {	// iCloud-CoreData に変更があれば呼び出される
-	//[self.tableView reloadData];
-	//[self viewWillAppear:YES];
-	if (note) {
-		[self viewDidAppear:YES];
-	}
+	[self viewDidAppear:YES];
 }
 
 
@@ -859,11 +853,13 @@
 
 	// observe the app delegate telling us when it's finished asynchronously setting up the persistent store
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refetcheAllData:)
-												 name:NFM_REFETCH_ALL_DATA   object:appDelegate_];
+												 name:NFM_REFETCH_ALL_DATA
+											   object:nil];  //=nil: 全てのオブジェクトからの通知を受ける
 	
 	// listen to our app delegates notification that we might want to refresh our detail view
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAllViews:) 
-												 name:NFM_REFRESH_ALL_VIEWS  object:appDelegate_];
+												 name:NFM_REFRESH_ALL_VIEWS  
+											   object:nil];  //=nil: 全てのオブジェクトからの通知を受ける
 }
 
 - (void)viewWillAppear:(BOOL)animated 
@@ -1604,37 +1600,6 @@
 {	// [Cancel][Save][枠外タッチ]何れでも閉じるときここを通る
 	[self refreshE1view];
 	return;
-}
-
-
-#pragma mark - <SKProductsRequestDelegate>
-- (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
-{	// 商品情報を取得して購入ボタン表示などを整える
-	if (0 < [response.invalidProductIdentifiers count]) {
-		NSLog(@"*** invalidProductIdentifiers: アイテムIDが不正");
-		[appDelegate_ alertProgressOff];
-		return;
-	}
-	productUnlock_ = nil;
-	for (SKProduct *product in response.products) 
-	{
-		productUnlock_ = product;
-		// product.localizedTitle <<<商品名称
-		break; // 1つだけだから
-	}	
-	
-	if (productUnlock_) {
-		// アドオン購入処理開始　　　　　　　<SKPaymentTransactionObserver>は、AzBodyNoteAppDelegateに実装
-		[[SKPaymentQueue defaultQueue] addTransactionObserver: appDelegate_];
-		//SKPayment *payment = [SKPayment paymentWithProductIdentifier: STORE_PRODUCTID_UNLOCK]; <<<Deprecated
-		SKPayment *payment = [SKPayment paymentWithProduct:productUnlock_];
-		[[SKPaymentQueue defaultQueue] addPayment:payment];
-	}
-	else {
-		// 販売停止中
-		[appDelegate_ alertProgressOff];
-		alertBox(NSLocalizedString(@"SK Closed",nil), NSLocalizedString(@"SK Closed msg",nil), NSLocalizedString(@"Roger",nil));
-	}
 }
 
 

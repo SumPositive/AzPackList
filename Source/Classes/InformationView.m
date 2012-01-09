@@ -223,17 +223,10 @@ static UIColor *MpColorBlue(float percent) {
 	[self.view addSubview:label];//[label release];
 	
 	//------------------------------------------Lable:Version
-	label = [[UILabel alloc] initWithFrame:CGRectMake(100, 80, 200, 45)];
-	NSString *zFree = @"PackList";
-	NSString *zDevice;
-	if (appDelegate_.app_is_iPad) {
-		zDevice = @"for iPad";
-	} else {
-		zDevice = @"for iPhone";
-	}
+	label = [[UILabel alloc] initWithFrame:CGRectMake(100, 80, 200, 20)];
 	NSString *zVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]; //（リリース バージョン）は、ユーザーに公開した時のレベルを表現したバージョン表記
-	label.text = [NSString stringWithFormat:@"%@\n%@\nVersion %@", zFree, zDevice, zVersion];
-	label.numberOfLines = 3;
+	label.text = [NSString stringWithFormat:@"Version %@", zVersion];
+	label.numberOfLines = 1;
 	label.textAlignment = UITextAlignmentCenter;
 	label.textColor = [UIColor whiteColor];
 	label.backgroundColor = [UIColor clearColor]; //背景透明
@@ -256,12 +249,13 @@ static UIColor *MpColorBlue(float percent) {
 	[self.view addSubview:label]; //[label release];
 	
 	//------------------------------------------Lable:著作権表示
-	label = [[UILabel alloc] initWithFrame:CGRectMake(100, 130, 200, 60)];
-	label.text =	@"Born on March 2\n"
-						@"© 1995-2012 Azukid\n"
+	label = [[UILabel alloc] initWithFrame:CGRectMake(100, 110, 200, 80)];
+	label.text =	@"PackList  (.azpl)\n"
+						@"Born on March 2\n"
+						COPYRIGHT			@"\n"
 						@"Author: Sum Positive\n"
 						@"All Rights Reserved.";
-	label.numberOfLines = 4;
+	label.numberOfLines = 5;
 	label.textAlignment = UITextAlignmentCenter;
 	label.textColor = [UIColor whiteColor];
 	label.backgroundColor = [UIColor clearColor]; //背景透明

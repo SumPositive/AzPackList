@@ -11,7 +11,7 @@
 
 
 @interface E1viewController : UITableViewController 
-	<NSFetchedResultsControllerDelegate, UIActionSheetDelegate	,UIPopoverControllerDelegate, SKProductsRequestDelegate>
+	<NSFetchedResultsControllerDelegate, UIActionSheetDelegate	,UIPopoverControllerDelegate>
 
 - (void)refreshE1view;
 

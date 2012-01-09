@@ -52,6 +52,14 @@
     self = [super init];
     if (self) {
         // Custom initialization
+
+		// 背景テクスチャ・タイルペイント
+		//self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+		// 背景色
+		self.view.backgroundColor = [UIColor colorWithRed:152/255.0f 
+													green:81/255.0f 
+													 blue:75/255.0f 
+													alpha:1.0f];
     }
     return self;
 }
@@ -62,13 +70,6 @@
 {
 	//AzLOG(@"------- E1viewController: loadView");    
 	[super loadView];
-
-	/*self.view.backgroundColor = [UIColor colorWithRed:152/255.0f 
-												green:81/255.0f 
-												 blue:75/255.0f 
-												alpha:1.0f]; */
-	// 背景テクスチャ・タイルペイント
-	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 
 	
 	//------------------------------------------アイコン

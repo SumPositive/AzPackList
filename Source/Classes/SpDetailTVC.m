@@ -557,7 +557,10 @@
 													  otherButtonTitles:@"OK", nil];
 				alert.tag = ALERT_TAG_PREVIEW; // 前Viewへ戻る
 				[alert show];
-				//[alert release];
+				// E1 再フィッチ（データ追加あり）
+				NSNotification* refreshNotification = [NSNotification notificationWithName:NFM_REFETCH_ALL_DATA
+																					object:self  userInfo:nil];
+				[[NSNotificationCenter defaultCenter] postNotification:refreshNotification];
 			}
 		}
 		else if (indexPath.row==1) { 

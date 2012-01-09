@@ -15,7 +15,7 @@
 #define STORE_PRODUCTID_UNLOCK		@"com.azukid.AzPackList.Unlock"		// In-App Purchase ProductIdentifier
 
 @interface AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate
-									,ADBannerViewDelegate	,GADBannerViewDelegate, SKPaymentTransactionObserver> 
+									,ADBannerViewDelegate	,GADBannerViewDelegate> 
 
 @property (nonatomic, retain) UIWindow		*window;
 @property (nonatomic, retain) UINavigationController		*mainNC;		//for iPhone
