@@ -29,7 +29,7 @@
 @property (nonatomic, assign) id			delegate;
 @property (nonatomic, retain) NSSet	*productIDs;
 
-- (IBAction)ibBuClose:(UIButton *)button;
+//- (IBAction)ibBuClose:(UIButton *)button;
 
 - (id)initWithUnLock:(BOOL)unlock;
 

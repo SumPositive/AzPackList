@@ -27,6 +27,9 @@
 #define SK_NoSALE		@"NoSale"
 #define SK_CLOSED		@"Closed"
 
+#define TAG_ActivityIndicator			109
+#define TAG_GoAppStore					208
+
 
 #pragma mark - Alert
 
@@ -50,16 +53,31 @@
 }
 
 
-#pragma mark - IBAction
-
+#pragma mark - Action
+/*
 - (IBAction)ibBuClose:(UIButton *)button
 {
 	[self dismissModalViewControllerAnimated:YES];
 }
+*/
+
+// productID の購入確定処理
+- (void)actPurchasedProductID:(NSString*)productID
+{
+	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+	[kvs setBool:YES forKey: productID];
+	[kvs synchronize];
+	
+	if ([delegate_ respondsToSelector:@selector(azStorePurchesed:)]) {
+		[delegate_ azStorePurchesed: productID];	// 呼び出し側にて、再描画など実施
+	}
+	// 再表示
+	[ibTableView reloadData];
+}
 
 
 #pragma mark - View lifecycle
-/*
+
 - (id)initWithUnLock:(BOOL)unlock
 {
 	if ([[[UIDevice currentDevice] model] hasPrefix:@"iPad"]) {	// iPad
@@ -69,22 +87,28 @@
 	}
     if (self) {
         // Custom initialization
-		
 		unLock_ = unlock;
+
+		// 背景色　小豆色 RGB(152,81,75) #98514B
+		self.view.backgroundColor = [UIColor colorWithRed:152/255.0f 
+													green:81/255.0f 
+													 blue:75/255.0f
+													alpha:1.0f];
     }
     return self;
 }
-*/
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	self.title = NSLocalizedString(@"menu Purchase",nil);
 	
 	if (unLock_) 
 	{	// Version 1.2 購入済み
 		//ibLbInviteTitle.hidden = YES;
 		//ibLbInviteMsg.hidden = YES;
 		ibTfInvitePass.enabled = NO;
-		ibTfInvitePass.placeholder = NSLocalizedString(@"SK Sponsor", nil); // Version 1.2 購入済み
+		ibTfInvitePass.placeholder = NSLocalizedString(@"SK Invitation", nil); // Version 1.2 購入済み
 	} else {
 		ibTfInvitePass.keyboardType = UIKeyboardTypeASCIICapable;
 		ibTfInvitePass.returnKeyType = UIReturnKeyDone;
@@ -160,7 +184,7 @@
 
 - (void)dealloc 
 {
-
+    [[SKPaymentQueue defaultQueue] removeTransactionObserver:self]; // これが無いと、しばらくすると落ちる
 }
 
 
@@ -169,26 +193,24 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
 	assert(textField==ibTfInvitePass);
-
-	[self alertActivityOn:NSLocalizedString(@"SK InvitePass", nil)];
 	[textField resignFirstResponder]; // キーボードを隠す
 
-	@try {
-		// 招待パス処理
-		if ([ibTfInvitePass.text length]==7) 
-		{
-			
-			
-			// OK
-			alertBox(NSLocalizedString(@"SK InvitePass OK", nil), NSLocalizedString(@"SK InvitePass", nil), @"OK");
-		}
+	// 招待パス生成
+	NSString *pass = @"enjiSmei";
+	
+	
+	// チェック
+	if (7<=[pass length] && [pass isEqualToString: ibTfInvitePass.text]) 
+	{
+		// productID の購入確定処理
+		[self actPurchasedProductID: SK_PID_UNLOCK];
+		// OK
+		alertBox(NSLocalizedString(@"SK InvitePass OK", nil), nil, @"OK");
 	}
-	@catch (NSException *exception) {
+	else {
 		// NG 招待パスが違う
-		alertBox(NSLocalizedString(@"SK InvitePass NG", nil), NSLocalizedString(@"SK InvitePass", nil), @"OK");
-	}
-	@finally {
-		[self alertActivityOff];
+		alertBox(NSLocalizedString(@"SK InvitePass NG", nil), nil, @"OK");
+		ibTfInvitePass.text = @"";
 	}
 	return YES;
 }
@@ -212,25 +234,27 @@ replacementString:(NSString *)string
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	if (section==0) {
-		return [products_ count];
-	} else {
-		return 3; // アプリ宣伝
-	}
+	return [products_ count];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section 
 {
 	if (section==0) {
-		return NSLocalizedString(@"SK Product", nil);
+		return NSLocalizedString(@"SK License", nil);
 	} else {
 		return NSLocalizedString(@"SK AzukiSoft", nil);
 	}
+}
+
+// セルの高さを指示する
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
+{
+	return 66; // デフォルト：44ピクセル
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -242,22 +266,40 @@ replacementString:(NSString *)string
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
 									  reuseIdentifier:CellIdentifier];
     }
+	// Def.選択不可にする
+	cell.accessoryType = UITableViewCellAccessoryNone;
+	cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし ＜＜選択不可
 	
 	if (indexPath.section==0) {
 		if (0<=indexPath.row && indexPath.row<[products_ count]) 
 		{
+			UIActivityIndicatorView *ai = (UIActivityIndicatorView*)[cell.contentView viewWithTag:TAG_ActivityIndicator];
+			if (ai) {
+				[ai stopAnimating];
+			}
+			
 			if ([[products_ objectAtIndex: indexPath.row] isKindOfClass:[SKProduct class]]) 
 			{
 				cell.imageView.image = [UIImage imageNamed:@"Icon32-ExtParts"];
 				SKProduct *prod = [products_ objectAtIndex: indexPath.row];
 				if (prod) {
+					cell.textLabel.font = [UIFont systemFontOfSize:18];
 					cell.textLabel.text = prod.localizedTitle;
-					cell.detailTextLabel.text = [NSString stringWithFormat:@"%@  %@", 
-												 [prod.price descriptionWithLocale: [NSLocale currentLocale]] ,
-												 prod.localizedDescription];
 					
-					if ([prod.productIdentifier isEqualToString: SK_PID_UNLOCK]) {
-						
+					NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+					if ([kvs boolForKey: prod.productIdentifier]) {
+						// 購入済み
+						cell.detailTextLabel.font = [UIFont systemFontOfSize:16];
+						cell.detailTextLabel.textColor = [UIColor blueColor];
+						cell.detailTextLabel.text = NSLocalizedString(@"SK Purchased", nil);
+					} else {
+						cell.detailTextLabel.font = [UIFont systemFontOfSize:10];
+						cell.detailTextLabel.textColor = [UIColor brownColor];
+						cell.detailTextLabel.text = [NSString stringWithFormat:@"Price: %@\n%@", 
+													 [prod.price descriptionWithLocale: [NSLocale currentLocale]] ,
+													 prod.localizedDescription];
+						cell.detailTextLabel.numberOfLines = 3;
+						cell.selectionStyle = UITableViewCellSelectionStyleBlue; // 選択時ハイライト ＜＜選択許可
 					}
 				}
 				else {
@@ -267,10 +309,12 @@ replacementString:(NSString *)string
 			}
 			else if ([[products_ objectAtIndex: indexPath.row] isEqualToString:SK_INIT])
 			{
-				cell.imageView.image = nil;
+				cell.imageView.image = [UIImage imageNamed:@"Icon44-ClipOff"]; // 44x44
 				UIActivityIndicatorView *ai = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-				ai.frame = cell.imageView.frame;
+				ai.frame = CGRectMake(0, 0, 50, 66);
 				[cell.contentView addSubview:ai];
+				[ai startAnimating];
+				ai.tag = TAG_ActivityIndicator;
 				cell.textLabel.text = NSLocalizedString(@"SK Progress", nil);
 			}
 			else if ([[products_ objectAtIndex: indexPath.row] isEqualToString:SK_NoSALE])
@@ -285,7 +329,7 @@ replacementString:(NSString *)string
 			}
 		}
 	} 
-	else {
+/*	else {
 		switch (indexPath.row) {
 			case 0:
 				cell.imageView.image = [UIImage imageNamed:@"Icon32-Setting"];
@@ -308,7 +352,7 @@ replacementString:(NSString *)string
 				cell.detailTextLabel.text = NSLocalizedString(@"CM PayNote msg", nil);
 				break;
 		}
-	}
+	}*/
     return cell;
 }
 
@@ -319,23 +363,42 @@ replacementString:(NSString *)string
 {
 	[ibTableView deselectRowAtIndexPath:indexPath animated:YES]; // 選択解除
 
-	if (0<=indexPath.row && indexPath.row<[products_ count]) 
-	{
-		SKProduct *prod = [products_ objectAtIndex: indexPath.row];
-		if (prod) {
-			[self alertActivityOn:NSLocalizedString(@"SK Progress",nil)];
-			// アドオン購入処理開始　　　　　　　<SKPaymentTransactionObserver>は、AzBodyNoteAppDelegateに実装
-			[[SKPaymentQueue defaultQueue] addTransactionObserver: self];
-			SKPayment *payment = [SKPayment paymentWithProduct: prod];
-			[[SKPaymentQueue defaultQueue] addPayment:payment];
-		}
-		else {
-			// 販売停止中
-			alertBox(NSLocalizedString(@"SK Closed",nil), NSLocalizedString(@"SK Closed msg",nil), NSLocalizedString(@"Roger",nil));
-			[products_ replaceObjectAtIndex:indexPath.row withObject:SK_NoSALE];
-			[ibTableView reloadData];
+	if (indexPath.section==0) {
+		if (0<=indexPath.row && indexPath.row<[products_ count]) 
+		{
+			UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+			if (cell.selectionStyle==UITableViewCellSelectionStyleBlue)
+			{	// 選択時ハイライト ＜＜選択許可
+				SKProduct *prod = [products_ objectAtIndex: indexPath.row];
+				if (prod) {
+					[self alertActivityOn:NSLocalizedString(@"SK Progress",nil)];
+					// アドオン購入処理開始　　　　　　　<SKPaymentTransactionObserver>は、AzBodyNoteAppDelegateに実装
+					[[SKPaymentQueue defaultQueue] addTransactionObserver: self];
+					SKPayment *payment = [SKPayment paymentWithProduct: prod];
+					[[SKPaymentQueue defaultQueue] addPayment:payment];
+				}
+				else {
+					// 販売停止中
+					alertBox(NSLocalizedString(@"SK Closed",nil), NSLocalizedString(@"SK Closed msg",nil), NSLocalizedString(@"Roger",nil));
+					[products_ replaceObjectAtIndex:indexPath.row withObject:SK_NoSALE];
+					[ibTableView reloadData];
+				}
+			}
+			else {
+					// 選択不可、　購入済み
+			}
 		}
 	}
+/*	else {
+		// AzukiSoft Information
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"SK GoAppStore",nil)
+														message:NSLocalizedString(@"SK GoAppStore msg",nil)
+													   delegate:self		// clickedButtonAtIndexが呼び出される
+											  cancelButtonTitle:@"＜Back"
+											  otherButtonTitles:@"Go AppStore＞", nil];
+		alert.tag = TAG_GoAppStore;
+		[alert show];
+	}*/
 }
 
 
@@ -354,21 +417,17 @@ replacementString:(NSString *)string
 	{
 		[products_ addObject:product];
 	}	
+	[ibTableView reloadData];
 }
 
 
 #pragma mark - <SKPaymentTransactionObserver>  販売処理
 
-- (void)purchasedCompleate:(SKPaymentTransaction*)tran
+// 購入成功時の最終処理　＜＜ここでトランザクションをクリアする。
+- (void)paymentCompleate:(SKPaymentTransaction*)tran
 {
-	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
-	[kvs setBool:YES forKey: tran.payment.productIdentifier];
-	[kvs synchronize];
-
-	if ([delegate_ respondsToSelector:@selector(azStorePurchesed:)]) {
-		[delegate_ azStorePurchesed: tran.payment.productIdentifier];	// 呼び出し側にて、再描画など実施
-	}
-	
+	// productID の購入確定処理
+	[self actPurchasedProductID: tran.payment.productIdentifier];
 	// Compleate !
 	[[SKPaymentQueue defaultQueue] finishTransaction:tran]; // 処理完了
 	// インジケータ消す
@@ -405,20 +464,20 @@ replacementString:(NSString *)string
 #ifdef DEBUG
 				// 購入成功と見なしてテストする
 				NSLog(@"DEBUG: SKPaymentTransactionStatePurchased: tran=%@", tran);
-				[self purchasedCompleate:tran];
+				[self paymentCompleate:tran];
 #endif
 			} break;
 				
 			case SKPaymentTransactionStatePurchased:	// 購入完了
 			{
 				NSLog(@"SKPaymentTransactionStatePurchased: tran=%@", tran);
-				[self purchasedCompleate:tran];
+				[self paymentCompleate:tran];
 			} break;
 				
 			case SKPaymentTransactionStateRestored:		// 購入済み
 			{
 				NSLog(@"SKPaymentTransactionStateRestored: tran=%@", tran);
-				[self purchasedCompleate:tran];
+				[self paymentCompleate:tran];
 			} break;
 				
 			default:

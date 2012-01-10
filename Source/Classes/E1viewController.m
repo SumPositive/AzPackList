@@ -520,15 +520,43 @@
 - (void)actionIPurchase
 {
 	//if (appDelegate_.app_pid_UnLock) return;
-	AZStoreVC *vc;
+/*	AZStoreVC *vc;
 	if (appDelegate_.app_is_iPad) {
 		vc = [[AZStoreVC alloc] initWithNibName:@"AZStoreVC-iPad" bundle:nil];
+		vc.delegate = self; //--> azStorePurchesed:
+		vc.productIDs = [NSSet setWithObjects:SK_PID_UNLOCK, nil]; // 商品が複数ある場合は列記
+		//[self presentModalViewController:vc animated:YES];
+		[appDelegate_.mainSVC presentModalViewController:vc animated:YES];
 	} else {
 		vc = [[AZStoreVC alloc] initWithNibName:@"AZStoreVC" bundle:nil];
+		vc.delegate = self; //--> azStorePurchesed:
+		vc.productIDs = [NSSet setWithObjects:SK_PID_UNLOCK, nil]; // 商品が複数ある場合は列記
+		[self.navigationController pushViewController:vc animated:YES];
+	}*/
+
+	if (appDelegate_.app_opt_Ad) {
+		[appDelegate_ AdRefresh:NO];	//広告禁止
 	}
+
+	AZStoreVC *vc = [[AZStoreVC alloc] initWithUnLock:appDelegate_.app_pid_UnLock];
 	vc.delegate = self; //--> azStorePurchesed:
 	vc.productIDs = [NSSet setWithObjects:SK_PID_UNLOCK, nil]; // 商品が複数ある場合は列記
-	[self presentModalViewController:vc animated:YES];
+	if (appDelegate_.app_is_iPad) {
+		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
+		popOver_.delegate = nil;	// 不要
+		CGRect rcArrow;
+		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //iPad初期、常にタテになる。原因不明
+			rcArrow = CGRectMake(0, 1027-60, 32,32);
+		} else {
+			rcArrow = CGRectMake(0, 768-60, 32,32);
+		}
+		[popOver_ presentPopoverFromRect:rcArrow  inView:self.navigationController.view  
+				permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
+	}
+	else {
+		[self.navigationController pushViewController:vc animated:YES];
+	}
 }
 // <AZStoreDelegate>
 - (void)azStorePurchesed:(NSString*)productID
@@ -1356,16 +1384,8 @@
 					
 				case 2:
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-ExtParts"];
-					if (appDelegate_.app_pid_UnLock) {
-						cell.textLabel.text = [NSString stringWithFormat:@"%@  【%@】", NSLocalizedString(@"menu Purchase",nil), 
-											   NSLocalizedString(@"Purchased",nil)];
-						cell.detailTextLabel.text = NSLocalizedString(@"Thank you",nil);
-						cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
-					} else {
-						cell.textLabel.text = NSLocalizedString(@"menu Purchase",nil);
-						cell.detailTextLabel.text = NSLocalizedString(@"menu Purchase msg",nil);
-					}
-					cell.accessoryType = UITableViewCellAccessoryNone;
+					cell.textLabel.text = NSLocalizedString(@"menu Purchase",nil);
+					cell.detailTextLabel.text = NSLocalizedString(@"menu Purchase msg",nil);
 					break;
 			}
 		}
