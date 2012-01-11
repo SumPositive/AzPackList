@@ -115,17 +115,14 @@ static UIColor *MpColorBlue(float percent) {
 	}
 }
 
-- (void)buGoAppStore:(UIButton *)button
+- (void)buInvitation:(UIButton *)button
 {
-	//alertBox( NSLocalizedString(@"Contact mail",nil), NSLocalizedString(@"Contact mail msg",nil), @"OK" );
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"GoAppStore Paid",nil)
-													message:NSLocalizedString(@"GoAppStore Paid msg",nil)
-												   delegate:self		// clickedButtonAtIndexが呼び出される
-										  cancelButtonTitle:@"Cancel"
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Invitation pass",nil)
+													message:NSLocalizedString(@"Invitation pass msg",nil)
+												   delegate:nil
+										  cancelButtonTitle:nil
 										  otherButtonTitles:@"OK", nil];
-	alert.tag = ALERT_TAG_GoAppStore;
 	[alert show];
-	//[alert autorelease];
 }
 
 - (void)buGoSupportSite:(UIButton *)button
@@ -137,7 +134,6 @@ static UIColor *MpColorBlue(float percent) {
 										  otherButtonTitles:@"OK", nil];
 	alert.tag = ALERT_TAG_GoSupportSite;
 	[alert show];
-	//[alert autorelease];
 }
 
 -(void)buPostComment:(UIButton*)sender 
@@ -271,12 +267,12 @@ static UIColor *MpColorBlue(float percent) {
 	[self.view addSubview:bu];
 
 	if (appDelegate_.app_pid_UnLock==NO) {
-		//------------------------------------------Go to App Store
+		//------------------------------------------「招待パス」
 		bu = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-		bu.titleLabel.font = [UIFont boldSystemFontOfSize:10];
+		bu.titleLabel.font = [UIFont boldSystemFontOfSize:12];
 		bu.frame = CGRectMake(150, 210, 150,26);
-		[bu setTitle:NSLocalizedString(@"GoAppStore Paid",nil) forState:UIControlStateNormal];
-		[bu addTarget:self action:@selector(buGoAppStore:) forControlEvents:UIControlEventTouchUpInside];
+		[bu setTitle:NSLocalizedString(@"Invitation pass",nil) forState:UIControlStateNormal];
+		[bu addTarget:self action:@selector(buInvitation:) forControlEvents:UIControlEventTouchUpInside];
 		[self.view addSubview:bu];
 	}
 	

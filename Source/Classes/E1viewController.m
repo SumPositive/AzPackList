@@ -558,7 +558,7 @@
 		[self.navigationController pushViewController:vc animated:YES];
 	}
 }
-// <AZStoreDelegate>
+#pragma mark <AZStoreDelegate>
 - (void)azStorePurchesed:(NSString*)productID
 {
 	if ([productID isEqualToString:SK_PID_UNLOCK]) 
@@ -566,6 +566,11 @@
 		//[EntityRelation commit];
 		appDelegate_.app_pid_UnLock = YES;
 		[appDelegate_ managedObjectContextReset]; // iCloud対応の moc再生成する。
+		//広告は非表示にするが、設定にて切替を可能にする。
+		appDelegate_.app_opt_Ad = NO;
+		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+		[kvs setBool:NO forKey:KV_OptAdvertising];
+		[appDelegate_ AdRefresh:appDelegate_.app_opt_Ad];
 		// 再フィッチ＆画面リフレッシュ通知
 		[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFETCH_ALL_DATA		// 再フィッチ（レコード増減あったとき）
 															object:self userInfo:nil];
@@ -931,11 +936,9 @@
 		[self actionInformation];  //[1.0.2]最初に表示する。バックグランド復帰時には通らない
 	}
 	
-	if (appDelegate_.app_opt_Ad) {
-		//【Tips】タテから始まるとき、willRotateToInterfaceOrientation:を通らずに、ここを通る　⇒ AdRefresh：にて初期タテ配置となる
-		//【Tips】ヨコから始まるとき、ここよりもloadView：よりも先に willRotateToInterfaceOrientation: を通る ⇒ willRotateにてヨコ配置となる
-		[appDelegate_ AdRefresh:YES];	//広告許可
-	}
+	//【Tips】タテから始まるとき、willRotateToInterfaceOrientation:を通らずに、ここを通る　⇒ AdRefresh：にて初期タテ配置となる
+	//【Tips】ヨコから始まるとき、ここよりもloadView：よりも先に willRotateToInterfaceOrientation: を通る ⇒ willRotateにてヨコ配置となる
+	[appDelegate_ AdRefresh:appDelegate_.app_opt_Ad];	//広告
 }
 
 // この画面が非表示になる直前に呼ばれる

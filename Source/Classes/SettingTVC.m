@@ -17,6 +17,7 @@
 #define TAG_OptShowTotalWeight				994
 #define TAG_OptShowTotalWeightReq			993
 #define TAG_OptSearchItemsNote				992
+#define TAG_OptAdvertising							991
 
 @interface SettingTVC (PrivateMethods)
 - (void)switchAction:(UISwitch *)sender;
@@ -136,9 +137,9 @@
 	switch (section) {
 		case 0: // 
 			if (appDelegate_.app_is_iPad) {
-				return 5;	// (0)回転は不要
+				return 6;	// (0)回転は不要
 			} else {
-				return 6;
+				return 7;
 			}
 			break;
 	}
@@ -296,6 +297,25 @@
 			}
 			sw.frame = CGRectMake(fX, 5, 120, 25); // 回転対応
 		}	break;
+
+		case 6:
+		{ // KV_OptAdvertising
+			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptAdvertising];
+			if (sw==nil) {
+				// add UISwitch
+				sw = [[UISwitch alloc] init];
+				BOOL bOpt = [kvs boolForKey:KV_OptAdvertising];
+				[sw setOn:bOpt animated:NO]; // 初期値セット
+				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+				sw.tag = TAG_OptAdvertising;
+				sw.backgroundColor = [UIColor clearColor]; //背景透明
+				sw.enabled = appDelegate_.app_pid_UnLock;
+				[cell.contentView  addSubview:sw]; //[sw release];
+				cell.textLabel.text = NSLocalizedString(@"Advertising",nil);
+				cell.detailTextLabel.text = NSLocalizedString(@"Advertising msg",nil);
+			}
+			sw.frame = CGRectMake(fX, 5, 120, 25); // 回転対応
+		}	break;
 	}
     return cell;
 }
@@ -313,9 +333,8 @@
 	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
 	switch (sender.tag) {  // .tag は UIView にて NSInteger で存在する、　
 		case TAG_OptShouldAutorotate: {
-			AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-			app.app_opt_Autorotate = [sender isOn];
-			[defaults setBool:app.app_opt_Autorotate forKey:UD_OptShouldAutorotate];
+			[defaults setBool: [sender isOn]  forKey:UD_OptShouldAutorotate];
+			appDelegate_.app_opt_Autorotate = [sender isOn];
 		}	break;
 		case TAG_OptTotlWeightRound:
 			[kvs setBool:[sender isOn] forKey:KV_OptWeightRound];
@@ -331,6 +350,10 @@
 			break;
 		case TAG_OptSearchItemsNote:
 			[kvs setBool:[sender isOn] forKey:KV_OptSearchItemsNote];
+			break;
+		case TAG_OptAdvertising:
+			[kvs setBool:[sender isOn] forKey:KV_OptAdvertising];
+			appDelegate_.app_opt_Ad = [sender isOn];
 			break;
 	}
 }
