@@ -24,6 +24,7 @@
 @synthesize productIDs = productIDs_;
 
 #define SK_INIT				@"Init"
+#define SK_BAN				@"Ban"
 #define SK_NoSALE		@"NoSale"
 #define SK_CLOSED		@"Closed"
 
@@ -147,12 +148,11 @@ NSString *passCode()
 
 
 #pragma mark - Action
-/*
+
 - (IBAction)ibBuClose:(UIButton *)button
 {
 	[self dismissModalViewControllerAnimated:YES];
 }
-*/
 
 // productID の購入確定処理
 - (void)actPurchasedProductID:(NSString*)productID
@@ -236,7 +236,7 @@ NSString *passCode()
 		[req start];  //---> productsRequest:didReceiveResponse:が呼び出される
 	} else {
 		// 購入が禁止されています。
-		[products_ replaceObjectAtIndex:0 withObject:@"Non"];
+		[products_ replaceObjectAtIndex:0 withObject:SK_BAN];
 		[ibTableView reloadData];
 	}
 }
@@ -371,7 +371,7 @@ replacementString:(NSString *)string
 			
 			if ([[products_ objectAtIndex: indexPath.row] isKindOfClass:[SKProduct class]]) 
 			{
-				cell.imageView.image = [UIImage imageNamed:@"Icon32-ExtParts"];
+				cell.imageView.image = [UIImage imageNamed:@"Icon-Parts-32"];
 				SKProduct *prod = [products_ objectAtIndex: indexPath.row];
 				if (prod) {
 					cell.textLabel.font = [UIFont systemFontOfSize:18];
@@ -386,8 +386,13 @@ replacementString:(NSString *)string
 					} else {
 						cell.detailTextLabel.font = [UIFont systemFontOfSize:10];
 						cell.detailTextLabel.textColor = [UIColor brownColor];
+						//NSString *zPrice = [prod.price descriptionWithLocale: [NSLocale currentLocale]];
+						// Price 金額単位表示する
+						NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
+						[fmt setNumberStyle:NSNumberFormatterCurrencyStyle]; // 通貨スタイル（先頭に通貨記号が付く）
+						[fmt setLocale: prod.priceLocale];  //[NSLocale currentLocale]]; 
 						cell.detailTextLabel.text = [NSString stringWithFormat:@"Price: %@\n%@", 
-													 [prod.price descriptionWithLocale: [NSLocale currentLocale]] ,
+													 [fmt stringFromNumber:prod.price],
 													 prod.localizedDescription];
 						cell.detailTextLabel.numberOfLines = 3;
 						cell.selectionStyle = UITableViewCellSelectionStyleBlue; // 選択時ハイライト ＜＜選択許可
@@ -395,28 +400,48 @@ replacementString:(NSString *)string
 				}
 				else {
 					// 販売停止中
+					cell.imageView.image = [UIImage imageNamed:@"Icon-Stop-32"];
+					cell.textLabel.font = [UIFont systemFontOfSize:12];
 					cell.textLabel.text = [cell.textLabel.text stringByAppendingString:NSLocalizedString(@"SK No Sale", nil)];
+#ifdef DEBUG
+					cell.detailTextLabel.text = @"DEBUG1: AppStore Sign Out?";
+#endif
 				}
 			}
 			else if ([[products_ objectAtIndex: indexPath.row] isEqualToString:SK_INIT])
 			{
-				cell.imageView.image = [UIImage imageNamed:@"Icon44-ClipOff"]; // 44x44
+				cell.imageView.image = [UIImage imageNamed:@"Icon-Space-44"]; // 44x44
 				UIActivityIndicatorView *ai = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 				ai.frame = CGRectMake(0, 0, 50, 66);
 				[cell.contentView addSubview:ai];
 				[ai startAnimating];
 				ai.tag = TAG_ActivityIndicator;
+				cell.textLabel.font = [UIFont systemFontOfSize:12];
 				cell.textLabel.text = NSLocalizedString(@"SK Progress", nil);
+			}
+			else if ([[products_ objectAtIndex: indexPath.row] isEqualToString:SK_BAN])
+			{
+				cell.imageView.image = [UIImage imageNamed:@"Icon-Stop-32"];
+				cell.textLabel.font = [UIFont systemFontOfSize:12];
+				cell.textLabel.text = NSLocalizedString(@"SK Ban", nil);
 			}
 			else if ([[products_ objectAtIndex: indexPath.row] isEqualToString:SK_NoSALE])
 			{
-				cell.imageView.image = [UIImage imageNamed:@"Icon32-ExtParts"];
+				cell.imageView.image = [UIImage imageNamed:@"Icon-Stop-32"];
+				cell.textLabel.font = [UIFont systemFontOfSize:12];
 				cell.textLabel.text = NSLocalizedString(@"SK No Sale", nil);
+#ifdef DEBUG
+				cell.detailTextLabel.text = @"DEBUG2: AppStore Sign Out?";
+#endif
 			}
 			else if ([[products_ objectAtIndex: indexPath.row] isEqualToString:SK_CLOSED])
 			{
-				cell.imageView.image = [UIImage imageNamed:@"Icon32-ExtParts"];
+				cell.imageView.image = [UIImage imageNamed:@"Icon-Stop-32"];
+				cell.textLabel.font = [UIFont systemFontOfSize:12];
 				cell.textLabel.text = NSLocalizedString(@"SK Closed", nil);
+#ifdef DEBUG
+				cell.detailTextLabel.text = @"DEBUG3: AppStore Sign Out?";
+#endif
 			}
 		}
 	} 
@@ -470,7 +495,7 @@ replacementString:(NSString *)string
 				}
 				else {
 					// 販売停止中
-					alertBox(NSLocalizedString(@"SK Closed",nil), NSLocalizedString(@"SK Closed msg",nil), NSLocalizedString(@"Roger",nil));
+					//alertBox(NSLocalizedString(@"SK Closed",nil), NSLocalizedString(@"SK Closed msg",nil), NSLocalizedString(@"Roger",nil));
 					[products_ replaceObjectAtIndex:indexPath.row withObject:SK_NoSALE];
 					[ibTableView reloadData];
 				}

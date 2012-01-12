@@ -242,7 +242,7 @@
 	[self.tableView reloadData];
 }
 
-- (void)actionImportSharedPackList
+- (void)actionImportSharedPackList:(NSIndexPath*)indexPath
 {
 	if (appDelegate_.app_is_iPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
@@ -265,12 +265,9 @@
 		//[MindexPathEdit release], 
 		indexPathEdit_ = nil;
 		
-		CGRect rcArrow;
-		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
-			rcArrow = CGRectMake(768/2-10, 1027-60, 20,20);
-		} else {
-			rcArrow = CGRectMake((1024-320)/2-10, 768-60, 20,20);
-		}
+		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:indexPath];
+		rcArrow.origin.x = rcArrow.size.width - 25;	rcArrow.size.width = 1;
+		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
 		[popOver_ presentPopoverFromRect:rcArrow  inView:self.navigationController.view
 				permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
 	} else {
@@ -289,10 +286,13 @@
 		if (appDelegate_.app_is_iPad) {
 			DropboxVC *vc = [[DropboxVC alloc] initWithNibName:@"DropboxVC-iPad" bundle:nil];
 			vc.Re1selected = nil; // 取込専用
+			vc.modalPresentationStyle = UIModalPresentationFormSheet;
 			[self presentModalViewController:vc animated:YES];
 		} else {
 			DropboxVC *vc = [[DropboxVC alloc] initWithNibName:@"DropboxVC" bundle:nil];
 			vc.Re1selected = nil; // 取込専用
+			//vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+			vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 			[self presentModalViewController:vc animated:YES];
 		}
 	} else {
@@ -302,7 +302,7 @@
 	}
 }
 
-- (void)actionImportGoogle
+- (void)actionImportGoogle:(NSIndexPath*)indexPath
 {
 	if (appDelegate_.app_is_iPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
@@ -326,12 +326,10 @@
 		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
 		//[MindexPathEdit release], 
 		indexPathEdit_ = nil;
-		CGRect rcArrow;
-		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
-			rcArrow = CGRectMake(768/2-10, 1027-60, 20,20);
-		} else {
-			rcArrow = CGRectMake((1024-320)/2-10, 768-60, 20,20);
-		}
+
+		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:indexPath];
+		rcArrow.origin.x = rcArrow.size.width - 25;	rcArrow.size.width = 1;
+		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
 		[popOver_ presentPopoverFromRect:rcArrow	  inView:self.navigationController.view
 				permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
 		goodocs.selfPopover = popOver_;
@@ -429,7 +427,7 @@
 	[self viewWillAppear:YES]; // Fech データセットさせるため
 }
 
-- (void)actionInformation
+- (void)actionInformation:(NSIndexPath*)indexPath
 {
 	if (appDelegate_.app_is_iPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
@@ -447,12 +445,9 @@
 		popOver_ = [[UIPopoverController alloc] initWithContentViewController:informationView_];
 		//Mpopover.popoverContentSize = CGSizeMake(320, 510);
 		popOver_.delegate = nil;	// 不要
-		CGRect rcArrow;
-		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //iPad初期、常にタテになる。原因不明
-			rcArrow = CGRectMake(0, 1027-60, 32,32);
-		} else {
-			rcArrow = CGRectMake(0, 768-60, 32,32);
-		}
+		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:indexPath];
+		rcArrow.origin.x = rcArrow.size.width - 25;	rcArrow.size.width = 1;
+		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
 		[popOver_ presentPopoverFromRect:rcArrow  inView:self.navigationController.view  
 				permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
 	} 
@@ -475,13 +470,13 @@
 			informationView_ = nil;
 		}
 		informationView_ = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
-		informationView_.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+		informationView_.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 		[self presentModalViewController:informationView_ animated:YES];
 		//[MinformationView release];
 	}
 }
 
-- (void)actionSetting
+- (void)actionSetting:(NSIndexPath*)indexPath
 {
 	if (appDelegate_.app_is_iPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
@@ -496,12 +491,9 @@
 		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vi];
 		//Mpopover.popoverContentSize = CGSizeMake(480, 400);
 		popOver_.delegate = nil;	// 不要
-		CGRect rcArrow;
-		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
-			rcArrow = CGRectMake(768-32, 1027-60, 32,32);
-		} else {
-			rcArrow = CGRectMake(1024-320-32, 768-60, 32,32);
-		}
+		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:indexPath];
+		rcArrow.origin.x = rcArrow.size.width - 25;	rcArrow.size.width = 1;
+		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
 		[popOver_ presentPopoverFromRect:rcArrow	inView:self.navigationController.view  
 				permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
 	} else {
@@ -520,20 +512,6 @@
 - (void)actionIPurchase
 {
 	//if (appDelegate_.app_pid_UnLock) return;
-/*	AZStoreVC *vc;
-	if (appDelegate_.app_is_iPad) {
-		vc = [[AZStoreVC alloc] initWithNibName:@"AZStoreVC-iPad" bundle:nil];
-		vc.delegate = self; //--> azStorePurchesed:
-		vc.productIDs = [NSSet setWithObjects:SK_PID_UNLOCK, nil]; // 商品が複数ある場合は列記
-		//[self presentModalViewController:vc animated:YES];
-		[appDelegate_.mainSVC presentModalViewController:vc animated:YES];
-	} else {
-		vc = [[AZStoreVC alloc] initWithNibName:@"AZStoreVC" bundle:nil];
-		vc.delegate = self; //--> azStorePurchesed:
-		vc.productIDs = [NSSet setWithObjects:SK_PID_UNLOCK, nil]; // 商品が複数ある場合は列記
-		[self.navigationController pushViewController:vc animated:YES];
-	}*/
-
 	if (appDelegate_.app_opt_Ad) {
 		[appDelegate_ AdRefresh:NO];	//広告禁止
 	}
@@ -542,21 +520,12 @@
 	vc.delegate = self; //--> azStorePurchesed:
 	vc.productIDs = [NSSet setWithObjects:SK_PID_UNLOCK, nil]; // 商品が複数ある場合は列記
 	if (appDelegate_.app_is_iPad) {
-		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
-		popOver_.delegate = nil;	// 不要
-		CGRect rcArrow;
-		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //iPad初期、常にタテになる。原因不明
-			rcArrow = CGRectMake(0, 1027-60, 32,32);
-		} else {
-			rcArrow = CGRectMake(0, 768-60, 32,32);
-		}
-		[popOver_ presentPopoverFromRect:rcArrow  inView:self.navigationController.view  
-				permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
+		vc.modalPresentationStyle = UIModalPresentationFormSheet;
+	} else {
+		vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+		//[self.navigationController pushViewController:vc animated:YES];
 	}
-	else {
-		[self.navigationController pushViewController:vc animated:YES];
-	}
+	[self presentModalViewController:vc animated:YES];
 }
 #pragma mark <AZStoreDelegate>
 - (void)azStorePurchesed:(NSString*)productID
@@ -1374,19 +1343,19 @@
 		} else {
 			switch (indexPath.row) {
 				case 0:
-					cell.imageView.image = [UIImage imageNamed:@"Icon32-Setting"];
+					cell.imageView.image = [UIImage imageNamed:@"Icon-Setting-32"];
 					cell.textLabel.text = NSLocalizedString(@"menu Setting",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"menu Setting msg",nil);
 					break;
 					
 				case 1:
-					cell.imageView.image = [UIImage imageNamed:@"Icon32-Information"];
+					cell.imageView.image = [UIImage imageNamed:@"Icon-Info-32"];
 					cell.textLabel.text = NSLocalizedString(@"menu Information",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"menu Information msg",nil);
 					break;
 					
 				case 2:
-					cell.imageView.image = [UIImage imageNamed:@"Icon32-ExtParts"];
+					cell.imageView.image = [UIImage imageNamed:@"Icon-Parts-32"];
 					cell.textLabel.text = NSLocalizedString(@"menu Purchase",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"menu Purchase msg",nil);
 					break;
@@ -1443,7 +1412,7 @@
 	else if (indexPath.section == 1) {
 		switch (indexPath.row) {
 			case 0: // SharePlan Search
-				[self	actionImportSharedPackList];
+				[self	actionImportSharedPackList:indexPath];
 				break;
 				
 			case 1: // Restore from Dropbox
@@ -1451,7 +1420,7 @@
 				break;
 				
 			case 2: // Restore from Google
-				[self actionImportGoogle];
+				[self actionImportGoogle:indexPath];
 				break;
 				
 			case 3: // Restore from YourPC
@@ -1466,11 +1435,11 @@
 	else if (indexPath.section == 2) {
 		switch (indexPath.row) {
 			case 0: // Setting
-				[self actionSetting];
+				[self actionSetting:indexPath];
 				break;
 				
 			case 1: // Information
-				[self actionInformation];
+				[self actionInformation:indexPath];
 				break;
 				
 			case 2: // Purchase
