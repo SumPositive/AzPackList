@@ -40,7 +40,7 @@
 
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		if (appDelegate_.app_is_iPad) {
-			self.contentSizeForViewInPopover = CGSizeMake(420, 360);
+			self.contentSizeForViewInPopover = CGSizeMake(420, 420);
 			self.navigationItem.hidesBackButton = YES;
 		}
 	}
@@ -185,7 +185,8 @@
 		fX = self.tableView.frame.size.width - 60 - 120;
 		 iCase = indexPath.row + 1;
 	} else {
-		fX = cell.frame.size.width - 120;
+		//fX = cell.frame.size.width - 120;
+		fX = self.tableView.frame.size.width - 120;
 		 iCase = indexPath.row;
 	}
 

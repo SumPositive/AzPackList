@@ -11,9 +11,9 @@
 
 @class E1;
 @class E2;
-@class E3edit;
-@class ItemTouchView;
-@class E2viewController;
+//@class E3edit;
+//@class ItemTouchView;
+//@class E2viewController;
 
 @interface E3viewController : UITableViewController <UIActionSheetDelegate, UISearchBarDelegate
 	,UIPopoverControllerDelegate>

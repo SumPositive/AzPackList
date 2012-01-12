@@ -157,14 +157,18 @@ static UIColor *MpColorBlue(float percent) {
 	//[alert autorelease];
 }
 
+- (void)buClose:(UIButton*)sender 
+{
+	[self hide];
+}
 
 #pragma mark - Touch
-
+/*
 // タッチイベント
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	[self hide];
 }
-
+*/
 
 #pragma mark - View
 
@@ -305,7 +309,7 @@ static UIColor *MpColorBlue(float percent) {
 	[self.view addSubview:label];
 
 	//------------------------------------------CLOSE
-	label = [[UILabel alloc] initWithFrame:CGRectMake(20, 435, 280, 25)];
+/*	label = [[UILabel alloc] initWithFrame:CGRectMake(20, 435, 280, 25)];
 	if (appDelegate_.app_is_iPad) {
 		label.text = NSLocalizedString(@"Infomation Open Pad",nil);
 	} else {
@@ -315,7 +319,12 @@ static UIColor *MpColorBlue(float percent) {
 	label.textColor = [UIColor whiteColor];
 	label.backgroundColor = [UIColor clearColor]; //背景透明
 	label.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-	[self.view addSubview:label];
+	[self.view addSubview:label];*/
+	bu = [UIButton buttonWithType:UIButtonTypeCustom];
+	bu.frame = CGRectMake(320-44, 460-40,  44, 40);
+	[bu setImage:[UIImage imageNamed:@"Icon-Close-44"] forState:UIControlStateNormal];
+	[bu addTarget:self action:@selector(buClose:) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:bu];
 
     return self;
 }

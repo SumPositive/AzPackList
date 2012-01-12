@@ -12,12 +12,18 @@
 #import "SpSearchVC.h"
 #import "E2viewController.h"
 
+#define BAG_FRAME			CGRectMake(100, 120, 72*2, 72*2)  // 取手が中心になるようにしている。
+#define BAG_FRAME2		CGRectMake(180, 120, 72*2, 72*2)
+
 
 @interface PadRootVC (PrivateMethods)
 @end
 
 
 @implementation PadRootVC
+{
+	UIImageView		*imgBag_;
+}
 @synthesize popoverButtonItem;
 
 
@@ -60,7 +66,10 @@
 													green:81/255.0f 
 													 blue:75/255.0f 
 													alpha:1.0f];
-    }
+		
+		//iPad// これが、最初の Index Popover のサイズになる。
+		self.contentSizeForViewInPopover = GD_POPOVER_SIZE; //アクションメニュー配下(Share,Googleなど）においてサイズ統一
+   }
     return self;
 }
 
@@ -70,14 +79,13 @@
 {
 	//AzLOG(@"------- E1viewController: loadView");    
 	[super loadView];
-
 	
 	//------------------------------------------アイコン
-	UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(124,124, 72,72)];
-	[iv setImage:[UIImage imageNamed:@"Icon72"]];
-	[self.view addSubview:iv]; 
-	//[iv release], 
-	iv = nil;
+	imgBag_ = [[UIImageView alloc] initWithFrame:BAG_FRAME];
+	imgBag_.contentMode = UIViewContentModeBottomLeft;
+	[imgBag_ setImage:[UIImage imageNamed:@"Icon72"]];
+	//imgBag_.center = CGPointMake(self.view.bounds.size.width/2+60, 150);
+	[self.view addSubview:imgBag_]; 
 }
 
 /*
@@ -94,13 +102,53 @@
 	[self.navigationController setToolbarHidden:NO animated:NO]; // ツールバー表示
 }
 
-/* SplitViewは、透明なので通らない！
+// SplitViewは、透明なので通らない！
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-}
-*/
+	
+	// Anime 開始位置
+	imgBag_.transform = CGAffineTransformIdentity;
+	imgBag_.frame = BAG_FRAME;
+	
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationDuration:1.0];
+	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+	
+	// 終了後、元の位置に戻す
+	[UIView setAnimationDelegate:self];
+	[UIView setAnimationDidStopSelector:@selector(animeAfter)];
+	
+#ifdef DEBUG
+	// 繰り返し
+	[UIView setAnimationRepeatAutoreverses:YES];
+	[UIView setAnimationRepeatCount:3.5];
+#endif
+	
+	// Anime 終了位置
+	imgBag_.frame = BAG_FRAME2;
+	imgBag_.transform = CGAffineTransformMakeRotation(-M_PI/2.0);
 
+	//CGAffineTransform tfTrans = CGAffineTransformTranslate(CGAffineTransformIdentity, -120, 0);
+	//CGAffineTransform tfRotate = CGAffineTransformRotate(CGAffineTransformIdentity, -M_PI/2.0);
+	//imgBag_.transform = CGAffineTransformConcat(tfTrans, tfRotate);
+	
+	
+	[UIView commitAnimations];
+}
+
+- (void)animeAfter
+{	// 元の位置に戻す
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationDuration:1.0];
+	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+	
+	// Anime 終了位置
+	imgBag_.transform = CGAffineTransformIdentity;  // 変換クリア
+	imgBag_.frame = BAG_FRAME;
+
+	[UIView commitAnimations];
+}
 
 
 #pragma mark - Rotation support

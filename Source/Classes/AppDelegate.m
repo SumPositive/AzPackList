@@ -14,13 +14,13 @@
 #import "FileCsv.h"
 #import "padRootVC.h"
 #import "E1viewController.h"
-#import "E2viewController.h"
+//#import "E2viewController.h"
 #import "DropboxVC.h"
 #import "AZStoreVC.h"
 
 
 @interface AppDelegate (PrivateMethods) // メソッドのみ記述：ここに変数を書くとグローバルになる。他に同じ名称があると不具合発生する
-#define FREE_AD_OFFSET_Y			200.0
+#define FREE_AD_OFFSET_Y			200.0	// iAdを上に隠すため
 - (void)AdRefresh;
 - (void)AdMobWillRotate:(UIInterfaceOrientation)toInterfaceOrientation;
 - (void)AdAppWillRotate:(UIInterfaceOrientation)toInterfaceOrientation;
@@ -84,6 +84,7 @@
 							  nil];
 	[userDefaults registerDefaults:azOptDef];	// 未定義のKeyのみ更新される
 	[userDefaults synchronize]; // plistへ書き出す
+	app_opt_Autorotate_ = [userDefaults boolForKey:UD_OptShouldAutorotate];
 	
 	// iCloud-KVS： 全端末共用（同期）設定
 	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
@@ -99,8 +100,6 @@
 	// AZStore PID  ＜＜productIdentifier をそのままKEYにする
 	if ([kvs objectForKey: SK_PID_UNLOCK]==nil)						[kvs setBool:NO  forKey: SK_PID_UNLOCK];
 	[kvs synchronize]; // 最新同期
-	
-	app_opt_Autorotate_ = [kvs boolForKey:UD_OptShouldAutorotate];
 	app_opt_Ad_ = [kvs boolForKey:KV_OptAdvertising];
 	app_pid_UnLock_ = [kvs boolForKey:SK_PID_UNLOCK];
 	
@@ -223,14 +222,11 @@
 		{	// Dropbox 認証成功
             NSLog(@"App linked successfully!");
 			// DropboxTVC を開ける
-			DropboxVC *vc;
+			DropboxVC *vc = [[DropboxVC alloc] init];
+			vc.Re1selected = dropboxSaveE1selected_;
 			if (app_is_iPad_) {
-				vc = [[DropboxVC alloc] initWithNibName:@"DropboxVC-iPad" bundle:nil];
-				vc.Re1selected = dropboxSaveE1selected_;
 				[mainSVC_ presentModalViewController:vc animated:YES];
 			} else {
-				vc = [[DropboxVC alloc] initWithNibName:@"DropboxVC" bundle:nil];
-				vc.Re1selected = dropboxSaveE1selected_;
 				[mainNC_ presentModalViewController:vc animated:YES];
 			}
         }
@@ -610,10 +606,17 @@
 		}
 		
 		if (adMobView_) {
-			if (adMobView_.tag==1) { //AdMob常時表示なので、MbAdCanVisible判定不要
-				adMobView_.alpha = 1;
+			if (adCanVisible_ && adMobView_.tag==1) {
+				if (adMobView_.alpha==0) {
+					adMobView_.alpha = 1;
+				}
 			} else {
-				adMobView_.alpha = 0;
+				if (app_is_iPad_ && app_opt_Ad_) {
+					adMobView_.alpha = 1;		// iPadは常時表示
+				}
+				else if (adMobView_.alpha==1) {
+					adMobView_.alpha = 0;
+				}
 			}
 		}
 	}

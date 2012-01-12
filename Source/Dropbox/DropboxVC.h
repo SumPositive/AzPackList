@@ -16,9 +16,10 @@
 #define DBOX_SECRET			@"l6rho4qt0jpiarq"
 #define DBOX_EXTENSION		@"packlist"
 
-@interface DropboxVC : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, DBRestClientDelegate, UIActionSheetDelegate>
+@interface DropboxVC : UIViewController <UITableViewDelegate, UITableViewDataSource, 
+										UITextFieldDelegate, DBRestClientDelegate, UIActionSheetDelegate>
 {
-	IBOutlet UIButton		*ibBuClose;
+	//IBOutlet UIButton		*ibBuClose;
 	IBOutlet UIButton		*ibBuSave;
 	IBOutlet UITextField	*ibTfName;
 
@@ -40,5 +41,7 @@
 - (IBAction)ibBuClose:(UIButton *)button;
 - (IBAction)ibBuSave:(UIButton *)button;
 - (IBAction)ibSegSort:(UISegmentedControl *)segment;
+
+- (id)init;
 
 @end

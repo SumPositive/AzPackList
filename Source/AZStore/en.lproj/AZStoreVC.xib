@@ -44,8 +44,9 @@
 						<object class="IBUITextField" id="950279800">
 							<reference key="NSNextResponder" ref="3333123"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{53, 62}, {215, 31}}</string>
+							<string key="NSFrame">{{53, 64}, {215, 31}}</string>
 							<reference key="NSSuperview" ref="3333123"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="628806904"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
@@ -81,6 +82,7 @@
 							<int key="NSvFlags">274</int>
 							<string key="NSFrame">{{10, 158}, {300, 260}}</string>
 							<reference key="NSSuperview" ref="3333123"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="1048125192"/>
 							<object class="NSColor" key="IBUIBackgroundColor" id="193881541">
 								<int key="NSColorSpace">3</int>
@@ -105,6 +107,7 @@
 							<int key="NSvFlags">292</int>
 							<string key="NSFrame">{{10, 118}, {32, 36}}</string>
 							<reference key="NSSuperview" ref="3333123"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="957703219"/>
 							<bool key="IBUIUserInteractionEnabled">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -118,6 +121,7 @@
 							<int key="NSvFlags">292</int>
 							<string key="NSFrame">{{50, 118}, {260, 36}}</string>
 							<reference key="NSSuperview" ref="3333123"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="810522777"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
@@ -142,15 +146,16 @@
 						<object class="IBUILabel" id="174964641">
 							<reference key="NSNextResponder" ref="3333123"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{10, 1}, {300, 36}}</string>
+							<string key="NSFrame">{{10, 3}, {300, 36}}</string>
 							<reference key="NSSuperview" ref="3333123"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="453342399"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
 							<int key="IBUIContentMode">7</int>
 							<bool key="IBUIUserInteractionEnabled">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							<string key="IBUIText">PackList Version 1.2 (paid ver) to the user as</string>
+							<string key="IBUIText">PackList Version 1.2 (paid ver) user as</string>
 							<reference key="IBUITextColor" ref="193881541"/>
 							<nil key="IBUIHighlightedColor"/>
 							<int key="IBUIBaselineAdjustment">1</int>
@@ -168,9 +173,10 @@
 						<object class="IBUILabel" id="453342399">
 							<reference key="NSNextResponder" ref="3333123"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{20, 19}, {290, 50}}</string>
+							<string key="NSFrame">{{20, 21}, {290, 50}}</string>
 							<reference key="NSSuperview" ref="3333123"/>
-							<reference key="NSNextKeyView" ref="950279800"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="972877083"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
 							<int key="IBUIContentMode">7</int>
@@ -198,8 +204,9 @@
 						<object class="IBUILabel" id="1048125192">
 							<reference key="NSNextResponder" ref="3333123"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{10, 416}, {237, 43}}</string>
+							<string key="NSFrame">{{10, 417}, {238, 43}}</string>
 							<reference key="NSSuperview" ref="3333123"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
@@ -222,14 +229,14 @@ cmdlZCB0d2ljZS4</string>
 						<object class="IBUIButton" id="972877083">
 							<reference key="NSNextResponder" ref="3333123"/>
 							<int key="NSvFlags">265</int>
-							<string key="NSFrame">{{253, 424}, {73, 40}}</string>
+							<string key="NSFrame">{{276, 422}, {44, 40}}</string>
 							<reference key="NSSuperview" ref="3333123"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="950279800"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							<int key="IBUIContentHorizontalAlignment">0</int>
 							<int key="IBUIContentVerticalAlignment">0</int>
-							<int key="IBUIButtonType">1</int>
-							<string key="IBUINormalTitle">Close</string>
 							<reference key="IBUIHighlightedTitleColor" ref="193881541"/>
 							<object class="NSColor" key="IBUINormalTitleColor">
 								<int key="NSColorSpace">1</int>
@@ -238,6 +245,10 @@ cmdlZCB0d2ljZS4</string>
 							<object class="NSColor" key="IBUINormalTitleShadowColor">
 								<int key="NSColorSpace">3</int>
 								<bytes key="NSWhite">MC41AA</bytes>
+							</object>
+							<object class="NSCustomResource" key="IBUINormalImage">
+								<string key="NSClassName">NSImage</string>
+								<string key="NSResourceName">Icon-Close-44.png</string>
 							</object>
 							<object class="IBUIFontDescription" key="IBUIFontDescription">
 								<int key="type">2</int>
@@ -252,6 +263,7 @@ cmdlZCB0d2ljZS4</string>
 					</array>
 					<string key="NSFrame">{{0, 20}, {320, 460}}</string>
 					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="174964641"/>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">1</int>
@@ -466,7 +478,43 @@ cmdlZCB0d2ljZS4</string>
 			<nil key="sourceID"/>
 			<int key="maxID">71</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">AZStoreVC</string>
+					<string key="superclassName">UIViewController</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">ibBuClose:</string>
+						<string key="NS.object.0">UIButton</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">ibBuClose:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">ibBuClose:</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+					</object>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="ibTableView">UITableView</string>
+						<string key="ibTfInvitePass">UITextField</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="ibTableView">
+							<string key="name">ibTableView</string>
+							<string key="candidateClassName">UITableView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="ibTfInvitePass">
+							<string key="name">ibTfInvitePass</string>
+							<string key="candidateClassName">UITextField</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/AZStoreVC.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">
@@ -479,10 +527,10 @@ cmdlZCB0d2ljZS4</string>
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="NS.key.0">Icon-Store-32.png</string>
-			<string key="NS.object.0">{29, 32}</string>
-		</object>
+		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="Icon-Close-44.png">{44, 35}</string>
+			<string key="Icon-Store-32.png">{29, 32}</string>
+		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">933</string>
 	</data>
 </archive>

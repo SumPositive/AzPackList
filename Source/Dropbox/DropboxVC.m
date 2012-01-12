@@ -96,6 +96,20 @@
 
 #pragma mark - View lifecycle
 
+- (id)init
+{
+	if ([[[UIDevice currentDevice] model] hasPrefix:@"iPad"]) {	// iPad
+		self = [super initWithNibName:@"DropboxVC-iPad" bundle:nil];
+	} else {
+		self = [super initWithNibName:@"DropboxVC" bundle:nil];
+	}
+    if (self) {
+        // Custom initialization
+
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
