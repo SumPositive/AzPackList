@@ -24,33 +24,22 @@
 @implementation E2edit   // ViewController
 {
 @private
-	//E1 *Re1selected;  // Edit時は IaE2target.parent と同値であるが、Add時にはこれを頼りにする必要がある。 
-	//E2 *Re2target;
-	//NSInteger PiAddRow;  // (>=0)Add  (-1)Edit
-	//BOOL	PbSharePlanList;	// SharePlan プレビューモード
-	
-	// E2viewが左ペインにあるとき、E2editをPopover内包するために使う。
-	//id									delegate;
-	//UIPopoverController*	selfPopover;  // 自身を包むPopover  閉じる為に必要
-	
-	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
-	//----------------------------------------------Owner移管につきdealloc時のrelese不要
 	UITextField *MtfName;
 	UITextView	*MtvNote;
-	//----------------------------------------------assign
 	AppDelegate		*appDelegate_;
 }
-@synthesize Re1selected;
-@synthesize Re2target;
-@synthesize PiAddRow;
-@synthesize PbSharePlanList;
-@synthesize delegate;
-@synthesize selfPopover;
+@synthesize e1selected = e1selected_;
+@synthesize e2target = e2target_;
+@synthesize addRow = addRow_;
+@synthesize sharePlanList = sharePlanList_;
+@synthesize delegate = delegate_;
+@synthesize selfPopover = selfPopover_;
+
 
 - (void)dealloc 
 {
-	//[selfPopover release], 
-	selfPopover = nil;
+	//[selfPopover_ release], 
+	selfPopover_ = nil;
 	// @property (retain)
 	//[Re2target release];
 	//[Re1selected release];
@@ -64,7 +53,7 @@
 		// 初期化処理：インスタンス生成時に1回だけ通る
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		appDelegate_.app_UpdateSave = NO;
-		PbSharePlanList = NO;
+		sharePlanList_ = NO;
 
 		if (appDelegate_.app_is_iPad) {
 			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
@@ -115,7 +104,7 @@
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
 											  initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
 											  target:self action:@selector(cancel:)];
-	if (PbSharePlanList==NO) {
+	if (sharePlanList_==NO) {
 		// SAVEボタンを右側に追加する
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
 												   initWithBarButtonSystemItem:UIBarButtonSystemItemSave
@@ -148,13 +137,13 @@
 
 	[self viewDesign];
 	
-	if ([[Re2target valueForKey:@"name"] isEqualToString:NSLocalizedString(@"New Index",nil)]) {
+	if ([[e2target_ valueForKey:@"name"] isEqualToString:NSLocalizedString(@"New Index",nil)]) {
 		MtfName.text = @"";
 	} else {
-		MtfName.text = [Re2target valueForKey:@"name"];
+		MtfName.text = [e2target_ valueForKey:@"name"];
 	}
 
-	MtvNote.text = [Re2target valueForKey:@"note"];
+	MtvNote.text = [e2target_ valueForKey:@"note"];
 
 }
 
@@ -291,9 +280,9 @@ replacementString:(NSString *)string
 - (void)cancel:(id)sender 
 {
 	if (appDelegate_.app_is_iPad) {
-		if (selfPopover) 
+		if (selfPopover_) 
 		{	//ヨコ： E2viewが左ペインにあるとき、E2editを内包するPopoverを閉じる
-			[selfPopover dismissPopoverAnimated:YES];
+			[selfPopover_ dismissPopoverAnimated:YES];
 			return;
 		}
 		//タテ： E2viewが[MENU]でPopover内包されているとき、E2editはiPhone同様にNavi遷移するだけ
@@ -304,31 +293,31 @@ replacementString:(NSString *)string
 - (void)save:(id)sender 
 {
 	// 編集フィールドの値を editObj にセットする
-	[Re2target setValue:MtfName.text forKey:@"name"];
-	[Re2target setValue:MtvNote.text forKey:@"note"];
+	[e2target_ setValue:MtfName.text forKey:@"name"];
+	[e2target_ setValue:MtvNote.text forKey:@"note"];
 	
-	if (0 <= PiAddRow) {
+	if (0 <= addRow_) {
 		// 新規のとき、末尾になるように行番号を付与する
-		[Re2target setValue:[NSNumber numberWithInteger:PiAddRow] forKey:@"row"];
+		[e2target_ setValue:[NSNumber numberWithInteger:addRow_] forKey:@"row"];
 		// E2レベルでは新オブジェクトを上位のE1と関連させる
-		[Re1selected addChildsObject:Re2target];
+		[e1selected_ addChildsObject:e2target_];
 	}
 
-	if (PbSharePlanList==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
+	if (sharePlanList_==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
 		NSError *err = nil;
-		if (![Re2target.managedObjectContext save:&err]) {
+		if (![e2target_.managedObjectContext save:&err]) {
 			NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
 			//abort();
 		}
 	}
 
 	if (appDelegate_.app_is_iPad) {
-		if (selfPopover) 
+		if (selfPopover_) 
 		{	//ヨコ： E2viewが左ペインにあるとき、E2editを内包するPopoverを閉じる
-			if ([delegate respondsToSelector:@selector(refreshE2view)]) {	// メソッドの存在を確認する
-				[delegate refreshE2view];// 親の再描画を呼び出す
+			if ([delegate_ respondsToSelector:@selector(refreshE2view)]) {	// メソッドの存在を確認する
+				[delegate_ refreshE2view];// 親の再描画を呼び出す
 			}
-			[selfPopover dismissPopoverAnimated:YES];
+			[selfPopover_ dismissPopoverAnimated:YES];
 			return;
 		}
 		//タテ： E2viewが[MENU]でPopover内包されているとき、E2editはiPhone同様にNavi遷移するだけ

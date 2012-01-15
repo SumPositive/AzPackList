@@ -29,8 +29,10 @@
 
 @property (nonatomic, assign, readonly) BOOL	app_is_iPad;	// YES=iPad
 @property (nonatomic, assign) BOOL	app_UpdateSave;			// YES=変更あり
-@property (nonatomic, assign) BOOL	app_pid_UnLock;			// YES=購入済み（スポンサー）
+@property (nonatomic, assign) BOOL	app_pid_iCloud;			// YES=購入済み（スポンサー）
 
+
+//- (void)storeReset;
 
 - (NSString *)applicationDocumentsDirectory;
 - (void) managedObjectContextReset;

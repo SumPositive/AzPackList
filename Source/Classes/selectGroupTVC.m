@@ -32,7 +32,7 @@
 		// 初期化成功
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		if (appDelegate_.app_is_iPad) {
-			self.contentSizeForViewInPopover = GD_POPOVER_E3detailTVC_SIZE;
+			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
 		}
     }
     return self;

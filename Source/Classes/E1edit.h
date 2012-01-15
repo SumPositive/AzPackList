@@ -11,10 +11,10 @@
 
 @interface E1edit : UIViewController  <UITextFieldDelegate, UITextViewDelegate>
 
-@property (nonatomic, retain) E1 *Re1target;
-@property NSInteger PiAddRow;
+@property (nonatomic, retain) E1		*e1target;
+@property NSInteger							addRow;
 
-@property (nonatomic, assign) id									delegate;
+//@property (nonatomic, assign) id									delegate;
 @property (nonatomic, retain) UIPopoverController*	selfPopover;
 
 @end

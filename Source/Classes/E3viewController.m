@@ -44,39 +44,30 @@
 @implementation E3viewController
 {
 @private
-	//E1				*Re1selected;  // grandParent: 常にセットされる
-	//NSInteger		PiFirstSection;  // E2から呼び出されたとき頭出しするセクション viewWillAppear内でジャンプ後、(-1)にする。
-	//NSInteger		PiSortType;		// (-1)Group  (0〜)Sort list.
-	//BOOL			PbSharePlanList;	// SharePlan プレビューモード
-	
-	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
-	//NSAutoreleasePool	*RautoPool;		// [0.3]autorelease独自解放のため
-	NSMutableArray		*RaE2array;			//[1.0.2]E2から受け取るのではなく、ここで生成するようにした。
-	NSMutableArray		*RaE3array;
-	//----------------------------------------------Owner移管につきdealloc時のrelese不要
-	UIPopoverController*	Mpopover;
-	NSIndexPath*				MindexPathEdit;	//[1.1]ポインタ代入注意！copyするように改善した。
-	UIToolbar*					Me2toolbar;
-	//----------------------------------------------assign
+	NSMutableArray		*e2array_;			//[1.0.2]E2から受け取るのではなく、ここで生成するようにした。
+	NSMutableArray		*e3array_;
+
+	UIPopoverController*	popOver_;
+	NSIndexPath*				indexPathEdit_;	//[1.1]ポインタ代入注意！copyするように改善した。
+	UIToolbar*					e2toolbar_;
+
 	AppDelegate *appDelegate_;
-	NSIndexPath		*MpathClip;					//[1.1]ポインタ代入注意！copyするように改善した。
-	NSIndexPath	  *MindexPathActionDelete;	//[1.1]ポインタ代入注意！copyするように改善した。
-	//BOOL MbFirstOne;
-	//BOOL MbOptShouldAutorotate;
-	BOOL MbAzOptTotlWeightRound;
-	BOOL MbAzOptShowTotalWeight;
-	BOOL MbAzOptShowTotalWeightReq;
-	BOOL MbAzOptItemsGrayShow;
-	//BOOL MbAzOptItemsQuickSort;
-	BOOL MbAzOptCheckingAtEditMode;
-	BOOL MbAzOptSearchItemsNote;
-	BOOL MbClipPaste;
-	CGPoint		McontentOffsetDidSelect; // didSelect時のScrollView位置を記録
+	NSIndexPath		*indexPathClip_;					//[1.1]ポインタ代入注意！copyするように改善した。
+	NSIndexPath	  *indexPathActionDelete_;	//[1.1]ポインタ代入注意！copyするように改善した。
+
+	BOOL optWeightRound_;
+	BOOL optShowTotalWeight_;
+	BOOL optShowTotalWeightReq_;
+	BOOL optItemsGrayShow_;
+	BOOL optCheckingAtEditMode_;
+	BOOL optSearchItemsNote_;
+	BOOL hasClipPaste_;
+	CGPoint		contentOffsetDidSelect_; // didSelect時のScrollView位置を記録
 }
-@synthesize  Re1selected;
-@synthesize  PiFirstSection;
-@synthesize  PiSortType;
-@synthesize PbSharePlanList;
+@synthesize  e1selected = e1selected_;
+@synthesize  firstSection = firstSection_;
+@synthesize  sortType = sortType_;
+@synthesize sharePlanList = sharePlanList_;
 
 
 
@@ -84,7 +75,7 @@
 
 - (void)refreshE3view
 {
-	if (MindexPathEdit)
+	if (indexPathEdit_)
 	{
 		[self requreyMe3array];//Add行を読む込む為に必要
 		
@@ -104,7 +95,7 @@
 		//[1.0.6]【Tips】結局、これが一番良い。 ＜＜行位置変わらず、表示の乱れも無い
 		[self.tableView reloadData];
 		// 左側 E2 再描画
-		[self padE2refresh:MindexPathEdit.section];
+		[self padE2refresh:indexPathEdit_.section];
 	}
 	else {
 		[self.tableView reloadData];
@@ -123,8 +114,8 @@
 	if (self) {
 		// 初期化成功
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		RaE3array = nil;
-		PbSharePlanList = NO;
+		e3array_ = nil;
+		sharePlanList_ = NO;
 	}
 	return self;
 }
@@ -135,25 +126,25 @@
 	[super loadView];
 
 	if (appDelegate_.app_is_iPad) {
-		if (PbSharePlanList) {
+		if (sharePlanList_) {
 			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
 			self.navigationController.toolbarHidden = YES;	// ツールバー不要
-			MbAzOptItemsGrayShow = YES; //グレー全表示
+			optItemsGrayShow_ = YES; //グレー全表示
 			return;  // 以下不要
 		} else {
 			//Popover表示なし  self.contentSizeForViewInPopover = CGSizeMake(360, 600);
 		}
 	}
 
-	if (PbSharePlanList==NO) {
+	if (sharePlanList_==NO) {
 		// Set up Right [Edit] buttons.
 		self.navigationItem.rightBarButtonItem = self.editButtonItem;
 		self.tableView.allowsSelectionDuringEditing = YES;
 	}
 	
 	if (appDelegate_.app_is_iPad) {
-		if (Me2toolbar==nil) {
-			Me2toolbar = [[UIToolbar alloc] init];
+		if (e2toolbar_==nil) {
+			e2toolbar_ = [[UIToolbar alloc] init];
 			
 			//[Me2toolbar setItems: [NSArray array]];
 			UIBarButtonItem* buFlexible = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -176,11 +167,11 @@
 				[buttons insertObject:appDelegate_.padRootVC.popoverButtonItem atIndex:1]; //この位置は、showPopoverButtonItemなどと一致させること
 			}
 			
-			Me2toolbar.barStyle = UIBarStyleDefault;
-			[Me2toolbar setItems:buttons animated:NO];
-			[Me2toolbar sizeToFit];
+			e2toolbar_.barStyle = UIBarStyleDefault;
+			[e2toolbar_ setItems:buttons animated:NO];
+			[e2toolbar_ sizeToFit];
 			//[buttons release];
-			self.navigationItem.titleView = Me2toolbar;
+			self.navigationItem.titleView = e2toolbar_;
 		}
 	} else {
 		// Set up NEXT Left [Back] buttons.
@@ -202,7 +193,7 @@
 	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	//MbAzOptItemsQuickSort = [defaults boolForKey:GD_OptItemsQuickSort];  [1.0.3]廃止
 	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
-	MbAzOptItemsGrayShow = [kvs boolForKey:KV_OptItemsGrayShow];
+	optItemsGrayShow_ = [kvs boolForKey:KV_OptItemsGrayShow];
 	//MbAzOptItemsQuickSort = NO;
 	
 	// Tool Bar Button
@@ -213,7 +204,7 @@
 								  target:self action:@selector(azSearchBar)];
 	// セグメントが回転に対応せず不具合（高さが変わる）発生するため、ボタンに戻した。
 	UIImage *img;
-	if (MbAzOptItemsGrayShow) {
+	if (optItemsGrayShow_) {
 		img = [UIImage imageNamed:@"Icon16-ItemGrayShow.png"]; // Gray Show
 	} else {
 		img = [UIImage imageNamed:@"Icon16-ItemGrayHide.png"]; // Gray Hide
@@ -247,44 +238,44 @@
 	// 画面表示に関係する Option Setting を取得する
 	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
-	MbAzOptTotlWeightRound = [kvs boolForKey:KV_OptWeightRound]; // YES=四捨五入 NO=切り捨て
-	MbAzOptShowTotalWeight = [kvs boolForKey:KV_OptShowTotalWeight];
-	MbAzOptShowTotalWeightReq = [kvs boolForKey:KV_OptShowTotalWeightReq]; // [0.3]Fix:抜けていた
-	MbAzOptCheckingAtEditMode = [kvs boolForKey:KV_OptCheckingAtEditMode];
-	MbAzOptSearchItemsNote = [kvs boolForKey:KV_OptSearchItemsNote];
+	optWeightRound_ = [kvs boolForKey:KV_OptWeightRound]; // YES=四捨五入 NO=切り捨て
+	optShowTotalWeight_ = [kvs boolForKey:KV_OptShowTotalWeight];
+	optShowTotalWeightReq_ = [kvs boolForKey:KV_OptShowTotalWeightReq]; // [0.3]Fix:抜けていた
+	optCheckingAtEditMode_ = [kvs boolForKey:KV_OptCheckingAtEditMode];
+	optSearchItemsNote_ = [kvs boolForKey:KV_OptSearchItemsNote];
 	
 	//self.title = ;　呼び出す側でセット済み。　変化させるならばココで。
 	
 	static int siSortType = (-99); //Pad対応のため必要になった。
-	if (PiSortType==(-9)) {	// (-9)E3初期化（リロード＆再描画、セクション0表示）
-		PiSortType = (-1);
+	if (sortType_==(-9)) {	// (-9)E3初期化（リロード＆再描画、セクション0表示）
+		sortType_ = (-1);
 		[self requreyMe3array];
 	}
-	else if (RaE3array && siSortType==PiSortType && 0<=PiSortType) {
+	else if (e3array_ && siSortType==sortType_ && 0<=sortType_) {
 		// 読み込み(ソート)せずに、既存テーブルビューを更新します。
 		[self.tableView reloadData];  // これがないと、次のセクションスクロールでエラーになる
 	}
 	else {
 		[self requreyMe3array];
 	}
-	siSortType = PiSortType;
+	siSortType = sortType_;
 	
 	// 指定位置までテーブルビューの行をスクロールさせる初期処理　＜＜レコードセット後でなければならないので、この位置になった＞＞
-	if (0<=PiFirstSection && PiFirstSection < [RaE3array count]) 
+	if (0<=firstSection_ && firstSection_ < [e3array_ count]) 
 	{
-		if (0<=PiSortType) PiFirstSection = 0; // SortListならば常に0のみ
-		if (0 < [[RaE3array objectAtIndex:PiFirstSection] count]) 
+		if (0<=sortType_) firstSection_ = 0; // SortListならば常に0のみ
+		if (0 < [[e3array_ objectAtIndex:firstSection_] count]) 
 		{ // Sample表示のときAdd行が無いので回避しないとエラー発生する
-			NSIndexPath* indexPath = [NSIndexPath indexPathForRow:0 inSection:PiFirstSection];
+			NSIndexPath* indexPath = [NSIndexPath indexPathForRow:0 inSection:firstSection_];
 			[self.tableView scrollToRowAtIndexPath:indexPath 
 								  atScrollPosition:UITableViewScrollPositionTop animated:NO];  // 実機検証結果:NO
 		}
-		PiFirstSection = (-1); //クリア
+		firstSection_ = (-1); //クリア
 	}
-	else if (0 < McontentOffsetDidSelect.y) {
+	else if (0 < contentOffsetDidSelect_.y) {
 		// app.Me3dateUse=nil のときや、メモリ不足発生時に元の位置に戻すための処理。
 		// McontentOffsetDidSelect は、didSelectRowAtIndexPath にて記録している。
-		self.tableView.contentOffset = McontentOffsetDidSelect;
+		self.tableView.contentOffset = contentOffsetDidSelect_;
 	}
 	else {
 		[self viewDesign]; // cell生成の後
@@ -351,16 +342,16 @@
 - (void)requreyMe3array		//:(NSString *)searchText
 {
 	//[1.0.2]
-	if (RaE2array) {
+	if (e2array_) {
 		//[RaE2array release], 
-		RaE2array = nil;
+		e2array_ = nil;
 	}
-	RaE2array = [[NSMutableArray alloc] initWithArray:[Re1selected.childs allObjects]];
-	if ([RaE2array count] <= 0) return;  // NoGroup
+	e2array_ = [[NSMutableArray alloc] initWithArray:[e1selected_.childs allObjects]];
+	if ([e2array_ count] <= 0) return;  // NoGroup
 	// Sorting
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
 	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:&sortDescriptor count:1];
-	[RaE2array sortUsingDescriptors:sortDescriptors];
+	[e2array_ sortUsingDescriptors:sortDescriptors];
 	//[sortDescriptor release];
 	//[sortDescriptors release];
 	
@@ -376,9 +367,9 @@
 	
 	NSMutableArray *muE3arry = [[NSMutableArray alloc] init];
 	
-	if (PiSortType < 0) {
+	if (sortType_ < 0) {
 		// セクション(Group)別リスト
-		for (E2 *e2obj in RaE2array) 
+		for (E2 *e2obj in e2array_) 
 		{
 			//---------------------------------------------------------------------------- E3 Section
 			// SELECT & ORDER BY　　テーブルの行番号を記録した属性"row"で昇順ソートする
@@ -408,7 +399,7 @@
 						if (rng.location != NSNotFound) {
 							[muSection addObject:e3obj]; // searchText を含むならば追加
 						}
-						else if (MbAzOptSearchItemsNote) { // Noteまで検索する
+						else if (optSearchItemsNote_) { // Noteまで検索する
 							NSRange rng = [e3obj.note rangeOfString:zSearchText options:NSCaseInsensitiveSearch];
 							if (rng.location != NSNotFound) {
 								[muSection addObject:e3obj]; // searchText を含むならば追加
@@ -418,10 +409,10 @@
 				}
 			}
 			
-			if (!bE3Add && PbSharePlanList==NO) {
+			if (!bE3Add && sharePlanList_==NO) {
 				//(V0.4)Add専用 E3 なしにつき、追加する
 				E3 *e3obj = [NSEntityDescription insertNewObjectForEntityForName:@"E3"
-														  inManagedObjectContext:Re1selected.managedObjectContext];
+														  inManagedObjectContext:e1selected_.managedObjectContext];
 				//e3obj.name = GD_ADD_E3_NAME; //(V0.4)特殊レコード：Add行
 				e3obj.need = [NSNumber numberWithInt:(-1)];  //(-1)Add行であることを示す専用値
 				e3obj.row = [NSNumber numberWithInteger:[e2obj.childs count]];
@@ -435,10 +426,10 @@
 			//[sortDescriptors release];
 			//[sortDescriptor release];
 		}
-		if (PbSharePlanList==NO) {
+		if (sharePlanList_==NO) {
 			// SAVE : 変更あれば保存する		Bug:Add行が通常行のように表示される-->Fix[1.1.0]
 			NSError *error = nil;
-			if ([Re1selected.managedObjectContext hasChanges] && ![Re1selected.managedObjectContext save:&error]) {
+			if ([e1selected_.managedObjectContext hasChanges] && ![e1selected_.managedObjectContext save:&error]) {
 				// Handle error.
 				NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 				assert(NO); //DEBUGでは落とす
@@ -448,7 +439,7 @@
 	else {
 		// 全体ソートリスト　＜＜セクション[0]に全アイテムを入れてソートする＞＞
 		NSMutableArray *muSect0 = nil;
-		for (E2 *e2obj in RaE2array) {
+		for (E2 *e2obj in e2array_) {
 			//---------------------------------------------------------------------------- E3 Section
 			// 選択中の E2(e2obj) の子となる E3(e2obj.childs) を抽出する。
 			//NSMutableArray *muSection = [[NSMutableArray alloc] initWithArray:[e2obj.childs allObjects]];
@@ -468,7 +459,7 @@
 						if (rng.location != NSNotFound) {
 							[muSection addObject:e3obj]; // searchText を含むならば追加
 						}
-						else if (MbAzOptSearchItemsNote) { // Noteまで検索する
+						else if (optSearchItemsNote_) { // Noteまで検索する
 							NSRange rng = [e3obj.note rangeOfString:zSearchText options:NSCaseInsensitiveSearch];
 							if (rng.location != NSNotFound) {
 								[muSection addObject:e3obj]; // searchText を含むならば追加
@@ -491,7 +482,7 @@
 		// Sort条件セット
 		NSString *zSortKey;
 		BOOL bSortAscending;
-		switch (PiSortType) {
+		switch (sortType_) {
 			case 0:
 				zSortKey = @"lack";   //NSLocalizedString(@"Sort0key", nil);
 				bSortAscending = NO;  //[NSLocalizedString(@"Sort0ascending", nil) isEqualToString:@"YES"];
@@ -521,10 +512,10 @@
 		//[sortDescriptors release];
 	}
 	
-	if (RaE3array != muE3arry) {
+	if (e3array_ != muE3arry) {
 		//[muE3arry retain];	//先に確保
 		//[RaE3array release];	//その後解放
-		RaE3array = muE3arry;
+		e3array_ = muE3arry;
 	}
 	//[muE3arry release];
 	
@@ -537,8 +528,8 @@
 - (void)viewWillDisappear:(BOOL)animated 
 {
 	if (appDelegate_.app_is_iPad) {
-		if ([Mpopover isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
-			[Mpopover dismissPopoverAnimated:animated];
+		if ([popOver_ isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
+			[popOver_ dismissPopoverAnimated:animated];
 		}
 		// 左側のＥ２を閉じる
 		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) 
@@ -592,26 +583,26 @@
 // 回転した後に呼び出される
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {	// Popoverの位置を調整する　＜＜UIPopoverController の矢印が画面回転時にターゲットから外れてはならない＞＞
-	if ([Mpopover isPopoverVisible]) {
-		if (MindexPathEdit) { 
+	if ([popOver_ isPopoverVisible]) {
+		if (indexPathEdit_) { 
 			@try {		//何度かここでSIGABRT発生、MindexPathEdit不正だと思うが原因不明につき @try 回避
 							//[1.1]原因は、retainしていないポインタを代入していたことだと思う。　代入時に copy した。
 				//NSLog(@"MindexPathEdit=%@", MindexPathEdit);
-				[self.tableView scrollToRowAtIndexPath:MindexPathEdit 
+				[self.tableView scrollToRowAtIndexPath:indexPathEdit_ 
 									  atScrollPosition:UITableViewScrollPositionMiddle animated:NO]; // YESだと次の座標取得までにアニメーションが終了せずに反映されない
-				CGRect rc = [self.tableView rectForRowAtIndexPath:MindexPathEdit];
+				CGRect rc = [self.tableView rectForRowAtIndexPath:indexPathEdit_];
 				rc.origin.x += (rc.size.width/2 - 100);	//(-100)ヨコのとき幅が縮小されてテンキーが欠けるため
 				rc.size.width = 1;
-				[Mpopover presentPopoverFromRect:rc  inView:self.tableView 
+				[popOver_ presentPopoverFromRect:rc  inView:self.tableView 
 						permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
 			}
 			@catch (NSException *exception) {
 				assert(NO);
-				[Mpopover dismissPopoverAnimated:YES];
+				[popOver_ dismissPopoverAnimated:YES];
 			}
 		} else {
 			// 回転後のアンカー位置が再現不可なので閉じる
-			[Mpopover dismissPopoverAnimated:YES];
+			[popOver_ dismissPopoverAnimated:YES];
 			//[Mpopover release], Mpopover = nil;
 		}
 	}
@@ -636,52 +627,52 @@
 
 - (void)e3detailView:(NSIndexPath *)indexPath 
 {
-	if (PbSharePlanList) return;  //サンプルモードにつき
+	if (sharePlanList_) return;  //サンプルモードにつき
 	if (appDelegate_.app_is_iPad) {
-		if ([Mpopover isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 	}
 
 	// E3detailTVC へドリルダウン
 	E3detailTVC *e3detail = [[E3detailTVC alloc] init];
 	// 以下は、E3detailTVCの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
 	e3detail.title = NSLocalizedString(@"Edit Item", nil);
-	e3detail.RaE2array = RaE2array;
-	e3detail.RaE3array = RaE3array;
+	e3detail.e2array = e2array_;
+	e3detail.e3array = e3array_;
 	
-	E3 *e3obj = [[RaE3array objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+	E3 *e3obj = [[e3array_ objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
 	if ([e3obj.need integerValue] == (-1)) { //(V0.4)Add
 		// Add Item
 		// ContextにE3ノードを追加する　                               ＜＜Sortのとき、Pe2selected==nil である＞＞
-		e3detail.Re3target = [NSEntityDescription insertNewObjectForEntityForName:@"E3"
-														   inManagedObjectContext:Re1selected.managedObjectContext];
-		e3detail.PiAddGroup = indexPath.section; // Add mode
-		e3detail.PiAddRow = [e3obj.row integerValue];
+		e3detail.e3target = [NSEntityDescription insertNewObjectForEntityForName:@"E3"
+														   inManagedObjectContext:e1selected_.managedObjectContext];
+		e3detail.addE2section = indexPath.section; // Add mode
+		e3detail.addE3row = [e3obj.row integerValue];
 		//
-		e3detail.Re3target.need = [NSNumber numberWithInteger:1]; //[1.0.6]初期値1個にした。
+		e3detail.e3target.need = [NSNumber numberWithInteger:1]; //[1.0.6]初期値1個にした。
 	}
 	else {
 		// Edit Item
-		e3detail.Re3target = e3obj;
-		e3detail.PiAddGroup = (-1); // Edit mode
+		e3detail.e3target = e3obj;
+		e3detail.addE2section = (-1); // Edit mode
 	}
-	e3detail.PbSharePlanList = PbSharePlanList;
+	e3detail.sharePlanList = sharePlanList_;
 	
 	if (appDelegate_.app_is_iPad) {
 		//[Mpopover release], Mpopover = nil;
 		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:e3detail];
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:e3detail];
-		Mpopover = [[UIPopoverController alloc] initWithContentViewController:nc];
+		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
 		//[nc release];
-		Mpopover.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
+		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
 		//MindexPathEdit = indexPath; Bug!危険　　　下記FIX
 		//[MindexPathEdit release], 
-		MindexPathEdit = [indexPath copy];
+		indexPathEdit_ = [indexPath copy];
 		CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
 		rc.origin.x += (rc.size.width/2 - 100);	//(-100)ヨコのとき幅が縮小されてテンキーが欠けるため
 		rc.size.width = 1;
-		[Mpopover presentPopoverFromRect:rc
+		[popOver_ presentPopoverFromRect:rc
 								  inView:self.tableView  permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-		e3detail.selfPopover = Mpopover;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
+		e3detail.selfPopover = popOver_;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
 		e3detail.delegate = self;		// refresh callback
 	} else {
 		[e3detail setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
@@ -700,12 +691,12 @@
 	
 	NSLog(@"--- unloadRelease --- E3viewController");
 	//[RaE3array release],	
-	RaE3array = nil;
+	e3array_ = nil;
 	
 	if (appDelegate_.app_is_iPad) {
 		self.navigationItem.titleView = nil;  //これなしにE1へ戻ると落ちる
 		//[Me2toolbar release], 
-		Me2toolbar = nil;
+		e2toolbar_ = nil;
 	}
 }
 
@@ -723,19 +714,19 @@
 	[self unloadRelease];
 
 	if (appDelegate_.app_is_iPad) {
-		Mpopover.delegate = nil;	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
+		popOver_.delegate = nil;	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
 		//[MindexPathEdit release], 
-		MindexPathEdit = nil;
+		indexPathEdit_ = nil;
 	}
 	//[MindexPathActionDelete release], 
-	MindexPathActionDelete = nil;
+	indexPathActionDelete_ = nil;
 	//[MpathClip release], 
-	MpathClip = nil;
+	indexPathClip_ = nil;
 	//--------------------------------@property (retain)
 	//[RaE2array release],	
-	RaE2array = nil;
-	//[Re1selected release],	
-	Re1selected = nil;
+	e2array_ = nil;
+	//[Re1selected_ release],	
+	e1selected_ = nil;
 	//[super dealloc];
 }
 
@@ -757,9 +748,9 @@
 
 - (void)azItemsGrayHide: (UIBarButtonItem *)sender 
 {
-	MbAzOptItemsGrayShow = !(MbAzOptItemsGrayShow); // 反転
+	optItemsGrayShow_ = !(optItemsGrayShow_); // 反転
 	
-	if (MbAzOptItemsGrayShow) {
+	if (optItemsGrayShow_) {
 		sender.image = [UIImage imageNamed:@"Icon16-ItemGrayShow.png"]; // Gray Show
 	} else {
 		sender.image = [UIImage imageNamed:@"Icon16-ItemGrayHide.png"]; // Gray Hide
@@ -767,7 +758,7 @@
 	
 	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
-	[kvs setBool:MbAzOptItemsGrayShow forKey:KV_OptItemsGrayShow];
+	[kvs setBool:optItemsGrayShow_ forKey:KV_OptItemsGrayShow];
 	
 	// 再表示 -------------------------------------------------------------------
 	// 表示行数が変化するための処理　　 表示最上行を取得する
@@ -775,8 +766,8 @@
 	NSIndexPath *topPath = nil;
 	for (NSInteger i=0 ; i<[arCells count] ; i++) {
 		topPath = [arCells objectAtIndex:i]; 
-		if (topPath.row < [[RaE3array objectAtIndex:topPath.section] count]) {
-			E3 *e3obj = [[RaE3array objectAtIndex:topPath.section] objectAtIndex:topPath.row];
+		if (topPath.row < [[e3array_ objectAtIndex:topPath.section] count]) {
+			E3 *e3obj = [[e3array_ objectAtIndex:topPath.section] objectAtIndex:topPath.row];
 			if ([e3obj.need intValue] != 0) {  // +Add行は、.need=(-1)にしている。
 				// 必要数が0でない「Grayでない」セル発見
 				break;
@@ -799,7 +790,7 @@
 	// Serch Bar にフォーカスを当てる　（このときスクロールはしないので下記のスクロール処理が必要）
 	[self.tableView.tableHeaderView becomeFirstResponder];
 	// Search Bar が見えるように最上行を表示する
-	if (RaE3array && 0 < [RaE3array count] && 0 < [[RaE3array objectAtIndex:0] count]) { // ERROR対策
+	if (e3array_ && 0 < [e3array_ count] && 0 < [[e3array_ objectAtIndex:0] count]) { // ERROR対策
 		NSIndexPath* indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
 		[self.tableView scrollToRowAtIndexPath:indexPath 
 							  atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
@@ -827,7 +818,7 @@
 
 - (void)cellButtonCheck: (UIButton *)button 
 {
-	if (MbAzOptCheckingAtEditMode && !self.editing) return; // 編集時のみ許可
+	if (optCheckingAtEditMode_ && !self.editing) return; // 編集時のみ許可
 	
 	E3 *e3obj = nil;
 	NSIndexPath *checkPath;  // 後半でCheckセルだけ再描画するときに使用
@@ -847,7 +838,7 @@
 			//if (button == [aSub objectAtIndex:1]) {
 			if ([aSub indexOfObject:button] != NSNotFound) { // 位置が変わるケースがあったので、こうした。
 				//このbuttonが含まれるセル発見
-				e3obj = [[RaE3array objectAtIndex:checkPath.section] objectAtIndex:checkPath.row];
+				e3obj = [[e3array_ objectAtIndex:checkPath.section] objectAtIndex:checkPath.row];
 				//AzLOG(@"cellButton -B- .row=%ld", (long)path.row);
 				break;
 			}
@@ -919,7 +910,7 @@
 	[e1obj setValue:sumWeStk forKey:@"sumWeightStk"];
 	[e1obj setValue:sumWeNed forKey:@"sumWeightNed"];
 	
-	if (PbSharePlanList==NO) {
+	if (sharePlanList_==NO) {
 		// SAVE : e3edit,e2list は ManagedObject だから更新すれば ManagedObjectContext に反映されている
 		NSError *err = nil;
 		if (![e3obj.managedObjectContext save:&err]) {
@@ -949,10 +940,10 @@
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
 	if (@selector(cut:) == action) {
-		if (PbSharePlanList) return NO;
-		assert(MpathClip.section < [RaE3array count]);
-		assert(MpathClip.row < [[RaE3array objectAtIndex:MpathClip.section] count]);
-		E3 *e3obj = [[RaE3array objectAtIndex:MpathClip.section] objectAtIndex:MpathClip.row];
+		if (sharePlanList_) return NO;
+		assert(indexPathClip_.section < [e3array_ count]);
+		assert(indexPathClip_.row < [[e3array_ objectAtIndex:indexPathClip_.section] count]);
+		E3 *e3obj = [[e3array_ objectAtIndex:indexPathClip_.section] objectAtIndex:indexPathClip_.row];
 		if (0 <= [e3obj.need integerValue]) return YES;
 		return NO; // e3obj.need < 0 ならばAdd行であるのでCut無効
 	}
@@ -960,7 +951,7 @@
 	if (@selector(copy:) == action) return YES;
 	
 	if (@selector(paste:) == action) {
-		if (PbSharePlanList) return NO;
+		if (sharePlanList_) return NO;
 		// クリップボード(clipE3objects) にE3があるか調べる
 		if (0 < [appDelegate_.clipE3objects_ count]) return YES; // クリップあり
 		return NO; // クリップボードが空なのでPaste無効
@@ -970,40 +961,40 @@
 
 - (void)cut:(id)sender {  // これはプロトコルとして予約されている
 	AzLOG(@"--cut:--");
-	assert(MpathClip);
-	if ([RaE3array count] <= MpathClip.section) return;
-	if ([[RaE3array objectAtIndex:MpathClip.section] count] <= MpathClip.row) return;
+	assert(indexPathClip_);
+	if ([e3array_ count] <= indexPathClip_.section) return;
+	if ([[e3array_ objectAtIndex:indexPathClip_.section] count] <= indexPathClip_.row) return;
 	
 	// クリップボード(clipE3objects) 前処理
-	if (MbClipPaste && 0 < [appDelegate_.clipE3objects_ count]) { // 未[Paste]ならばPUSHスタックするため
+	if (hasClipPaste_ && 0 < [appDelegate_.clipE3objects_ count]) { // 未[Paste]ならばPUSHスタックするため
 		// 1回でもPasteしたならば、先ずクリップをクリアする
 		for (E3 *e3 in appDelegate_.clipE3objects_) {
 			if (e3.parent == nil) {
 				// [Cut]されたE3なので削除する
-				[Re1selected.managedObjectContext deleteObject:e3];
+				[e1selected_.managedObjectContext deleteObject:e3];
 			}
 		}
 		[appDelegate_.clipE3objects_ removeAllObjects]; // 全て削除する
 	}
-	MbClipPaste = NO;
+	hasClipPaste_ = NO;
 	//
-	E3 *e3obj = [[RaE3array objectAtIndex:MpathClip.section] objectAtIndex:MpathClip.row];
+	E3 *e3obj = [[e3array_ objectAtIndex:indexPathClip_.section] objectAtIndex:indexPathClip_.row];
 	E2 *e2obj = e3obj.parent; // 後半のsum更新のため親E2を保持する
 	e3obj.parent = nil; // リンクを切った状態で残す。Pasteできるようにするため。
 	// e3obj をクリップボード(clipE3objects) へ追加する
 	[appDelegate_.clipE3objects_ addObject:e3obj];
 	
-	[[RaE3array objectAtIndex:MpathClip.section] removeObjectAtIndex:MpathClip.row]; // TableViewCell削除
+	[[e3array_ objectAtIndex:indexPathClip_.section] removeObjectAtIndex:indexPathClip_.row]; // TableViewCell削除
 	// アニメーション付きで、MpathClip行をテーブルから削除する　＜＜表示だけの更新＞＞
-	[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:MpathClip] withRowAnimation:UITableViewRowAnimationFade];
+	[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPathClip_] withRowAnimation:UITableViewRowAnimationFade];
 	// .row 更新
-	for (NSInteger i = MpathClip.row ; i < [[RaE3array objectAtIndex:MpathClip.section] count] ; i++) {
-		E3 *e3 = [[RaE3array objectAtIndex:MpathClip.section] objectAtIndex:i];
+	for (NSInteger i = indexPathClip_.row ; i < [[e3array_ objectAtIndex:indexPathClip_.section] count] ; i++) {
+		E3 *e3 = [[e3array_ objectAtIndex:indexPathClip_.section] objectAtIndex:i];
 		e3.row = [NSNumber numberWithInteger:i];
 	}
 	
 	
-	//[Re1selected.managedObjectContext deleteObject:Me3objCopy] ここでは削除しない！
+	//[Re1selected_.managedObjectContext deleteObject:Me3objCopy] ここでは削除しない！
 	
 	// E2 sum属性　＜高速化＞ 親sum保持させる
 	[e2obj setValue:[e2obj valueForKeyPath:@"childs.@sum.noGray"] forKey:@"sumNoGray"];
@@ -1022,41 +1013,41 @@
 
 	if (appDelegate_.app_is_iPad) {
 		// 左側 E2 再描画  ＜＜未チェック数と重量を更新するため
-		[self padE2refresh:MpathClip.section];
+		[self padE2refresh:indexPathClip_.section];
 	}
 }
 
 - (void)copy:(id)sender {  // これはプロトコルとして予約されている
 	AzLOG(@"--copy:--");
-	assert(MpathClip);
-	if ([RaE3array count] <= MpathClip.section) return;
-	if ([[RaE3array objectAtIndex:MpathClip.section] count] <= MpathClip.row) return;
+	assert(indexPathClip_);
+	if ([e3array_ count] <= indexPathClip_.section) return;
+	if ([[e3array_ objectAtIndex:indexPathClip_.section] count] <= indexPathClip_.row) return;
 	
 	// クリップボード(clipE3objects) 前処理
-	if (MbClipPaste && 0 < [appDelegate_.clipE3objects_ count]) { // 未[Paste]ならばPUSHスタックするため
+	if (hasClipPaste_ && 0 < [appDelegate_.clipE3objects_ count]) { // 未[Paste]ならばPUSHスタックするため
 		// 1回でもPasteしたならば、先ずクリップをクリアする
 		for (E3 *e3 in appDelegate_.clipE3objects_) {
 			if (e3.parent == nil) {
 				// [Cut]されたE3なので削除する
-				[Re1selected.managedObjectContext deleteObject:e3];
+				[e1selected_.managedObjectContext deleteObject:e3];
 			}
 		}
 		[appDelegate_.clipE3objects_ removeAllObjects]; // 全て削除する
 	}
-	MbClipPaste = NO;
+	hasClipPaste_ = NO;
 	//
-	E3 *e3obj = [[RaE3array objectAtIndex:MpathClip.section] objectAtIndex:MpathClip.row];
+	E3 *e3obj = [[e3array_ objectAtIndex:indexPathClip_.section] objectAtIndex:indexPathClip_.row];
 	// e3obj をクリップボード(clipE3objects) へ追加する
 	[appDelegate_.clipE3objects_ addObject:e3obj];
 }
 
 - (void)paste:(id)sender {  // これはプロトコルとして予約されている
 	AzLOG(@"--paste:--");
-	assert(MpathClip);
-	if ([RaE3array count] <= MpathClip.section) return;
-	if ([[RaE3array objectAtIndex:MpathClip.section] count] <= MpathClip.row) return;
+	assert(indexPathClip_);
+	if ([e3array_ count] <= indexPathClip_.section) return;
+	if ([[e3array_ objectAtIndex:indexPathClip_.section] count] <= indexPathClip_.row) return;
 	// 貼り付け先
-	E3 *e3paste = [[RaE3array objectAtIndex:MpathClip.section] objectAtIndex:MpathClip.row];
+	E3 *e3paste = [[e3array_ objectAtIndex:indexPathClip_.section] objectAtIndex:indexPathClip_.row];
 	if (e3paste == nil) return;
 	
 	// クリップボード(clipE3objects) の末尾から e3clip を取り出す(POP)
@@ -1065,7 +1056,7 @@
 	
 	// MpathClip位置へ追加する
 	E3 *e3new = [NSEntityDescription insertNewObjectForEntityForName:@"E3"
-											  inManagedObjectContext:Re1selected.managedObjectContext];
+											  inManagedObjectContext:e1selected_.managedObjectContext];
 	// Paste位置である e3paste から引用
 	e3new.row = e3paste.row;
 	e3new.parent = e3paste.parent;
@@ -1094,19 +1085,19 @@
 		// クリップボード(clipE3objects) の末尾を削除し、参照(e3clip)を無効にする
 		if (e3clip.parent == nil) {
 			// [Cut]されたE3なので削除する
-			[Re1selected.managedObjectContext deleteObject:e3clip];
+			[e1selected_.managedObjectContext deleteObject:e3clip];
 		}
 		[appDelegate_.clipE3objects_ removeLastObject]; // 末尾のオブジェクトを削除する
 		e3clip = nil;
 	}
-	MbClipPaste = YES;
+	hasClipPaste_ = YES;
 	//
-	[[RaE3array objectAtIndex:MpathClip.section] insertObject:e3new atIndex:MpathClip.row];
+	[[e3array_ objectAtIndex:indexPathClip_.section] insertObject:e3new atIndex:indexPathClip_.row];
 	// アニメーション付きで、テーブルの MpathClip行へ追加する
-	[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:MpathClip] withRowAnimation:UITableViewRowAnimationFade];
+	[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPathClip_] withRowAnimation:UITableViewRowAnimationFade];
 	// MpathClip.row+1 以下を更新する
-	for (NSInteger i = MpathClip.row+1 ; i < [[RaE3array objectAtIndex:MpathClip.section] count] ; i++) {
-		E3 *e3 = [[RaE3array objectAtIndex:MpathClip.section] objectAtIndex:i];
+	for (NSInteger i = indexPathClip_.row+1 ; i < [[e3array_ objectAtIndex:indexPathClip_.section] count] ; i++) {
+		E3 *e3 = [[e3array_ objectAtIndex:indexPathClip_.section] objectAtIndex:i];
 		e3.row = [NSNumber numberWithInteger:i];
 	}
 	// Paste先の E2 sum属性　＜高速化＞ 親sum保持させる
@@ -1134,7 +1125,7 @@
 
 	if (appDelegate_.app_is_iPad) {
 		// 左側 E2 再描画  ＜＜未チェック数と重量を更新するため
-		[self padE2refresh:MpathClip.section];
+		[self padE2refresh:indexPathClip_.section];
 	}
 }
 
@@ -1147,10 +1138,10 @@
 	NSInteger iRow = button.tag - (iSection * GD_SECTION_TIMES);
 	//Bug//MpathClip = [NSIndexPath indexPathForRow:iRow inSection:iSection];
 	//[MpathClip release], 
-	MpathClip = [[NSIndexPath indexPathForRow:iRow inSection:iSection] copy];
+	indexPathClip_ = [[NSIndexPath indexPathForRow:iRow inSection:iSection] copy];
 	AzLOG(@"cellButtonClip .row=%ld", (long)iRow);
 	
-	CGRect minRect = [self.tableView rectForRowAtIndexPath:MpathClip]; // 指定したインデックスパスの行の描画領域を返す。
+	CGRect minRect = [self.tableView rectForRowAtIndexPath:indexPathClip_]; // 指定したインデックスパスの行の描画領域を返す。
 	//AzLOG(@"-1-minRect(%f,%f, %f,%f)", minRect.origin.x,minRect.origin.y,minRect.size.width,minRect.size.height);
 	minRect.origin.x = minRect.size.width/2;
 	minRect.origin.y += 15;
@@ -1181,27 +1172,27 @@
 // TableView セクション数を応答
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
 {
-	return [RaE3array count];
+	return [e3array_ count];
 }
 
 // TableView セクションの行数を応答
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
 {
-	NSInteger rows = [[RaE3array objectAtIndex:section] count];  // Add行を含む
+	NSInteger rows = [[e3array_ objectAtIndex:section] count];  // Add行を含む
 	return rows;
 }
 
 // TableView セクション名を応答
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section 
 {
-	if (PiSortType < 0) {
+	if (sortType_ < 0) {
 		// Group E2以下の Sum(E3.weightStk) と Sum(E3.weightNed) の集計値を得ている。
-		E2 *e2obj = [RaE2array objectAtIndex:section];
+		E2 *e2obj = [e2array_ objectAtIndex:section];
 		double dWeightStk;
 		double dWeightReq;
-		if (MbAzOptShowTotalWeight) {
+		if (optShowTotalWeight_) {
 			long lWeightStk = [[e2obj valueForKeyPath:@"sumWeightStk"] longValue];
-			if (MbAzOptTotlWeightRound) {
+			if (optWeightRound_) {
 				// 四捨五入　＜＜ %.1f により小数第2位が丸められる＞＞ 
 				dWeightStk = (double)lWeightStk / 1000.0f;
 			} else {
@@ -1209,9 +1200,9 @@
 				dWeightStk = (double)(lWeightStk / 100) / 10.0f;
 			}
 		}
-		if (MbAzOptShowTotalWeightReq) {
+		if (optShowTotalWeightReq_) {
 			long lWeightReq = [[e2obj valueForKeyPath:@"sumWeightNed"] longValue];
-			if (MbAzOptTotlWeightRound) {
+			if (optWeightRound_) {
 				// 四捨五入　＜＜ %.1f により小数第2位が丸められる＞＞ 
 				dWeightReq = (double)lWeightReq / 1000.0f;
 			} else {
@@ -1225,18 +1216,18 @@
 			zName = NSLocalizedString(@"(New Index)", nil);
 		}
 
-		if (MbAzOptShowTotalWeight && MbAzOptShowTotalWeightReq) {
+		if (optShowTotalWeight_ && optShowTotalWeightReq_) {
 			return [NSString stringWithFormat:@"%@  %.1f／%.1fKg", zName, dWeightStk, dWeightReq];
-		} else if (MbAzOptShowTotalWeight) {
+		} else if (optShowTotalWeight_) {
 			return [NSString stringWithFormat:@"%@  %.1fKg", zName, dWeightStk];
-		} else if (MbAzOptShowTotalWeightReq) {
+		} else if (optShowTotalWeightReq_) {
 			return [NSString stringWithFormat:@"%@  ／%.1fKg", zName, dWeightReq];
 		} else {
 			return [NSString stringWithFormat:@"%@", zName];
 		}
 	}
 	else {
-		switch (PiSortType) {
+		switch (sortType_) {
 			case 0:
 				return NSLocalizedString(@"SortLackQty",nil);
 				break;
@@ -1254,13 +1245,13 @@
 // セルの高さを指示する  ＜＜ [Gray Hide] 高さ0にする＞＞
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-	E3 *e3obj = [[RaE3array objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-	if (!MbAzOptItemsGrayShow && [e3obj.need integerValue] <= 0) {
+	E3 *e3obj = [[e3array_ objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+	if (!optItemsGrayShow_ && [e3obj.need integerValue] <= 0) {
 		// (0)Gray行 (-1)Add行
 		return 0; // Hide さらに cell をクリアにしている
 		// さらに、canMoveRowAtIndexPath にて return NO; にする
 	}
-	else if (0 <= PiSortType && [e3obj.need integerValue]==(-1)) {	// .need=(-1) ⇒ Add行（位置自由になったため）
+	else if (0 <= sortType_ && [e3obj.need integerValue]==(-1)) {	// .need=(-1) ⇒ Add行（位置自由になったため）
 		return 0;  // ソートモード時、Add行を非表示
 	}
 
@@ -1281,10 +1272,10 @@
     UITableViewCell *cell = nil;
 
 	// E3 Node Object
-	E3 *e3obj = [[RaE3array objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+	E3 *e3obj = [[e3array_ objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
 	
 	//if (indexPath.row < [[Me3array objectAtIndex:indexPath.section] count]) {
-	if (!MbAzOptItemsGrayShow && [e3obj.need integerValue] <= 0) {
+	if (!optItemsGrayShow_ && [e3obj.need integerValue] <= 0) {
 		// 高さ0非表示用セル　＜＜専用セルを作って高速化＞＞
 		cell = [tableView dequeueReusableCellWithIdentifier:zCellHiddon];
 		if (cell == nil) {
@@ -1299,7 +1290,7 @@
 		return cell;
 	}
 	else if ([e3obj.need integerValue]==(-1)) {	//(V0.4)Add行セル  .need=(-1)
-		if (0 <= PiSortType) 
+		if (0 <= sortType_) 
 		{ // ソートモード ならば非表示　（速度優先のため重複記述している）
 			// 高さ0非表示用セル　＜＜専用セルを作って高速化＞＞
 			cell = [tableView dequeueReusableCellWithIdentifier:zCellHiddon];
@@ -1416,7 +1407,7 @@
 		if (0 < [e3obj.note length]) zNote = e3obj.note;
 		else zNote = @"";
 		
-		switch (PiSortType) {
+		switch (sortType_) {
 			case 0: // 不足個数順
 				cell.detailTextLabel.text = [NSString stringWithFormat:@"%@／%@  %@g  %@(%@%@)  %@",
 											 GstringFromNumber(e3obj.stock),
@@ -1467,7 +1458,7 @@
 		}
 	}
 	//AzLOG(@"E3 cell Section=%d Row=%d End", indexPath.section, indexPath.row);
-	if (!self.editing && PiSortType < 0 && PbSharePlanList==NO) {
+	if (!self.editing && sortType_ < 0 && sharePlanList_==NO) {
 		// Clipボタン ------------------------------------------------------------------
 		UIButton *buClip = [UIButton buttonWithType:UIButtonTypeCustom]; // autorelease
 		buClip.frame = CGRectMake(0,0, 44,44);
@@ -1479,7 +1470,7 @@
 		cell.accessoryView = buClip;
 		cell.accessoryType = UITableViewCellAccessoryNone;
 	} else {
-		if (PbSharePlanList) {
+		if (sharePlanList_) {
 			cell.showsReorderControl = NO;		// Move
 			cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
 			cell.accessoryType = UITableViewCellAccessoryNone; // なし
@@ -1497,12 +1488,12 @@
 // TableView Editボタンスタイル
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	E3 *e3obj = [[RaE3array objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-	if (!MbAzOptItemsGrayShow && [e3obj.need integerValue]==0) {
+	E3 *e3obj = [[e3array_ objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+	if (!optItemsGrayShow_ && [e3obj.need integerValue]==0) {
 		return UITableViewCellEditingStyleNone; // なし
 	}
 	else if ([e3obj.need integerValue] == (-1)) {
-		//if (0 <= PiSortType) return UITableViewCellEditingStyleNone; // ソートモード時なし
+		//if (0 <= sortType_) return UITableViewCellEditingStyleNone; // ソートモード時なし
 		//else                 return UITableViewCellEditingStyleInsert;
 		return UITableViewCellEditingStyleNone;
 		
@@ -1517,7 +1508,7 @@
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];		// 先ずは選択状態表示を解除する
 	
 	// didSelect時のScrollView位置を記録する（viewWillAppearにて再現するため）
-	McontentOffsetDidSelect = [tableView contentOffset];
+	contentOffsetDidSelect_ = [tableView contentOffset];
 
 	[self e3detailView:indexPath];
 }
@@ -1578,7 +1569,7 @@
 		 */
 		// [1.1.0]削除を[Cut]動作同等にした。
 		//[MpathClip release],
-		MpathClip = [indexPath copy];
+		indexPathClip_ = [indexPath copy];
 		[self cut:nil];
     }
 }
@@ -1605,9 +1596,9 @@
 // Editモード時の行移動の可否
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-	if (0 <= PiSortType) return NO; // SortTypeでは常時移動禁止
-	if (!MbAzOptItemsGrayShow) {	// この処理が無いと三途の川がハミダス
-		E3 *e3obj = [[RaE3array objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+	if (0 <= sortType_) return NO; // SortTypeでは常時移動禁止
+	if (!optItemsGrayShow_) {	// この処理が無いと三途の川がハミダス
+		E3 *e3obj = [[e3array_ objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
 		if ([e3obj.need integerValue]<=0) {
 			return NO;  // Gray行につき移動禁止  Add行も同様
 		}
@@ -1620,14 +1611,14 @@
 - (NSIndexPath *)tableView:(UITableView *)tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)oldPath
 																toProposedIndexPath:(NSIndexPath *)newPath 
 {
-	E3 *e3old = [[RaE3array objectAtIndex:oldPath.section] objectAtIndex:oldPath.row];
+	E3 *e3old = [[e3array_ objectAtIndex:oldPath.section] objectAtIndex:oldPath.row];
 	if ([e3old.need integerValue] == (-1)) { //(V0.4)Add
 		//(V0.4)Add行の場合、セクション内に限る
 		if (oldPath.section == newPath.section) {
 			return newPath;
 		} 
 		else if (oldPath.section < newPath.section) {
-			NSInteger rows = [[RaE3array objectAtIndex:oldPath.section] count];
+			NSInteger rows = [[e3array_ objectAtIndex:oldPath.section] count];
 			return [NSIndexPath indexPathForRow:rows-1 inSection:oldPath.section]; // oldPathの末尾
 		}
 		return [NSIndexPath indexPathForRow:0 inSection:oldPath.section]; // oldPathの先頭
@@ -1644,12 +1635,12 @@
 	// セクションを跨いだ移動にも対応
 	
 	//--------------------------------------------------(1)MutableArrayの移動
-	E3 *e3obj = [[RaE3array objectAtIndex:oldPath.section] objectAtIndex:oldPath.row];
+	E3 *e3obj = [[e3array_ objectAtIndex:oldPath.section] objectAtIndex:oldPath.row];
 	E2 *e2objOld = e3obj.parent; // [0.3.1]セクション間移動時に再集計するために必要となる
 	// 移動元から削除
-	[[RaE3array objectAtIndex:oldPath.section] removeObjectAtIndex:oldPath.row];
+	[[e3array_ objectAtIndex:oldPath.section] removeObjectAtIndex:oldPath.row];
 	// 移動先へ挿入　＜＜newPathは、targetIndexPathForMoveFromRowAtIndexPath にて[Gray]行の回避処理した行である＞＞
-	[[RaE3array objectAtIndex:newPath.section] insertObject:e3obj atIndex:newPath.row];
+	[[e3array_ objectAtIndex:newPath.section] insertObject:e3obj atIndex:newPath.row];
 
 	NSInteger i;
 	//--------------------------------------------------(2)row 付け替え処理
@@ -1662,24 +1653,24 @@
 			end = oldPath.row;
 		}
 		for (i = start ; i <= end ; i++) {
-			e3obj = [[RaE3array objectAtIndex:newPath.section] objectAtIndex:i];
+			e3obj = [[e3array_ objectAtIndex:newPath.section] objectAtIndex:i];
 			e3obj.row = [NSNumber numberWithInteger:i];
 		}
 	} else {
 		// 異セクション間の移動　＜＜親(.e2selected)の変更が必要＞＞
 		// 移動元セクション（親）から子を削除する
-		[[RaE2array objectAtIndex:oldPath.section] removeChildsObject:e3obj];	// 元の親ノードにある子登録を抹消する
+		[[e2array_ objectAtIndex:oldPath.section] removeChildsObject:e3obj];	// 元の親ノードにある子登録を抹消する
 		// 異動先セクション（親）へ子を追加する
-		[[RaE2array objectAtIndex:newPath.section] addChildsObject:e3obj];	// 新しい親ノードに子登録する
+		[[e2array_ objectAtIndex:newPath.section] addChildsObject:e3obj];	// 新しい親ノードに子登録する
 		// 異セクション間での移動： 双方のセクションで変化あったrow以降、全て更新する
 		// 元のrow付け替え処理
-		for (i = oldPath.row ; i < [[RaE3array objectAtIndex:oldPath.section] count] ; i++) {
-			e3obj = [[RaE3array objectAtIndex:oldPath.section] objectAtIndex:i];
+		for (i = oldPath.row ; i < [[e3array_ objectAtIndex:oldPath.section] count] ; i++) {
+			e3obj = [[e3array_ objectAtIndex:oldPath.section] objectAtIndex:i];
 			e3obj.row = [NSNumber numberWithInteger:i];
 		}
 		// 先のrow付け替え処理
-		for (i = newPath.row ; i < [[RaE3array objectAtIndex:newPath.section] count] ; i++) {
-			e3obj = [[RaE3array objectAtIndex:newPath.section] objectAtIndex:i];
+		for (i = newPath.row ; i < [[e3array_ objectAtIndex:newPath.section] count] ; i++) {
+			e3obj = [[e3array_ objectAtIndex:newPath.section] objectAtIndex:i];
 			e3obj.row = [NSNumber numberWithInteger:i];
 		}
 		E2 *e2objNew = e3obj.parent;  // [0.3.1]セクション間移動時に再集計するために必要となる
@@ -1702,17 +1693,17 @@
 		}
 	}
 
-	if (PbSharePlanList==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
+	if (sharePlanList_==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
 		// SAVE　＜＜万一システム障害で落ちてもデータが残るようにコマメに保存する方針である＞＞
 		NSError *error = nil;
 		// ＜＜Sortのとき、Pe2selected==nil であるからPe2selectedは使えない＞＞
-		if (![Re1selected.managedObjectContext save:&error]) {
+		if (![e1selected_.managedObjectContext save:&error]) {
 			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 			exit(-1);  // Fail
 		}
 	}
 
-	if (MbAzOptShowTotalWeight || MbAzOptShowTotalWeightReq) 
+	if (optShowTotalWeight_ || optShowTotalWeightReq_) 
 	{ // セクションヘッダの重量表示を更新する
 		[self.tableView reloadData];
 	}
@@ -1729,23 +1720,23 @@
 // タテになり左が非表示になる前に呼ばれる  <willHideViewController>
 - (void)showPopoverButtonItem:(UIBarButtonItem *)barButtonItem
 {
-    NSMutableArray *items = [[Me2toolbar items] mutableCopy];
+    NSMutableArray *items = [[e2toolbar_ items] mutableCopy];
 	if ([items count]==4) {
 		barButtonItem.title = NSLocalizedString(@"Index button", nil);
 		[items insertObject:barButtonItem atIndex:1]; //この位置は、loadView:にある初期定義と一致させること
 	}
-	[Me2toolbar setItems:items animated:YES];
+	[e2toolbar_ setItems:items animated:YES];
    // [items release];
 }
 
 // ヨコになり左が表示される前に呼ばれる  <willShowViewController>
 - (void)hidePopoverButtonItem:(UIBarButtonItem *)barButtonItem
 {
-	NSMutableArray *items = [[Me2toolbar items] mutableCopy];
+	NSMutableArray *items = [[e2toolbar_ items] mutableCopy];
 	if ([items count]==5) {
 		[items removeObjectAtIndex:1]; //この位置は、loadView:にある初期定義と一致させること
 	}
-    [Me2toolbar setItems:items animated:YES];
+    [e2toolbar_ setItems:items animated:YES];
     //[items release];
 }
 
@@ -1765,7 +1756,7 @@
 			return NO; 
 		}
 	}
-	[Re1selected.managedObjectContext rollback]; // 前回のSAVE以降を取り消す
+	[e1selected_.managedObjectContext rollback]; // 前回のSAVE以降を取り消す
 	return YES; // 閉じることを許可
 }
 /*

@@ -529,8 +529,8 @@
 			// E2 へドリルダウン
 			E2viewController *e2view = [[E2viewController alloc] init];
 			e2view.title = self.title;	// "Sample"
-			e2view.Re1selected = Re1add;
-			e2view.PbSharePlanList = YES; // SharePlan専用モード
+			e2view.e1selected = Re1add;
+			e2view.sharePlanList = YES; // SharePlan専用モード
 			[self.navigationController pushViewController:e2view animated:YES];
 			//[e2view release];
 		}

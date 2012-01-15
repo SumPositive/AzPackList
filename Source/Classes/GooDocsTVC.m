@@ -601,9 +601,13 @@
 		if (appDelegate_.app_is_iPad) {
 			//[(PadNaviCon*)self.navigationController dismissPopoverSaved];  // E1再描画させるためSaved
 			if (selfPopover) {
-				if ([delegate respondsToSelector:@selector(refreshE1view)]) {	// メソッドの存在を確認する
+				/*if ([delegate respondsToSelector:@selector(refreshE1view)]) {	// メソッドの存在を確認する
 					[delegate refreshE1view];// 親の再描画を呼び出す
-				}
+				}*/
+				// 再読み込み 通知発信
+				NSNotification* refreshNotification = [NSNotification notificationWithName:NFM_REFETCH_ALL_DATA  // DATA追加発生
+																					object:self  userInfo:nil];
+				[[NSNotificationCenter defaultCenter] postNotification:refreshNotification];
 				[selfPopover dismissPopoverAnimated:YES]; 
 			}
 		} else {
@@ -663,7 +667,8 @@
 		
 		//NSString *title = [[NSFileManager defaultManager] displayNameAtPath:pathDefault];
 		// Google Document 上に表示されるファイル名　＜＜ .csv を付けない！勝手にExcel型に変換されてしまうため＞＞
-		NSString *title = [Re1selected.name stringByAppendingString:GD_GDOCS_EXT4]; // 拡張子指定
+		//NSString *title = [Re1selected.name stringByAppendingString:GD_GDOCS_EXT4]; // 拡張子指定
+		NSString *title = [Re1selected.name stringByAppendingString: @"."  GD_EXTENSION]; //[2.0]拡張子指定
 		[newEntry setTitleWithString:title];
 		
 		// iPhone ローカルファイル名
@@ -771,7 +776,8 @@
 	GDataQueryDocs *query = [GDataQueryDocs documentQueryWithFeedURL:feedURL];
 	[query setMaxResults:100];			// 一度に取得する件数
 	[query setShouldShowFolders:NO];	// フォルダを表示するか
-	[query setFullTextQueryString:@".packlist|.azpack"];	// この文字列が含まれるものを抽出する　　GD_GDOCS_EXT or GD_GDOCS_EXT4 両対応するため
+	// この文字列が含まれるものを抽出する　　GD_GDOCS_EXT or GD_GDOCS_EXT4 両対応するため
+	[query setFullTextQueryString:@".packlist|.azpack|.azp"];	 //[2.0]GD_EXTENSION にも対応
 
 	// リスト取得開始、進捗サインON
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES; // NetworkアクセスサインON

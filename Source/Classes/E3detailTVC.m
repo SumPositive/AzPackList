@@ -49,55 +49,40 @@
 @implementation E3detailTVC
 {
 @private
-	//NSMutableArray	*RaE2array;
-	//NSMutableArray	*RaE3array;
-	//E3						*Re3target;
-	//NSInteger			PiAddGroup;		// =(-1)Edit  >=(E2.row)Add Mode
-	//NSInteger			PiAddRow;		//(V0.4)Add行の.row ここに追加する
-	//BOOL					PbSharePlanList;  // PbSpMode;	// SharePlan プレビューモード
-	
-	//id									delegate;
-	//UIPopoverController*	selfPopover;  // 自身を包むPopover  閉じる為に必要
-	
-	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
-	//NSAutoreleasePool	*MautoreleasePool;	autoreleaseオブジェクトを「戻り値」にしているため、ここでの破棄禁止
-	//----------------------------------------------Owner移管につきdealloc時のrelese不要
-	UILabel		*MlbGroup;	// .tag = E2.row　　　以下全てcellがOwnerになる
-	UITextField	*MtfName;
-	UITextField	*MtfKeyword;	//[1.1]Shopping keyword
-	UITextView	*MtvNote;
-	//UILabel		*MlbNote;
-	UILabel		*MlbStock;
-	UILabel		*MlbNeed;
-	UILabel		*MlbWeight;
+	UILabel		*lbGroup_;	// .tag = E2.row　　　以下全てcellがOwnerになる
+	UITextField	*tfName_;
+	UITextField	*tfKeyword_;	//[1.1]Shopping keyword
+	UITextView	*tvNote_;
+	UILabel		*lbStock_;
+	UILabel		*lbNeed_;
+	UILabel		*lbWeight_;
 	//UILabel		*MlbStockMax;
 	//UILabel		*MlbNeedMax;
 	//UISlider			*MsliderStock;
 	//UISlider			*MsliderNeed;
-	AZDial			*mDialStock;
-	AZDial			*mDialNeed;
+	AZDial			*dialStock_;
+	AZDial			*dialNeed_;
 #ifdef WEIGHT_DIAL
-	AZDial			*mDialWeight;
+	AZDial			*dialWeight_;
 #else
 	UISlider			*MsliderWeight;
 	UILabel		*MlbWeightMax;
 	UILabel		*MlbWeightMin;
 #endif
 	
-	CalcView		*McalcView;
+	CalcView		*calcView_;
 	
-	//----------------------------------------------assign
 	AppDelegate		*appDelegate_;
-	float						MfTableViewContentY;
+	float						tableViewContentY_;
 }
-@synthesize RaE2array;
-@synthesize RaE3array;
-@synthesize Re3target;
-@synthesize PiAddGroup;
-@synthesize PiAddRow;
-@synthesize PbSharePlanList;
-@synthesize delegate;
-@synthesize selfPopover;
+@synthesize e2array = e2array_;
+@synthesize e3array = e3array_;
+@synthesize e3target = e3target_;
+@synthesize addE2section = addE2section_;
+@synthesize addE3row = addE3row_;
+@synthesize sharePlanList = sharePlanList_;
+@synthesize delegate = delegate_;
+@synthesize selfPopover = selfPopover_;
 
 
 #pragma mark - dealloc
@@ -105,8 +90,8 @@
 - (void)dealloc    // 生成とは逆順に解放するのが好ましい
 {
 	//[selfPopover release], 
-	selfPopover = nil;
-	//[Re3target release];
+	selfPopover_ = nil;
+	//[e3target_ release];
 	//[RaE3array release];
 	//[RaE2array release];
 	//[super dealloc];
@@ -122,8 +107,8 @@
 		// 初期化成功
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		appDelegate_.app_UpdateSave = NO;
-		PbSharePlanList = NO;
-		MfTableViewContentY = -1;
+		sharePlanList_ = NO;
+		tableViewContentY_ = -1;
 
 		// 背景テクスチャ・タイルペイント
 		if (appDelegate_.app_is_iPad) {
@@ -160,7 +145,7 @@
 											  initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
 											  target:self action:@selector(cancelClose:)];
 	
-	if (PbSharePlanList==NO) {
+	if (sharePlanList_==NO) {
 		// SAVEボタンを右側に追加する
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] 
 												   initWithBarButtonSystemItem:UIBarButtonSystemItemSave
@@ -191,8 +176,8 @@
 	self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 
 	// 電卓が出ておれば消す
-	if (McalcView && [McalcView isShow]) {
-		[McalcView hide]; //　ここでは隠すだけ。 removeFromSuperviewするとアニメ無く即消えてしまう。
+	if (calcView_ && [calcView_ isShow]) {
+		[calcView_ hide]; //　ここでは隠すだけ。 removeFromSuperviewするとアニメ無く即消えてしまう。
 	}
 	
 	// 画面表示に関係する Option Setting を取得する
@@ -210,21 +195,21 @@
 	CGRect rect;
 	float fWidth = self.tableView.frame.size.width;
 	
-	rect = MlbGroup.frame;
+	rect = lbGroup_.frame;
 	rect.size.width = fWidth - 80;
-	MlbGroup.frame = rect;
+	lbGroup_.frame = rect;
 	
-	rect = MtfName.frame;
+	rect = tfName_.frame;
 	rect.size.width = fWidth - 60;
-	MtfName.frame = rect;
+	tfName_.frame = rect;
 	
-	rect = MtvNote.frame;
+	rect = tvNote_.frame;
 	rect.size.width = fWidth - 60;
-	MtvNote.frame = rect;
+	tvNote_.frame = rect;
 	
-	rect = MtfKeyword.frame;
+	rect = tfKeyword_.frame;
 	rect.size.width = fWidth - 60;
-	MtfKeyword.frame = rect;
+	tfKeyword_.frame = rect;
 	
 /*	rect = MlbStock.frame;
 	rect.origin.x = fWidth / 2 - OFSX2;
@@ -232,12 +217,12 @@
 	MlbNeed.frame = rect;
 	MlbWeight.frame = rect;*/
 	
-	rect = mDialStock.frame;
+	rect = dialStock_.frame;
 	rect.size.width = fWidth - 80;
-	[mDialStock setFrame:rect]; 	//NG//mDialStock.frame = rect;
-	[mDialNeed setFrame:rect];
+	[dialStock_ setFrame:rect]; 	//NG//mDialStock.frame = rect;
+	[dialNeed_ setFrame:rect];
 #ifdef WEIGHT_DIAL
-	[mDialWeight setFrame:rect];
+	[dialWeight_ setFrame:rect];
 #else
 	rect = MsliderStock.frame;
 	rect.size.width = fWidth - 80;
@@ -245,12 +230,12 @@
 #endif
 	
 /*	NSInteger iVal;
-	iVal = [Re3target.stock integerValue];  //  MlbStock.text integerValue];
+	iVal = [e3target_.stock integerValue];  //  MlbStock.text integerValue];
 	MsliderStock.maximumValue = 10 + (iVal / 10) * 10;
 	MlbStockMax.text = [NSString stringWithFormat:@"%4ld", (long)MsliderStock.maximumValue];
 	MsliderStock.value = (float)iVal; // Min,Maxを変えてから、その範囲でしか代入できないため、最後に代入
 	
-	iVal = [Re3target.need integerValue];  // MlbNeed.text integerValue];
+	iVal = [e3target_.need integerValue];  // MlbNeed.text integerValue];
 	MsliderNeed.maximumValue = 10 + (iVal / 10) * 10;
 	MlbNeedMax.text = [NSString stringWithFormat:@"%4ld", (long)MsliderNeed.maximumValue];
 	MsliderNeed.value = (float)iVal;
@@ -259,7 +244,7 @@
 #else
 	NSInteger iVal;
 	// One Weight
-	iVal = [Re3target.weight integerValue];  // MlbWeight.text integerValue];
+	iVal = [e3target_.weight integerValue];  // MlbWeight.text integerValue];
 	// Min
 	MsliderWeight.minimumValue = (float)(iVal - WEIGHT_CENTER_OFFSET);
 	if (MsliderWeight.minimumValue < 0) MsliderWeight.minimumValue = 0.0f;
@@ -282,8 +267,8 @@
 
 - (void)performNameFirstResponder
 {
-	if (MtfName && [MtfName.text length]<=0) {			// ブランクならば、
-		[MtfName becomeFirstResponder];  // キーボード表示  NG/iPadでは効かなかった。0.5秒後にするとOK
+	if (tfName_ && [tfName_.text length]<=0) {			// ブランクならば、
+		[tfName_ becomeFirstResponder];  // キーボード表示  NG/iPadでは効かなかった。0.5秒後にするとOK
 	}
 }
 
@@ -308,11 +293,11 @@
 	if (appDelegate_.app_is_iPad) {
 		//
 	} else {
-		if (McalcView) {	// あれば破棄する
-			[McalcView hide];
-			[McalcView removeFromSuperview];  // これでCalcView.deallocされる
+		if (calcView_) {	// あれば破棄する
+			[calcView_ hide];
+			[calcView_ removeFromSuperview];  // これでCalcView.deallocされる
 			//[McalcView release]; +1残っているが、viewが破棄されるときにreleseされるので、ここは不要
-			McalcView = nil;
+			calcView_ = nil;
 		}
 	}
 	[super viewWillDisappear:animated];
@@ -336,8 +321,8 @@
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration
 {
 	// この開始時に消す。　　この時点で self.view.frame は回転していない。
-	if (McalcView && [McalcView isShow]) {
-		[McalcView hide]; //　ここでは隠すだけ。 removeFromSuperviewするとアニメ無く即消えてしまう。
+	if (calcView_ && [calcView_ isShow]) {
+		[calcView_ hide]; //　ここでは隠すだけ。 removeFromSuperviewするとアニメ無く即消えてしまう。
 	}
 }
 
@@ -361,14 +346,14 @@
 
 - (void)cancelClose:(id)sender 
 {	// E3は、Cancel時、新規ならば破棄、修正ならば復旧、させる
-	if (Re3target && PbSharePlanList==NO) {  // Sample表示のときrollbackすると、一時表示用のE1まで消えてしまうので回避する。
+	if (e3target_ && sharePlanList_==NO) {  // Sample表示のときrollbackすると、一時表示用のE1まで消えてしまうので回避する。
 		// ROLLBACK
 #ifdef xxxDEBUG
-		NSManagedObjectContext *moc = Re3target.managedObjectContext;
-		//NSLog(@"--1-- Re3target=%@", Re3target);
+		NSManagedObjectContext *moc = e3target_.managedObjectContext;
+		//NSLog(@"--1-- e3target_=%@", e3target_);
 		//[1.0.6]insertされたentityが本当にrollbackされているのかを検証
 		{
-			E2 *e2 = Re3target.parent;
+			E2 *e2 = e3target_.parent;
 			NSLog(@"--1-- [[e2.childs allObjects] count]=%d", (int)[[e2.childs allObjects] count]);
 			
 			NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
@@ -381,13 +366,13 @@
 #endif		
 
 		//[1.0.6]今更ながら、insert後、saveしていない限り、rollbackだけで十分であることが解った。 ＜＜前後のDEBUGによる検証済み。
-		[Re3target.managedObjectContext rollback]; // 前回のSAVE以降を取り消す
+		[e3target_.managedObjectContext rollback]; // 前回のSAVE以降を取り消す
 		
 #ifdef xxxDEBUG
-		//NSLog(@"--2-- Re3target=%@", Re3target);
+		//NSLog(@"--2-- e3target_=%@", e3target_);
 		//[1.0.6]insertされたentityが本当にrollbackされているのかを検証
 		{
-			E2 *e2 = Re3target.parent;
+			E2 *e2 = e3target_.parent;
 			NSLog(@"--2-- [[e2.childs allObjects] count]=%d", (int)[[e2.childs allObjects] count]);
 			
 			NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
@@ -402,30 +387,30 @@
 	}
 
 	if (appDelegate_.app_is_iPad) {
-		if (selfPopover) {
-			[selfPopover dismissPopoverAnimated:YES];
+		if (selfPopover_) {
+			[selfPopover_ dismissPopoverAnimated:YES];
 		}
 	} else {
 		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
 	}
 }
 
-// 編集フィールドの値を self.e3target にセットする
+// 編集フィールドの値を e3target_ にセットする
 - (void)saveClose:(id)sender 
 {
-	if (PbSharePlanList) return; // [Save]ボタンを消しているので通らないハズだが、念のため。
+	if (sharePlanList_) return; // [Save]ボタンを消しているので通らないハズだが、念のため。
 	
 	if (appDelegate_.app_is_iPad) {
 	} else {
 		//[McalcView hide]; // 電卓が出ておれば消す
-		if (McalcView) {	// あれば破棄する
-			[McalcView save]; // 有効値あれば保存
+		if (calcView_) {	// あれば破棄する
+			[calcView_ save]; // 有効値あれば保存
 		}
 	}
 	
-	NSInteger lWeight = [Re3target.weight integerValue];  // MlbWeight.text integerValue];
-	NSInteger lStock = [Re3target.stock integerValue];  // MlbStock.text integerValue];
-	NSInteger lNeed = [Re3target.need integerValue];  // MlbNeed.text integerValue];
+	NSInteger lWeight = [e3target_.weight integerValue];  // MlbWeight.text integerValue];
+	NSInteger lStock = [e3target_.stock integerValue];  // MlbStock.text integerValue];
+	NSInteger lNeed = [e3target_.need integerValue];  // MlbNeed.text integerValue];
 	//[0.2c]プラン総重量制限
 	if (0 < lWeight) {  // longオーバーする可能性があるため商は求めない
 		if (AzMAX_PLAN_WEIGHT / lWeight < lStock OR AzMAX_PLAN_WEIGHT / lWeight < lNeed) {
@@ -436,84 +421,84 @@
 	
 	//Pe3target,Pe2selected は ManagedObject だから更新すれば ManagedObjectContext に反映される
 	// PICKER 指定したコンポーネントで選択された行のインデックスを返す。
-	NSInteger newSection = MlbGroup.tag;
-	if ([self.RaE2array count]<=newSection) {
+	NSInteger newSection = lbGroup_.tag;
+	if ([e2array_ count]<=newSection) {
 		NSLog(@"*** OVER newSection=%d", newSection);
 		return;
 	}
-	E2 *e2objNew = [self.RaE2array objectAtIndex:newSection];
+	E2 *e2objNew = [e2array_ objectAtIndex:newSection];
 	
-	if (self.PiAddGroup < 0 && 0 <= newSection)
+	if (addE2section_< 0 && 0 <= newSection)
 	{	// Edit mode のときだけ、グループ移動による「旧グループの再集計」が必要になる
-		NSInteger oldSection = [Re3target.parent.row integerValue];  // Edit mode
+		NSInteger oldSection = [e3target_.parent.row integerValue];  // Edit mode
 		
 		if (oldSection != newSection) 
 		{	// グループに変化があれば、
 			// E2セクション(Group)の変更あり  self.e3section ==>> newSection
-			NSInteger oldRow = [Re3target.row integerValue];	// 元ノードのrow　最後のrow更新処理で、ie3nodeRow以降を更新する。
+			NSInteger oldRow = [e3target_.row integerValue];	// 元ノードのrow　最後のrow更新処理で、ie3nodeRow以降を更新する。
 			
 			NSInteger newRow = (-1);
 			// Add行に追加する （Add行は1つ下へ）
-			for (E3* e3 in [self.RaE3array objectAtIndex:newSection]) {
+			for (E3* e3 in [e3array_ objectAtIndex:newSection]) {
 				if ([e3.need integerValue]==(-1)) { // Add行
 					newRow = [e3.row integerValue];
 				}
 			}
 			if (newRow<0) {	// 万一、Add行がバグで削除されたときのため
-				newRow = [[self.RaE3array objectAtIndex:newSection] count];  // セクション末尾
+				newRow = [[e3array_ objectAtIndex:newSection] count];  // セクション末尾
 			}
 			
-			E2 *e2objOld = [self.RaE2array objectAtIndex:oldSection];
+			E2 *e2objOld = [e2array_ objectAtIndex:oldSection];
 			//--------------------------------------------------(1)MutableArrayの移動
-			[[self.RaE3array objectAtIndex:oldSection] removeObjectAtIndex:oldRow];
-			[[self.RaE3array objectAtIndex:newSection] insertObject:Re3target atIndex:newRow];
+			[[e3array_ objectAtIndex:oldSection] removeObjectAtIndex:oldRow];
+			[[e3array_ objectAtIndex:newSection] insertObject:e3target_ atIndex:newRow];
 			
 			// 異セクション間の移動　＜＜親(.e2selected)の変更が必要＞＞
 			// 移動元セクション（親）から子を削除する
-			[e2objOld removeChildsObject:Re3target];	// 元の親ノードにある子登録を抹消する
+			[e2objOld removeChildsObject:e3target_];	// 元の親ノードにある子登録を抹消する
 			// e2objOld 子が無くなったので再集計する
 			[e2objOld setValue:[e2objOld valueForKeyPath:@"childs.@sum.noGray"] forKey:@"sumNoGray"];
 			[e2objOld setValue:[e2objOld valueForKeyPath:@"childs.@sum.noCheck"] forKey:@"sumNoCheck"];
 			[e2objOld setValue:[e2objOld valueForKeyPath:@"childs.@sum.weightStk"] forKey:@"sumWeightStk"];
 			[e2objOld setValue:[e2objOld valueForKeyPath:@"childs.@sum.weightNed"] forKey:@"sumWeightNed"];
 			// 異動先セクション（親）へ子を追加する
-			[e2objNew addChildsObject:Re3target];	// 新しい親ノードに子登録する
+			[e2objNew addChildsObject:e3target_];	// 新しい親ノードに子登録する
 			// e2objNew の再集計は、変更を含めて最後に実施
 			
 			// 元のrow付け替え処理　 異セクション間での移動： 双方のセクションで変化あったrow以降、全て更新
 			NSInteger i;
 			E3 *e3obj;
-			for (i = oldRow ; i < [[self.RaE3array objectAtIndex:oldSection] count] ; i++) {
-				e3obj = [[self.RaE3array objectAtIndex:oldSection] objectAtIndex:i];
+			for (i = oldRow ; i < [[e3array_ objectAtIndex:oldSection] count] ; i++) {
+				e3obj = [[e3array_ objectAtIndex:oldSection] objectAtIndex:i];
 				e3obj.row = [NSNumber numberWithInteger:i];
 			}
 			// Add行に追加
-			Re3target.row = [NSNumber numberWithInteger:newRow];  
+			e3target_.row = [NSNumber numberWithInteger:newRow];  
 			// Add行以下のrow付け替え処理
-			for (i = newRow ; i < [[self.RaE3array objectAtIndex:newSection] count] ; i++) {
-				e3obj = [[self.RaE3array objectAtIndex:newSection] objectAtIndex:i];
+			for (i = newRow ; i < [[e3array_ objectAtIndex:newSection] count] ; i++) {
+				e3obj = [[e3array_ objectAtIndex:newSection] objectAtIndex:i];
 				e3obj.row = [NSNumber numberWithInteger:i];
 			}
 		}
 	}
 	
-	if( 50 < [MtfName.text length] ){
+	if( 50 < [tfName_.text length] ){
 		// 長さが50超ならば、0文字目から50文字を切り出して保存　＜以下で切り出すとフリーズする＞
-		[Re3target setValue:[MtfName.text substringWithRange:NSMakeRange(0, 50)] forKey:@"name"];
+		[e3target_ setValue:[tfName_.text substringWithRange:NSMakeRange(0, 50)] forKey:@"name"];
 	} else {
 		//[Pe3target setValue:MlbName.text forKey:@"name"];
-		Re3target.name = MtfName.text;
+		e3target_.name = tfName_.text;
 	}
 	
-	if( 50 < [MtfKeyword.text length] ){
+	if( 50 < [tfKeyword_.text length] ){
 		// 長さが50超ならば、0文字目から50文字を切り出して保存　＜以下で切り出すとフリーズする＞
-		[Re3target setValue:[MtfKeyword.text substringWithRange:NSMakeRange(0, 50)] forKey:@"shopKeyword"];
+		[e3target_ setValue:[tfKeyword_.text substringWithRange:NSMakeRange(0, 50)] forKey:@"shopKeyword"];
 	} else {
-		Re3target.shopKeyword = MtfKeyword.text;
+		e3target_.shopKeyword = tfKeyword_.text;
 	}
 	
 	NSString *zNote;
-	zNote = MtvNote.text;
+	zNote = tvNote_.text;
 	/*
 	 if ([MlbNote.text length] <= 0) {
 	 zNote = @"";
@@ -527,29 +512,29 @@
 	 */
 	if( TEXTVIEW_MAXLENGTH < [zNote length] ){
 		// 長さがTEXTVIEW_MAXLENGTH超ならば、0文字目からTEXTVIEW_MAXLENGTH文字を切り出して保存　＜以下で切り出すとフリーズする＞
-		[Re3target setValue:[zNote substringWithRange:NSMakeRange(0, TEXTVIEW_MAXLENGTH)] forKey:@"note"];
+		[e3target_ setValue:[zNote substringWithRange:NSMakeRange(0, TEXTVIEW_MAXLENGTH)] forKey:@"note"];
 	} else {
-		[Re3target setValue:zNote forKey:@"note"];
+		[e3target_ setValue:zNote forKey:@"note"];
 	}
 	
-	[Re3target setValue:[NSNumber numberWithInteger:lWeight] forKey:@"weight"];  // 最小値が0でないとエラー発生
-	[Re3target setValue:[NSNumber numberWithInteger:lStock] forKey:@"stock"];
-	[Re3target setValue:[NSNumber numberWithInteger:lNeed] forKey:@"need"];
-	[Re3target setValue:[NSNumber numberWithInteger:(lWeight*lStock)] forKey:@"weightStk"];
-	[Re3target setValue:[NSNumber numberWithInteger:(lWeight*lNeed)] forKey:@"weightNed"];
-	[Re3target setValue:[NSNumber numberWithInteger:(lNeed-lStock)] forKey:@"lack"]; // 不足数
-	[Re3target setValue:[NSNumber numberWithInteger:((lNeed-lStock)*lWeight)] forKey:@"weightLack"]; // 不足重量
+	[e3target_ setValue:[NSNumber numberWithInteger:lWeight] forKey:@"weight"];  // 最小値が0でないとエラー発生
+	[e3target_ setValue:[NSNumber numberWithInteger:lStock] forKey:@"stock"];
+	[e3target_ setValue:[NSNumber numberWithInteger:lNeed] forKey:@"need"];
+	[e3target_ setValue:[NSNumber numberWithInteger:(lWeight*lStock)] forKey:@"weightStk"];
+	[e3target_ setValue:[NSNumber numberWithInteger:(lWeight*lNeed)] forKey:@"weightNed"];
+	[e3target_ setValue:[NSNumber numberWithInteger:(lNeed-lStock)] forKey:@"lack"]; // 不足数
+	[e3target_ setValue:[NSNumber numberWithInteger:((lNeed-lStock)*lWeight)] forKey:@"weightLack"]; // 不足重量
 	
 	NSInteger iNoGray = 0;
 	if (0 < lNeed) iNoGray = 1;
-	[Re3target setValue:[NSNumber numberWithInteger:iNoGray] forKey:@"noGray"]; // NoGray:有効(0<必要数)アイテム
+	[e3target_ setValue:[NSNumber numberWithInteger:iNoGray] forKey:@"noGray"]; // NoGray:有効(0<必要数)アイテム
 	
 	NSInteger iNoCheck = 0;
 	if (0 < lNeed && lStock < lNeed) iNoCheck = 1;
-	[Re3target setValue:[NSNumber numberWithInteger:iNoCheck] forKey:@"noCheck"]; // NoCheck:不足アイテム
+	[e3target_ setValue:[NSNumber numberWithInteger:iNoCheck] forKey:@"noCheck"]; // NoCheck:不足アイテム
 	
-	if (0 <= self.PiAddGroup && 0 <= PiAddRow) {
-		/*(V0.4)PiAddRow に新規追加する。 PiAddRow以下を先にずらすこと。
+	if (0 <= addE2section_&& 0 <= addE3row_) {
+		/*(V0.4)addE3row_ に新規追加する。 addE3row_以下を先にずらすこと。
 		 // 新規のとき、末尾になるように行番号を付与する
 		 NSInteger rows = [[Pe3array objectAtIndex:newSection] count]; // 追加するセクションの現在行数
 		 [Pe3target setValue:[NSNumber numberWithInteger:rows] forKey:@"row"];
@@ -557,17 +542,17 @@
 		 [e2objNew addChildsObject:Pe3target];
 		 */
 		
-		//(V0.4)PiAddRow以下について、.row++ して、PiAddRowを空ける。
+		//(V0.4)addE3row_以下について、.row++ して、addE3row_を空ける。
 		//		NSArray *aE3s = [NSArray arrayWithArray:[Pe3array objectAtIndex:newSection]];
-		for (E3 *e3 in [RaE3array objectAtIndex:newSection]) {
-			if (PiAddRow <= [e3.row integerValue]) {
+		for (E3 *e3 in [e3array_ objectAtIndex:newSection]) {
+			if (addE3row_ <= [e3.row integerValue]) {
 				e3.row = [NSNumber numberWithInteger:[e3.row integerValue]+1]; // +1
 			}
 		}
-		//(V0.4)PiAddRowに追加する。
-		Re3target.row = [NSNumber numberWithInteger:PiAddRow];
+		//(V0.4)addE3row_に追加する。
+		e3target_.row = [NSNumber numberWithInteger:addE3row_];
 		// E2-E3 Link
-		Re3target.parent = e2objNew;
+		e3target_.parent = e2objNew;
 	}
 	
 	// E2 sum属性　＜高速化＞ 親sum保持させる
@@ -590,10 +575,10 @@
 	[e1obj setValue:sumWeStk forKey:@"sumWeightStk"];
 	[e1obj setValue:sumWeNed forKey:@"sumWeightNed"];
 	
-	if (PbSharePlanList==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
+	if (sharePlanList_==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
 		// SAVE : e3edit,e2list は ManagedObject だから更新すれば ManagedObjectContext に反映されている
 		NSError *err = nil;
-		if (![Re3target.managedObjectContext save:&err]) {
+		if (![e3target_.managedObjectContext save:&err]) {
 			NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
 			//abort();
 		}
@@ -601,11 +586,11 @@
 	
 	if (appDelegate_.app_is_iPad) {
 		//[(PadNaviCon*)self.navigationController dismissPopoverSaved];  // SAVE: PadNaviCon拡張メソッド
-		if (selfPopover) {
-			if ([delegate respondsToSelector:@selector(refreshE3view)]) {	// メソッドの存在を確認する
-				[delegate refreshE3view];// 親の再描画を呼び出す
+		if (selfPopover_) {
+			if ([delegate_ respondsToSelector:@selector(refreshE3view)]) {	// メソッドの存在を確認する
+				[delegate_ refreshE3view];// 親の再描画を呼び出す
 			}
-			[selfPopover dismissPopoverAnimated:YES];
+			[selfPopover_ dismissPopoverAnimated:YES];
 		}
 	} else {
 		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
@@ -629,11 +614,11 @@
 
 - (void)closePopover
 {
-	if (selfPopover) {	//dismissPopoverCancel
-		if (McalcView && [McalcView isShow]) {
-			[McalcView cancel];  //　ラベル表示を元に戻す
+	if (selfPopover_) {	//dismissPopoverCancel
+		if (calcView_ && [calcView_ isShow]) {
+			[calcView_ cancel];  //　ラベル表示を元に戻す
 		}
-		[selfPopover dismissPopoverAnimated:YES];
+		[selfPopover_ dismissPopoverAnimated:YES];
 	}
 }
 
@@ -645,15 +630,15 @@
 		 withRow:(NSInteger)iRow
 		 withMax:(NSInteger)iMax
 {
-	if (McalcView) {	// あれば一旦、破棄する
-		[McalcView hide];
-		[McalcView removeFromSuperview];  // これでCalcView.deallocされる
+	if (calcView_) {	// あれば一旦、破棄する
+		[calcView_ hide];
+		[calcView_ removeFromSuperview];  // これでCalcView.deallocされる
 		//[McalcView release]; +1残っているが、viewが破棄されるときにreleseされるので、ここは不要
-		McalcView = nil;
+		calcView_ = nil;
 	}
-	[MtfName resignFirstResponder]; // ファーストレスポンダでなくす ⇒ キーボード非表示
-	[MtvNote resignFirstResponder]; // ファーストレスポンダでなくす ⇒ キーボード非表示
-	[MtfKeyword resignFirstResponder]; // ファーストレスポンダでなくす ⇒ キーボード非表示
+	[tfName_ resignFirstResponder]; // ファーストレスポンダでなくす ⇒ キーボード非表示
+	[tvNote_ resignFirstResponder]; // ファーストレスポンダでなくす ⇒ キーボード非表示
+	[tfKeyword_ resignFirstResponder]; // ファーストレスポンダでなくす ⇒ キーボード非表示
 	
 	CGRect rect = self.view.bounds;
 
@@ -661,7 +646,7 @@
 		//テンキー表示位置
 		rect.origin.y = 400;  //全体が見えるようにした + (iRow-3)*60;  
 	} else {
-		MfTableViewContentY = self.tableView.contentOffset.y; // Hide時に元の表示に戻すため
+		tableViewContentY_ = self.tableView.contentOffset.y; // Hide時に元の表示に戻すため
 		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) {
 			// 横
 			rect.origin.y = 170 + (iRow-3)*60;
@@ -681,15 +666,15 @@
 		[UIView commitAnimations];
 	}
 	
-	McalcView = [[CalcView alloc] initWithFrame:rect];
-	McalcView.Rlabel = pLabel;  // MlbAmount.tag にはCalc入力された数値(long)が記録される
-	McalcView.Rentity = Re3target;
-	McalcView.RzKey = zKey;
-	McalcView.delegate = self;
-	McalcView.maxValue = iMax;
-	[self.view addSubview:McalcView];
+	calcView_ = [[CalcView alloc] initWithFrame:rect];
+	calcView_.Rlabel = pLabel;  // MlbAmount.tag にはCalc入力された数値(long)が記録される
+	calcView_.Rentity = e3target_;
+	calcView_.RzKey = zKey;
+	calcView_.delegate = self;
+	calcView_.maxValue = iMax;
+	[self.view addSubview:calcView_];
 	//[McalcView release]; // addSubviewにてretain(+1)されるため、こちらはrelease(-1)して解放
-	[McalcView show];
+	[calcView_ show];
 }
 
 #pragma mark  <CalcViewDelegate>
@@ -702,14 +687,14 @@
 - (void)calcViewWillDisappear	// CalcViewが隠れるときに呼び出される
 {
 	[self.tableView setScrollEnabled:YES]; // スクロール許可
-	if (0 <= MfTableViewContentY) {
+	if (0 <= tableViewContentY_) {
 		// AzPacking Original 元の位置に戻す
-		self.tableView.contentOffset = CGPointMake(0, MfTableViewContentY);
+		self.tableView.contentOffset = CGPointMake(0, tableViewContentY_);
 	}
-	[mDialStock setDial:[Re3target.stock integerValue] animated:YES];
-	[mDialNeed setDial:[Re3target.need integerValue] animated:YES];
+	[dialStock_ setDial:[e3target_.stock integerValue] animated:YES];
+	[dialNeed_ setDial:[e3target_.need integerValue] animated:YES];
 #ifdef WEIGHT_MAX
-	[mDialWeight setDial:[Re3target.weight integerValue] animated:YES];
+	[dialWeight_ setDial:[e3target_.weight integerValue] animated:YES];
 #else
 	[self viewWillAppear:NO]; // スライドバーを再描画するため
 #endif
@@ -732,13 +717,13 @@
 	
 	switch (iRow) {
 		case 3: // Stock
-			[self showCalc:MlbStock forKey:@"stock" forTitle:NSLocalizedString(@"StockQty", nil) withRow:3 withMax:STOCK_MAX];
+			[self showCalc:lbStock_ forKey:@"stock" forTitle:NSLocalizedString(@"StockQty", nil) withRow:3 withMax:STOCK_MAX];
 			break;
 		case 4: // Need
-			[self showCalc:MlbNeed forKey:@"need" forTitle:NSLocalizedString(@"Need Qty", nil) withRow:4 withMax:NEED_MAX];
+			[self showCalc:lbNeed_ forKey:@"need" forTitle:NSLocalizedString(@"Need Qty", nil) withRow:4 withMax:NEED_MAX];
 			break;
 		case 5: // Weight
-			[self showCalc:MlbWeight forKey:@"weight" forTitle:NSLocalizedString(@"One Weight", nil) withRow:5 withMax:WEIGHT_MAX];
+			[self showCalc:lbWeight_ forKey:@"weight" forTitle:NSLocalizedString(@"One Weight", nil) withRow:5 withMax:WEIGHT_MAX];
 			break;
 	}
 }
@@ -748,9 +733,9 @@
 {
 	long lVal = (long)(slider.value + 0.5f);
 	if (9999 < lVal) lVal = 9999;
-	if ([Re3target.stock longValue] != lVal) { // 変更あり
+	if ([e3target_.stock longValue] != lVal) { // 変更あり
 		MlbStock.text = GstringFromNumber([NSNumber numberWithInteger:lVal]);  //[NSString stringWithFormat:@"%5ld", lVal];
-		Re3target.stock = [NSNumber numberWithInteger:lVal];
+		e3target_.stock = [NSNumber numberWithInteger:lVal];
 		appDelegate.AppUpdateSave = YES; // 変更あり
 		self.navigationItem.rightBarButtonItem.enabled = appDelegate.AppUpdateSave;
 	}
@@ -771,9 +756,9 @@
 {
 	long lVal = (long)(slider.value + 0.5f);
 	if (9999 < lVal) lVal = 9999;
-	if ([Re3target.need longValue] != lVal) { // 変更あり
+	if ([e3target_.need longValue] != lVal) { // 変更あり
 		MlbNeed.text = GstringFromNumber([NSNumber numberWithInteger:lVal]);  //[NSString stringWithFormat:@"%5ld", lVal];
-		Re3target.need = [NSNumber numberWithInteger:lVal];
+		e3target_.need = [NSNumber numberWithInteger:lVal];
 		appDelegate.AppUpdateSave = YES; // 変更あり
 		self.navigationItem.rightBarButtonItem.enabled = appDelegate.AppUpdateSave;
 	}
@@ -798,9 +783,9 @@
 	long lVal = (long)(slider.value + 0.5f);
 	lVal = (lVal / WEIGHT_SLIDER_STEP) * WEIGHT_SLIDER_STEP;
 	if (WEIGHT_MAX < lVal) lVal = WEIGHT_MAX;
-	if ([Re3target.weight longValue] != lVal) { // 変更あり
+	if ([e3target_.weight longValue] != lVal) { // 変更あり
 		MlbWeight.text = GstringFromNumber([NSNumber numberWithInteger:lVal]);  //[NSString stringWithFormat:@"%5ld", lVal];
-		Re3target.weight = [NSNumber numberWithInteger:lVal];
+		e3target_.weight = [NSNumber numberWithInteger:lVal];
 		appDelegate.AppUpdateSave = YES; // 変更あり
 		self.navigationItem.rightBarButtonItem.enabled = appDelegate.AppUpdateSave;
 	}	
@@ -915,7 +900,7 @@
 	if (cell == nil) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
 									   reuseIdentifier:zCellIndex];
-		if (PbSharePlanList) {
+		if (sharePlanList_) {
 			// 選択禁止
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
@@ -955,30 +940,30 @@
 					[cell.contentView addSubview:label]; //[label release];
 
 					if (appDelegate_.app_is_iPad) {
-						MlbGroup = [[UILabel alloc] initWithFrame:
+						lbGroup_ = [[UILabel alloc] initWithFrame:
 									CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
-						MlbGroup.font = [UIFont systemFontOfSize:20];
+						lbGroup_.font = [UIFont systemFontOfSize:20];
 					} else {
-						MlbGroup = [[UILabel alloc] initWithFrame:
+						lbGroup_ = [[UILabel alloc] initWithFrame:
 									CGRectMake(20,18, self.tableView.frame.size.width-60,16)];
-						MlbGroup.font = [UIFont systemFontOfSize:14];
+						lbGroup_.font = [UIFont systemFontOfSize:14];
 					}
 											   // cell.frame.size.width ではダメ。初期幅が常に縦になっているため
 					// selectGroupTVC が MlbGroup を参照、変更する
-					if (self.PiAddGroup < 0) {
+					if (addE2section_< 0) {
 						// Edit Mode
-						MlbGroup.tag = [Re3target.parent.row integerValue]; // E2.row
-						MlbGroup.text = Re3target.parent.name;
+						lbGroup_.tag = [e3target_.parent.row integerValue]; // E2.row
+						lbGroup_.text = e3target_.parent.name;
 					} else {
 						// Add Mode
-						MlbGroup.tag = self.PiAddGroup; // E2.row
-						MlbGroup.text = [[RaE2array objectAtIndex:self.PiAddGroup] valueForKey:@"name"];
+						lbGroup_.tag = addE2section_; // E2.row
+						lbGroup_.text = [[e2array_ objectAtIndex:addE2section_] valueForKey:@"name"];
 					}
-					if ([MlbGroup.text length] <= 0) { // (未定)
-						MlbGroup.text = NSLocalizedString(@"(New Index)", nil);
+					if ([lbGroup_.text length] <= 0) { // (未定)
+						lbGroup_.text = NSLocalizedString(@"(New Index)", nil);
 					}
-					MlbGroup.backgroundColor = [UIColor clearColor]; // [UIColor grayColor]; //範囲チェック用
-					[cell.contentView addSubview:MlbGroup]; //[MlbGroup release];
+					lbGroup_.backgroundColor = [UIColor clearColor]; // [UIColor grayColor]; //範囲チェック用
+					[cell.contentView addSubview:lbGroup_]; //[MlbGroup release];
 				}
 					break;
 				case 1: // Name
@@ -991,22 +976,22 @@
 					[cell.contentView addSubview:label]; //[label release];
 
 					if (appDelegate_.app_is_iPad) {
-						MtfName = [[UITextField alloc] initWithFrame:
+						tfName_ = [[UITextField alloc] initWithFrame:
 								   CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
-						MtfName.font = [UIFont systemFontOfSize:20];
+						tfName_.font = [UIFont systemFontOfSize:20];
 					} else {
-						MtfName = [[UITextField alloc] initWithFrame:
+						tfName_ = [[UITextField alloc] initWithFrame:
 								   CGRectMake(20,18, self.tableView.frame.size.width-60,20)];
-						MtfName.font = [UIFont systemFontOfSize:16];
+						tfName_.font = [UIFont systemFontOfSize:16];
 					}
-					MtfName.placeholder = NSLocalizedString(@"(New Goods)", nil);
-					MtfName.keyboardType = UIKeyboardTypeDefault;
-					MtfName.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-					MtfName.returnKeyType = UIReturnKeyDone; // ReturnキーをDoneに変える
-					MtfName.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
-					MtfName.delegate = self; // textFieldShouldReturn:を呼び出すため
-					[cell.contentView addSubview:MtfName]; //[MtfName release];
-					MtfName.text = Re3target.name; // (未定)表示しない。Editへ持って行かれるため
+					tfName_.placeholder = NSLocalizedString(@"(New Goods)", nil);
+					tfName_.keyboardType = UIKeyboardTypeDefault;
+					tfName_.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+					tfName_.returnKeyType = UIReturnKeyDone; // ReturnキーをDoneに変える
+					tfName_.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
+					tfName_.delegate = self; // textFieldShouldReturn:を呼び出すため
+					[cell.contentView addSubview:tfName_]; //[MtfName release];
+					tfName_.text = e3target_.name; // (未定)表示しない。Editへ持って行かれるため
 					cell.accessoryType = UITableViewCellAccessoryNone; // なし
 				}
 					break;
@@ -1020,25 +1005,25 @@
 					[cell.contentView addSubview:label]; //[label release];
 
 					if (appDelegate_.app_is_iPad) {
-						MtvNote = [[UITextView alloc] initWithFrame:
+						tvNote_ = [[UITextView alloc] initWithFrame:
 								   CGRectMake(20,15, self.tableView.frame.size.width-60,130)];
-						MtvNote.font = [UIFont systemFontOfSize:20];
+						tvNote_.font = [UIFont systemFontOfSize:20];
 					} else {
-						MtvNote = [[UITextView alloc] initWithFrame:
+						tvNote_ = [[UITextView alloc] initWithFrame:
 								   CGRectMake(20,15, self.tableView.frame.size.width-60,95)];
-						MtvNote.font = [UIFont systemFontOfSize:16];
+						tvNote_.font = [UIFont systemFontOfSize:16];
 					}
-					MtvNote.textAlignment = UITextAlignmentLeft;
-					MtvNote.keyboardType = UIKeyboardTypeDefault;
-					MtvNote.returnKeyType = UIReturnKeyDefault;  //改行有効にする
-					MtvNote.backgroundColor = [UIColor clearColor];
+					tvNote_.textAlignment = UITextAlignmentLeft;
+					tvNote_.keyboardType = UIKeyboardTypeDefault;
+					tvNote_.returnKeyType = UIReturnKeyDefault;  //改行有効にする
+					tvNote_.backgroundColor = [UIColor clearColor];
 					//MtvNote.backgroundColor = [UIColor grayColor]; //範囲チェック用
-					MtvNote.delegate = self;
-					[cell.contentView addSubview:MtvNote]; //[MtvNote release];
-					if (Re3target.note == nil) {
-						MtvNote.text = @"";  // TextViewは、(nil) と表示されるので、それを消すため。
+					tvNote_.delegate = self;
+					[cell.contentView addSubview:tvNote_]; //[MtvNote release];
+					if (e3target_.note == nil) {
+						tvNote_.text = @"";  // TextViewは、(nil) と表示されるので、それを消すため。
 					} else {
-						MtvNote.text = Re3target.note;
+						tvNote_.text = e3target_.note;
 					}
 					cell.accessoryType = UITableViewCellAccessoryNone; // なし
 				}
@@ -1057,21 +1042,21 @@
 						label.font = [UIFont systemFontOfSize:14];
 						[cell.contentView addSubview:label]; //[label release];
 					}
-					long lVal = (long)[Re3target.stock integerValue];
+					long lVal = (long)[e3target_.stock integerValue];
 					{
-						MlbStock = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
+						lbStock_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
 									//CGRectMake(self.tableView.frame.size.width-30-90,1, 90,20)];
-						MlbStock.backgroundColor = [UIColor clearColor];
-						MlbStock.textAlignment = UITextAlignmentCenter;
-						MlbStock.font = [UIFont systemFontOfSize:24];
-						[cell.contentView addSubview:MlbStock];
+						lbStock_.backgroundColor = [UIColor clearColor];
+						lbStock_.textAlignment = UITextAlignmentCenter;
+						lbStock_.font = [UIFont systemFontOfSize:24];
+						[cell.contentView addSubview:lbStock_];
 						// 3桁コンマ付加
-						MlbStock.text = GstringFromNumber(Re3target.stock);
+						lbStock_.text = GstringFromNumber(e3target_.stock);
 					}
-					mDialStock = [[AZDial alloc] initWithFrame:CGRectMake(10,16, self.tableView.frame.size.width-80,44)
+					dialStock_ = [[AZDial alloc] initWithFrame:CGRectMake(10,16, self.tableView.frame.size.width-80,44)
 																		delegate:self  dial:lVal  min:0  max:9999  step:1  stepper:YES];
-					mDialStock.backgroundColor = [UIColor clearColor];
-					[cell.contentView addSubview:mDialStock];
+					dialStock_.backgroundColor = [UIColor clearColor];
+					[cell.contentView addSubview:dialStock_];
 				}
 					break;
 				case 4: // Need
@@ -1085,21 +1070,21 @@
 						label.font = [UIFont systemFontOfSize:14];
 						[cell.contentView addSubview:label]; //[label release];
 					}
-					long lVal = (long)[Re3target.need integerValue];
+					long lVal = (long)[e3target_.need integerValue];
 					{
-						MlbNeed = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
+						lbNeed_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
 									//CGRectMake(self.tableView.frame.size.width/2-OFSX2,1, 90,20)];
-						MlbNeed.backgroundColor = [UIColor clearColor];
-						MlbNeed.textAlignment = UITextAlignmentCenter;
-						MlbNeed.font = [UIFont systemFontOfSize:24];
-						[cell.contentView addSubview:MlbNeed];
+						lbNeed_.backgroundColor = [UIColor clearColor];
+						lbNeed_.textAlignment = UITextAlignmentCenter;
+						lbNeed_.font = [UIFont systemFontOfSize:24];
+						[cell.contentView addSubview:lbNeed_];
 						// 3桁コンマ付加
-						MlbNeed.text = GstringFromNumber(Re3target.need);
+						lbNeed_.text = GstringFromNumber(e3target_.need);
 					}
-					mDialNeed = [[AZDial alloc] initWithFrame:CGRectMake(10,16, self.tableView.frame.size.width-80,44)
+					dialNeed_ = [[AZDial alloc] initWithFrame:CGRectMake(10,16, self.tableView.frame.size.width-80,44)
 													  delegate:self  dial:lVal  min:0  max:9999  step:1  stepper:YES];
-					mDialNeed.backgroundColor = [UIColor clearColor];
-					[cell.contentView addSubview:mDialNeed];
+					dialNeed_.backgroundColor = [UIColor clearColor];
+					[cell.contentView addSubview:dialNeed_];
 				}
 					break;
 				case 5: // Weight
@@ -1116,23 +1101,23 @@
 						label.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
 						[cell.contentView addSubview:label];
 					}
-					long lVal = (long)[Re3target.weight integerValue];
+					long lVal = (long)[e3target_.weight integerValue];
 					{
-						MlbWeight = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
+						lbWeight_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
 									 //CGRectMake(self.tableView.frame.size.width/2-OFSX2,1, 90,20)];
-						MlbWeight.backgroundColor = [UIColor clearColor];
-						MlbWeight.textAlignment = UITextAlignmentCenter;
-						MlbWeight.font = [UIFont systemFontOfSize:24];
-						[cell.contentView addSubview:MlbWeight];
+						lbWeight_.backgroundColor = [UIColor clearColor];
+						lbWeight_.textAlignment = UITextAlignmentCenter;
+						lbWeight_.font = [UIFont systemFontOfSize:24];
+						[cell.contentView addSubview:lbWeight_];
 						// 3桁コンマ付加
-						MlbWeight.text = GstringFromNumber(Re3target.weight);
+						lbWeight_.text = GstringFromNumber(e3target_.weight);
 					}
 #ifdef WEIGHT_DIAL
-					mDialWeight = [[AZDial alloc] initWithFrame:CGRectMake(10,16, self.tableView.frame.size.width-80,44)
+					dialWeight_ = [[AZDial alloc] initWithFrame:CGRectMake(10,16, self.tableView.frame.size.width-80,44)
 													   delegate:self  dial:lVal  min:0  max:WEIGHT_MAX  step:10  stepper:YES];
-					mDialWeight.backgroundColor = [UIColor clearColor];
+					dialWeight_.backgroundColor = [UIColor clearColor];
 					//[mDialWeight setStepperMagnification:10.0];
-					[cell.contentView addSubview:mDialWeight];
+					[cell.contentView addSubview:dialWeight_];
 #else				
 					{
 						MsliderWeight = [[UISlider alloc] initWithFrame:
@@ -1188,22 +1173,22 @@
 					[cell.contentView addSubview:label]; //[label release];
 
 					if (appDelegate_.app_is_iPad) {
-						MtfKeyword = [[UITextField alloc] initWithFrame:
+						tfKeyword_ = [[UITextField alloc] initWithFrame:
 									  CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
-						MtfKeyword.font = [UIFont systemFontOfSize:20];
+						tfKeyword_.font = [UIFont systemFontOfSize:20];
 					} else {
-						MtfKeyword = [[UITextField alloc] initWithFrame:
+						tfKeyword_ = [[UITextField alloc] initWithFrame:
 									  CGRectMake(20,18, self.tableView.frame.size.width-60,20)];
-						MtfKeyword.font = [UIFont systemFontOfSize:16];
+						tfKeyword_.font = [UIFont systemFontOfSize:16];
 					}
-					MtfKeyword.placeholder = NSLocalizedString(@"Shop Keyword placeholder", nil);
-					MtfKeyword.keyboardType = UIKeyboardTypeDefault;
-					MtfKeyword.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-					MtfKeyword.returnKeyType = UIReturnKeyDone; // ReturnキーをDoneに変える
-					MtfKeyword.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
-					MtfKeyword.delegate = self; // textFieldShouldReturn:を呼び出すため
-					[cell.contentView addSubview:MtfKeyword]; //[MtfKeyword release];
-					MtfKeyword.text = Re3target.shopKeyword; // (未定)表示しない。Editへ持って行かれるため
+					tfKeyword_.placeholder = NSLocalizedString(@"Shop Keyword placeholder", nil);
+					tfKeyword_.keyboardType = UIKeyboardTypeDefault;
+					tfKeyword_.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+					tfKeyword_.returnKeyType = UIReturnKeyDone; // ReturnキーをDoneに変える
+					tfKeyword_.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
+					tfKeyword_.delegate = self; // textFieldShouldReturn:を呼び出すため
+					[cell.contentView addSubview:tfKeyword_]; //[MtfKeyword release];
+					tfKeyword_.text = e3target_.shopKeyword; // (未定)表示しない。Editへ持って行かれるため
 					cell.accessoryType = UITableViewCellAccessoryNone; // なし
 					cell.tag = 00;
 				}
@@ -1253,8 +1238,8 @@
 
 - (void)actionWebTitle:(NSString*)zTitle  URL:(NSString*)zUrl  Domain:(NSString*)zDomain
 {
-	if ([MtfKeyword.text length]<=0) {
-		MtfKeyword.text = MtfName.text;
+	if ([tfKeyword_.text length]<=0) {
+		tfKeyword_.text = tfName_.text;
 		appDelegate_.app_UpdateSave = YES; // 変更あり
 		self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 	}
@@ -1268,7 +1253,7 @@
 
 	// __bridge_transfer : CオブジェクトをARC管理オブジェクトにする
 	NSString *zKeyword = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-																			 (__bridge CFStringRef)MtfKeyword.text,
+																			 (__bridge CFStringRef)tfKeyword_.text,
 																			 CFSTR(";,/?:@&=+$#"),
 																			 NULL,
 																			 kCFStringEncodingUTF8);	// release必要
@@ -1299,9 +1284,9 @@
 {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];	// 選択状態を解除する
 
-	[MtfName resignFirstResponder]; // キーボード非表示
-	[MtvNote resignFirstResponder]; // キーボード非表示
-	[MtfKeyword resignFirstResponder]; // キーボード非表示
+	[tfName_ resignFirstResponder]; // キーボード非表示
+	[tvNote_ resignFirstResponder]; // キーボード非表示
+	[tfKeyword_ resignFirstResponder]; // キーボード非表示
 	
 	switch (indexPath.section) {
 		case 0: // 
@@ -1310,20 +1295,20 @@
 				{
 					// selectGroupTVC へ
 					selectGroupTVC *selectGroup = [[selectGroupTVC alloc] init];
-					selectGroup.RaE2array = RaE2array;
-					selectGroup.RlbGroup = MlbGroup; // .tag=E2.row  .text=E2.name
+					selectGroup.RaE2array = e2array_;
+					selectGroup.RlbGroup = lbGroup_; // .tag=E2.row  .text=E2.name
 					[self.navigationController pushViewController:selectGroup animated:YES];
 					//[selectGroup release];
 				}
 					break;
 				case 1: // Name
 				{
-					[MtfName becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
+					[tfName_ becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
 				}
 					break;
 				case 2: // Note
 				{
-					[MtvNote becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
+					[tvNote_ becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
 				}
 					break;
 			}
@@ -1334,7 +1319,7 @@
 			switch (cell.tag) {
 				case 00: // Name
 				{
-					[MtfKeyword becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
+					[tfKeyword_ becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
 				}
 					break;
 				case 01: // Amazon.co.jp
@@ -1407,17 +1392,17 @@
 #pragma mark - <UITextFieldDelegete>
 //============================================<UITextFieldDelegete>
 - (void)nameDone:(id)sender {
-	[MtfName resignFirstResponder]; // キーボード非表示
-	[MtvNote resignFirstResponder]; // キーボード非表示
-	[MtfKeyword resignFirstResponder]; // キーボード非表示
+	[tfName_ resignFirstResponder]; // キーボード非表示
+	[tvNote_ resignFirstResponder]; // キーボード非表示
+	[tfKeyword_ resignFirstResponder]; // キーボード非表示
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-	if (McalcView) {	// あれば一旦、破棄する
-		[McalcView hide];
-		[McalcView removeFromSuperview];  // これでCalcView.deallocされる
-		McalcView = nil;
+	if (calcView_) {	// あれば一旦、破棄する
+		[calcView_ hide];
+		[calcView_ removeFromSuperview];  // これでCalcView.deallocされる
+		calcView_ = nil;
 	}
 	// スクロールして textField が隠れた状態で resignFirstResponder するとフリースするため
 	self.tableView.scrollEnabled = NO; // スクロール禁止
@@ -1476,15 +1461,15 @@
 #pragma mark - <UITextViewDelegete>
 //============================================<UITextViewDelegete>
 - (void)noteDone:(id)sender {
-	[MtvNote resignFirstResponder];
+	[tvNote_ resignFirstResponder];
 }
 
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
-	if (McalcView) {	// あれば一旦、破棄する
-		[McalcView hide];
-		[McalcView removeFromSuperview];  // これでCalcView.deallocされる
-		McalcView = nil;
+	if (calcView_) {	// あれば一旦、破棄する
+		[calcView_ hide];
+		[calcView_ removeFromSuperview];  // これでCalcView.deallocされる
+		calcView_ = nil;
 	}
 	self.tableView.scrollEnabled = NO; // スクロール禁止
 	//self.navigationItem.leftBarButtonItem.enabled = NO;
@@ -1538,42 +1523,42 @@
 #pragma mark - <AZDialDelegate>
 - (void)dialChanged:(id)sender  dial:(NSInteger)dial
 {
-	if (sender==mDialStock) {
-		MlbStock.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
+	if (sender==dialStock_) {
+		lbStock_.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
 	}
-	else if (sender==mDialNeed) {
-		MlbNeed.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
+	else if (sender==dialNeed_) {
+		lbNeed_.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
 	}
 #ifdef WEIGHT_DIAL
-	else if (sender==mDialWeight) {
-		MlbWeight.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
+	else if (sender==dialWeight_) {
+		lbWeight_.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
 	}
 #endif
 }
 
 - (void)dialDone:(id)sender  dial:(NSInteger)dial
 {
-	if (sender==mDialStock) {
-		if ([Re3target.stock longValue] != dial) { // 変更あり
-			MlbStock.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
-			Re3target.stock = [NSNumber numberWithInteger:dial];
+	if (sender==dialStock_) {
+		if ([e3target_.stock longValue] != dial) { // 変更あり
+			lbStock_.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
+			e3target_.stock = [NSNumber numberWithInteger:dial];
 			appDelegate_.app_UpdateSave = YES; // 変更あり
 			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 		}
 	}
-	else if (sender==mDialNeed) {
-		if ([Re3target.need longValue] != dial) { // 変更あり
-			MlbNeed.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
-			Re3target.need = [NSNumber numberWithInteger:dial];
+	else if (sender==dialNeed_) {
+		if ([e3target_.need longValue] != dial) { // 変更あり
+			lbNeed_.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
+			e3target_.need = [NSNumber numberWithInteger:dial];
 			appDelegate_.app_UpdateSave = YES; // 変更あり
 			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 		}
 	}
 #ifdef WEIGHT_DIAL
-	else if (sender==mDialWeight) {
-		if ([Re3target.weight longValue] != dial) { // 変更あり
-			MlbWeight.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
-			Re3target.weight = [NSNumber numberWithInteger:dial];
+	else if (sender==dialWeight_) {
+		if ([e3target_.weight longValue] != dial) { // 変更あり
+			lbWeight_.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
+			e3target_.weight = [NSNumber numberWithInteger:dial];
 			appDelegate_.app_UpdateSave = YES; // 変更あり
 			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 		}

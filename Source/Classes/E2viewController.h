@@ -18,10 +18,10 @@
 @interface E2viewController : UITableViewController 	<UIActionSheetDelegate, MFMailComposeViewControllerDelegate
 	, UIPopoverControllerDelegate>
 
-@property (nonatomic, retain) E1	*Re1selected;
-@property (nonatomic, assign) BOOL	PbSharePlanList;
-
+@property (nonatomic, retain) E1					*e1selected;
+@property (nonatomic, assign) BOOL			sharePlanList;
 @property (nonatomic, assign) E3viewController*			delegateE3viewController;
+
 - (void)setPopover:(UIPopoverController*)pc;
 - (void)refreshE2view;
 

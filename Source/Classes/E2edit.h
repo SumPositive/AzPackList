@@ -11,10 +11,10 @@
 
 @interface E2edit : UIViewController  <UITextFieldDelegate, UITextViewDelegate> 
 
-@property (nonatomic, retain) E1 *Re1selected;
-@property (nonatomic, retain) E2 *Re2target;
-@property (nonatomic, assign) NSInteger PiAddRow;
-@property (nonatomic, assign) BOOL	PbSharePlanList;
+@property (nonatomic, retain) E1						*e1selected;
+@property (nonatomic, retain) E2						*e2target;
+@property (nonatomic, assign) NSInteger		addRow;
+@property (nonatomic, assign) BOOL				sharePlanList;
 
 @property (nonatomic, assign) id									delegate;
 @property (nonatomic, retain) UIPopoverController*	selfPopover;

@@ -250,7 +250,7 @@ static UIColor *MpColorBlue(float percent) {
 	
 	//------------------------------------------Lable:著作権表示
 	label = [[UILabel alloc] initWithFrame:CGRectMake(100, 110, 200, 80)];
-	label.text =	@"PackList  (.azpl)\n"
+	label.text =	@"PackList  (.azp)\n"
 						@"Born on March 2\n"
 						COPYRIGHT			@"\n"
 						@"Author: Sum Positive\n"

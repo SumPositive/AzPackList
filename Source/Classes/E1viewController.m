@@ -16,7 +16,7 @@
 #import "E3viewController.h"
 #import "GooDocsTVC.h"
 #import "SettingTVC.h"
-#import "InformationView.h"
+#import "AZInformationVC.h"
 #import "WebSiteVC.h"
 #import "HTTPServer.h"
 #import "MyHTTPConnection.h"
@@ -37,8 +37,8 @@
 
 
 @interface E1viewController (PrivateMethods)
-- (void)actionInformation;
-- (void)actionSetting;
+//- (void)actionInformation;
+//- (void)actionSetting;
 - (void)azAction;
 - (void)httpInfoUpdate:(NSNotification *)notification;
 - (void)e1add;
@@ -58,7 +58,7 @@
 	NSDictionary							*dicAddresses_;
 
 	E1edit							*e1editView_;	
-	InformationView			*informationView_;
+	//InformationView			*informationView_;
 
 	UIPopoverController	*popOver_;
 	NSIndexPath*				indexPathEdit_;	//[1.1]ポインタ代入注意！copyするように改善した。
@@ -76,13 +76,13 @@
 
 
 #pragma mark - Delegate
-
+/*
 - (void)refreshE1view
 {
 	contentOffsetDidSelect_.y = 0;  // 直前のdidSelectRowAtIndexPath位置に戻らないようにクリアしておく
 	//[self viewWillAppear:YES];		// Setting変更後、全域再描画が必要になるので、このようにした。
 	[self viewDidAppear:YES];
-}
+}*/
 
 
 #pragma mark - CoreData - iCloud
@@ -113,7 +113,7 @@
 		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 		return; //exit(-1);  // Fail
 	}
-	NSLog(@"RfetchedE1=%@", fetchedE1_);
+	NSLog(@"fetchedE1_=%@", fetchedE1_);
 	
 	// 高速化のため、ここでE1レコード数（行数）を求めてしまう
     section0Rows_ = 0;
@@ -180,12 +180,23 @@
 
 - (void)refetcheAllData:(NSNotification*)note 
 {	// iCloud-CoreData に変更（追加や削除）があれば呼び出される
+	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+	if (appDelegate_.app_pid_iCloud==NO  &&  [kvs boolForKey:SK_PID_iCloud]) 
+	{	// iCloud OFF --> ON
+		appDelegate_.app_pid_iCloud = YES;
+		[appDelegate_ managedObjectContextReset]; // iCloud対応の moc再生成する。
+		appDelegate_.app_opt_Ad = NO;
+		[kvs setBool:NO forKey:KV_OptAdvertising];
+		[appDelegate_ AdRefresh:NO];
+	}
+	
 	moc_ = [EntityRelation getMoc]; //購入後、再生成された場合のため
 	[self refetcheAllData];
 }
 
 - (void)refreshAllViews:(NSNotification*)note 
 {	// iCloud-CoreData に変更があれば呼び出される
+	contentOffsetDidSelect_.y = 0;  // 直前のdidSelectRowAtIndexPath位置に戻らないようにクリアしておく
 	[self viewDidAppear:YES];
 }
 
@@ -199,7 +210,7 @@
 	//         そのため、pppIndexPathActionDelete を使っている。
 	// ＜注意＞ CoreDataモデルは、エンティティ間の削除ルールは双方「無効にする」を指定。（他にするとフリーズ）
 	// 削除対象の ManagedObject をチョイス
-	NSLog(@"RfetchedE1=%@", fetchedE1_);
+	NSLog(@"fetchedE1_=%@", fetchedE1_);
 	NSLog(@"uiRow=%ld", (long)uiRow);
 	NSIndexPath *ixp = [NSIndexPath indexPathForRow:uiRow inSection:0];
 	E1 *e1objDelete = [fetchedE1_ objectAtIndexPath:ixp];
@@ -242,7 +253,7 @@
 	[self.tableView reloadData];
 }
 
-- (void)actionImportSharedPackList:(NSIndexPath*)indexPath
+- (void)actionImportSharedPackList
 {
 	if (appDelegate_.app_is_iPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
@@ -256,8 +267,8 @@
 		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
 		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
 		indexPathEdit_ = nil;
-		
-		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:indexPath];
+		NSIndexPath *idx = [NSIndexPath indexPathForRow:0 inSection:1];  //<<<<< Shared PackList セル位置をセット
+		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
 		rcArrow.origin.x = 85;		rcArrow.size.width = 1;
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
 		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
@@ -267,29 +278,43 @@
 		if (appDelegate_.app_opt_Ad) {
 			[appDelegate_ AdRefresh:NO];	//広告禁止
 		}
-		//vc.hidesBottomBarWhenPushed = YES; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-		[vc setHidesBottomBarWhenPushed:YES];
+		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 		[self.navigationController pushViewController:vc animated:YES];
 	}
 }
 
 - (void)actionImportDropbox
 {
+	if (appDelegate_.app_is_iPad) {
+		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+	}
+
 	// 未認証の場合、認証処理後、AppDelegate:handleOpenURL:から呼び出される
 	if ([[DBSession sharedSession] isLinked]) 
 	{	// Dropbox 認証済み
-		if (appDelegate_.app_opt_Ad) {
-			[appDelegate_ AdRefresh:NO];	//広告禁止
-		}
 		DropboxVC *vc = [[DropboxVC alloc] init];
 		assert(vc);
 		vc.Re1selected = nil; // 取込専用
 		if (appDelegate_.app_is_iPad) {
+			/*	popOver_ = nil;
+			popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
+			popOver_.delegate = nil;	// 不要
+			CGRect rcArrow = [self.tableView rectForRowAtIndexPath:indexPath];
+			rcArrow.origin.x = 85;		rcArrow.size.width = 1;
+			rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
+			[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
+					permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];*/
+			// Dropboxだけは、認証して戻ったときAppDelegate内で再現させるため座標情報が不要なFormSheetにしている。
 			vc.modalPresentationStyle = UIModalPresentationFormSheet;
-		} else {
-			vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+			[self presentModalViewController:vc animated:YES];
+		} 
+		else {
+			if (appDelegate_.app_opt_Ad) {
+				[appDelegate_ AdRefresh:NO];	//広告禁止
+			}
+			[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+			[self.navigationController pushViewController:vc animated:YES];
 		}
-		[self presentModalViewController:vc animated:YES];
 	}
 	else {
 		// Dropbox 未認証
@@ -298,7 +323,7 @@
 	}
 }
 
-- (void)actionImportGoogle:(NSIndexPath*)indexPath
+- (void)actionImportGoogle
 {
 	if (appDelegate_.app_is_iPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
@@ -322,8 +347,8 @@
 		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
 		//[MindexPathEdit release], 
 		indexPathEdit_ = nil;
-
-		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:indexPath];
+		NSIndexPath *idx = [NSIndexPath indexPathForRow:2 inSection:1];  //<<<<< Google Docs セル位置をセット
+		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
 		rcArrow.origin.x = 85;		rcArrow.size.width = 1;
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
 		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
@@ -344,6 +369,9 @@
 
 - (void)actionImportYourPC
 {
+	if (appDelegate_.app_is_iPad) {
+		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+	}
 	if (appDelegate_.app_opt_Ad) {
 		[appDelegate_ AdRefresh:NO];	//広告禁止
 	}
@@ -382,6 +410,9 @@
 
 - (void)actionImportPasteBoard
 {
+	if (appDelegate_.app_is_iPad) {
+		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+	}
 	NSRange range = [[UIPasteboard generalPasteboard].string rangeOfString:GD_CSV_HEADER_ID];
 	if (range.location == NSNotFound) {
 		UIAlertView *alert = [[UIAlertView alloc] 
@@ -422,14 +453,42 @@
 	[self viewWillAppear:YES]; // Fech データセットさせるため
 }
 
-- (void)actionInformation:(NSIndexPath*)indexPath
+- (void)actionInformation
 {
 	if (appDelegate_.app_is_iPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+	}
+
+	AZInformationVC *vc = [[AZInformationVC alloc] init];
+
+	if (appDelegate_.app_is_iPad) {
+		popOver_ = nil;
+		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
+		popOver_.delegate = nil;	// 不要
+		NSIndexPath *idx = [NSIndexPath indexPathForRow:1 inSection:2];  //<<<<< About this app セル位置をセット
+		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
+		rcArrow.origin.x = 85;		rcArrow.size.width = 1;
+		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
+		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
+				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
+	}
+	else {
+		if (appDelegate_.app_opt_Ad) {
+			// 各viewDidAppear:にて「許可/禁止」を設定する
+			[appDelegate_ AdRefresh:NO];	//広告禁止
+		}
+		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+		[self.navigationController pushViewController:vc animated:YES];
+	}
+}
+/*{
+	InformationView *vc = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
+
+	if (appDelegate_.app_is_iPad) {
+		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 		
-		informationView_ = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
 		//popOver_ = nil;
-		popOver_ = [[UIPopoverController alloc] initWithContentViewController:informationView_];
+		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
 		popOver_.delegate = nil;	// 不要
 		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:indexPath];
 		rcArrow.origin.x = 85;		rcArrow.size.width = 1;
@@ -438,77 +497,90 @@
 				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
 	} 
 	else {
-		//if (self.interfaceOrientation != UIInterfaceOrientationPortrait) return; // 正面でなければ禁止
-		// ヨコ非対応につき正面以外は、hideするようにした。
-		// モーダル UIViewController
-		informationView_ = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
-		informationView_.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentModalViewController:informationView_ animated:YES];
+		if (appDelegate_.app_opt_Ad) {
+			// 各viewDidAppear:にて「許可/禁止」を設定する
+			[appDelegate_ AdRefresh:NO];	//広告禁止
+		}
+		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+		[self.navigationController pushViewController:vc animated:YES];
 	}
-}
+}*/
 
-- (void)actionSetting:(NSIndexPath*)indexPath
+- (void)actionSetting
 {
 	if (appDelegate_.app_is_iPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 	}
+
+	// 別デバイスへインストールした直後、購買情報が反映されないとき、ここで反映させるため
+	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+	[kvs synchronize];
+	if (appDelegate_.app_pid_iCloud==NO  &&  [kvs boolForKey:SK_PID_iCloud]) 
+	{	// 再フィッチ＆画面リフレッシュ通知  ＜＜＜＜ E1viewController:refetcheAllData: にて iCloud OFF --> ON している。
+		[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFETCH_ALL_DATA		// 再フィッチ（レコード増減あったとき）
+															object:self userInfo:nil];
+	}
 	
-	SettingTVC *vi = [[SettingTVC alloc] init];
+	SettingTVC *vc = [[SettingTVC alloc] init];
 	
 	if (appDelegate_.app_is_iPad) {
 		popOver_ = nil;
-		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vi];
+		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
 		popOver_.delegate = nil;	// 不要
-		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:indexPath];
+		NSIndexPath *idx = [NSIndexPath indexPathForRow:0 inSection:2];  //<<<<< Settings セル位置をセット
+		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
 		rcArrow.origin.x = 85;		rcArrow.size.width = 1;
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
 		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
 				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
 	}
 	else {
-		//vi.hidesBottomBarWhenPushed = YES; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-		[vi setHidesBottomBarWhenPushed:YES];
-		[self.navigationController pushViewController:vi animated:YES];
 		if (appDelegate_.app_opt_Ad) {
 			// 各viewDidAppear:にて「許可/禁止」を設定する
 			[appDelegate_ AdRefresh:NO];	//広告禁止
 		}
+		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+		[self.navigationController pushViewController:vc animated:YES];
 	}
 }
 
 - (void)actionIPurchase
 {
+	if (appDelegate_.app_is_iPad) {
+		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+	}
 	//if (appDelegate_.app_pid_UnLock) return;
 
-	AZStoreVC *vc = [[AZStoreVC alloc] initWithUnLock:appDelegate_.app_pid_UnLock];
+	AZStoreVC *vc = [[AZStoreVC alloc] initWithUnLock:appDelegate_.app_pid_iCloud];
 	vc.delegate = self; //--> azStorePurchesed:
-	vc.productIDs = [NSSet setWithObjects:SK_PID_UNLOCK, nil]; // 商品が複数ある場合は列記
+	vc.productIDs = [NSSet setWithObjects:SK_PID_iCloud, nil]; // 商品が複数ある場合は列記
 	if (appDelegate_.app_is_iPad) {
-		vc.modalPresentationStyle = UIModalPresentationFormSheet;
+		popOver_ = nil;
+		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
+		popOver_.delegate = nil;	// 不要
+		NSIndexPath *idx = [NSIndexPath indexPathForRow:2 inSection:2];  //<<<<< Extension parts shop セル位置をセット
+		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
+		rcArrow.origin.x = 85;		rcArrow.size.width = 1;
+		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
+		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
+				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
 	}
 	else {
 		if (appDelegate_.app_opt_Ad) {
+			// 各viewDidAppear:にて「許可/禁止」を設定する
 			[appDelegate_ AdRefresh:NO];	//広告禁止
 		}
-		vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		//[self.navigationController pushViewController:vc animated:YES];
+		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+		[self.navigationController pushViewController:vc animated:YES];
 	}
-	[self presentModalViewController:vc animated:YES];
 }
+
 #pragma mark <AZStoreDelegate>
 - (void)azStorePurchesed:(NSString*)productID
 {
-	if ([productID isEqualToString:SK_PID_UNLOCK]) 
+	if ([productID isEqualToString:SK_PID_iCloud]) 
 	{	// iCloud対応： NSPersistentStoreCoordinator, NSManagedObjectModel 再生成してiCloud対応する
-		//[EntityRelation commit];
-		appDelegate_.app_pid_UnLock = YES;
-		[appDelegate_ managedObjectContextReset]; // iCloud対応の moc再生成する。
-		//広告は非表示にするが、設定にて切替を可能にする。
-		appDelegate_.app_opt_Ad = NO;
-		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
-		[kvs setBool:NO forKey:KV_OptAdvertising];
-		[appDelegate_ AdRefresh:appDelegate_.app_opt_Ad];
-		// 再フィッチ＆画面リフレッシュ通知
+		// 再フィッチ＆画面リフレッシュ通知  ＜＜＜＜ E1viewController:refetcheAllData: にて iCloud OFF --> ON している。
 		[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFETCH_ALL_DATA		// 再フィッチ（レコード増減あったとき）
 															object:self userInfo:nil];
 	}
@@ -530,18 +602,18 @@
 		}
 	}
 	
-	e2view.Re1selected = e1obj;
-	e2view.PbSharePlanList = NO;
+	e2view.e1selected = e1obj;
+	e2view.sharePlanList = NO;
 	
 	if (appDelegate_.app_is_iPad) {
 		//Split Right
 		E3viewController* e3view = [[E3viewController alloc] init];
 		// 以下は、E3viewControllerの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
 		e3view.title = e1obj.name;  //  self.title;  // NSLocalizedString(@"Items", nil);
-		e3view.Re1selected = e1obj; // E1
-		e3view.PiFirstSection = 0;
-		e3view.PiSortType = (-1);
-		e3view.PbSharePlanList = NO;
+		e3view.e1selected = e1obj; // E1
+		e3view.firstSection = 0;
+		e3view.sortType = (-1);
+		e3view.sharePlanList = NO;
 		//[1]Right
 		[[appDelegate_.mainSVC.viewControllers objectAtIndex:1] pushViewController:e3view animated:YES]; 
 		//[0]Left
@@ -606,8 +678,8 @@
 	
 	e1editView_ = [[E1edit alloc] init]; // popViewで戻れば解放されているため、毎回alloc必要。
 	e1editView_.title = NSLocalizedString(@"Edit Plan",nil);
-	e1editView_.Re1target = e1obj;
-	e1editView_.PiAddRow = (-1); // Edit mode.
+	e1editView_.e1target = e1obj;
+	e1editView_.addRow = (-1); // Edit mode.
 	
 	if (appDelegate_.app_is_iPad) {
 		//[Mpopover release], 
@@ -626,7 +698,7 @@
 		[popOver_ presentPopoverFromRect:rc
 								  inView:self.view  permittedArrowDirections:UIPopoverArrowDirectionRight  animated:YES];
 		e1editView_.selfPopover = popOver_;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
-		e1editView_.delegate = self;		// refresh callback
+		//e1editView_.delegate = self;		// refresh callback
 	}
 	else {
 		[e1editView_ setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
@@ -836,6 +908,7 @@
 	// 画面表示に関係する Option Setting を取得する
 	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+	[kvs synchronize];
 	bOptWeightRound_ = [kvs boolForKey:KV_OptWeightRound]; // YES=四捨五入 NO=切り捨て
 	bOptShowTotalWeight_ = [kvs boolForKey:KV_OptShowTotalWeight];
 	bOptShowTotalWeightReq_ = [kvs boolForKey:KV_OptShowTotalWeightReq];
@@ -868,14 +941,22 @@
 
 	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 
-	if (bInformationOpen_) {	//initWithStyleにて判定処理している
-		bInformationOpen_ = NO;	// 以後、自動初期表示しない。
-		[self actionInformation];  //[1.0.2]最初に表示する。バックグランド復帰時には通らない
-	}
+	
+	// iCloud OFF --> ON
+	
+	
+	
+	
 	
 	//【Tips】タテから始まるとき、willRotateToInterfaceOrientation:を通らずに、ここを通る　⇒ AdRefresh：にて初期タテ配置となる
 	//【Tips】ヨコから始まるとき、ここよりもloadView：よりも先に willRotateToInterfaceOrientation: を通る ⇒ willRotateにてヨコ配置となる
 	[appDelegate_ AdRefresh:appDelegate_.app_opt_Ad];	//広告
+
+	// アップデート直後、1回だけInformation表示する
+	if (bInformationOpen_) {	//initWithStyleにて判定処理している
+		bInformationOpen_ = NO;	// 以後、自動初期表示しない。
+		[self actionInformation];  //[1.0.2]最初に表示する。バックグランド復帰時には通らない
+	}
 }
 
 // この画面が非表示になる直前に呼ばれる
@@ -910,7 +991,7 @@
 			return NO; // その他、禁止
 		}
 		
-		// 回転許可
+/*		// 回転許可
 		if (UIInterfaceOrientationIsPortrait(interfaceOrientation))
 		{	// タテ
 			//[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
@@ -920,9 +1001,9 @@
 				[informationView_ hide]; // 正面でなければhide
 				informationView_ = nil;
 			}
-		}
-		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
+		}*/
 	}
+	return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
 }
 
 // shouldAutorotateToInterfaceOrientation で YES を返すと、回転開始時に呼び出される
@@ -936,12 +1017,12 @@
 		MbuInfo.enabled = (toInterfaceOrientation == UIInterfaceOrientationPortrait);
 	}*/
 
-	if (appDelegate_.app_opt_Ad) {
+	//if (appDelegate_.app_opt_Ad) {
 		// 広告非表示でも回転時に位置調整しておく必要あり ＜＜現れるときの開始位置のため＞＞
 		// ここが最初の生成となる。この後、loadView: よりも先に willRotateToInterfaceOrientation: を通り、回転位置セットされる。
 		[appDelegate_ AdRefresh];	//広告生成のみ
 		[appDelegate_ AdViewWillRotate:toInterfaceOrientation];
-	}
+	//}
 }
 
 // 回転した後に呼び出される
@@ -986,11 +1067,11 @@
 	//[RfetchedE1 release],		
 	fetchedE1_ = nil;
 	
-	if (informationView_) {
+/*	if (informationView_) {
 		[informationView_ hide]; // 正面でなければhide
 		//[MinformationView release], 
 		informationView_ = nil;
-	}
+	}*/
 }
 
 - (void)viewDidUnload 
@@ -1081,7 +1162,7 @@
 	switch (section) {
 		case 2: {
 			NSString *zz;  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
-			if (appDelegate_.app_pid_UnLock) {
+			if (appDelegate_.app_pid_iCloud) {
 				zz = NSLocalizedString(@"iCloud ON",nil); //@"<<< Will syncronize with iCloud >>>";
 			} else {
 				zz = @"";
@@ -1293,7 +1374,6 @@
 					cell.imageView.image = [UIImage imageNamed:@"Dropbox-130x44"];
 					cell.textLabel.text = NSLocalizedString(@"Import Dropbox",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"Import Dropbox msg",nil);
-					cell.accessoryType = UITableViewCellAccessoryNone;
 					break;
 					
 				case 2:
@@ -1328,14 +1408,12 @@
 					cell.imageView.image = [UIImage imageNamed:@"Icon-Info-32"];
 					cell.textLabel.text = NSLocalizedString(@"menu Information",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"menu Information msg",nil);
-					cell.accessoryType = UITableViewCellAccessoryNone;
 					break;
 					
 				case 2:
 					cell.imageView.image = [UIImage imageNamed:@"Icon-Parts-32"];
 					cell.textLabel.text = NSLocalizedString(@"menu Purchase",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"menu Purchase msg",nil);
-					cell.accessoryType = UITableViewCellAccessoryNone;
 					break;
 			}
 		}
@@ -1390,7 +1468,7 @@
 	else if (indexPath.section == 1) {
 		switch (indexPath.row) {
 			case 0: // SharePlan Search
-				[self	actionImportSharedPackList:indexPath];
+				[self	actionImportSharedPackList];
 				break;
 				
 			case 1: // Restore from Dropbox
@@ -1398,7 +1476,7 @@
 				break;
 				
 			case 2: // Restore from Google
-				[self actionImportGoogle:indexPath];
+				[self actionImportGoogle];
 				break;
 				
 			case 3: // Restore from YourPC
@@ -1413,11 +1491,11 @@
 	else if (indexPath.section == 2) {
 		switch (indexPath.row) {
 			case 0: // Setting
-				[self actionSetting:indexPath];
+				[self actionSetting];
 				break;
 				
 			case 1: // Information
-				[self actionInformation:indexPath];
+				[self actionInformation];
 				break;
 				
 			case 2: // Purchase
@@ -1566,7 +1644,8 @@
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {	// [Cancel][Save][枠外タッチ]何れでも閉じるときここを通る
-	[self refreshE1view];
+	//[self refreshE1view];
+	[self refreshAllViews:nil];
 	return;
 }
 

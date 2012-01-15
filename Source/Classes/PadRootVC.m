@@ -22,16 +22,16 @@
 
 @implementation PadRootVC
 {
+	AppDelegate		*appDelegate_;
 	UIImageView		*imgBag_;
 }
-@synthesize popoverButtonItem;
-
+@synthesize popoverButtonItem = popoverButtonItem_;
 
 - (void)unloadRelease	// dealloc, viewDidUnload から呼び出される
 {
 	NSLog(@"--- unloadRelease --- PadRootVC");
-   //[popoverButtonItem release], 
-	popoverButtonItem = nil;
+   //[popoverButtonItem_ release], 
+	popoverButtonItem_ = nil;
 }
 
 - (void)dealloc
@@ -46,7 +46,7 @@
 	[super viewDidUnload];  // TableCell破棄される
 	[self unloadRelease];		// その後、AdMob破棄する
 	//self.splitViewController = nil;
-	self.popoverButtonItem = nil;
+	popoverButtonItem_ = nil;
 	// この後に loadView ⇒ viewDidLoad ⇒ viewWillAppear がコールされる
 }
 
@@ -58,7 +58,8 @@
     self = [super init];
     if (self) {
         // Custom initialization
-
+		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		appDelegate_.app_UpdateSave = NO;
 		// 背景テクスチャ・タイルペイント
 		//self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 		// 背景色
@@ -107,34 +108,37 @@
 {
     [super viewDidAppear:animated];
 	
-	// Anime 開始位置
-	imgBag_.transform = CGAffineTransformIdentity;
-	imgBag_.frame = BAG_FRAME;
-	
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:1.0];
-	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-	
-	// 終了後、元の位置に戻す
-	[UIView setAnimationDelegate:self];
-	[UIView setAnimationDidStopSelector:@selector(animeAfter)];
-	
-#ifdef DEBUG
-	// 繰り返し
-	[UIView setAnimationRepeatAutoreverses:YES];
-	[UIView setAnimationRepeatCount:3.5];
+	if (appDelegate_.app_UpdateSave) {	//変更あれば揺らす
+		appDelegate_.app_UpdateSave = NO; // 解除
+		
+		// Anime 開始位置
+		imgBag_.transform = CGAffineTransformIdentity;
+		imgBag_.frame = BAG_FRAME;
+		
+		[UIView beginAnimations:nil context:NULL];
+		[UIView setAnimationDuration:1.0];
+		[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+		
+		// 終了後、元の位置に戻す
+		[UIView setAnimationDelegate:self];
+		[UIView setAnimationDidStopSelector:@selector(animeAfter)];
+		
+#ifdef DEBUGxxx
+		// 繰り返し
+		[UIView setAnimationRepeatAutoreverses:YES];
+		[UIView setAnimationRepeatCount:3.5];
 #endif
-	
-	// Anime 終了位置
-	imgBag_.frame = BAG_FRAME2;
-	imgBag_.transform = CGAffineTransformMakeRotation(-M_PI/2.0);
+		
+		// Anime 終了位置
+		imgBag_.frame = BAG_FRAME2;
+		imgBag_.transform = CGAffineTransformMakeRotation(-M_PI/2.0);
+		
+		//CGAffineTransform tfTrans = CGAffineTransformTranslate(CGAffineTransformIdentity, -120, 0);
+		//CGAffineTransform tfRotate = CGAffineTransformRotate(CGAffineTransformIdentity, -M_PI/2.0);
+		//imgBag_.transform = CGAffineTransformConcat(tfTrans, tfRotate);
 
-	//CGAffineTransform tfTrans = CGAffineTransformTranslate(CGAffineTransformIdentity, -120, 0);
-	//CGAffineTransform tfRotate = CGAffineTransformRotate(CGAffineTransformIdentity, -M_PI/2.0);
-	//imgBag_.transform = CGAffineTransformConcat(tfTrans, tfRotate);
-	
-	
-	[UIView commitAnimations];
+		[UIView commitAnimations];
+	}
 }
 
 - (void)animeAfter
@@ -180,11 +184,11 @@
 {
     barButtonItem.title = @"padRoot";
 	//self.popoverController = pc;
-    self.popoverButtonItem = barButtonItem;
+    popoverButtonItem_ = barButtonItem;
 	UINavigationController *navi = [svc.viewControllers objectAtIndex:1];
 	UIViewController <DetailViewController> *detailVC = (UIViewController <DetailViewController> *)navi.visibleViewController;
 	if ([detailVC respondsToSelector:@selector(showPopoverButtonItem:)]) {
-		[detailVC showPopoverButtonItem:popoverButtonItem];
+		[detailVC showPopoverButtonItem:popoverButtonItem_];
 	}
 }
 
@@ -196,10 +200,10 @@
 	UINavigationController *navi = [svc.viewControllers objectAtIndex:1];
 	UIViewController <DetailViewController> *detailVC = (UIViewController <DetailViewController> *)navi.visibleViewController;
 	if ([detailVC respondsToSelector:@selector(hidePopoverButtonItem:)]) {
-		[detailVC hidePopoverButtonItem:popoverButtonItem];
+		[detailVC hidePopoverButtonItem:popoverButtonItem_];
 	}
     //self.popoverController = nil;
-	self.popoverButtonItem = nil;
+	popoverButtonItem_ = nil;
 }
 
 @end

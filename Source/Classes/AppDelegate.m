@@ -56,8 +56,7 @@
 @synthesize app_UpdateSave = app_UpdateSave_;
 @synthesize app_opt_Autorotate = app_opt_Autorotate_;
 @synthesize app_opt_Ad = app_opt_Ad_;
-@synthesize app_pid_UnLock = app_pid_UnLock_;
-
+@synthesize app_pid_iCloud = app_pid_iCloud_;
 
 
 
@@ -98,13 +97,13 @@
 	if ([kvs objectForKey: KV_OptSearchItemsNote]==nil)		[kvs setBool:YES forKey: KV_OptSearchItemsNote];
 	if ([kvs objectForKey: KV_OptAdvertising]==nil)					[kvs setBool:YES forKey: KV_OptAdvertising];
 	// AZStore PID  ＜＜productIdentifier をそのままKEYにする
-	if ([kvs objectForKey: SK_PID_UNLOCK]==nil)						[kvs setBool:NO  forKey: SK_PID_UNLOCK];
+	if ([kvs objectForKey: SK_PID_iCloud]==nil)							[kvs setBool:NO  forKey: SK_PID_iCloud];
 	[kvs synchronize]; // 最新同期
 	app_opt_Ad_ = [kvs boolForKey:KV_OptAdvertising];
-	app_pid_UnLock_ = [kvs boolForKey:SK_PID_UNLOCK];
+	app_pid_iCloud_ = [kvs boolForKey:SK_PID_iCloud];
 	
 #ifdef DEBUG
-	app_pid_UnLock_ = NO;	// 購入中止で YES に変えてテストするため
+	app_pid_iCloud_ = NO;	// 購入中止で YES に変えてテストするため
 #endif
 	
 	//-------------------------------------------------初期化
@@ -119,7 +118,7 @@
 		exit(0);
 	}
 	app_is_iPad_ = [[[UIDevice currentDevice] model] hasPrefix:@"iPad"];	// iPad
-	NSLog(@"app_is_iPad_=%d,  app_is_Ad_=%d,  app_is_sponsor_=%d", app_is_iPad_, app_opt_Ad_, app_pid_UnLock_);
+	NSLog(@"app_is_iPad_=%d,  app_is_Ad_=%d,  app_is_sponsor_=%d", app_is_iPad_, app_opt_Ad_, app_pid_iCloud_);
 	
 	//-------------------------------------------------
 	if (app_is_iPad_) {
@@ -167,7 +166,7 @@
 // info.plist "CFBundleURLTypes" 定義
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url 
 {
-	if ([url isFileURL]) {	// .packlist ファイルをタッチしたとき、
+	if ([url isFileURL]) {	// .packlist OR .azp ファイルをタッチしたとき、
 		NSLog(@"File loaded into [url path]=%@", [url path]);
 		if ([[[url pathExtension] lowercaseString] isEqualToString:DBOX_EXTENSION]) 
 		{	// ファイル・タッチ対応
@@ -225,19 +224,23 @@
 			DropboxVC *vc = [[DropboxVC alloc] init];
 			vc.Re1selected = dropboxSaveE1selected_;
 			if (app_is_iPad_) {
+				// Dropboxだけは、認証して戻ったときAppDelegate内で再現させるため座標情報が不要なFormSheetにしている。
+				vc.modalPresentationStyle = UIModalPresentationFormSheet;
 				[mainSVC_ presentModalViewController:vc animated:YES];
-			} else {
-				[mainNC_ presentModalViewController:vc animated:YES];
+			} 
+			else {
+				if (app_opt_Ad_) {
+					[self AdRefresh:NO];	//広告禁止
+				}
+				[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+				[mainNC_ pushViewController:vc animated:YES];
 			}
         }
         return YES;
     }
-	//else if (app_is_sponsor_==NO) {
-	//	alertBox( NSLocalizedString(@"Dropbox NGAPP",nil), NSLocalizedString(@"Dropbox NGAPP msg",nil), @"OK");
-	//	return NO;
-	//}
     return NO;
 }
+
 
 - (void)applicationWillResignActive:(UIApplication *)application 
 {	//iOS4: アプリケーションがアクティブでなくなる直前に呼ばれる
@@ -319,6 +322,28 @@
 	padRootVC_ = nil;
 }
 
+/*
+#pragma mark - StoreKit
+
+- (void)storeReset
+{
+	// オプション・チェック
+	if (app_pid_UnLock_==NO) {
+		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+		[kvs synchronize];
+		if ([kvs boolForKey:SK_PID_iCloud]) {
+			app_pid_UnLock_ = YES;
+			[self	managedObjectContextReset]; // iCloud対応の moc再生成する。
+			//広告は非表示にするが、設定にて切替を可能にする。
+			app_opt_Ad_ = NO;
+			[self AdRefresh:NO];
+			// 再フィッチ＆画面リフレッシュ通知
+			[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFETCH_ALL_DATA		// 再フィッチ（レコード増減あったとき）
+																object:self userInfo:nil];
+		}
+	}
+}
+*/
 
 #pragma mark - iCloud
 
@@ -380,7 +405,7 @@
 	
     persistentStoreCoordinator_ = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
 	
-	if (app_pid_UnLock_) {  // (IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0"))
+	if (app_pid_iCloud_) {  // (IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0"))
 		 // do this asynchronously since if this is the first time this particular device is syncing with preexisting
 		 // iCloud content it may take a long long time to download
 		 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -465,7 +490,7 @@
 	NSManagedObjectContext* moc = nil;
 	
     if (coordinator != nil) {
-		if (app_pid_UnLock_) {  // (IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0"))
+		if (app_pid_iCloud_) {  // (IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0"))
 			moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
 			
 			[moc performBlockAndWait:^{

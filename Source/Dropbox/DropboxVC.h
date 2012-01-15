@@ -14,12 +14,12 @@
 
 #define DBOX_APPKEY			@"jngoip8t4z187ot"	// PackList
 #define DBOX_SECRET			@"l6rho4qt0jpiarq"
-#define DBOX_EXTENSION		@"packlist"
+#define DBOX_EXTENSION		@"azp"
 
 @interface DropboxVC : UIViewController <UITableViewDelegate, UITableViewDataSource, 
 										UITextFieldDelegate, DBRestClientDelegate, UIActionSheetDelegate>
 {
-	//IBOutlet UIButton		*ibBuClose;
+	IBOutlet UIButton		*ibBuClose;		//iPad Only
 	IBOutlet UIButton		*ibBuSave;
 	IBOutlet UITextField	*ibTfName;
 

@@ -16,12 +16,12 @@
 
 @interface E3detailTVC : UITableViewController <UITextFieldDelegate, UITextViewDelegate>
 
-@property (nonatomic, retain) NSMutableArray *RaE2array;
-@property (nonatomic, retain) NSMutableArray *RaE3array;
-@property (nonatomic, retain) E3 *Re3target;
-@property (nonatomic, assign) NSInteger PiAddGroup;
-@property (nonatomic, assign) NSInteger PiAddRow;
-@property (nonatomic, assign) BOOL	PbSharePlanList;
+@property (nonatomic, retain) NSMutableArray		*e2array;
+@property (nonatomic, retain) NSMutableArray		*e3array;
+@property (nonatomic, retain) E3								*e3target;
+@property (nonatomic, assign) NSInteger				addE2section;
+@property (nonatomic, assign) NSInteger				addE3row;
+@property (nonatomic, assign) BOOL						sharePlanList;
 @property (nonatomic, assign) id									delegate;
 @property (nonatomic, retain) UIPopoverController*	selfPopover;
 

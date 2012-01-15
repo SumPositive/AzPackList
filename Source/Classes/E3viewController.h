@@ -18,15 +18,11 @@
 @interface E3viewController : UITableViewController <UIActionSheetDelegate, UISearchBarDelegate
 	,UIPopoverControllerDelegate>
 
-//@property (nonatomic, retain) NSMutableArray *RaE2array; // assignにするとスクーロール中に「戻る」とフリーズする。
-														// assignだとE3側の処理が完了する前に解放されてしまうようだ。
-@property (nonatomic, retain) E1		*Re1selected;	//grandParent;
-//@property (nonatomic, retain) E2		*Re2selected;	//parent;
-@property (nonatomic, assign) NSInteger	PiFirstSection;
-@property (nonatomic, assign) NSInteger	PiSortType;
-@property (nonatomic, assign) BOOL		PbSharePlanList;
+@property (nonatomic, retain) E1					*e1selected;	//grandParent;
+@property (nonatomic, assign) NSInteger	firstSection;
+@property (nonatomic, assign) NSInteger	sortType;
+@property (nonatomic, assign) BOOL			sharePlanList;
 
-//- (void)viewComeback:(NSArray *)selectionArray;  // Comeback 再現復帰処理用
 - (void)refreshE3view;
 
 @end

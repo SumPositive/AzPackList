@@ -28,7 +28,8 @@
 //#define GD_CSVFILENAME			@"AzPack.csv"		// Local Save file name
 #define GD_GDOCS_EXT			@".AzPack"			// Google Document Spredseet.拡張子
 #define GD_CSVFILENAME4		@"AzPack.packlist"	//[1.1.0:xcdatamodel-4]以降 HOME/tmp/file name
-#define GD_GDOCS_EXT4			@".packlist"				//[1.1.0:xcdatamodel-4]以降 Google Document Spredseet.拡張子
+#define GD_GDOCS_EXT4			@".packlist"			//[1.1.0:xcdatamodel-4]以降 Google Document Spredseet.拡張子
+#define GD_EXTENSION				@"azp"					//[2.0]
 
 #define GD_SECTION_TIMES	100000				// .tag = .section * GD_SECTION_TIMES + .row に使用
 #define GD_E2SORTLIST_COUNT		3				// E2 Sort Listの有効行数

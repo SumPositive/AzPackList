@@ -10,7 +10,7 @@
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>packlist</string>
-				<string>azpl</string>
+				<string>azp</string>
 			</array>
 			<key>CFBundleTypeIconFiles</key>
 			<array>
@@ -65,7 +65,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.8.0</string>
+	<string>2.0.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -84,7 +84,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>0.8.0.0</string>
+	<string>2.0.0.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIPrerenderedIcon</key>
@@ -114,7 +114,7 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>packlist</string>
+				<string>azp</string>
 				<key>public.mime-type</key>
 				<string>application/vnd.packlist</string>
 			</dict>

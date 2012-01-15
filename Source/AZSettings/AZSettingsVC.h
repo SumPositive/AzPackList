@@ -12,7 +12,7 @@
 #import <StoreKit/StoreKit.h>
 
 // ProductID
-#define SK_PID_iCloud		@"com.azukid.AzPackList5.iCloud"		// In-App Purchase ProductIdentifier
+#define SK_PID_UNLOCK		@"com.azukid.AzPackList.Unlock"		// In-App Purchase ProductIdentifier
 
 
 @interface AZStoreVC : UIViewController <UITableViewDelegate, UITableViewDataSource, 

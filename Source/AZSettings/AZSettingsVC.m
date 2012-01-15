@@ -173,12 +173,11 @@ NSString *passCode()
 
 - (id)initWithUnLock:(BOOL)unlock
 {
-/*	if ([[[UIDevice currentDevice] model] hasPrefix:@"iPad"]) {	// iPad
+	if ([[[UIDevice currentDevice] model] hasPrefix:@"iPad"]) {	// iPad
 		self = [super initWithNibName:@"AZStoreVC-iPad" bundle:nil];
 	} else {
 		self = [super initWithNibName:@"AZStoreVC" bundle:nil];
-	}*/
-	self = [super initWithNibName:@"AZStoreVC" bundle:nil];
+	}
     if (self) {
         // Custom initialization
 		unLock_ = unlock;
@@ -188,7 +187,6 @@ NSString *passCode()
 													green:81/255.0f 
 													 blue:75/255.0f
 													alpha:1.0f];
-		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;  //   CGSizeMake(320, 416); //iPad-Popover
     }
     return self;
 }
@@ -296,7 +294,7 @@ NSString *passCode()
 	if ([pass length]==10 && [pass isEqualToString: [ibTfInvitePass.text uppercaseString]]) 
 	{
 		// productID の購入確定処理
-		[self actPurchasedProductID: SK_PID_iCloud];
+		[self actPurchasedProductID: SK_PID_UNLOCK];
 		// OK
 		alertBox(NSLocalizedString(@"SK InvitePass OK", nil), nil, @"OK");
 	}

@@ -26,23 +26,14 @@
 @implementation E1edit   // ViewController
 {
 @private
-	//E1			*Re1target;  // IはInstance、aはassign を示す
-	//NSInteger	PiAddRow;    // (>=0)Add  (-1)Edit
-	
-	//id									delegate;
-	//UIPopoverController*	selfPopover;  // 自身を包むPopover  閉じる為に必要
-	
-	//----------------------------------------------------------------viewDidLoadでnil, dealloc時にrelese
-	//----------------------------------------------------------------Owner移管につきdealloc時のrelese不要
 	UITextField		*MtfName;  // self.viewがOwner
 	UITextView		*MtvNote;  // self.viewがOwner
-	//----------------------------------------------------------------assign
 	AppDelegate		*appDelegate_;
 }
-@synthesize Re1target;
-@synthesize PiAddRow;
-@synthesize delegate;
-@synthesize selfPopover;
+@synthesize e1target = e1target_;
+@synthesize addRow = addRow_;
+//@synthesize delegate = delegate_;	<<<<<Notificationにしたため
+@synthesize selfPopover = selfPopover_;
 
 
 #pragma mark - View lifecycle
@@ -134,13 +125,13 @@
 	
 	[self viewDesign];
 	
-	if ([[Re1target valueForKey:@"name"] isEqualToString:NSLocalizedString(@"New Pack",nil)]) {
+	if ([[e1target_ valueForKey:@"name"] isEqualToString:NSLocalizedString(@"New Pack",nil)]) {
 		MtfName.text = @"";
 	} else {
-		MtfName.text = [Re1target valueForKey:@"name"];
+		MtfName.text = [e1target_ valueForKey:@"name"];
 	}
 
-	MtvNote.text = [Re1target valueForKey:@"note"];
+	MtvNote.text = [e1target_ valueForKey:@"note"];
 	
 }
 
@@ -227,10 +218,10 @@
 
 - (void)dealloc 
 {
-	//[selfPopover release], 
-	selfPopover = nil;
+	//[selfPopover_ release], 
+	selfPopover_ = nil;
 	// @property (retain)
-	//[Re1target release];
+	//[e1target_ release];
     //[super dealloc];
 }
 
@@ -285,17 +276,17 @@
 	if (appDelegate_.app_is_iPad) {
 		//Cancelでも「新しい・・」を削除しない。Rootに戻ったときに配下クリーン処理している。
 		//[(PadNaviCon*)self.navigationController dismissPopoverCancel];  // PadNaviCon拡張メソッド
-		if (selfPopover) {
-			[selfPopover dismissPopoverAnimated:YES];
+		if (selfPopover_) {
+			[selfPopover_ dismissPopoverAnimated:YES];
 		}
 	} else {
 		/*	Cancelでも「新しい・・」を削除しない。Rootに戻ったときに配下クリーン処理している。
-		 if (Re1target && 0 <= PiAddRow) 
-		 {	// SAVEしたときには、Re1target=nil にしているので通らない。
+		 if (e1target_ && 0 <= addRow_) 
+		 {	// SAVEしたときには、e1target_=nil にしているので通らない。
 		 // 新オブジェクトのキャンセルなので、呼び出し元で挿入したオブジェクトを削除する
-		 NSManagedObjectContext *ct = Re1target.managedObjectContext;
-		 [ct deleteObject:Re1target];
-		 Re1target = nil;
+		 NSManagedObjectContext *ct = e1target_.managedObjectContext;
+		 [ct deleteObject:e1target_];
+		 e1target_ = nil;
 		 NSError *err = nil;
 		 if (![ct save:&err]) {
 		 NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
@@ -309,15 +300,15 @@
 - (void)save:(id)sender 
 {
 	// 編集フィールドの値を editObj にセットする
-	[Re1target setValue:MtfName.text forKey:@"name"];
-	[Re1target setValue:MtvNote.text forKey:@"note"];
+	[e1target_ setValue:MtfName.text forKey:@"name"];
+	[e1target_ setValue:MtvNote.text forKey:@"note"];
 
-	if (0 <= PiAddRow) {
+	if (0 <= addRow_) {
 		// 新規のとき、末尾になるように行番号を付与する
-		[Re1target setValue:[NSNumber numberWithInteger:PiAddRow] forKey:@"row"];
+		[e1target_ setValue:[NSNumber numberWithInteger:addRow_] forKey:@"row"];
 	}
 	
-	NSManagedObjectContext *ct = Re1target.managedObjectContext;
+	NSManagedObjectContext *ct = e1target_.managedObjectContext;
 	NSError *err = nil;
 	if (![ct save:&err]) {
 		NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
@@ -325,11 +316,15 @@
 	}
 	
 	if (appDelegate_.app_is_iPad) {
-		if (selfPopover) {
-			if ([delegate respondsToSelector:@selector(refreshE1view)]) {	// メソッドの存在を確認する
-				[delegate refreshE1view];// 親の再描画を呼び出す
-			}
-			[selfPopover dismissPopoverAnimated:YES];
+		if (selfPopover_) {
+			/*if ([delegate_ respondsToSelector:@selector(refreshE1view)]) {	// メソッドの存在を確認する
+				[delegate_ refreshE1view];// 親の再描画を呼び出す
+			}*/
+			// 再表示 通知発信
+			NSNotification* refreshNotification = [NSNotification notificationWithName:NFM_REFRESH_ALL_VIEWS
+																				object:self  userInfo:nil];
+			[[NSNotificationCenter defaultCenter] postNotification:refreshNotification];
+			[selfPopover_ dismissPopoverAnimated:YES];
 		}
 	} else {
 		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る

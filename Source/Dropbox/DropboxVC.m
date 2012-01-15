@@ -98,14 +98,10 @@
 
 - (id)init
 {
-	if ([[[UIDevice currentDevice] model] hasPrefix:@"iPad"]) {	// iPad
-		self = [super initWithNibName:@"DropboxVC-iPad" bundle:nil];
-	} else {
-		self = [super initWithNibName:@"DropboxVC" bundle:nil];
-	}
+	self = [super initWithNibName:@"DropboxVC" bundle:nil];
     if (self) {
         // Custom initialization
-
+		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;  //   CGSizeMake(320, 416); //iPad-Popover
     }
     return self;
 }
@@ -114,7 +110,14 @@
 {
     [super viewDidLoad];
 
-	//homeTmpPath_ = [NSHomeDirectory() stringByAppendingPathComponent:@"tmp"];  // "tmp"フォルダは、iCloud同期除外される
+	// init:では早すぎるようなので、ここで制御する。
+	if ([[[UIDevice currentDevice] model] hasPrefix:@"iPad"]) {	// iPad
+		ibBuClose.hidden = NO;
+	} else {
+		// iPhone
+		ibBuClose.hidden = YES;
+		self.title = @"Dropbox";
+	}
 	
 	ibTfName.keyboardType = UIKeyboardTypeDefault;
 	ibTfName.returnKeyType = UIReturnKeyDone;
@@ -275,8 +278,8 @@
 											 cancelButtonTitle:nil
 											 otherButtonTitles:NSLocalizedString(@"Roger", nil), nil];
 		[alv	show];
-		// 再表示 通知発信
-		NSNotification* refreshNotification = [NSNotification notificationWithName:NFM_REFRESH_ALL_VIEWS
+		// 再読み込み 通知発信
+		NSNotification* refreshNotification = [NSNotification notificationWithName:NFM_REFETCH_ALL_DATA  // DATA追加発生
 																			object:self  userInfo:nil];
 		[[NSNotificationCenter defaultCenter] postNotification:refreshNotification];
 	}
