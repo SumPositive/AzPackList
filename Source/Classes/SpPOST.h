@@ -19,5 +19,5 @@
 void alertMsgBox( NSString *title, NSString *msg, NSString *buttonTitle );
 NSMutableURLRequest *requestSpPOST( NSString *PzBody );
 NSString *postCmdAddUserPass( NSString *PzPostCmd );
-NSString *postCmdAddLanguage( NSString *PzPostCmd );
+//NSString *postCmdAddLanguage( NSString *PzPostCmd );
 

@@ -20,10 +20,31 @@
 - (void)viewDesign;
 - (void)vBarDone:(id)sender;
 - (void)vBuPublish:(id)sender;
-- (NSString *)vSharePlanAppend:(NSMutableArray *)maTags;
+- (NSString *)vSharePlanAppend;  //:(NSMutableArray *)maTags;
 @end
 
 @implementation SpAppendVC
+{
+@private
+	E1								*Re1selected;
+	UIPopoverController*	selfPopover;  // 自身を包むPopover  閉じる為に必要
+
+	//NSArray				*RaPickerSource;
+	UIBarButtonItem		*RbarButtonItemDone;
+	NSURLConnection		*RurlConnection;
+	NSMutableData		*RdaResponse;
+
+	//UIPickerView		*Mpicker;
+	UITextField			*MtfName;
+	UITextView			*MtvNote;
+	UITextField			*MtfNickname;
+	UILabel				*MlbNickname;
+	UIButton			*MbuUpload;
+
+	AppDelegate		*appDelegate_;
+	//BOOL				MbOptShouldAutorotate;
+	NSInteger			MiConnectTag;	// (0)Non (1)Search (2)Append (3)Download (4)Delete
+}
 @synthesize Re1selected;
 @synthesize selfPopover;
 
@@ -33,26 +54,19 @@
 	NSLog(@"--- unloadRelease --- SpAppendVC");
 	
 	[RurlConnection cancel]; // 停止させてから解放する
-	//[RurlConnection release],	
 	RurlConnection = nil;
 	
-	//[RdaResponse release],			
 	RdaResponse = nil;
-	//[RbarButtonItemDone release],	
 	RbarButtonItemDone = nil;
-	//[RaPickerSource release],		
-	RaPickerSource = nil;
+	//RaPickerSource = nil;
 }
 
 - (void)dealloc    // 生成とは逆順に解放するのが好ましい
 {
 	[self unloadRelease];
-	//[selfPopover release],
 	selfPopover = nil;
 	//--------------------------------@property (retain)
 	[Re1selected.managedObjectContext rollback]; //一時的に修正された可能性がある.name .note を取り消すため
-	//[Re1selected release];
-	//[super dealloc];
 }
 
 - (void)viewDidUnload 
@@ -75,17 +89,18 @@
 		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
 	}
 
-	Mpicker = nil;		// ここで生成
+	//Mpicker = nil;		// ここで生成
 	
 	self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
 	
 	// とりあえず生成、位置はviewDesignにて決定
-	//------------------------------------------------------
+/*	//------------------------------------------------------
 	Mpicker = [[UIPickerView alloc] init];
 	Mpicker.delegate = self;
 	Mpicker.dataSource = self;
 	Mpicker.showsSelectionIndicator = YES;
 	[self.view addSubview:Mpicker]; //[Mpicker release];
+ */
 	//------------------------------------------------------
 	MtfName = [[UITextField alloc] init];
 	MtfName.delegate = self;
@@ -117,6 +132,8 @@
 	MlbNickname = [[UILabel alloc] init];
 	MlbNickname.font = [UIFont systemFontOfSize:12];
 	MlbNickname.text = NSLocalizedString(@"Nickname info",nil);
+	MlbNickname.numberOfLines = 3;
+	MlbNickname.textAlignment = UITextAlignmentCenter;
 	MlbNickname.backgroundColor = [UIColor clearColor];
 	[self.view addSubview:MlbNickname]; //[MlbNickname release];
 	//------------------------------------------------------
@@ -126,13 +143,13 @@
 	[MbuUpload addTarget:self action:@selector(vBuPublish:) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:MbuUpload]; //[mBuUpload release];
 	//------------------------------------------------------
-	// SharePlanTag.plist からタグリストを読み込む
+/*	// SharePlanTag.plist からタグリストを読み込む
 	NSString *zPath = [[NSBundle mainBundle] pathForResource:@"SharePlanTag" ofType:@"plist"];
 	RaPickerSource = [[NSArray alloc] initWithContentsOfFile:zPath];
 	if (RaPickerSource==nil) {
 		AzLOG(@"ERROR: SharePlanTag.plist not Open");
 		//exit(-1);
-	}
+	}*/
 	
 	if (RbarButtonItemDone == nil) {
 		RbarButtonItemDone = [[UIBarButtonItem alloc] initWithTitle:@"Done"
@@ -269,26 +286,24 @@
 	
 	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
 	{	// タテ
-		rect.origin.y = 5;		rect.size.height = 25;
+		rect.origin.y =  5;		rect.size.height = 30;
 		rect.origin.x = 10;		rect.size.width -= 20;
 		MtfName.frame = rect;
 
-		rect.origin.y = 35;		rect.size.height = 70;
+		rect.origin.y = 45;		rect.size.height = 60;
 		MtvNote.frame = rect;
 		
-		rect.origin.y = 110;	rect.size.height = 25;
+		rect.origin.y = 115;		rect.size.height = 30;
 		MtfNickname.frame = rect;
 
-		rect.origin.y = 137;	rect.size.height = 18;
+		rect.origin.y = 170;		rect.size.height = 60; // 3行
 		MlbNickname.frame = rect;
-		MlbNickname.textAlignment = UITextAlignmentCenter;
-		MlbNickname.numberOfLines = 1;
 		
-		rect.origin.y = 160;	rect.size.height = 216;
+/*		rect.origin.y = 160;	rect.size.height = 216;
 		rect.origin.x = 0;		rect.size.width = self.view.bounds.size.width;
-		Mpicker.frame = rect;
+		Mpicker.frame = rect;*/
 
-		rect.origin.y = 380;	rect.size.height = 32;
+		rect.origin.y = 300;		rect.size.height = 32;
 		rect.size.width = 150;
 		rect.origin.x = (self.view.bounds.size.width - rect.size.width) / 2;
 		MbuUpload.frame = rect;
@@ -301,26 +316,24 @@
 		rect.origin.y = 30;		rect.size.height = 50;
 		MtvNote.frame = rect;
 		
-		rect.origin.y = self.view.bounds.size.height - 216;	rect.size.height = 216;
+/*		rect.origin.y = self.view.bounds.size.height - 216;	rect.size.height = 216;
 		rect.origin.x = 0;		rect.size.width = 320;
-		Mpicker.frame = rect;
+		Mpicker.frame = rect;*/
 
-		rect.origin.y += 30;	rect.size.height = 22;
-		rect.origin.x = 330;	rect.size.width = self.view.bounds.size.width - rect.origin.x - 10;
+		rect.origin.y = 83;	rect.size.height = 22;
+		//rect.origin.x = 330;	rect.size.width = self.view.bounds.size.width - rect.origin.x - 10;
 		MtfNickname.frame = rect;
 		
-		rect.origin.y += 25;	rect.size.height = 28;
+		rect.origin.y += 25;	rect.size.height = 60; // 3行
 		MlbNickname.frame = rect;
-		MlbNickname.textAlignment = UITextAlignmentCenter;
-		MlbNickname.numberOfLines = 2;
 		
-		rect.origin.y = self.view.bounds.size.height - 40;	rect.size.height = 32;
-		rect.origin.x = self.view.bounds.size.width - 130;	rect.size.width = 100;
+		rect.origin.y = self.view.bounds.size.height - 50;	rect.size.height = 32;
+		rect.origin.x = self.view.bounds.size.width - 150;	rect.size.width = 100;
 		MbuUpload.frame = rect;
 	}
 }	
 
-
+/*
 //-----------------------------------------------------------Picker
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
@@ -352,6 +365,7 @@
 
 //- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 
+*/
 
 
 - (void)vBuPublish:(id)sender
@@ -400,7 +414,7 @@
 	[uds setObject:MtfNickname.text forKey:GD_DefNickname];
 	[uds synchronize]; // plistへ書き出す
 			
-	// Tag
+/*	// Tag
 	for (int comp=0; comp<3; comp++) {
 		NSInteger iRow = [Mpicker selectedRowInComponent:comp];
 		if (iRow <= 0) {
@@ -414,7 +428,7 @@
 			//[alert release];
 			return;
 		}
-	}
+	}*/
 	
 	// 最終確認アラート
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Publish Exec Title",nil)
@@ -427,7 +441,7 @@
 	//[alert release];
 }
 
-- (NSString *)vSharePlanAppend:(NSMutableArray *)maTags
+- (NSString *)vSharePlanAppend   //:(NSMutableArray *)maTags
 {
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES; // NetworkアクセスサインON
 
@@ -442,7 +456,13 @@
 	postCmd = postCmdAddUserPass( postCmd );
 	
 	// language
-	postCmd = postCmdAddLanguage( postCmd );
+	//[2.0]//postCmd = postCmdAddLanguage( postCmd );
+	NSString *zLc = [[NSLocale preferredLanguages] objectAtIndex:0];	// "ja", "en", "zh-Hans", など ＜＜先頭(:0)がデフォルト
+	if (2<[zLc length]) {
+		zLc = [zLc substringToIndex:2]; // 先頭2文字に制限 ＜＜＜GAE側が2文字しか対応していないため。
+	}
+	assert([zLc length]==2);
+	postCmd = [postCmd stringByAppendingFormat:@"&language=%@", zLc];
 	
 	// planCsv
 	NSMutableString *zCsv = [NSMutableString new]; //こちら側でメモリ管理する
@@ -456,11 +476,12 @@
 	postCmd = [postCmd stringByAppendingString:zCsv];
 	//[zCsv release];
 	
-	// tag
+/*	// tag
 	for (NSString *zz in maTags) {
 		postCmd = [postCmd stringByAppendingFormat:@"&tag=%@", zz];
-	}
+	}*/
 	
+	NSLog(@"vSharePlanAppend: postCmd=%@", postCmd);
 	if (RurlConnection) {
 		[RurlConnection cancel]; // 停止させてから解放する
 		//[RurlConnection release];
@@ -535,17 +556,18 @@
 		
 		case ALERT_TAG_PUBLISH: 
 			if (buttonIndex==1) {
-				// Tag
+		/*		// Tag
 				NSMutableArray *ma = [NSMutableArray new];
 				for (int comp=0; comp<3; comp++) {
 					NSInteger iRow = [Mpicker selectedRowInComponent:comp];
 					if (0 < iRow) {
 						[ma addObject:[[RaPickerSource objectAtIndex:comp] objectAtIndex:iRow]];
 					}
-				}
+				}*/
 				// Append - Upload - Publish
 				@autoreleasepool {
-					NSString *err = [self vSharePlanAppend:ma];
+					//NSString *err = [self vSharePlanAppend:ma];
+					NSString *err = [self vSharePlanAppend];
 					if (err) {
 						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append Err",nil)
 																		message:err

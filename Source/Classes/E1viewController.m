@@ -465,7 +465,7 @@
 		popOver_ = nil;
 		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
 		popOver_.delegate = nil;	// 不要
-		NSIndexPath *idx = [NSIndexPath indexPathForRow:1 inSection:2];  //<<<<< About this app セル位置をセット
+		NSIndexPath *idx = [NSIndexPath indexPathForRow:4 inSection:1];  //<<<<< About this app セル位置をセット
 		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
 		rcArrow.origin.x = 85;		rcArrow.size.width = 1;
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
@@ -527,7 +527,7 @@
 		popOver_ = nil;
 		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
 		popOver_.delegate = nil;	// 不要
-		NSIndexPath *idx = [NSIndexPath indexPathForRow:0 inSection:2];  //<<<<< Settings セル位置をセット
+		NSIndexPath *idx = [NSIndexPath indexPathForRow:3 inSection:1];  //<<<<< Settings セル位置をセット
 		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
 		rcArrow.origin.x = 85;		rcArrow.size.width = 1;
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
@@ -558,7 +558,7 @@
 		popOver_ = nil;
 		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
 		popOver_.delegate = nil;	// 不要
-		NSIndexPath *idx = [NSIndexPath indexPathForRow:2 inSection:2];  //<<<<< Extension parts shop セル位置をセット
+		NSIndexPath *idx = [NSIndexPath indexPathForRow:5 inSection:1];  //<<<<< Extension parts shop セル位置をセット
 		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
 		rcArrow.origin.x = 85;		rcArrow.size.width = 1;
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
@@ -1362,7 +1362,7 @@
 		cell.detailTextLabel.textColor = [UIColor grayColor];
 		cell.showsReorderControl = NO;
 
-		if (indexPath.section == 1) { //-----------------------------------------------------------Section 1
+		if (indexPath.section == 1) { //-----------------------------------------------------------Section 1:行位置変更したなら、Popover矢印位置も変更すること。
 			switch (indexPath.row) {
 				case 0:
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-SharedAdd"];

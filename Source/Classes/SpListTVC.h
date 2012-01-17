@@ -12,7 +12,8 @@
 
 @interface SpListTVC : UITableViewController //<UIActionSheetDelegate> 
 
-@property (nonatomic, retain) NSArray					*RaTags;
+//@property (nonatomic, retain) NSArray					*RaTags;
+@property (nonatomic, retain) NSString					*RzLanguage;
 @property (nonatomic, retain) NSString					*RzSort;
 
 @end

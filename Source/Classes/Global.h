@@ -39,6 +39,7 @@
 #define UD_OptShouldAutorotate				@"UD_OptShouldAutorotate"
 #define UD_OptPasswordSave					@"UD_OptPasswordSave"
 #define UD_CurrentVersion						@"UD_CurrentVersion"
+//#define UD_DeviceID									@"UD_DeviceID"		//2.0// Original UDID
 #define GD_DefPassword							@"DefPassword"
 #define GD_DefUsername							@"DefUsername"
 #define GD_DefNickname							@"DefNickname"
@@ -73,6 +74,7 @@ void alertBox( NSString *zTitle, NSString *zMsg, NSString *zButton );
 UIColor *GcolorBlue(float percent);
 UIImage *GimageFromString(float Pfx, float Pfy, float PfSize, NSString* str);
 NSString *GstringFromNumber( NSNumber *num );
+NSString *getMacAddress();
 
 
 

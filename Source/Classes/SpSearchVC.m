@@ -25,7 +25,7 @@
 	//[RaSegSortSource release],	
 	RaSegSortSource = nil;
 	//[RaPickerSource release],	
-	RaPickerSource = nil;
+	//RaPickerSource = nil;
 }
 
 - (void)dealloc    // 生成とは逆順に解放するのが好ましい
@@ -75,7 +75,9 @@
 	Mpicker.dataSource = self;
 	Mpicker.showsSelectionIndicator = YES;
 	[self.view addSubview:Mpicker]; //[Mpicker release];
-	//------------------------------------------------------
+	[Mpicker selectRow:1 inComponent:0 animated:NO]; // デフォルト言語を選択
+
+	//------------------------------------------------------ソート
 	if (RaSegSortSource == nil) {
 		RaSegSortSource = [[NSArray alloc] initWithObjects:
 						  NSLocalizedString(@"New Order",nil),
@@ -84,7 +86,7 @@
 	}
 	MsegSort = [[UISegmentedControl alloc] initWithItems:RaSegSortSource];
 	MsegSort.selectedSegmentIndex = 0;
-	[MsegSort addTarget:self action:@selector(vSegSort:) forControlEvents:UIControlEventValueChanged];
+	//[MsegSort addTarget:self action:@selector(vSegSort:) forControlEvents:UIControlEventValueChanged];
 	[self.view addSubview:MsegSort]; //[MsegSort release];
 	//MsegSort.hidden = YES;  //GAE-V1:人気順("-downCount")に不具合あるため保留中
 
@@ -96,13 +98,13 @@
 	[self.view addSubview:MbuSearch]; //[mBuSearch release]; autorelease
 	//------------------------------------------------------
 	
-	// SharePlanTag.plist からタグリストを読み込む
+/*	// SharePlanTag.plist からタグリストを読み込む
 	NSString *zPath = [[NSBundle mainBundle] pathForResource:@"SharePlanTag" ofType:@"plist"];
 	RaPickerSource = [[NSArray alloc] initWithContentsOfFile:zPath];
 	if (RaPickerSource==nil) {
 		AzLOG(@"ERROR: SharePlanTag.plist not Open");
 		exit(-1);
-	}
+	}*/
 }
 
 // viewWillAppear はView表示直前に呼ばれる。よって、Viewの変化要素はここに記述する。　 　// viewDidAppear はView表示直後に呼ばれる
@@ -184,22 +186,20 @@
 //-----------------------------------------------------------Picker
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
-	return [RaPickerSource count];
+	return 1;
 }
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-	return [[RaPickerSource objectAtIndex:component] count];
+	// [NSLocale preferredLanguages] デフォルト言語が先頭(:0)に配置されている。
+	return [[NSLocale preferredLanguages] count] + 1;
 }
 
 - (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
 {
 	switch (component) {
-		case 0: return 140;
-			break;
-		case 1: return 80;
-			break;
-		case 2: return 80;
+		case 0: 
+			return 300;
 			break;
 	}
 	return 0;
@@ -207,37 +207,50 @@
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
-	return [[RaPickerSource objectAtIndex:component] objectAtIndex:row];
+	if (row<=0) {
+		return @"(* All Language)";
+	}
+	NSString *zLcd = [[NSLocale preferredLanguages] objectAtIndex:row - 1];
+	NSString *zLang = [[NSLocale currentLocale] displayNameForKey:NSLocaleIdentifier value:zLcd];
+#ifdef DEBUG
+	return [NSString stringWithFormat:@"%@  (%@)", zLang, zLcd];
+#else
+	return zLang;
+#endif
 }
 
 //- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 
 
 
-- (void)vSegSort:(id)sender
-{
-
-}
-
 - (void)vBuSearch:(id)sender
 {
-	// Tag条件
+/*	// Tag条件
 	NSMutableArray *ma = [NSMutableArray new];
 	for (int comp=0; comp<3; comp++) {
 		NSInteger iRow = [Mpicker selectedRowInComponent:comp];
 		if (0 < iRow) {
 			[ma addObject:[[RaPickerSource objectAtIndex:comp] objectAtIndex:iRow]];
 		}
-	}
+	}*/
 
 	// Search
 	SpListTVC *vc = [[SpListTVC alloc] init];
-	vc.RaTags = ma;	//BUG//[ma retain];
+	//vc.RaTags = ma;	//BUG//[ma retain];
 	//[ma release];
+	
+	// Language
+	NSInteger iRow = [Mpicker selectedRowInComponent:0];
+	if (0 < iRow) {
+		vc.RzLanguage = [[NSLocale preferredLanguages] objectAtIndex:iRow-1];
+	} else {
+		vc.RzLanguage = nil; // * ALL
+	}
+	
 	// Sort条件
 	NSInteger iSort = MsegSort.selectedSegmentIndex;
-	if (iSort <= 0) vc.RzSort = @"N"; //N 新着順
-	else			vc.RzSort = @"P"; //P 人気順
+	if (iSort <= 0)	vc.RzSort = @"N"; //N 新着順
+	else					vc.RzSort = @"P"; //P 人気順
 
 	[self.navigationController pushViewController:vc animated:YES];
 	//[vc release];

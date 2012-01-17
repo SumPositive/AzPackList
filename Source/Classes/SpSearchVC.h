@@ -12,7 +12,7 @@
 	
 @private
 	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
-	NSArray				*RaPickerSource;
+	//NSArray				*RaPickerSource;
 	NSArray				*RaSegSortSource;
 	//----------------------------------------------Owner移管につきdealloc時のrelese不要
 	UIPickerView		*Mpicker;

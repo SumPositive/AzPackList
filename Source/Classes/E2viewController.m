@@ -818,7 +818,7 @@
 	if (self) {
 		// 初期化成功
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		sharePlanList_ = NO;
+		//NG//sharePlanList_ = NO;  ＜＜＜常にNOになってしまう。
 		
 		// 背景テクスチャ・タイルペイント
 		if (appDelegate_.app_is_iPad) {
@@ -843,38 +843,18 @@
 {	//【Tips】ここでaddSubviewするオブジェクトは全てautoreleaseにすること。メモリ不足時には自動的に解放後、改めてここを通るので、初回同様に生成するだけ。
 	[super loadView];
 
-	// その他、初期化
-	if (appDelegate_.app_is_iPad) {
-		if (sharePlanList_) {
-			//self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
-			self.navigationController.toolbarHidden = YES;	// ツールバー不要
-		} else {
-			//self.contentSizeForViewInPopover = GD_POPOVER_SIZE; //アクションメニュー配下(Share,Googleなど）においてサイズ統一
-			self.navigationItem.hidesBackButton = YES;	// E3側に統一したので不要になった。
-			//self.navigationController.toolbarHidden = NO;	// ツールバー表示する
-			self.navigationController.toolbarHidden = YES;	// ツールバー不要
-		}
-	}
-
 	// Set up NEXT Left [Back] buttons.
 	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
 											  initWithTitle:NSLocalizedString(@"Group", nil)
 											  style:UIBarButtonItemStylePlain 
 											  target:nil  action:nil];
 
+	/*** loadViewやviewDidLoad:では、@property が参照できないので、viewWillAppear:へ移設
 	if (sharePlanList_==NO) {
 		// Set up Right [Edit] buttons.
 		self.navigationItem.rightBarButtonItem = self.editButtonItem;
 		self.tableView.allowsSelectionDuringEditing = YES;
-
-/*		// Tool Bar Button
-		UIBarButtonItem *buFlex = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-																				 target:nil action:nil] autorelease];
-		UIBarButtonItem *buAction = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction
-																				   target:self action:@selector(azAction)] autorelease];
-		NSArray *buArray = [NSArray arrayWithObjects: buFlex, buAction, buFlex, nil];
-		[self setToolbarItems:buArray animated:YES];*/
-	}
+	}*/
 }
 
 - (void)viewDidLoad 
@@ -891,6 +871,22 @@
 {
 	[super viewWillAppear:animated];
 	
+	// その他、初期化
+	if (appDelegate_.app_is_iPad) {
+		if (sharePlanList_) {	// loadViewやviewDidLoad:では、@property が参照できないので、viewWillAppear:へ移設
+			self.navigationItem.hidesBackButton = NO;  // 必要
+		} else {
+			self.navigationItem.hidesBackButton = YES;	// E3側に統一したので不要になった。
+		}
+		self.navigationController.toolbarHidden = YES;	// ツールバー不要
+	}
+	
+	if (sharePlanList_==NO) {	// loadViewやviewDidLoad:では、@property が参照できないので、viewWillAppear:へ移設
+		// Set up Right [Edit] buttons.
+		self.navigationItem.rightBarButtonItem = self.editButtonItem;
+		self.tableView.allowsSelectionDuringEditing = YES;
+	}
+
 	// 画面表示に関係する Option Setting を取得する
 	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];

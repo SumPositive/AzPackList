@@ -28,7 +28,7 @@
 #define ALERT_TAG_BREAK		811
 
 
-#ifdef DEBUG
+#ifdef DEBUGxxx
 #define PAGE_LIMIT			3
 #else
 #define PAGE_LIMIT			20
@@ -41,23 +41,17 @@
 @implementation SpListTVC
 {
 @private
-	//NSMutableArray		*RaTags;
-	//NSString			*RzSort;
-	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
-	//NSAutoreleasePool	*RautoPool;		// [0.6]autorelease独自解放のため
 	NSMutableArray		*RaSharePlans;
 	NSURLConnection		*RurlConnection;
 	NSMutableData		*RdaResponse;
-	//----------------------------------------------Owner移管につきdealloc時のrelese不要
-	//----------------------------------------------assign
 	AppDelegate		*appDelegate_;
-	//BOOL				MbOptShouldAutorotate;
-	//NSString			*MzUserPass;
-	BOOL				MbSearchOver;
-	BOOL				MbSearching;
+	BOOL					MbSearchOver;
+	BOOL					MbSearching;
 	NSInteger			MiConnectTag;	// (0)Non (1)Search (2)Append (3)Download (4)Delete
 }
-@synthesize	RaTags, RzSort;
+//@synthesize RaTags = aTags_P_;
+@synthesize RzLanguage = zLanguage_P_;  //=nil:ALL
+@synthesize RzSort = zSort_P_;
 
 
 - (void)unloadRelease	// dealloc, viewDidUnload から呼び出される
@@ -140,16 +134,29 @@
 	// userPass
 	postCmd = postCmdAddUserPass( postCmd );
 	
-	// language
-	postCmd = postCmdAddLanguage( postCmd );
-	
-	// Search paramaters
-	for (NSString *zz in self.RaTags) {
-		postCmd = [postCmd stringByAppendingFormat:@"&tag=%@", zz];
+	// LANGUAGE
+	//2.0//postCmd = postCmdAddLanguage( postCmd );
+	if (1 < [zLanguage_P_ length]) {
+		if (2 < [zLanguage_P_ length]) {
+			zLanguage_P_ = [zLanguage_P_ substringToIndex:2]; // 先頭2文字にする
+		}
+		postCmd = [postCmd stringByAppendingFormat:@"&language=%@", zLanguage_P_]; // 先頭2文字だけ対応しているため
 	}
-	postCmd = [postCmd stringByAppendingFormat:@"&sort=%@", self.RzSort];
+	
+	// SORT
+	postCmd = [postCmd stringByAppendingFormat:@"&sort=%@", zSort_P_];
+	
+/*	// TAG
+	for (NSString *zz in aTags_P_) {
+		postCmd = [postCmd stringByAppendingFormat:@"&tag=%@", zz];
+	}*/
+	
+	
+	// PAGE制御
 	postCmd = [postCmd stringByAppendingFormat:@"&shLimit=%d", PAGE_LIMIT];
 	postCmd = [postCmd stringByAppendingFormat:@"&shOffset=%ld", (long)iOffset];
+	
+	NSLog(@"vSharePlanSearch: postCmd=%@", postCmd);
 
 	if (RurlConnection) {
 		[RurlConnection cancel];
@@ -446,14 +453,11 @@
 		}
 		
 		lb = (UILabel *)[cell.contentView viewWithTag:CELL_TAG_INFO];
-//	lb.frame = CGRectMake(0,70-14, cell.frame.size.width ,14);
 		lb.frame = CGRectMake(0,70-14, self.view.frame.size.width,14);
-	/*	lb.text = [NSString stringWithFormat:@"%@    %@ %@   %@ %@  ", zOwn,
-				   NSLocalizedString(@"Release",nil), [dic objectForKey:@"stamp"], 
-				   NSLocalizedString(@"Popular",nil), [dic objectForKey:@"downCount"]];　*/
 #ifdef DEBUG
-		lb.text = [NSString stringWithFormat:@"%@  %@ (%@DL) ", zNickname, zStamp, [dic objectForKey:@"downCount"]];
+		lb.text = [NSString stringWithFormat:@"%@  %@ (%@) ", zNickname, zStamp, [dic objectForKey:@"downCount"]];
 #else
+		// DL数は非公開にする
 		lb.text = [NSString stringWithFormat:@"%@   %@ %@  ", zNickname, NSLocalizedString(@"Release",nil), zStamp];
 #endif
 	}
