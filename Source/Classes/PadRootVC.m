@@ -108,8 +108,8 @@
 {
     [super viewDidAppear:animated];
 	
-	if (appDelegate_.app_UpdateSave) {	//変更あれば揺らす
-		appDelegate_.app_UpdateSave = NO; // 解除
+	if (appDelegate_.app_BagSwing) {		// 振る // 全収納済みとなったE1から戻ったとき。
+		appDelegate_.app_BagSwing = NO; // 解除
 		
 		// Anime 開始位置
 		imgBag_.transform = CGAffineTransformIdentity;
@@ -123,11 +123,9 @@
 		[UIView setAnimationDelegate:self];
 		[UIView setAnimationDidStopSelector:@selector(animeAfter)];
 		
-#ifdef DEBUGxxx
 		// 繰り返し
 		[UIView setAnimationRepeatAutoreverses:YES];
-		[UIView setAnimationRepeatCount:3.5];
-#endif
+		[UIView setAnimationRepeatCount:1.5];
 		
 		// Anime 終了位置
 		imgBag_.frame = BAG_FRAME2;

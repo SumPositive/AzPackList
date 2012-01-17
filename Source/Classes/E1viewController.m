@@ -967,6 +967,7 @@
 			[popOver_ dismissPopoverAnimated:animated];
 		}
 	}
+	
 	[super viewWillDisappear:animated];
 }
 

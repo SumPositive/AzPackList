@@ -57,7 +57,7 @@
 @synthesize app_opt_Autorotate = app_opt_Autorotate_;
 @synthesize app_opt_Ad = app_opt_Ad_;
 @synthesize app_pid_iCloud = app_pid_iCloud_;
-
+@synthesize app_BagSwing = app_BagSwing_;		//YES=PadRootVC:が表示されたとき、バッグを振る。
 
 
 #pragma mark - Application lifecycle

@@ -976,7 +976,10 @@
 		if ([popOver_ isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
 			[popOver_ dismissPopoverAnimated:animated];
 		}
+		// YES=BagSwing // 全収納済みとなったE1から戻ったとき。
+		appDelegate_.app_BagSwing = ([e1selected_.sumNoCheck integerValue] <= 0);
 	}
+	
 	[super viewWillDisappear:animated];
 }
 
