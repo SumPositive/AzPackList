@@ -86,9 +86,8 @@
 	MsegSort.selectedSegmentIndex = 0;
 	[MsegSort addTarget:self action:@selector(vSegSort:) forControlEvents:UIControlEventValueChanged];
 	[self.view addSubview:MsegSort]; //[MsegSort release];
-#ifndef DEBUG
-	MsegSort.hidden = YES;  //GAE-V1:人気順("-downCount")に不具合あるため保留中
-#endif
+	//MsegSort.hidden = YES;  //GAE-V1:人気順("-downCount")に不具合あるため保留中
+
 	//------------------------------------------------------
 	MbuSearch = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 	MbuSearch.titleLabel.font = [UIFont boldSystemFontOfSize:20];

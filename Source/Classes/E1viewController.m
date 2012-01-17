@@ -1109,7 +1109,7 @@
 #ifdef AzMAKE_SPLASHFACE
     return 0;
 #else
-	return 3; // (0)PackList　　(1)Import menu　　(2)Basic menu
+	return 4; // (0)PackList　　(1)Import menu　　(2)Basic menu
 #endif
 }
 
@@ -1119,9 +1119,9 @@
 		case 0:
 			return section0Rows_ + 1; // +1:Add行
 		case 1:
-			return 5;	//Import menu
+			return 6;	//Action menu
 		case 2:
-			return 3;	//Basic menu
+			return 2;	//Old menu
 	}
 	return 0;
 }
@@ -1146,11 +1146,11 @@
 			break;
 			
 		case 1:
-			return NSLocalizedString(@"Import menu",nil);
+			return NSLocalizedString(@"Action menu",nil);
 			break;
 
 		case 2:
-			return NSLocalizedString(@"Basic menu",nil);
+			return NSLocalizedString(@"Old menu",nil);
 			break;
 	}
 	return nil;
@@ -1340,7 +1340,7 @@
 			}
 		}
 	}
-	else { //-----------------------------------------------------------Section(1)Import menu  (2)Basic menu
+	else { //-----------------------------------------------------------Section(1)Action menu  (2)Old menu
 		cell = [tableView dequeueReusableCellWithIdentifier:zCellSubtitle];
 		if (cell == nil) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
@@ -1362,7 +1362,7 @@
 		cell.detailTextLabel.textColor = [UIColor grayColor];
 		cell.showsReorderControl = NO;
 
-		if (indexPath.section == 1) { //-----------------------------------------------------------Section
+		if (indexPath.section == 1) { //-----------------------------------------------------------Section 1
 			switch (indexPath.row) {
 				case 0:
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-SharedAdd"];
@@ -1381,42 +1381,43 @@
 					cell.textLabel.text = NSLocalizedString(@"Import Google",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"Import Google msg",nil);
 					break;
-					
+
 				case 3:
-					cell.imageView.image = [UIImage imageNamed:@"Icon32-NearPcAdd"];
-					cell.textLabel.text = NSLocalizedString(@"Import YourPC",nil);
-					cell.detailTextLabel.text = NSLocalizedString(@"Import YourPC msg",nil);
-					cell.accessoryType = UITableViewCellAccessoryNone;
-					break;
-					
-				case 4:
-					cell.imageView.image = [UIImage imageNamed:@"Icon32-PasteAdd"];
-					cell.textLabel.text = NSLocalizedString(@"Import PasteBoard",nil);
-					cell.detailTextLabel.text = NSLocalizedString(@"Import PasteBoard msg",nil);
-					cell.accessoryType = UITableViewCellAccessoryNone;
-					break;
-			}
-		} else {
-			switch (indexPath.row) {
-				case 0:
 					cell.imageView.image = [UIImage imageNamed:@"Icon-Setting-32"];
 					cell.textLabel.text = NSLocalizedString(@"menu Setting",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"menu Setting msg",nil);
 					break;
 					
-				case 1:
+				case 4:
 					cell.imageView.image = [UIImage imageNamed:@"Icon-Info-32"];
 					cell.textLabel.text = NSLocalizedString(@"menu Information",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"menu Information msg",nil);
 					break;
 					
-				case 2:
+				case 5:
 					cell.imageView.image = [UIImage imageNamed:@"Icon-Parts-32"];
 					cell.textLabel.text = NSLocalizedString(@"menu Purchase",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"menu Purchase msg",nil);
 					break;
 			}
 		}
+		else if (indexPath.section == 2) { //-----------------------------------------------------------Section 2
+			switch (indexPath.row) {
+				case 0:
+					cell.imageView.image = [UIImage imageNamed:@"Icon32-NearPcAdd"];
+					cell.textLabel.text = NSLocalizedString(@"Import YourPC",nil);
+					cell.detailTextLabel.text = NSLocalizedString(@"Import YourPC msg",nil);
+					cell.accessoryType = UITableViewCellAccessoryNone;
+					break;
+					
+				case 1:
+					cell.imageView.image = [UIImage imageNamed:@"Icon32-PasteAdd"];
+					cell.textLabel.text = NSLocalizedString(@"Import PasteBoard",nil);
+					cell.detailTextLabel.text = NSLocalizedString(@"Import PasteBoard msg",nil);
+					cell.accessoryType = UITableViewCellAccessoryNone;
+					break;
+			}
+		} 
 	}
 	return cell;
 }
@@ -1479,27 +1480,27 @@
 				[self actionImportGoogle];
 				break;
 				
-			case 3: // Restore from YourPC
-				[self actionImportYourPC];
+			case 3: // Setting
+				[self actionSetting];
 				break;
 				
-			case 4: // PasteBoard
-				[self actionImportPasteBoard];
+			case 4: // Information
+				[self actionInformation];
+				break;
+				
+			case 5: // Purchase
+				[self actionIPurchase];
 				break;
 		}
 	}
 	else if (indexPath.section == 2) {
 		switch (indexPath.row) {
-			case 0: // Setting
-				[self actionSetting];
+			case 0: // Restore from YourPC
+				[self actionImportYourPC];
 				break;
 				
-			case 1: // Information
-				[self actionInformation];
-				break;
-				
-			case 2: // Purchase
-				[self actionIPurchase];
+			case 1: // PasteBoard
+				[self actionImportPasteBoard];
 				break;
 		}
 	}

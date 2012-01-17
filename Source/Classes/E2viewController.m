@@ -1097,7 +1097,7 @@
 
 // TableView セクション数を応答
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 3;  // (0)Group (1)Sort list　　(2)Action menu
+    return 4;  // (0)Group (1)Sort list　　(2)Action menu  (3)Old menu
 }
 
 // TableView セクションの行数を応答
@@ -1118,7 +1118,13 @@
 			break;
 		case 2: // Action menu
 			if (!sharePlanList_ && 0 < section0Rows_) {
-				rows = 7;
+				rows = 5;
+			}
+			else rows = 0;
+			break;
+		case 3: // Old menu
+			if (!sharePlanList_ && 0 < section0Rows_) {
+				rows = 2;
 			}
 			else rows = 0;
 			break;
@@ -1179,6 +1185,11 @@
 				return NSLocalizedString(@"Action menu",nil);
 			}
 			break;
+		case 3:
+			if (!sharePlanList_ && 0<section0Rows_) {
+				return NSLocalizedString(@"Old menu",nil);
+			}
+			break;
 	}
 	return nil;
 }
@@ -1186,7 +1197,7 @@
 // TableView セクションフッタを応答
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
 	switch (section) {
-		case 2:
+		case 3:
 			if (sharePlanList_) {
 				return NSLocalizedString(@"SharePLAN PreView",nil);
 			}
@@ -1416,7 +1427,7 @@
 			}
 			break;
 		
-		case 2:	// section: Action menu
+		case 2:	//------------------------------------------------------------------ section: Action menu
 			cell = [tableView dequeueReusableCellWithIdentifier:zCellSubtitle];
 			if (cell == nil) {
 				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle		// サブタイトル型(3.0)
@@ -1474,12 +1485,40 @@
 						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
 					}
 					break;
-				case 5:
+			}
+			break;
+			
+		case 3:	//------------------------------------------------------------------ section: Old menu
+			cell = [tableView dequeueReusableCellWithIdentifier:zCellSubtitle];
+			if (cell == nil) {
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle		// サブタイトル型(3.0)
+											  reuseIdentifier:zCellSubtitle];
+			}
+			
+			if (appDelegate_.app_is_iPad) {
+				cell.textLabel.font = [UIFont systemFontOfSize:18];
+				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
+			} else {
+				cell.textLabel.font = [UIFont systemFontOfSize:16];
+				cell.detailTextLabel.font = [UIFont systemFontOfSize:10];
+			}
+			cell.textLabel.textAlignment = UITextAlignmentLeft;
+			cell.textLabel.textColor = [UIColor darkGrayColor];
+			
+			cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
+			cell.detailTextLabel.textColor = [UIColor grayColor];
+			
+			cell.imageView.image = nil;
+			cell.accessoryType = UITableViewCellAccessoryNone;
+			cell.showsReorderControl = NO;		// Move禁止
+			
+			switch (indexPath.row) {
+				case 0:
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-NearPc"];
 					cell.textLabel.text = NSLocalizedString(@"Backup YourPC",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"Backup YourPC msg",nil);
 					break;
-				case 6:
+				case 1:
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-PasteCopy"];
 					cell.textLabel.text = NSLocalizedString(@"Copied to PasteBoard",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"Copied to PasteBoard msg",nil);
@@ -1615,12 +1654,16 @@
 				case 4: // Backup to Google
 					[self actionBackupGoogle:indexPath];
 					return; //Popover時に閉じないように
-					
-				case 5: // Backup to YourPC
+			}
+		}	break;
+
+		case 3: { // Old Menu
+			switch (indexPath.row) {
+				case 0: // Backup to YourPC
 					[self actionBackupYourPC];
 					break;
 					
-				case 6: // ペーストボードへコピー
+				case 1: // ペーストボードへコピー
 					[self actionCopiedPasteBoard];
 					break;
 			}

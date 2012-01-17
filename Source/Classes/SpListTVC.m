@@ -451,7 +451,11 @@
 	/*	lb.text = [NSString stringWithFormat:@"%@    %@ %@   %@ %@  ", zOwn,
 				   NSLocalizedString(@"Release",nil), [dic objectForKey:@"stamp"], 
 				   NSLocalizedString(@"Popular",nil), [dic objectForKey:@"downCount"]];　*/
+#ifdef DEBUG
+		lb.text = [NSString stringWithFormat:@"%@  %@ (%@DL) ", zNickname, zStamp, [dic objectForKey:@"downCount"]];
+#else
 		lb.text = [NSString stringWithFormat:@"%@   %@ %@  ", zNickname, NSLocalizedString(@"Release",nil), zStamp];
+#endif
 	}
 	else {
 		// ヨコ
