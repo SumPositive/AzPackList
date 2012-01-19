@@ -279,9 +279,8 @@
 											 otherButtonTitles:NSLocalizedString(@"Roger", nil), nil];
 		[alv	show];
 		// 再読み込み 通知発信
-		NSNotification* refreshNotification = [NSNotification notificationWithName:NFM_REFETCH_ALL_DATA  // DATA追加発生
-																			object:self  userInfo:nil];
-		[[NSNotificationCenter defaultCenter] postNotification:refreshNotification];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
+															object:self userInfo:nil];
 	}
 	// 閉じる
 	[self dismissModalViewControllerAnimated:YES];
