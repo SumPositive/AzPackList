@@ -861,7 +861,9 @@
 {
 	[super viewDidLoad];
 	// listen to our app delegates notification that we might want to refresh our detail view
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAllViews:) name:NFM_REFRESH_ALL_VIEWS
+    [[NSNotificationCenter defaultCenter] addObserver:self			// viewDidUnload:にて removeObserver:必須
+											 selector:@selector(refreshAllViews:) 
+												 name:NFM_REFRESH_ALL_VIEWS
 											   object:nil];  //=nil: 全てのオブジェクトからの通知を受ける
 }
 
@@ -977,8 +979,8 @@
 			[popOver_ dismissPopoverAnimated:animated];
 		}
 		// YES=BagSwing // 全収納済みとなったE1から戻ったとき。
-		appDelegate_.app_BagSwing = ([e1selected_.sumNoCheck integerValue] <= 0);
-	}
+		appDelegate_.app_BagSwing = ([e1selected_.sumNoCheck integerValue] <= 0 && 2 <= [e1selected_.childs count]);
+	 }
 	
 	[super viewWillDisappear:animated];
 }
@@ -1088,7 +1090,10 @@
 #pragma mark - iCloud
 - (void)refreshAllViews:(NSNotification*)note 
 {	// iCloud-CoreData に変更があれば呼び出される
-	[self.tableView reloadData];
+	@synchronized(note)
+	{
+		[self viewWillAppear:YES];
+	}
 }
 
 

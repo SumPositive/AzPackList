@@ -605,9 +605,8 @@
 					[delegate refreshE1view];// 親の再描画を呼び出す
 				}*/
 				// 再読み込み 通知発信
-				NSNotification* refreshNotification = [NSNotification notificationWithName:NFM_REFETCH_ALL_DATA  // DATA追加発生
-																					object:self  userInfo:nil];
-				[[NSNotificationCenter defaultCenter] postNotification:refreshNotification];
+				[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
+																	object:self  userInfo:nil];
 				[selfPopover dismissPopoverAnimated:YES]; 
 			}
 		} else {

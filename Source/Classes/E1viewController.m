@@ -177,11 +177,11 @@
 	
 	[self.tableView reloadData];
 }
-
+/*
 - (void)refetcheAllData:(NSNotification*)note 
 {	// iCloud-CoreData に変更（追加や削除）があれば呼び出される
 	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
-	if (appDelegate_.app_pid_iCloud==NO  &&  [kvs boolForKey:SK_PID_iCloud]) 
+	if (appDelegate_.app_pid_iCloud==NO  &&  [kvs boolForKey:SK_PID_AdOff]) 
 	{	// iCloud OFF --> ON
 		appDelegate_.app_pid_iCloud = YES;
 		[appDelegate_ managedObjectContextReset]; // iCloud対応の moc再生成する。
@@ -192,12 +192,28 @@
 	
 	moc_ = [EntityRelation getMoc]; //購入後、再生成された場合のため
 	[self refetcheAllData];
-}
+}*/
 
 - (void)refreshAllViews:(NSNotification*)note 
 {	// iCloud-CoreData に変更があれば呼び出される
-	contentOffsetDidSelect_.y = 0;  // 直前のdidSelectRowAtIndexPath位置に戻らないようにクリアしておく
-	[self viewDidAppear:YES];
+	@synchronized(note)
+	{
+		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+		//[kvs synchronize]; <<<変化通知により同期済みであるから不要
+		if (appDelegate_.app_pid_AdOff==NO  &&  [kvs boolForKey:SK_PID_AdOff]) 
+		{	// iCloud OFF --> ON
+			appDelegate_.app_pid_AdOff = YES;
+			[appDelegate_ managedObjectContextReset]; // iCloud対応の moc再生成する。
+			appDelegate_.app_opt_Ad = NO;
+			[kvs setBool:NO forKey:KV_OptAdvertising];
+			[appDelegate_ AdRefresh:NO];
+		}
+		
+		moc_ = [EntityRelation getMoc]; //購入後、再生成された場合のため
+		contentOffsetDidSelect_.y = 0;  // 直前のdidSelectRowAtIndexPath位置に戻らないようにクリアしておく
+		[self viewWillAppear:YES];	//この中で、refetcheAllData:が呼ばれる
+		[appDelegate_ AdViewWillRotate:self.interfaceOrientation];	// AdOFF-->ONのとき回転補正が必要
+	}
 }
 
 
@@ -269,7 +285,7 @@
 		indexPathEdit_ = nil;
 		NSIndexPath *idx = [NSIndexPath indexPathForRow:0 inSection:1];  //<<<<< Shared PackList セル位置をセット
 		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
-		rcArrow.origin.x = 85;		rcArrow.size.width = 1;
+		rcArrow.origin.x = 150;		rcArrow.size.width = 1;
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
 		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
 				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
@@ -349,7 +365,7 @@
 		indexPathEdit_ = nil;
 		NSIndexPath *idx = [NSIndexPath indexPathForRow:2 inSection:1];  //<<<<< Google Docs セル位置をセット
 		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
-		rcArrow.origin.x = 85;		rcArrow.size.width = 1;
+		rcArrow.origin.x = 150;		rcArrow.size.width = 1;
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
 		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
 				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
@@ -467,7 +483,7 @@
 		popOver_.delegate = nil;	// 不要
 		NSIndexPath *idx = [NSIndexPath indexPathForRow:4 inSection:1];  //<<<<< About this app セル位置をセット
 		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
-		rcArrow.origin.x = 85;		rcArrow.size.width = 1;
+		rcArrow.origin.x = 180;		rcArrow.size.width = 1;
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
 		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
 				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
@@ -481,30 +497,6 @@
 		[self.navigationController pushViewController:vc animated:YES];
 	}
 }
-/*{
-	InformationView *vc = [[InformationView alloc] init];  //[1.0.2]Pad対応に伴いControllerにした。
-
-	if (appDelegate_.app_is_iPad) {
-		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-		
-		//popOver_ = nil;
-		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
-		popOver_.delegate = nil;	// 不要
-		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:indexPath];
-		rcArrow.origin.x = 85;		rcArrow.size.width = 1;
-		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
-		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
-				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
-	} 
-	else {
-		if (appDelegate_.app_opt_Ad) {
-			// 各viewDidAppear:にて「許可/禁止」を設定する
-			[appDelegate_ AdRefresh:NO];	//広告禁止
-		}
-		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-		[self.navigationController pushViewController:vc animated:YES];
-	}
-}*/
 
 - (void)actionSetting
 {
@@ -512,15 +504,6 @@
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 	}
 
-	// 別デバイスへインストールした直後、購買情報が反映されないとき、ここで反映させるため
-	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
-	[kvs synchronize];
-	if (appDelegate_.app_pid_iCloud==NO  &&  [kvs boolForKey:SK_PID_iCloud]) 
-	{	// 再フィッチ＆画面リフレッシュ通知  ＜＜＜＜ E1viewController:refetcheAllData: にて iCloud OFF --> ON している。
-		[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFETCH_ALL_DATA		// 再フィッチ（レコード増減あったとき）
-															object:self userInfo:nil];
-	}
-	
 	SettingTVC *vc = [[SettingTVC alloc] init];
 	
 	if (appDelegate_.app_is_iPad) {
@@ -529,7 +512,7 @@
 		popOver_.delegate = nil;	// 不要
 		NSIndexPath *idx = [NSIndexPath indexPathForRow:3 inSection:1];  //<<<<< Settings セル位置をセット
 		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
-		rcArrow.origin.x = 85;		rcArrow.size.width = 1;
+		rcArrow.origin.x = 150;		rcArrow.size.width = 1;
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
 		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
 				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
@@ -551,16 +534,16 @@
 	}
 	//if (appDelegate_.app_pid_UnLock) return;
 
-	AZStoreVC *vc = [[AZStoreVC alloc] initWithUnLock:appDelegate_.app_pid_iCloud];
+	AZStoreVC *vc = [[AZStoreVC alloc] initWithUnLock:appDelegate_.app_pid_AdOff];
 	vc.delegate = self; //--> azStorePurchesed:
-	vc.productIDs = [NSSet setWithObjects:SK_PID_iCloud, nil]; // 商品が複数ある場合は列記
+	vc.productIDs = [NSSet setWithObjects:SK_PID_AdOff, nil]; // 商品が複数ある場合は列記
 	if (appDelegate_.app_is_iPad) {
 		popOver_ = nil;
 		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
 		popOver_.delegate = nil;	// 不要
 		NSIndexPath *idx = [NSIndexPath indexPathForRow:5 inSection:1];  //<<<<< Extension parts shop セル位置をセット
 		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
-		rcArrow.origin.x = 85;		rcArrow.size.width = 1;
+		rcArrow.origin.x = 150;		rcArrow.size.width = 1;
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
 		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
 				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
@@ -578,10 +561,10 @@
 #pragma mark <AZStoreDelegate>
 - (void)azStorePurchesed:(NSString*)productID
 {
-	if ([productID isEqualToString:SK_PID_iCloud]) 
+	if ([productID isEqualToString:SK_PID_AdOff]) 
 	{	// iCloud対応： NSPersistentStoreCoordinator, NSManagedObjectModel 再生成してiCloud対応する
 		// 再フィッチ＆画面リフレッシュ通知  ＜＜＜＜ E1viewController:refetcheAllData: にて iCloud OFF --> ON している。
-		[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFETCH_ALL_DATA		// 再フィッチ（レコード増減あったとき）
+		[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFRESH_ALL_VIEWS
 															object:self userInfo:nil];
 	}
 }
@@ -890,14 +873,16 @@
 { //iCloud
 	[super viewDidLoad];
 
+	/*** NFM_REFRESH_ALL_VIEWS に一元化
 	// observe the app delegate telling us when it's finished asynchronously setting up the persistent store
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refetcheAllData:)
 												 name:NFM_REFETCH_ALL_DATA
-											   object:nil];  //=nil: 全てのオブジェクトからの通知を受ける
+											   object:nil];  //=nil: 全てのオブジェクトからの通知を受ける　*/
 	
 	// listen to our app delegates notification that we might want to refresh our detail view
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAllViews:) 
-												 name:NFM_REFRESH_ALL_VIEWS  
+    [[NSNotificationCenter defaultCenter] addObserver:self			// viewDidUnload:にて removeObserver:必須
+											 selector:@selector(refreshAllViews:) 
+												 name:NFM_REFRESH_ALL_VIEWS
 											   object:nil];  //=nil: 全てのオブジェクトからの通知を受ける
 }
 
@@ -908,7 +893,7 @@
 	// 画面表示に関係する Option Setting を取得する
 	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
-	[kvs synchronize];
+	//[kvs synchronize]; <<<変化通知により同期済みであるから不要
 	bOptWeightRound_ = [kvs boolForKey:KV_OptWeightRound]; // YES=四捨五入 NO=切り捨て
 	bOptShowTotalWeight_ = [kvs boolForKey:KV_OptShowTotalWeight];
 	bOptShowTotalWeightReq_ = [kvs boolForKey:KV_OptShowTotalWeightReq];
@@ -940,17 +925,11 @@
 	}
 
 	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
-
-	
-	// iCloud OFF --> ON
-	
-	
-	
-	
 	
 	//【Tips】タテから始まるとき、willRotateToInterfaceOrientation:を通らずに、ここを通る　⇒ AdRefresh：にて初期タテ配置となる
 	//【Tips】ヨコから始まるとき、ここよりもloadView：よりも先に willRotateToInterfaceOrientation: を通る ⇒ willRotateにてヨコ配置となる
 	[appDelegate_ AdRefresh:appDelegate_.app_opt_Ad];	//広告
+	[appDelegate_ AdViewWillRotate:self.interfaceOrientation];
 
 	// アップデート直後、1回だけInformation表示する
 	if (bInformationOpen_) {	//initWithStyleにて判定処理している
@@ -1163,7 +1142,7 @@
 	switch (section) {
 		case 2: {
 			NSString *zz;  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
-			if (appDelegate_.app_pid_iCloud) {
+			if (appDelegate_.app_pid_AdOff) {
 				zz = NSLocalizedString(@"iCloud ON",nil); //@"<<< Will syncronize with iCloud >>>";
 			} else {
 				zz = @"";

@@ -32,7 +32,7 @@
 @property (nonatomic, assign) BOOL	app_BagSwing;
 
 // Product ID
-@property (nonatomic, assign) BOOL	app_pid_iCloud;			// YES=購入済み（スポンサー）
+@property (nonatomic, assign) BOOL	app_pid_AdOff;			// YES=購入済み（スポンサー）
 
 
 //- (void)storeReset;

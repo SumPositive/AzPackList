@@ -102,6 +102,7 @@
 
 - (void)loadView {
     [super loadView];
+	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
 	//NSLog(@"frameWeb=(%f,%f)-(%f,%f)", frameWeb.origin.x,frameWeb.origin.y, frameWeb.size.width,frameWeb.size.height);
 	//MwebView = [[UIWebView alloc] initWithFrame:frameWeb];

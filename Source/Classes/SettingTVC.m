@@ -310,7 +310,7 @@
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptAdvertising;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
-				sw.enabled = appDelegate_.app_pid_iCloud;
+				sw.enabled = appDelegate_.app_pid_AdOff;
 				[cell.contentView  addSubview:sw]; //[sw release];
 				cell.textLabel.text = NSLocalizedString(@"Advertising",nil);
 				cell.detailTextLabel.text = NSLocalizedString(@"Advertising msg",nil);
@@ -355,10 +355,12 @@
 		case TAG_OptAdvertising:
 			[kvs setBool:[sender isOn] forKey:KV_OptAdvertising];
 			appDelegate_.app_opt_Ad = [sender isOn];
-			//[appDelegate_ AdRefresh:[sender isOn]];
-			// 再描画　　Adスペースを変化させるため
-			//NSNotification* refreshNotification = [NSNotification notificationWithName:NFM_REFRESH_ALL_VIEWS  object:self  userInfo:nil];
-			//[[NSNotificationCenter defaultCenter] postNotification:refreshNotification];
+			if (appDelegate_.app_is_iPad) {
+				[appDelegate_ AdRefresh:[sender isOn]];
+				// 再描画　　Adスペースを変化させるため
+				[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS 
+																	object:self userInfo:nil];
+			} //iPhoneは、E1viewController:viewWillAppear:を通ってAd再開される
 			break;
 	}
 }

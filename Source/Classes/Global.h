@@ -64,8 +64,8 @@
 #define GD_POPOVER_E3detailTVC_SIZE		CGSizeMake(400, 610)	//590		//E3detailTVCおよびその配下に使用　＜＜下余白はテンキーエリア
 
 // iCloud NSNotification messages
-#define NFM_REFRESH_ALL_VIEWS			@"RefreshAllViews"					// 再描画（レコード変更だけのとき）
-#define NFM_REFETCH_ALL_DATA			@"RefetchAllDatabaseData"		// 再フィッチ（レコード増減あったとき）
+#define NFM_REFRESH_ALL_VIEWS			@"RefreshAllViews"					// 再描画（MOC変更）
+//#define NFM_REFETCH_ALL_DATA			@"RefetchAllDatabaseData"		<<< NFM_REFRESH_ALL_VIEWS に一元化
 
 //
 // Global.m Functions

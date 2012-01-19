@@ -118,7 +118,9 @@
 	[super viewDidLoad];
 
 	// listen to our app delegates notification that we might want to refresh our detail view
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAllViews:) name:NFM_REFRESH_ALL_VIEWS
+    [[NSNotificationCenter defaultCenter] addObserver:self			// viewDidUnload:にて removeObserver:必須
+											 selector:@selector(refreshAllViews:) 
+												 name:NFM_REFRESH_ALL_VIEWS
 											   object:nil];  //=nil: 全てのオブジェクトからの通知を受ける
 }
 
@@ -237,7 +239,10 @@
 #pragma mark - iCloud
 - (void)refreshAllViews:(NSNotification*)note 
 {	// iCloud-CoreData に変更があれば呼び出される
-	[self viewWillAppear:YES];
+	@synchronized(note)
+	{
+		[self viewWillAppear:YES];
+	}
 }
 
 

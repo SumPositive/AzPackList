@@ -16,9 +16,9 @@
    version="1.1"
    inkscape:version="0.48.1 r9760"
    sodipodi:docname="Icon--512x512.svg"
-   inkscape:export-filename="/Users/masa/AzukiSoft/AzPackList/Source/Icon72.png"
-   inkscape:export-xdpi="12.66"
-   inkscape:export-ydpi="12.66"
+   inkscape:export-filename="/Users/masa/AzukiSoft/AzPackList/Source/Icon512.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90"
    style="display:inline">
   <defs
      id="defs4">
@@ -828,7 +828,7 @@
       </feSpecularLighting>
       <feComposite
          id="feComposite3388"
-         in2="result91"
+         in2="result1"
          k3="1"
          k2="1"
          operator="arithmetic"
@@ -867,7 +867,7 @@
       </feSpecularLighting>
       <feComposite
          id="feComposite3400"
-         in2="result91"
+         in2="result1"
          k3="1"
          k2="1"
          operator="arithmetic"
@@ -1129,7 +1129,7 @@
       </feSpecularLighting>
       <feComposite
          id="feComposite4451"
-         in2="result91"
+         in2="result1"
          k3="1"
          k2="1"
          operator="arithmetic"
@@ -1202,9 +1202,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.9"
-     inkscape:cx="236.79067"
-     inkscape:cy="270.95543"
+     inkscape:zoom="1.1523851"
+     inkscape:cx="256.71034"
+     inkscape:cy="253.64794"
      inkscape:document-units="px"
      inkscape:current-layer="layer4"
      showgrid="false"
@@ -1681,7 +1681,7 @@
     <g
        id="g4244"
        style="filter:url(#filter4473)"
-       transform="matrix(0.69941881,0.63818078,-0.63818078,0.69941881,248.99175,-96.65158)">
+       transform="matrix(0.65333219,0.5986803,-0.5961293,0.65612797,248.63258,-73.546238)">
       <path
          id="path2768"
          d="m 227.83281,65.80246 c -16.19848,0 -29.80301,9.35781 -29.80301,24.08764 l 0,40.49833 -58.22807,0 0,282.33829 238.42419,0 0,-282.33829 -58.70874,0 0,-40.49833 c 0,-14.72983 -13.38023,-24.08764 -29.57871,-24.08764 l -62.10566,0 z m -8.39612,22.81333 77.93651,0 0,41.77264 -77.93651,0 0,-41.77264 z"

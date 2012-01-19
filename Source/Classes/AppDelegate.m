@@ -22,8 +22,9 @@
 @interface AppDelegate (PrivateMethods) // メソッドのみ記述：ここに変数を書くとグローバルになる。他に同じ名称があると不具合発生する
 #define FREE_AD_OFFSET_Y			200.0	// iAdを上に隠すため
 - (void)AdRefresh;
+- (void)AdRemove;
 - (void)AdMobWillRotate:(UIInterfaceOrientation)toInterfaceOrientation;
-- (void)AdAppWillRotate:(UIInterfaceOrientation)toInterfaceOrientation;
+- (void)iAdWillRotate:(UIInterfaceOrientation)toInterfaceOrientation;
 @end
 
 
@@ -52,11 +53,11 @@
 @synthesize padRootVC = padRootVC_;
 @synthesize clipE3objects_;
 @synthesize dropboxSaveE1selected = dropboxSaveE1selected_;
+@synthesize app_opt_Autorotate = app_opt_Autorotate_;
+@synthesize app_opt_Ad = app_opt_Ad_;				//Setting選択フラグ
 @synthesize app_is_iPad = app_is_iPad_;
 @synthesize app_UpdateSave = app_UpdateSave_;
-@synthesize app_opt_Autorotate = app_opt_Autorotate_;
-@synthesize app_opt_Ad = app_opt_Ad_;
-@synthesize app_pid_iCloud = app_pid_iCloud_;
+@synthesize app_pid_AdOff = app_pid_AdOff_;		//Store購入済フラグ
 @synthesize app_BagSwing = app_BagSwing_;		//YES=PadRootVC:が表示されたとき、バッグを振る。
 
 
@@ -97,12 +98,12 @@
 	if ([kvs objectForKey: KV_OptSearchItemsNote]==nil)		[kvs setBool:YES forKey: KV_OptSearchItemsNote];
 	if ([kvs objectForKey: KV_OptAdvertising]==nil)					[kvs setBool:YES forKey: KV_OptAdvertising];
 	// AZStore PID  ＜＜productIdentifier をそのままKEYにする
-	if ([kvs objectForKey: SK_PID_iCloud]==nil)							[kvs setBool:NO  forKey: SK_PID_iCloud];
+	if ([kvs objectForKey: SK_PID_AdOff]==nil)							[kvs setBool:NO  forKey: SK_PID_AdOff];
 	[kvs synchronize]; // 最新同期
 	app_opt_Ad_ = [kvs boolForKey:KV_OptAdvertising];
-	app_pid_iCloud_ = [kvs boolForKey:SK_PID_iCloud];
+	app_pid_AdOff_ = [kvs boolForKey:SK_PID_AdOff];
 	
-#ifdef DEBUG
+#ifdef DEBUGxxx
 	app_pid_iCloud_ = NO;	// 購入中止で YES に変えてテストするため
 #endif
 	
@@ -118,7 +119,7 @@
 		exit(0);
 	}
 	app_is_iPad_ = [[[UIDevice currentDevice] model] hasPrefix:@"iPad"];	// iPad
-	NSLog(@"app_is_iPad_=%d,  app_is_Ad_=%d,  app_is_sponsor_=%d", app_is_iPad_, app_opt_Ad_, app_pid_iCloud_);
+	NSLog(@"app_is_iPad_=%d,  app_is_Ad_=%d,  app_pid_iCloud_=%d", app_is_iPad_, app_opt_Ad_, app_pid_AdOff_);
 	
 	//-------------------------------------------------
 	if (app_is_iPad_) {
@@ -159,7 +160,35 @@
 	// 初期生成
 	[EntityRelation setMoc:[self managedObjectContext]];
 	
+	
+	// listen to our app delegates notification that we might want to refresh our detail view
+    [[NSNotificationCenter defaultCenter] addObserver:self			// viewDidUnload:にて removeObserver:必須
+											 selector:@selector(kvsValueChange:) 
+												 name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification	// KVSの値が変化したとき
+											   object:nil];  //=nil: 全てのオブジェクトからの通知を受ける
+	
 	return;  // YES;  //iOS4
+}
+
+- (void)kvsValueChange:(NSNotification*)note 
+{	// iCloud-KVS に変化があれば呼び出される
+	@synchronized(note)
+	{
+		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+		[kvs synchronize]; // 最新同期
+		
+		// 別デバイスへインストールした直後、購買情報が反映されないとき、ここで反映させるため
+		/*	if (app_pid_AdOff_==NO  &&  [kvs boolForKey:SK_PID_AdOff]==YES) 
+		 {	// 再フィッチ＆画面リフレッシュ通知  ＜＜＜＜ E1viewController:refreshAllViews: にて iCloud OFF --> ON している。
+		 [[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFRESH_ALL_VIEWS
+		 object:self userInfo:nil];
+		 }*/
+		
+		// 設定変更時も反映させるため。
+		// 再フィッチ＆画面リフレッシュ通知  ＜＜＜＜ E1viewController:refreshAllViews: にて iCloud OFF --> ON している。
+		[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFRESH_ALL_VIEWS
+															object:self userInfo:nil];
+	}
 }
 
 // URLスキーマ呼び出し： packlist://
@@ -282,6 +311,8 @@
 	
 	// iOS3互換のためにはここが必要。　iOS4以降、applicationDidEnterBackground から呼び出される。
 	
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	//--------------------------------------------------[Clip Board] クリップボード後処理
 	if (self.clipE3objects_ && 0 < [self.clipE3objects_ count]) {
 		for (E3 *e3 in self.clipE3objects_) {
@@ -306,44 +337,13 @@
 - (void)dealloc 
 {
 	adCanVisible_ = NO;  // 以後、Ad表示禁止
-	if (iAdView_) {
-		[iAdView_ cancelBannerViewAction];	// 停止
-		iAdView_.delegate = nil;							// 解放メソッドを呼び出さないようにする
-		// autoreleaseかつmainVCへaddSubしているので解放は不要
-	}
-	
-	if (adMobView_) {
-		adMobView_.delegate = nil;  //受信STOP  ＜＜これが無いと破棄後に呼び出されて落ちる場合がある
-		// autoreleaseかつmainVCへaddSubしているので解放は不要
-	}
+	[self AdRemove];
 	
 	mainNC_.delegate = nil;		mainNC_ = nil;
 	mainSVC_.delegate = nil;	mainSVC_ = nil;
 	padRootVC_ = nil;
 }
 
-/*
-#pragma mark - StoreKit
-
-- (void)storeReset
-{
-	// オプション・チェック
-	if (app_pid_UnLock_==NO) {
-		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
-		[kvs synchronize];
-		if ([kvs boolForKey:SK_PID_iCloud]) {
-			app_pid_UnLock_ = YES;
-			[self	managedObjectContextReset]; // iCloud対応の moc再生成する。
-			//広告は非表示にするが、設定にて切替を可能にする。
-			app_opt_Ad_ = NO;
-			[self AdRefresh:NO];
-			// 再フィッチ＆画面リフレッシュ通知
-			[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFETCH_ALL_DATA		// 再フィッチ（レコード増減あったとき）
-																object:self userInfo:nil];
-		}
-	}
-}
-*/
 
 #pragma mark - iCloud
 
@@ -351,9 +351,11 @@
 {
     [moc mergeChangesFromContextDidSaveNotification:note]; 
 	
-    NSNotification* refreshNotification = [NSNotification notificationWithName:NFM_REFRESH_ALL_VIEWS
-																		object:self  userInfo:[note userInfo]];
-    [[NSNotificationCenter defaultCenter] postNotification:refreshNotification];
+    //NSNotification* refreshNotification = [NSNotification notificationWithName:NFM_REFRESH_ALL_VIEWS
+	//																	object:self  userInfo:[note userInfo]];
+    //[[NSNotificationCenter defaultCenter] postNotification:refreshNotification];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
+														object:self userInfo:[note userInfo]];
 	
 	NSLog(@"NSNotification: POST: RefreshAllViews");
 	//NSLog(@"NSNotification: POST: RefreshAllViews: userInfo=%@", [note userInfo]);
@@ -405,7 +407,7 @@
 	
     persistentStoreCoordinator_ = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
 	
-	if (app_pid_iCloud_) {  // (IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0"))
+	if (app_pid_AdOff_) {  // (IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0"))
 		 // do this asynchronously since if this is the first time this particular device is syncing with preexisting
 		 // iCloud content it may take a long long time to download
 		 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -452,7 +454,7 @@
 			 // NSFetchedResultsController to -performFetch again now there is a real store
 			 dispatch_async(dispatch_get_main_queue(), ^{
 				 NSLog(@"asynchronously added persistent store!");
-				 [[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFETCH_ALL_DATA
+				 [[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
 																	 object:self userInfo:nil];
 			 });
 		 });
@@ -490,7 +492,7 @@
 	NSManagedObjectContext* moc = nil;
 	
     if (coordinator != nil) {
-		if (app_pid_iCloud_) {  // (IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0"))
+		if (app_pid_AdOff_) {  // (IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0"))
 			moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
 			
 			[moc performBlockAndWait:^{
@@ -543,8 +545,10 @@
 //- (void)AdShowApple:(BOOL)bApple AdMob:(BOOL)bMob
 - (void)AdRefresh
 {
+	if (app_opt_Ad_==NO && adMobView_==nil && iAdView_==nil) return;
+	
 	//----------------------------------------------------- AdMob  ＜＜loadView:に入れると起動時に生成失敗すると、以後非表示が続いてしまう。
-	if (adMobView_==nil) {
+	if (app_opt_Ad_ && adMobView_==nil) {
 		// iPhone タテ下部に表示固定、ヨコ非表示
 		adMobView_ = [[GADBannerView alloc] init];
 		// Adパラメータ初期化
@@ -572,7 +576,8 @@
 	}
 	
 	//----------------------------------------------------- iAd: AdMobの上層になるように後からaddSubviewする
-	if (iAdView_==nil && [[[UIDevice currentDevice] systemVersion] compare:@"4.0"]!=NSOrderedAscending) { // !<  (>=) "4.0"
+	if (app_opt_Ad_ && iAdView_==nil
+		&& [[[UIDevice currentDevice] systemVersion] compare:@"4.0"]!=NSOrderedAscending) { // !<  (>=) "4.0"
 		assert(NSClassFromString(@"ADBannerView"));
 		iAdView_ = [[ADBannerView alloc] init];		//WithFrame:CGRectZero 
 		// Adパラメータ初期化
@@ -585,33 +590,42 @@
 			[mainNC_.view addSubview:iAdView_];
 		}
 		//【Tips】初期配置は、常にタテ位置にすること。　ヨコのときだけwillRotateToInterfaceOrientation：などの回転通知が届く。
-		[self AdAppWillRotate:UIInterfaceOrientationPortrait]; 
+		[self iAdWillRotate:UIInterfaceOrientationPortrait]; 
 	}
 	
-	NSLog(@"=== AdRefresh: Can[%d] iAd[%d⇒%d] AdMob[%d⇒%d]", adCanVisible_, (int)iAdView_.tag, (int)iAdView_.alpha, 
-		  (int)adMobView_.tag, (int)adMobView_.alpha);
-	//if (MbAdCanVisible && MbannerView.alpha==MbannerView.tag && RoAdMobView.alpha==RoAdMobView.tag) {
-	if (adCanVisible_) {
-		if (iAdView_.alpha==iAdView_.tag && adMobView_.alpha==adMobView_.tag) {
-			NSLog(@"   = 変化なし =");
-			return; // 変化なし
+	if (app_opt_Ad_) {
+		NSLog(@"=== AdRefresh: Can[%d] iAd[%d⇒%d] AdMob[%d⇒%d]", adCanVisible_, (int)iAdView_.tag, (int)iAdView_.alpha, 
+			  (int)adMobView_.tag, (int)adMobView_.alpha);
+		//if (MbAdCanVisible && MbannerView.alpha==MbannerView.tag && RoAdMobView.alpha==RoAdMobView.tag) {
+		if (adCanVisible_) {
+			if (iAdView_.alpha==iAdView_.tag && adMobView_.alpha==adMobView_.tag) {
+				NSLog(@"   = 変化なし =");
+				return; // 変化なし
+			}
+			if (iAdView_.alpha==1 && iAdView_.alpha==iAdView_.tag) {
+				NSLog(@"   = iAd 優先ON = 変化なし =");
+				return; // 変化なし
+			}
+		} else {
+			if (iAdView_.alpha==0 && adMobView_.alpha==0) {
+				NSLog(@"   = OFF = 変化なし =");
+				return; // 変化なし
+			}
 		}
-		if (iAdView_.alpha==1 && iAdView_.alpha==iAdView_.tag) {
-			NSLog(@"   = iAd 優先ON = 変化なし =");
-			return; // 変化なし
-		}
-	} else {
-		if (iAdView_.alpha==0 && adMobView_.alpha==0) {
-			NSLog(@"   = OFF = 変化なし =");
-			return; // 変化なし
-		}
+	} 
+	else {
+		adCanVisible_ = NO;	// app_opt_Ad_==NO につき、Ad非表示にしてから破棄する。
 	}
-	
 	
 	[UIView beginAnimations:nil context:NULL];
 	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
 	[UIView setAnimationDuration:1.2];
 	
+	if (app_opt_Ad_==NO) {		// AdOffのとき、非表示アニメの後、破棄する
+		[UIView setAnimationDelegate:self];
+		[UIView setAnimationDidStopSelector:@selector(AdRefreshAfter)];
+	}
+
 	if (app_is_iPad_) {
 		if (iAdView_) {
 			CGRect rc = iAdView_.frame;
@@ -686,15 +700,37 @@
 			}
 		}
 	}
-
 	// アニメ開始
 	[UIView commitAnimations];
+}
+
+- (void)AdRemove
+{	// dealloc:からも呼び出される
+	if (adMobView_) {
+		adMobView_.delegate = nil;
+		adMobView_.rootViewController = nil;
+		[adMobView_ removeFromSuperview];
+		adMobView_ = nil;
+	}
+	if (iAdView_) {
+		[iAdView_ cancelBannerViewAction];	// 停止
+		iAdView_.delegate = nil;
+		[iAdView_ removeFromSuperview];
+		iAdView_ = nil;
+	}
+}
+
+- (void)AdRefreshAfter  // 非表示アニメ終了後に呼び出される
+{
+	if (app_opt_Ad_==NO) {		// AdOffのとき、非表示アニメの後、破棄する
+		[self AdRemove];
+	}
 }
 
 - (void)AdViewWillRotate:(UIInterfaceOrientation)toInterfaceOrientation
 {
 	[self AdMobWillRotate:toInterfaceOrientation];	//AdMob
-	[self AdAppWillRotate:toInterfaceOrientation];		//iAd
+	[self iAdWillRotate:toInterfaceOrientation];			//iAd
 }
 
 - (void)AdMobWillRotate:(UIInterfaceOrientation)toInterfaceOrientation
@@ -720,7 +756,7 @@
 	}
 }
 
-- (void)AdAppWillRotate:(UIInterfaceOrientation)toInterfaceOrientation
+- (void)iAdWillRotate:(UIInterfaceOrientation)toInterfaceOrientation
 {	// 非表示中でも回転対応すること。表示するときの出発位置のため
 	if (iAdView_==nil) return;
 

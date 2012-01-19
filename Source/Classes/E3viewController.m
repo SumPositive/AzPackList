@@ -227,7 +227,9 @@
 	//self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 
 	// listen to our app delegates notification that we might want to refresh our detail view
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAllViews:) name:NFM_REFRESH_ALL_VIEWS
+    [[NSNotificationCenter defaultCenter] addObserver:self			// viewDidUnload:にて removeObserver:必須
+											 selector:@selector(refreshAllViews:) 
+												 name:NFM_REFRESH_ALL_VIEWS
 											   object:nil];  //=nil: 全てのオブジェクトからの通知を受ける
 }
 
@@ -279,7 +281,7 @@
 	}
 	else {
 		[self viewDesign]; // cell生成の後
-		[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
+		//[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 	}
 }
 
@@ -426,6 +428,7 @@
 			//[sortDescriptors release];
 			//[sortDescriptor release];
 		}
+		/*** ここで保存は不要　＜＜＜競合が発生する
 		if (sharePlanList_==NO) {
 			// SAVE : 変更あれば保存する		Bug:Add行が通常行のように表示される-->Fix[1.1.0]
 			NSError *error = nil;
@@ -434,7 +437,7 @@
 				NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 				assert(NO); //DEBUGでは落とす
 			} 
-		}
+		}*/
 	}
 	else {
 		// 全体ソートリスト　＜＜セクション[0]に全アイテムを入れてソートする＞＞
@@ -734,7 +737,10 @@
 #pragma mark - iCloud
 - (void)refreshAllViews:(NSNotification*)note 
 {	// iCloud-CoreData に変更があれば呼び出される
-	[self.tableView reloadData];
+	@synchronized(note)
+	{
+		[self viewWillAppear:YES];
+	}
 }
 
 

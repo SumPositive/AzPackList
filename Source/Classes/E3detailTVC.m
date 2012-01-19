@@ -158,7 +158,9 @@
 	[super viewDidLoad];
 
 	// listen to our app delegates notification that we might want to refresh our detail view
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAllViews:) name:NFM_REFRESH_ALL_VIEWS
+    [[NSNotificationCenter defaultCenter] addObserver:self			// viewDidUnload:にて removeObserver:必須
+											 selector:@selector(refreshAllViews:) 
+												 name:NFM_REFRESH_ALL_VIEWS
 											   object:nil];  //=nil: 全てのオブジェクトからの通知を受ける
 }
 
@@ -185,8 +187,7 @@
 
 	[self viewDesign]; // 下層で回転して戻ったときに再描画が必要
 	// テーブルビューを更新します。
-    //[self.tableView reloadData];
-	//[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
+    [self.tableView reloadData];
 }
 
 - (void)viewDesign
@@ -277,6 +278,7 @@
 {
     [super viewDidAppear:animated];
 	[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
+	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 	
 	if (appDelegate_.app_opt_Ad) {
 		// 各viewDidAppear:にて「許可/禁止」を設定する
@@ -338,7 +340,10 @@
 #pragma mark - iCloud
 - (void)refreshAllViews:(NSNotification*)note 
 {	// iCloud-CoreData に変更があれば呼び出される
-	[self.tableView reloadData];
+	@synchronized(note)
+	{
+		[self viewWillAppear:YES];
+	}
 }
 
 
@@ -897,21 +902,22 @@
 	UITableViewCell *cell = nil;
 
 	cell = [tableView dequeueReusableCellWithIdentifier:zCellIndex];
-	if (cell == nil) {
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-									   reuseIdentifier:zCellIndex];
-		if (sharePlanList_) {
-			// 選択禁止
-			cell.accessoryType = UITableViewCellAccessoryNone;
-			cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
-		} else {
-			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
-		}
-		cell.showsReorderControl = NO; // Move禁止
-	}
-	else {
+	if (cell) {
 		return cell; // このTVではCell個体識別しているため
 	}
+	
+	// 以下、1回だけ通る
+	
+	cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+								  reuseIdentifier:zCellIndex];
+	if (sharePlanList_) {
+		// 選択禁止
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
+	} else {
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
+	}
+	cell.showsReorderControl = NO; // Move禁止
 	
 	switch (indexPath.section) {
 		case 0: // 
