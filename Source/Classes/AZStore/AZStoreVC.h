@@ -12,7 +12,8 @@
 #import <StoreKit/StoreKit.h>
 
 // ProductID
-#define SK_PID_iCloud		@"com.azukid.AzPackList5.iCloud"		// In-App Purchase ProductIdentifier
+#define SK_PID_AdOff		@"com.azukid.AzPackList5.AdOff"		// Ad Off/On （おまけ iCloud対応）
+// iCloud同期には未経験のことが多いため課金対象とせず「おまけ」扱いにした。
 
 
 @interface AZStoreVC : UIViewController <UITableViewDelegate, UITableViewDataSource, 

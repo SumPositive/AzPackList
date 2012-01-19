@@ -88,7 +88,7 @@ NSString *passCode()
 {
 	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
 	[kvs setBool:YES forKey: productID];
-	[kvs synchronize];
+	[kvs synchronize]; //保存
 	
 	if ([delegate_ respondsToSelector:@selector(azStorePurchesed:)]) {
 		[delegate_ azStorePurchesed: productID];	// 呼び出し側にて、再描画など実施
@@ -225,7 +225,7 @@ NSString *passCode()
 	if ([pass length]==10 && [pass isEqualToString: [ibTfInvitePass.text uppercaseString]]) 
 	{
 		// productID の購入確定処理
-		[self actPurchasedProductID: SK_PID_iCloud];
+		[self actPurchasedProductID: SK_PID_AdOff];
 		// OK
 		alertBox(NSLocalizedString(@"SK InvitePass OK", nil), nil, @"OK");
 	}

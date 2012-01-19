@@ -23,6 +23,80 @@
 }
 
 
+#pragma mark - Mail
+
+- (void)sendmail
+{
+	MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
+	picker.mailComposeDelegate = self;
+	// To: 宛先
+	NSArray *toRecipients = [NSArray arrayWithObject:@"packlist@azukid.com"];
+	[picker setToRecipients:toRecipients];
+	
+	// Subject: 件名
+	NSString* zSubj = NSLocalizedString(@"Product Title",nil);
+	if (appDelegate_.app_is_iPad) {
+		zSubj = [zSubj stringByAppendingString:@" for iPad"];
+	} else {
+		zSubj = [zSubj stringByAppendingString:@" for iPhone"];
+	}
+	
+	if (appDelegate_.app_pid_AdOff) {
+		zSubj = [zSubj stringByAppendingString:@"  (AdOff)"];
+	}
+	[picker setSubject:zSubj];  
+	
+	// Body: 本文
+	NSString *zVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]; //（リリース バージョン）は、ユーザーに公開した時のレベルを表現したバージョン表記
+	NSString *zBuild = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]; //（ビルド回数 バージョン）は、ユーザーに非公開のレベルも含めたバージョン表記
+	NSString* zBody = [NSString stringWithFormat:@"Product: %@\n",  zSubj];
+	zBody = [zBody stringByAppendingFormat:@"Version: %@ (%@)\n",  zVersion, zBuild];
+	UIDevice *device = [UIDevice currentDevice];
+	NSString* deviceID = [device platformString];	
+	zBody = [zBody stringByAppendingFormat:@"Device: %@   iOS: %@\n", 
+			 deviceID,
+			 [[UIDevice currentDevice] systemVersion]]; // OSの現在のバージョン
+	
+	NSArray *languages = [NSLocale preferredLanguages];
+	zBody = [zBody stringByAppendingFormat:@"Locale: %@ (%@)\n\n",
+			 [[NSLocale currentLocale] objectForKey:NSLocaleIdentifier],
+			 [languages objectAtIndex:0]];
+	
+	zBody = [zBody stringByAppendingString:NSLocalizedString(@"Contact message",nil)];
+	[picker setMessageBody:zBody isHTML:NO];
+	
+	picker.modalPresentationStyle = UIModalPresentationFormSheet;
+	[self presentModalViewController:picker animated:YES];
+}
+
+#pragma mark  <MFMailComposeViewControllerDelegate>
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller 
+		  didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error 
+{
+    switch (result){
+        case MFMailComposeResultCancelled:
+            //キャンセルした場合
+            break;
+        case MFMailComposeResultSaved:
+            //保存した場合
+            break;
+        case MFMailComposeResultSent:
+            //送信した場合
+			alertBox( NSLocalizedString(@"Contact Sent",nil), NSLocalizedString(@"Contact Sent msg",nil), @"OK" );
+            break;
+        case MFMailComposeResultFailed:
+            //[self setAlert:@"メール送信失敗！":@"メールの送信に失敗しました。ネットワークの設定などを確認して下さい"];
+			alertBox( NSLocalizedString(@"Contact Failed",nil), NSLocalizedString(@"Contact Failed msg",nil), @"OK" );
+            break;
+        default:
+            break;
+    }
+	// Close
+	[self dismissModalViewControllerAnimated:YES];
+}
+
+
 #pragma mark - <alertView>
 
 - (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -37,52 +111,7 @@
 		}	break;
 			
 		case ALERT_TAG_PostToAuthor: { // Post commens
-			MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
-			picker.mailComposeDelegate = self;
-			// To: 宛先
-			NSArray *toRecipients = [NSArray arrayWithObject:@"packlist@azukid.com"];
-			[picker setToRecipients:toRecipients];
-			
-			// Subject: 件名
-			NSString* zSubj = NSLocalizedString(@"Product Title",nil);
-			if (appDelegate_.app_is_iPad) {
-				zSubj = [zSubj stringByAppendingString:@" for iPad"];
-			} else {
-				zSubj = [zSubj stringByAppendingString:@" for iPhone"];
-			}
-			
-			if (appDelegate_.app_pid_iCloud) {
-				zSubj = [zSubj stringByAppendingString:@"  (Sponsor)"];
-			}
-			[picker setSubject:zSubj];  
-			
-			// Body: 本文
-			NSString *zVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]; //（リリース バージョン）は、ユーザーに公開した時のレベルを表現したバージョン表記
-			NSString *zBuild = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]; //（ビルド回数 バージョン）は、ユーザーに非公開のレベルも含めたバージョン表記
-			NSString* zBody = [NSString stringWithFormat:@"Product: %@\n",  zSubj];
-			zBody = [zBody stringByAppendingFormat:@"Version: %@ (%@)\n",  zVersion, zBuild];
-			UIDevice *device = [UIDevice currentDevice];
-			NSString* deviceID = [device platformString];	
-			zBody = [zBody stringByAppendingFormat:@"Device: %@   iOS: %@\n", 
-					 deviceID,
-					 [[UIDevice currentDevice] systemVersion]]; // OSの現在のバージョン
-			
-			NSArray *languages = [NSLocale preferredLanguages];
-			zBody = [zBody stringByAppendingFormat:@"Locale: %@ (%@)\n\n",
-					 [[NSLocale currentLocale] objectForKey:NSLocaleIdentifier],
-					 [languages objectAtIndex:0]];
-			
-			zBody = [zBody stringByAppendingString:NSLocalizedString(@"Contact message",nil)];
-			[picker setMessageBody:zBody isHTML:NO];
-
-			picker.modalPresentationStyle = UIModalPresentationFormSheet;
-			[self presentModalViewController:picker animated:YES];
-
-	/*		if (appDelegate_.app_is_iPad) {
-				[appDelegate_.mainSVC presentModalViewController:picker animated:YES];
-			} else {
-				[appDelegate_.mainNC presentModalViewController:picker animated:YES];
-			}*/
+			[self sendmail];
 		}	break;
 	}
 }
@@ -208,33 +237,6 @@
 
 }
 
-
-#pragma mark - <MFMailComposeViewControllerDelegate>
-
-- (void)mailComposeController:(MFMailComposeViewController*)controller 
-		  didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error 
-{
-    switch (result){
-        case MFMailComposeResultCancelled:
-            //キャンセルした場合
-            break;
-        case MFMailComposeResultSaved:
-            //保存した場合
-            break;
-        case MFMailComposeResultSent:
-            //送信した場合
-			alertBox( NSLocalizedString(@"Contact Sent",nil), NSLocalizedString(@"Contact Sent msg",nil), @"OK" );
-            break;
-        case MFMailComposeResultFailed:
-            //[self setAlert:@"メール送信失敗！":@"メールの送信に失敗しました。ネットワークの設定などを確認して下さい"];
-			alertBox( NSLocalizedString(@"Contact Failed",nil), NSLocalizedString(@"Contact Failed msg",nil), @"OK" );
-            break;
-        default:
-            break;
-    }
-	// Close
-	[self dismissModalViewControllerAnimated:YES];
-}
 
 
 @end
