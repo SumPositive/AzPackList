@@ -428,6 +428,9 @@
 	// valueChange
 	mDial = mDialMin + floor( (mScrollMax - scrollView.contentOffset.x) / PITCH ) * mDialStep;
 
+	if (mDial < mDialMin) mDial = mDialMin;	// Fix:2012-01-19
+	else if (mDialMax < mDial) mDial = mDialMax;
+	
 	if (mIsSetting==NO) {
 		if ([mDelegate respondsToSelector:@selector(dialChanged:dial:)]) {
 			[mDelegate dialChanged:self  dial:mDial];	// 変化、決定ではない
