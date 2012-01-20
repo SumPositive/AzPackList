@@ -25,13 +25,28 @@
 
 @implementation SettingTVC
 
-- (void)dealloc    // 生成とは逆順に解放するのが好ましい
+
+- (void)changeAdvertising
 {
-	// @property (retain)
-	
-	//[super dealloc];
+	if (appDelegate_.app_is_iPad) {
+		[appDelegate_ AdRefresh:appDelegate_.app_opt_Ad];
+		// 再描画　　Adスペースを変化させるため
+		[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS 
+															object:self userInfo:nil];
+	} //iPhoneは、E1viewController:viewWillAppear:を通ってAd再開される
 }
 
+/***随時同期はしない。閉じてから同期で十分
+#pragma mark - iCloud
+- (void)kvsValueChange:(NSNotification*)note 
+{	// iCloud-KVS に変更があれば呼び出される
+	@synchronized(note)
+	{
+		[self viewWillAppear:YES];
+	}
+}*/
+
+#pragma mark - View lifecycle
 
 // UITableViewインスタンス生成時のイニシャライザ　viewDidLoadより先に1度だけ通る
 - (id)initWithStyle:(UITableViewStyle)style 
@@ -47,13 +62,48 @@
 	return self;
 }
 
-/*
-// viewDidLoadメソッドは，TableViewContorllerオブジェクトが生成された後，実際に表示される際に呼び出されるメソッド
+/***随時同期はしない。閉じてから同期で十分
 - (void)viewDidLoad 
 {
-    [super viewDidLoad];
+	[super viewDidLoad];
+	
+	// iCloud-KVS 変更通知を受ける
+    [[NSNotificationCenter defaultCenter] addObserver:self			// viewDidUnload:にて removeObserver:必須
+											 selector:@selector(kvsValueChange:) 
+												 name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification	// KVSの値が変化したとき
+											   object:nil];  //=nil: 全てのオブジェクトからの通知を受ける
+}*/
+
+// 他のViewやキーボードが隠れて、現れる都度、呼び出される
+- (void)viewWillAppear:(BOOL)animated 
+{
+    [super viewWillAppear:animated];
+	
+	// 画面表示に関係する Option Setting を取得する
+	//NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	self.title = NSLocalizedString(@"Setting", nil);
+	
+	[[NSUbiquitousKeyValueStore defaultStore] synchronize]; // 最新取得
+	// テーブルビューを更新します。
+    [self.tableView reloadData];	// これにより修正結果が表示される
 }
-*/
+
+
+// ビューが最後まで描画された後やアニメーションが終了した後にこの処理が呼ばれる
+- (void)viewDidAppear:(BOOL)animated 
+{
+    [super viewDidAppear:animated];
+	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
+
+	// 広告表示に変化があれば、広告スペースを調整するための処理
+	BOOL bAd = [[NSUbiquitousKeyValueStore defaultStore] boolForKey:KV_OptAdvertising];
+	if (appDelegate_.app_opt_Ad != bAd) {
+		appDelegate_.app_opt_Ad = bAd;
+		[self changeAdvertising];
+	}
+}
+
 
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -80,51 +130,34 @@
 //	[self.tableView reloadData];
 }
 
-// 他のViewやキーボードが隠れて、現れる都度、呼び出される
-- (void)viewWillAppear:(BOOL)animated 
+ - (void)viewWillDisappear:(BOOL)animated 
 {
-    [super viewWillAppear:animated];
-	
-	// 画面表示に関係する Option Setting を取得する
-	//NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	
-	self.title = NSLocalizedString(@"Setting", nil);
-	
-	// テーブルビューを更新します。
-    [self.tableView reloadData];	// これにより修正結果が表示される
-}
-
-
-// ビューが最後まで描画された後やアニメーションが終了した後にこの処理が呼ばれる
-- (void)viewDidAppear:(BOOL)animated 
-{
-    [super viewDidAppear:animated];
-
-	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
-}
-
-
-/*
-- (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	[[NSUbiquitousKeyValueStore defaultStore] synchronize];
 }
-*/
-/*
-- (void)viewDidDisappear:(BOOL)animated {
-	[super viewDidDisappear:animated];
-}
-*/
 
 /*
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-*/
+ - (void)viewDidDisappear:(BOOL)animated {
+ [super viewDidDisappear:animated];
+ }
+ */
+
+/***随時同期はしない。閉じてから同期で十分
+- (void)viewDidUnload 
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super viewDidUnload];
+}*/
+/*
+- (void)dealloc    // 生成とは逆順に解放するのが好ましい
+{
+	//[super dealloc];
+}*/
 
 
-#pragma mark Table view methods
+
+#pragma mark - Table view methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -215,8 +248,6 @@
 			if (sw==nil) {
 				// add UISwitch
 				sw = [[UISwitch alloc] init];
-				BOOL bOpt = [kvs boolForKey:KV_OptShowTotalWeight];
-				[sw setOn:bOpt animated:NO]; // 初期値セット
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptShowTotalWeight;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
@@ -225,6 +256,7 @@
 				cell.detailTextLabel.text = NSLocalizedString(@"Stock weight comment",nil);
 			}
 			sw.frame = CGRectMake(fX, 5, 120, 25); // 回転対応
+			[sw setOn:[kvs boolForKey:KV_OptShowTotalWeight] animated:YES];
 		}	break;
 		
 		case 2:
@@ -233,8 +265,6 @@
 			if (sw==nil) {
 				// add UISwitch
 				sw = [[UISwitch alloc] init];
-				BOOL bOpt = [kvs boolForKey:KV_OptShowTotalWeightReq];
-				[sw setOn:bOpt animated:NO]; // 初期値セット
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptShowTotalWeightReq;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
@@ -243,6 +273,7 @@
 				cell.detailTextLabel.text = NSLocalizedString(@"Need weight comment",nil);
 			}
 			sw.frame = CGRectMake(fX, 5, 120, 25); // 回転対応
+			[sw setOn:[kvs boolForKey:KV_OptShowTotalWeightReq] animated:YES];
 		}	break;
 		
 		case 3:
@@ -251,8 +282,6 @@
 			if (sw==nil) {
 				// add UISwitch
 				sw = [[UISwitch alloc] init];
-				BOOL bOpt = [kvs boolForKey:KV_OptWeightRound];
-				[sw setOn:bOpt animated:NO]; // 初期値セット
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptTotlWeightRound;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
@@ -261,6 +290,7 @@
 				cell.detailTextLabel.text = NSLocalizedString(@"Round off Weight comment",nil);
 			}
 			sw.frame = CGRectMake(fX, 5, 120, 25); // 回転対応
+			[sw setOn:[kvs boolForKey:KV_OptWeightRound] animated:YES];
 		}	break;
 		
 		case 4:
@@ -269,8 +299,6 @@
 			if (sw==nil) {
 				// add UISwitch
 				sw = [[UISwitch alloc] init];
-				BOOL bOpt = [kvs boolForKey:KV_OptCheckingAtEditMode];
-				[sw setOn:bOpt animated:NO]; // 初期値セット
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptCheckingAtEditMode;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
@@ -279,6 +307,7 @@
 				cell.detailTextLabel.text = NSLocalizedString(@"Checking comment",nil);
 			}
 			sw.frame = CGRectMake(fX, 5, 120, 25); // 回転対応
+			[sw setOn:[kvs boolForKey:KV_OptCheckingAtEditMode] animated:YES];
 		}	break;
 		
 		case 5:
@@ -287,8 +316,6 @@
 			if (sw==nil) {
 				// add UISwitch
 				sw = [[UISwitch alloc] init];
-				BOOL bOpt = [kvs boolForKey:KV_OptSearchItemsNote];
-				[sw setOn:bOpt animated:NO]; // 初期値セット
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptSearchItemsNote;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
@@ -297,6 +324,7 @@
 				cell.detailTextLabel.text = NSLocalizedString(@"SearchItemsNote comment",nil);
 			}
 			sw.frame = CGRectMake(fX, 5, 120, 25); // 回転対応
+			[sw setOn:[kvs boolForKey:KV_OptSearchItemsNote] animated:YES];
 		}	break;
 
 		case 6:
@@ -305,8 +333,6 @@
 			if (sw==nil) {
 				// add UISwitch
 				sw = [[UISwitch alloc] init];
-				BOOL bOpt = [kvs boolForKey:KV_OptAdvertising];
-				[sw setOn:bOpt animated:NO]; // 初期値セット
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptAdvertising;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
@@ -316,6 +342,7 @@
 				cell.detailTextLabel.text = NSLocalizedString(@"Advertising msg",nil);
 			}
 			sw.frame = CGRectMake(fX, 5, 120, 25); // 回転対応
+			[sw setOn:[kvs boolForKey:KV_OptAdvertising] animated:YES];
 		}	break;
 	}
     return cell;
@@ -355,14 +382,10 @@
 		case TAG_OptAdvertising:
 			[kvs setBool:[sender isOn] forKey:KV_OptAdvertising];
 			appDelegate_.app_opt_Ad = [sender isOn];
-			if (appDelegate_.app_is_iPad) {
-				[appDelegate_ AdRefresh:[sender isOn]];
-				// 再描画　　Adスペースを変化させるため
-				[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS 
-																	object:self userInfo:nil];
-			} //iPhoneは、E1viewController:viewWillAppear:を通ってAd再開される
+			[self changeAdvertising];
 			break;
 	}
+	//[kvs synchronize]; ＜＜＜viewWillDisappear:にて保存する。
 }
 
 /*

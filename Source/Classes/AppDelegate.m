@@ -107,6 +107,10 @@
 	app_pid_iCloud_ = NO;	// 購入中止で YES に変えてテストするため
 #endif
 	
+#ifdef AzMAKE_SPLASHFACE
+	app_opt_Ad_ = NO;
+#endif
+	
 	//-------------------------------------------------初期化
 	app_UpdateSave_ = NO;
 	adCanVisible_ = NO;			// 現在状況、(NO)表示禁止  (YES)表示可能
@@ -161,7 +165,7 @@
 	[EntityRelation setMoc:[self managedObjectContext]];
 	
 	
-	// listen to our app delegates notification that we might want to refresh our detail view
+	// iCloud-KVS 変更通知を受ける
     [[NSNotificationCenter defaultCenter] addObserver:self			// viewDidUnload:にて removeObserver:必須
 											 selector:@selector(kvsValueChange:) 
 												 name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification	// KVSの値が変化したとき
@@ -177,14 +181,12 @@
 		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
 		[kvs synchronize]; // 最新同期
 		
-		// 別デバイスへインストールした直後、購買情報が反映されないとき、ここで反映させるため
-		/*	if (app_pid_AdOff_==NO  &&  [kvs boolForKey:SK_PID_AdOff]==YES) 
-		 {	// 再フィッチ＆画面リフレッシュ通知  ＜＜＜＜ E1viewController:refreshAllViews: にて iCloud OFF --> ON している。
-		 [[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFRESH_ALL_VIEWS
-		 object:self userInfo:nil];
-		 }*/
+		// 別デバイスで設定変更したとき、表示に影響ある設定について再描画する
 		
-		// 設定変更時も反映させるため。
+		// 広告表示に変化があれば、広告スペースを調整する
+		app_opt_Ad_ = [kvs boolForKey:KV_OptAdvertising];
+		[self AdRefresh:app_opt_Ad_];
+
 		// 再フィッチ＆画面リフレッシュ通知  ＜＜＜＜ E1viewController:refreshAllViews: にて iCloud OFF --> ON している。
 		[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFRESH_ALL_VIEWS
 															object:self userInfo:nil];
@@ -351,14 +353,11 @@
 {
     [moc mergeChangesFromContextDidSaveNotification:note]; 
 	
-    //NSNotification* refreshNotification = [NSNotification notificationWithName:NFM_REFRESH_ALL_VIEWS
-	//																	object:self  userInfo:[note userInfo]];
-    //[[NSNotificationCenter defaultCenter] postNotification:refreshNotification];
+	//NSLog(@"NSNotification: POST: RefreshAllViews");
+	NSLog(@"mergeiCloudChanges: RefreshAllViews: userInfo=%@", [note userInfo]);
+
 	[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
 														object:self userInfo:[note userInfo]];
-	
-	NSLog(@"NSNotification: POST: RefreshAllViews");
-	//NSLog(@"NSNotification: POST: RefreshAllViews: userInfo=%@", [note userInfo]);
 }
 
 // NSNotifications are posted synchronously on the caller's thread
@@ -498,7 +497,7 @@
 			[moc performBlockAndWait:^{
 				// even the post initialization needs to be done within the Block
 				[moc setPersistentStoreCoordinator: coordinator];
-				[[NSNotificationCenter defaultCenter]addObserver:self 
+				[[NSNotificationCenter defaultCenter] addObserver:self 
 														selector:@selector(mergeChangesFrom_iCloud:) 
 															name:NSPersistentStoreDidImportUbiquitousContentChangesNotification 
 														  object:coordinator];

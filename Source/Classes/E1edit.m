@@ -36,6 +36,16 @@
 @synthesize selfPopover = selfPopover_;
 
 
+#pragma mark - iCloud
+- (void)refreshAllViews:(NSNotification*)note 
+{	// iCloud-CoreData に変更があれば呼び出される
+	@synchronized(note)
+	{
+		[self viewWillAppear:YES];
+	}
+}
+
+
 #pragma mark - View lifecycle
 
 - (id)init 
@@ -225,16 +235,6 @@
 	// @property (retain)
 	//[e1target_ release];
     //[super dealloc];
-}
-
-
-#pragma mark - iCloud
-- (void)refreshAllViews:(NSNotification*)note 
-{	// iCloud-CoreData に変更があれば呼び出される
-	@synchronized(note)
-	{
-		[self viewWillAppear:YES];
-	}
 }
 
 
