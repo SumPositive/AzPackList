@@ -34,8 +34,6 @@
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFiles</key>
 	<array>
-		<string>Icon57s1.png</string>
-		<string>Icon57s1@2x.png</string>
 		<string>Icon57.png</string>
 		<string>Icon57@2x.png</string>
 		<string>Icon72.png</string>
@@ -46,8 +44,6 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
-				<string>Icon57s1.png</string>
-				<string>Icon57s1@2x.png</string>
 				<string>Icon57.png</string>
 				<string>Icon57@2x.png</string>
 				<string>Icon72.png</string>
@@ -90,6 +86,10 @@
 	<key>UIPrerenderedIcon</key>
 	<false/>
 	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
