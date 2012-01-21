@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="872" systemVersion="10K549" minimumToolsVersion="Xcode 4.2" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="E1" representedClassName="NSManagedObject" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="note" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="row" optional="YES" attributeType="Integer 32" maxValueString="99999" defaultValueString="0" syncable="YES"/>
+        <attribute name="sumNoCheck" optional="YES" attributeType="Integer 16" maxValueString="999" defaultValueString="0" syncable="YES"/>
+        <attribute name="sumNoGray" optional="YES" attributeType="Integer 16" maxValueString="999" defaultValueString="0" syncable="YES"/>
+        <attribute name="sumWeightNed" optional="YES" attributeType="Integer 32" maxValueString="9999999" defaultValueString="0" syncable="YES"/>
+        <attribute name="sumWeightStk" optional="YES" attributeType="Integer 32" maxValueString="9999999" defaultValueString="0" syncable="YES"/>
+        <attribute name="urlPhoto" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="childs" optional="YES" toMany="YES" minCount="1" deletionRule="Nullify" destinationEntity="E2" inverseName="parent" inverseEntity="E2" indexed="YES" syncable="YES"/>
+    </entity>
+    <entity name="E2" representedClassName="NSManagedObject" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="note" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="row" optional="YES" attributeType="Integer 32" maxValueString="99999" defaultValueString="0" syncable="YES"/>
+        <attribute name="sumNoCheck" optional="YES" attributeType="Integer 16" maxValueString="999" defaultValueString="0" syncable="YES"/>
+        <attribute name="sumNoGray" optional="YES" attributeType="Integer 16" maxValueString="999" defaultValueString="0" syncable="YES"/>
+        <attribute name="sumWeightNed" optional="YES" attributeType="Integer 32" maxValueString="9999999" defaultValueString="0" syncable="YES"/>
+        <attribute name="sumWeightStk" optional="YES" attributeType="Integer 32" maxValueString="9999999" defaultValueString="0" syncable="YES"/>
+        <attribute name="urlPhoto" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="childs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="E3" inverseName="parent" inverseEntity="E3" indexed="YES" syncable="YES"/>
+        <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="E1" inverseName="childs" inverseEntity="E1" indexed="YES" syncable="YES"/>
+    </entity>
+    <entity name="E3" representedClassName="NSManagedObject" syncable="YES">
+        <attribute name="lack" optional="YES" attributeType="Integer 16" maxValueString="9999" defaultValueString="0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="need" optional="YES" attributeType="Integer 16" maxValueString="9999" defaultValueString="0" syncable="YES"/>
+        <attribute name="noCheck" optional="YES" attributeType="Integer 16" maxValueString="1" defaultValueString="0" syncable="YES"/>
+        <attribute name="noGray" optional="YES" attributeType="Integer 16" maxValueString="1" defaultValueString="0" syncable="YES"/>
+        <attribute name="note" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="row" optional="YES" attributeType="Integer 32" maxValueString="99999" defaultValueString="0" syncable="YES"/>
+        <attribute name="shopKeyword" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="shopNote" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="stock" optional="YES" attributeType="Integer 16" maxValueString="9999" syncable="YES"/>
+        <attribute name="urlPhoto" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="weight" optional="YES" attributeType="Integer 32" maxValueString="99999" syncable="YES"/>
+        <attribute name="weightLack" optional="YES" attributeType="Integer 32" maxValueString="999999" defaultValueString="0" syncable="YES"/>
+        <attribute name="weightNed" optional="YES" attributeType="Integer 32" maxValueString="999999" defaultValueString="0" syncable="YES"/>
+        <attribute name="weightStk" optional="YES" attributeType="Integer 32" maxValueString="999999" defaultValueString="0" syncable="YES"/>
+        <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="E2" inverseName="childs" inverseEntity="E2" indexed="YES" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="E1" positionX="88" positionY="27" width="128" height="180"/>
+        <element name="E2" positionX="288" positionY="27" width="128" height="195"/>
+        <element name="E3" positionX="511" positionY="27" width="128" height="285"/>
+    </elements>
+</model>
