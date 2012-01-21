@@ -59,6 +59,7 @@
 @synthesize app_UpdateSave = app_UpdateSave_;
 @synthesize app_pid_AdOff = app_pid_AdOff_;		//Store購入済フラグ
 @synthesize app_BagSwing = app_BagSwing_;		//YES=PadRootVC:が表示されたとき、バッグを振る。
+@synthesize app_enable_iCloud = app_enable_iCloud_;		// persistentStoreCoordinator:にて設定
 
 
 #pragma mark - Application lifecycle
@@ -406,6 +407,8 @@
 	
     persistentStoreCoordinator_ = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
 	
+	app_enable_iCloud_ = NO;
+	
 	if (app_pid_AdOff_) {  // (IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0"))
 		 // do this asynchronously since if this is the first time this particular device is syncing with preexisting
 		 // iCloud content it may take a long long time to download
@@ -418,6 +421,7 @@
 			 NSURL *cloudURL = [fileManager URLForUbiquityContainerIdentifier:nil]; //.entitlementsから自動取得されるようになった。
 			 NSLog(@"cloudURL=1=%@", cloudURL);
 			 if (cloudURL) {
+				 app_enable_iCloud_ = YES;
 				 // アプリ内のコンテンツ名付加：["coredata"]　＜＜＜変わると共有できない。
 				 cloudURL = [cloudURL URLByAppendingPathComponent:@"coredata"];
 				 NSLog(@"cloudURL=2=%@", cloudURL);
@@ -425,8 +429,8 @@
 				 options = [NSDictionary dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
 							[NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption,
-							@"com.azukid.AzPackList.sqlog", NSPersistentStoreUbiquitousContentNameKey,	//【重要】リリース後変更禁止
-							cloudURL, NSPersistentStoreUbiquitousContentURLKey,												//【重要】リリース後変更禁止
+							@"com.azukid.AzPackList5.sqlog", NSPersistentStoreUbiquitousContentNameKey,	//【重要】リリース後変更禁止
+							cloudURL, NSPersistentStoreUbiquitousContentURLKey,													//【重要】リリース後変更禁止
 							nil];
 			 } else {
 				 // iCloud is not available
@@ -502,6 +506,8 @@
 															name:NSPersistentStoreDidImportUbiquitousContentChangesNotification 
 														  object:coordinator];
 			}];
+			// 競合解決方法
+			[moc setMergePolicy:NSMergeByPropertyStoreTrumpMergePolicy];	//Store(iCloud)優先
         }
 		else {	// iCloudなし
             moc = [[NSManagedObjectContext alloc] init];

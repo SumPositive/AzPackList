@@ -94,7 +94,7 @@
 - (void)viewDidAppear:(BOOL)animated 
 {
     [super viewDidAppear:animated];
-	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
+	//[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 
 	// 広告表示に変化があれば、広告スペースを調整するための処理
 	BOOL bAd = [[NSUbiquitousKeyValueStore defaultStore] boolForKey:KV_OptAdvertising];

@@ -89,110 +89,45 @@
 
 - (void)refetcheAllData
 {
-	if (fetchedE1_ == nil) 
-	{
-		// Create and configure a fetch request with the Book entity.
-		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-		NSEntityDescription *entity = [NSEntityDescription entityForName:@"E1" 
-												  inManagedObjectContext:moc_];
-		[fetchRequest setEntity:entity];
-		// Sorting
-		NSSortDescriptor *sortRow = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
-		NSArray *sortArray = [[NSArray alloc] initWithObjects:sortRow, nil];
-		[fetchRequest setSortDescriptors:sortArray];
-		// Create and initialize the fetch results controller.
-		fetchedE1_ = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest 
-														 managedObjectContext:moc_ 
-														   sectionNameKeyPath:nil cacheName:@"E1nodes"];
-	}
-	
-	// 読み込み
-	NSError *error = nil;
-	if (![fetchedE1_ performFetch:&error]) {
-		// Update to handle the error appropriately.
-		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-		return; //exit(-1);  // Fail
-	}
-	NSLog(@"fetchedE1_=%@", fetchedE1_);
-	
-	// 高速化のため、ここでE1レコード数（行数）を求めてしまう
-    section0Rows_ = 0;
-	if (0 < [[fetchedE1_ sections] count]) {
-		id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedE1_ sections] objectAtIndex:0];
-		section0Rows_ = [sectionInfo numberOfObjects];
-		
-		//[1.0.1]末尾の「新しい・・」空レコードがあれば削除する
-		BOOL bRefetch = NO;
-		NSArray *arE1 = [sectionInfo objects];
-		if (arE1 && 0<[arE1 count]) {
-			E1 *e1last = [arE1 lastObject];
-			if (0 < [e1last.childs count]) {
-				NSArray *arE2 = [e1last.childs allObjects];
-				for (E2 *e2 in arE2) {
-					if (0 < [e2.childs count]) {
-						NSArray *arE3 = [e2.childs allObjects];
-						for (E3 *e3 in arE3) {
-							//NSLog(@"name=%@ note=%@ stock=%d need=%d weight=%d", e3.name, e3.note,
-							//	  [e3.stock integerValue], [e3.need integerValue], [e3.weight integerValue]);
-							if ([e3.name length]<=0 && [e3.note length]<=0
-								&& [e3.stock integerValue]<=0
-								&& [e3.need integerValue]==(-1)		//(-1)Add行なら削除。 [SAVE]押せば少なくとも(0)になる
-								&& [e3.weight integerValue]<=0
-								) {
-								// 「新しいアイテム」かつ「未編集」 なので削除する
-								e3.parent = nil;
-								[moc_ deleteObject:e3];
-								bRefetch = YES;
-							}
-						}
-					}
-					if ([e2.name length]<=0 && [e2.childs count]<=0) {
-						//配下E3なし & 「新しいグループ」 なので削除する
-						e2.parent = nil;
-						[moc_ deleteObject:e2];
-						bRefetch = YES;
-					}
-				}
-			}
-			if ([e1last.name length]<=0 && [e1last.childs count]<=0) {
-				//配下E2なし & 「新しいプラン」 なので削除する
-				[moc_ deleteObject:e1last];
-				bRefetch = YES;
-			}
-			if (bRefetch) {
-				NSError *err = nil;
-				if (![moc_ save:&err]) {
-					NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
-				}
-				error = nil;
-				if (![fetchedE1_ performFetch:&error]) {
-					NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-					return; //exit(-1);  // Fail
-				}
-				id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedE1_ sections] objectAtIndex:0];
-				section0Rows_ = [sectionInfo numberOfObjects];
-			}
+	@try {
+		if (fetchedE1_ == nil) 
+		{
+			// Create and configure a fetch request with the Book entity.
+			NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+			NSEntityDescription *entity = [NSEntityDescription entityForName:@"E1" 
+													  inManagedObjectContext:moc_];
+			[fetchRequest setEntity:entity];
+			// Sorting
+			NSSortDescriptor *sortRow = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
+			NSArray *sortArray = [[NSArray alloc] initWithObjects:sortRow, nil];
+			[fetchRequest setSortDescriptors:sortArray];
+			// Create and initialize the fetch results controller.
+			fetchedE1_ = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest 
+															 managedObjectContext:moc_ 
+															   sectionNameKeyPath:nil cacheName:@"E1nodes"];
 		}
+		
+		NSError *error = nil;
+		// 読み込み
+		if (![fetchedE1_ performFetch:&error]) {
+			// Update to handle the error appropriately.
+			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+			return; //exit(-1);  // Fail
+		}
+		NSLog(@"refetcheAllData: fetchedE1_=%@", fetchedE1_);
+		
+		// 高速化のため、ここでE1レコード数（行数）を求めてしまう
+		section0Rows_ = 0;
+		if (0 < [[fetchedE1_ sections] count]) {
+			id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedE1_ sections] objectAtIndex:0];
+			section0Rows_ = [sectionInfo numberOfObjects];
+		}
+		[self.tableView reloadData];
 	}
-	
-	[self.tableView reloadData];
+	@catch (NSException *exception) {
+		NSLog(@"refetcheAllData: ERROR: exception: %@:%@", [exception name], [exception reason]);
+	}
 }
-/*
-- (void)refetcheAllData:(NSNotification*)note 
-{	// iCloud-CoreData に変更（追加や削除）があれば呼び出される
-	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
-	if (appDelegate_.app_pid_iCloud==NO  &&  [kvs boolForKey:SK_PID_AdOff]) 
-	{	// iCloud OFF --> ON
-		appDelegate_.app_pid_iCloud = YES;
-		[appDelegate_ managedObjectContextReset]; // iCloud対応の moc再生成する。
-		appDelegate_.app_opt_Ad = NO;
-		[kvs setBool:NO forKey:KV_OptAdvertising];
-		[appDelegate_ AdRefresh:NO];
-	}
-	
-	moc_ = [EntityRelation getMoc]; //購入後、再生成された場合のため
-	[self refetcheAllData];
-}*/
 
 - (void)refreshAllViews:(NSNotification*)note 
 {	// iCloud-CoreData に変更があれば呼び出される
@@ -216,6 +151,62 @@
 	}
 }
 
+- (void)deleteBlankData
+{	//[1.0.1]末尾の「新しい・・」空レコードがあれば削除する
+	id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedE1_ sections] objectAtIndex:0];
+	BOOL bRefetch = NO;
+	NSArray *arE1 = [sectionInfo objects];
+	if (arE1 && 0<[arE1 count]) {
+		E1 *e1last = [arE1 lastObject];
+		if (0 < [e1last.childs count]) {
+			NSArray *arE2 = [e1last.childs allObjects];
+			for (E2 *e2 in arE2) {
+				if (0 < [e2.childs count]) {
+					NSArray *arE3 = [e2.childs allObjects];
+					for (E3 *e3 in arE3) {
+						//NSLog(@"name=%@ note=%@ stock=%d need=%d weight=%d", e3.name, e3.note,
+						//	  [e3.stock integerValue], [e3.need integerValue], [e3.weight integerValue]);
+						if ([e3.name length]<=0 && [e3.note length]<=0
+							&& [e3.stock integerValue]<=0
+							&& [e3.need integerValue]==(-1)		//(-1)Add行なら削除。 [SAVE]押せば少なくとも(0)になる
+							&& [e3.weight integerValue]<=0
+							) {
+							// 「新しいアイテム」かつ「未編集」 なので削除する
+							e3.parent = nil;
+							[moc_ deleteObject:e3];
+							bRefetch = YES;
+						}
+					}
+				}
+				if ([e2.name length]<=0 && [e2.childs count]<=0) {
+					//配下E3なし & 「新しいグループ」 なので削除する
+					e2.parent = nil;
+					[moc_ deleteObject:e2];
+					bRefetch = YES;
+				}
+			}
+		}
+		if ([e1last.name length]<=0 && [e1last.childs count]<=0) {
+			//配下E2なし & 「新しいプラン」 なので削除する
+			[moc_ deleteObject:e1last];
+			bRefetch = YES;
+		}
+		if (bRefetch) {
+			NSError *error = nil;
+			if (![moc_ save:&error]) {
+				NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+			}
+			error = nil;
+			if (![fetchedE1_ performFetch:&error]) {
+				NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+				return; //exit(-1);  // Fail
+			}
+			id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedE1_ sections] objectAtIndex:0];
+			section0Rows_ = [sectionInfo numberOfObjects];
+		}
+	}
+}
+
 
 #pragma mark - Action
 
@@ -226,7 +217,7 @@
 	//         そのため、pppIndexPathActionDelete を使っている。
 	// ＜注意＞ CoreDataモデルは、エンティティ間の削除ルールは双方「無効にする」を指定。（他にするとフリーズ）
 	// 削除対象の ManagedObject をチョイス
-	NSLog(@"fetchedE1_=%@", fetchedE1_);
+	NSLog(@"actionE1deleteCell: fetchedE1_=%@", fetchedE1_);
 	NSLog(@"uiRow=%ld", (long)uiRow);
 	NSIndexPath *ixp = [NSIndexPath indexPathForRow:uiRow inSection:0];
 	E1 *e1objDelete = [fetchedE1_ objectAtIndexPath:ixp];
@@ -903,8 +894,12 @@
 	if (moc_==nil) {
 		moc_ = [appDelegate_ managedObjectContext];
 	}
+	
 	// CoreData 読み込み
 	[self refetcheAllData];	//この中で処理済み [self.tableView reloadData];
+
+	// E3に有効レコードが無ければ削除する。E2,E1も遡って配下が無ければ削除する。
+	//[self deleteBlankData];
 	
 	if (0 < contentOffsetDidSelect_.y) {
 		// app.Me3dateUse=nil のときや、メモリ不足発生時に元の位置に戻すための処理。
@@ -1141,11 +1136,13 @@
 {
 	switch (section) {
 		case 2: {
-			NSString *zz;  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
+			NSString *zz = @"";  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
 			if (appDelegate_.app_pid_AdOff) {
-				zz = NSLocalizedString(@"iCloud ON",nil); //@"<<< Will syncronize with iCloud >>>";
-			} else {
-				zz = @"";
+				if (appDelegate_.app_enable_iCloud) {
+					zz = NSLocalizedString(@"iCloud ON",nil); // 同期中
+				} else {
+					zz = NSLocalizedString(@"iCloud OFF",nil); // 無効
+				}
 			}
 			zz = [zz stringByAppendingString:@"\n\nAzukiSoft Project\n"  COPYRIGHT];
 			if (appDelegate_.app_opt_Ad) {
