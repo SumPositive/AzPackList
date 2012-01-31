@@ -979,8 +979,10 @@
 			[popOver_ dismissPopoverAnimated:animated];
 		}
 		// YES=BagSwing // 全収納済みとなったE1から戻ったとき。
-		appDelegate_.app_BagSwing = ([e1selected_.sumNoCheck integerValue] <= 0 && 2 <= [e1selected_.childs count]);
-	 }
+		appDelegate_.app_BagSwing = (0 < [e1selected_.sumNoGray integerValue]				// グレーを除く
+															   && [e1selected_.sumNoCheck integerValue] <= 0	// 全チェック済
+														 && 0 < [e1selected_.childs count]);								// 目次あり
+	}
 	
 	[super viewWillDisappear:animated];
 }
@@ -997,6 +999,7 @@
 		if (appDelegate_.app_opt_Autorotate==NO) {
 			// 回転禁止にしている場合
 			[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
+			
 			if (interfaceOrientation == UIInterfaceOrientationPortrait)
 			{ // 正面（ホームボタンが画面の下側にある状態）
 				return YES; // この方向だけ常に許可する

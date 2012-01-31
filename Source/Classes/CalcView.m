@@ -701,7 +701,8 @@ int levelOperator( NSString *zOpe )  // 演算子の優先順位
 {
 	if ([strFomula length] <= 0) return nil;
 	//-------------------------------------------------localPool BEGIN >>> @finaly release
-	@autoreleasepool {
+	//@autoreleasepool {    ＜＜＜＜＜ ARC対応により retain して抜ける方法が解らないので廃止した。
+	
 		NSMutableArray *maStack = [NSMutableArray new];	// - Stack Method
 		NSMutableArray *maRpn = [NSMutableArray new]; // 逆ポーランド記法結果
 		NSDecimalNumber *decAns = nil;
@@ -910,14 +911,13 @@ int levelOperator( NSString *zOpe )  // 演算子の優先順位
 			NSLog(@"Calc: error=%@", errMsg);
 			decAns = nil;
 		}
-		@finally {
+	/*	@finally {
 			//[autoPool release];
-			//-------------------------------------------------localPool END
 			//[maRpn release];
 			//[maStack release];
-		}
+		}*/
 		return decAns;
-	}
+	//}
 }
 
 

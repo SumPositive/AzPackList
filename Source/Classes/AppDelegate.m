@@ -352,6 +352,15 @@
 
 - (void)mergeiCloudChanges:(NSNotification*)note forContext:(NSManagedObjectContext*)moc 
 {
+	// 競合解決方法   Context <<>> SQLite <<>> iCloud
+	// NSErrorMergePolicy - マージコンフリクトを起こすとSQLite保存に失敗する（デフォルト）
+	// NSMergeByPropertyStoreTrumpMergePolicy - SQLite(Store)を優先にマージする
+	// NSMergeByPropertyObjectTrumpMergePolicy - Context(Object)を優先にマージする
+	// NSOverwriteMergePolicy - ContextでSQLiteを上書きする		<<<<<<<<<<
+	//　NSRollbackMergePolicy　-　Contextの変更を破棄する
+	//[moc setMergePolicy:NSOverwriteMergePolicy];
+	
+	// マージ処理
     [moc mergeChangesFromContextDidSaveNotification:note]; 
 	
 	//NSLog(@"NSNotification: POST: RefreshAllViews");
@@ -423,21 +432,25 @@
 			 if (cloudURL) {
 				 app_enable_iCloud_ = YES;
 				 // アプリ内のコンテンツ名付加：["coredata"]　＜＜＜変わると共有できない。
-				 cloudURL = [cloudURL URLByAppendingPathComponent:@"coredata"];
+				 cloudURL = [cloudURL URLByAppendingPathComponent:@"packlist"];
 				 NSLog(@"cloudURL=2=%@", cloudURL);
 
+				// iCloud完全クリアする　＜＜＜同期矛盾が生じたときや構造変更時に使用
+				// [[NSFileManager defaultManager] removeItemAtURL:cloudURL error:nil];
+				 
 				 options = [NSDictionary dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
 							[NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption,
-							@"com.azukid.AzPackList5.sqlog", NSPersistentStoreUbiquitousContentNameKey,	//【重要】リリース後変更禁止
-							cloudURL, NSPersistentStoreUbiquitousContentURLKey,													//【重要】リリース後変更禁止
+							//@"com.azukid.AzPackList5.sqlog", NSPersistentStoreUbiquitousContentNameKey,	//【重要】リリース後変更禁止
+							cloudURL, NSPersistentStoreUbiquitousContentURLKey,			// iCloudのアプリフォルダパス		//【重要】リリース後変更禁止
+							@"sqlog", NSPersistentStoreUbiquitousContentNameKey,		// アプリフォルダ内のフォルダ名	//【重要】リリース後変更禁止
 							nil];
 			 } else {
 				 // iCloud is not available
 				 options = [NSDictionary dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,	// 自動移行
 							[NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption,			// 自動マッピング推論して処理
-							nil];																									// NO ならば、「マッピングモデル」を使って移行処理される。
+							nil];																									// NO ならば、「.xcmappingmodel」を使って移行処理される。
 			 }			 
 			 NSLog(@"options=%@", options);
 
@@ -501,13 +514,12 @@
 			[moc performBlockAndWait:^{
 				// even the post initialization needs to be done within the Block
 				[moc setPersistentStoreCoordinator: coordinator];
+
 				[[NSNotificationCenter defaultCenter] addObserver:self 
 														selector:@selector(mergeChangesFrom_iCloud:) 
 															name:NSPersistentStoreDidImportUbiquitousContentChangesNotification 
 														  object:coordinator];
 			}];
-			// 競合解決方法
-			[moc setMergePolicy:NSMergeByPropertyStoreTrumpMergePolicy];	//Store(iCloud)優先
         }
 		else {	// iCloudなし
             moc = [[NSManagedObjectContext alloc] init];
@@ -516,6 +528,12 @@
     }
 	moc_ = moc;
     return moc_;
+}
+
+// 保存されたらマージポリシーに沿ってマージしてもらう
+- (void)anotherContextDidSave:(NSNotification *)notification
+{
+    [moc_ mergeChangesFromContextDidSaveNotification:notification];
 }
 
 - (void) managedObjectContextReset 
