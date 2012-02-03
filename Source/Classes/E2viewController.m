@@ -336,9 +336,8 @@
 	// 未認証の場合、認証処理後、AppDelegate:handleOpenURL:から呼び出される
 	if ([[DBSession sharedSession] isLinked]) 
 	{	// Dropbox 認証済み
-		DropboxVC *vc = [[DropboxVC alloc] init];
+		DropboxVC *vc = [[DropboxVC alloc] initWithE1:e1selected_];
 		assert(vc);
-		vc.Re1selected = e1selected_;	// [SAVE]
 		if (appDelegate_.app_is_iPad) {
 			/*popOver_ = nil;
 			popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
@@ -1093,10 +1092,10 @@
 #pragma mark - iCloud
 - (void)refreshAllViews:(NSNotification*)note 
 {	// iCloud-CoreData に変更があれば呼び出される
-	@synchronized(note)
-	{
+	//@synchronized(note)
+	//{
 		[self viewWillAppear:YES];
-	}
+	//}
 }
 
 
@@ -1482,7 +1481,9 @@
 					cell.imageView.image = [UIImage imageNamed:@"Dropbox-130x44"];
 					cell.textLabel.text = NSLocalizedString(@"Backup Dropbox",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"Backup Dropbox msg",nil);
-					//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
+					if (appDelegate_.app_is_iPad==NO  OR  [menuPopover_ isPopoverVisible]) {  //iPad-Popover内ならばiPhoneと同じ
+						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
+					}
 					break;
 				case 4:
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-Google"];

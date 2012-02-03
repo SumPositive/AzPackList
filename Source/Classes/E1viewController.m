@@ -131,14 +131,14 @@
 
 - (void)refreshAllViews:(NSNotification*)note 
 {	// iCloud-CoreData に変更があれば呼び出される
-	@synchronized(note)
-	{
+	//@synchronized(note)
+	//{
 		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
 		//[kvs synchronize]; <<<変化通知により同期済みであるから不要
 		if (appDelegate_.app_pid_AdOff==NO  &&  [kvs boolForKey:SK_PID_AdOff]) 
 		{	// iCloud OFF --> ON
 			appDelegate_.app_pid_AdOff = YES;
-			[appDelegate_ managedObjectContextReset]; // iCloud対応の moc再生成する。
+			//[appDelegate_ managedObjectContextReset]; // iCloud対応の moc再生成する。
 			appDelegate_.app_opt_Ad = NO;
 			[kvs setBool:NO forKey:KV_OptAdvertising];
 			[appDelegate_ AdRefresh:NO];
@@ -148,7 +148,7 @@
 		contentOffsetDidSelect_.y = 0;  // 直前のdidSelectRowAtIndexPath位置に戻らないようにクリアしておく
 		[self viewWillAppear:YES];	//この中で、refetcheAllData:が呼ばれる
 		[appDelegate_ AdViewWillRotate:self.interfaceOrientation];	// AdOFF-->ONのとき回転補正が必要
-	}
+	//}
 }
 
 - (void)deleteBlankData
@@ -299,9 +299,8 @@
 	// 未認証の場合、認証処理後、AppDelegate:handleOpenURL:から呼び出される
 	if ([[DBSession sharedSession] isLinked]) 
 	{	// Dropbox 認証済み
-		DropboxVC *vc = [[DropboxVC alloc] init];
+		DropboxVC *vc = [[DropboxVC alloc] initWithE1:nil];  // nil=Download
 		assert(vc);
-		vc.Re1selected = nil; // 取込専用
 		if (appDelegate_.app_is_iPad) {
 			/*	popOver_ = nil;
 			popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];

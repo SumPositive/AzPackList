@@ -44,16 +44,16 @@
 						<object class="IBUIButton" id="794958297">
 							<reference key="NSNextResponder" ref="557484746"/>
 							<int key="NSvFlags">289</int>
-							<string key="NSFrame">{{251, 62}, {59, 37}}</string>
+							<string key="NSFrame">{{251, 53}, {59, 37}}</string>
 							<reference key="NSSuperview" ref="557484746"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="177254008"/>
+							<reference key="NSNextKeyView" ref="758527512"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							<int key="IBUIContentHorizontalAlignment">0</int>
 							<int key="IBUIContentVerticalAlignment">0</int>
 							<int key="IBUIButtonType">1</int>
-							<string key="IBUINormalTitle">保存</string>
+							<string key="IBUINormalTitle">Up</string>
 							<object class="NSColor" key="IBUIHighlightedTitleColor" id="193881541">
 								<int key="NSColorSpace">3</int>
 								<bytes key="NSWhite">MQA</bytes>
@@ -112,7 +112,7 @@
 							<int key="IBSelectedSegmentIndex">1</int>
 							<array key="IBSegmentTitles">
 								<string>PackList名順</string>
-								<string>保存日時順</string>
+								<string>Up日時順</string>
 							</array>
 							<array class="NSMutableArray" key="IBSegmentWidths">
 								<real value="0.0"/>
@@ -134,7 +134,7 @@
 						<object class="IBUILabel" id="139144299">
 							<reference key="NSNextResponder" ref="557484746"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{10, 2}, {254, 36}}</string>
+							<string key="NSFrame">{{10, 7}, {254, 36}}</string>
 							<reference key="NSSuperview" ref="557484746"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="594973022"/>
@@ -143,7 +143,7 @@
 							<int key="IBUIContentMode">7</int>
 							<bool key="IBUIUserInteractionEnabled">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							<string key="IBUIText">Dropbox へ保存する</string>
+							<string key="IBUIText">Dropbox アップロード</string>
 							<reference key="IBUITextColor" ref="193881541"/>
 							<nil key="IBUIHighlightedColor"/>
 							<int key="IBUIBaselineAdjustment">1</int>
@@ -161,7 +161,7 @@
 						<object class="IBUILabel" id="594973022">
 							<reference key="NSNextResponder" ref="557484746"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{20, 25}, {290, 29}}</string>
+							<string key="NSFrame">{{20, 30}, {290, 29}}</string>
 							<reference key="NSSuperview" ref="557484746"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="953242431"/>
@@ -170,7 +170,7 @@
 							<int key="IBUIContentMode">7</int>
 							<bool key="IBUIUserInteractionEnabled">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							<string key="IBUIText">PackList名を入れて保存ボタンをタッチ。</string>
+							<string key="IBUIText">PackList名を入れてUpボタンをタッチ。</string>
 							<object class="NSColor" key="IBUITextColor" id="981258164">
 								<int key="NSColorSpace">1</int>
 								<bytes key="NSRGB">MCAwIDAAA</bytes>
@@ -192,17 +192,20 @@
 						<object class="IBUILabel" id="758527512">
 							<reference key="NSNextResponder" ref="557484746"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{10, 89}, {300, 36}}</string>
+							<string key="NSFrame">{{10, 95}, {300, 36}}</string>
 							<reference key="NSSuperview" ref="557484746"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="794958297"/>
+							<reference key="NSNextKeyView" ref="177254008"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
 							<int key="IBUIContentMode">7</int>
 							<bool key="IBUIUserInteractionEnabled">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							<string key="IBUIText">Dropbox から取り込む</string>
-							<reference key="IBUITextColor" ref="193881541"/>
+							<string key="IBUIText">＜削除＞</string>
+							<object class="NSColor" key="IBUITextColor">
+								<int key="NSColorSpace">1</int>
+								<bytes key="NSRGB">MSAwIDAAA</bytes>
+							</object>
 							<nil key="IBUIHighlightedColor"/>
 							<int key="IBUIBaselineAdjustment">1</int>
 							<float key="IBUIMinimumFontSize">10</float>
@@ -212,7 +215,7 @@
 						<object class="IBUILabel" id="428339026">
 							<reference key="NSNextResponder" ref="557484746"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{20, 111}, {290, 29}}</string>
+							<string key="NSFrame">{{20, 113}, {290, 29}}</string>
 							<reference key="NSSuperview" ref="557484746"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="970988190"/>
@@ -221,7 +224,7 @@
 							<int key="IBUIContentMode">7</int>
 							<bool key="IBUIUserInteractionEnabled">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							<string key="IBUIText">取り込みたいPackList名をタッチ。</string>
+							<string key="IBUIText">削除したいPackList名をタッチ。</string>
 							<reference key="IBUITextColor" ref="981258164"/>
 							<nil key="IBUIHighlightedColor"/>
 							<int key="IBUIBaselineAdjustment">1</int>
@@ -233,10 +236,10 @@
 						<object class="IBUITextField" id="761345486">
 							<reference key="NSNextResponder" ref="557484746"/>
 							<int key="NSvFlags">290</int>
-							<string key="NSFrame">{{10, 51}, {233, 31}}</string>
+							<string key="NSFrame">{{10, 56}, {233, 31}}</string>
 							<reference key="NSSuperview" ref="557484746"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="758527512"/>
+							<reference key="NSNextKeyView" ref="794958297"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -554,7 +557,7 @@
 				<string key="27.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="28.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="30.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<integer value="0" key="30.IUISegmentedControlInspectorSelectedSegmentMetadataKey"/>
+				<integer value="1" key="30.IUISegmentedControlInspectorSelectedSegmentMetadataKey"/>
 				<string key="44.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>

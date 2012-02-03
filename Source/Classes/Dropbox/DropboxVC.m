@@ -12,13 +12,15 @@
 
 #define TAG_ACTION_Save			109
 #define TAG_ACTION_Retrieve		118
+#define TAG_ALERT_Delete			127
+
 
 //#define USER_FILENAME			@"My PackList"
 //#define USER_FILENAME_KEY	@"MyPackList"
 
 @implementation DropboxVC
 //@synthesize delegate;
-@synthesize Re1selected;
+//@synthesize Re1selected;
 
 
 #pragma mark - Alert
@@ -76,12 +78,28 @@
 		[alv show];
 		return;
 	}
+
+	// 上書き確認
+	overWriteRev_ = nil;
+	for (DBMetadata *dbm in  mMetadatas) {
+		if ([filename  isEqualToString:[dbm.filename stringByDeletingPathExtension]]) {  // 拡張子を除く
+			overWriteRev_ = dbm.rev;  // OverWrite Revision
+			break;
+		}
+	}
 	
-	UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Dropbox Are you sure", nil) 
+	NSString *destructiveButtonTitle = nil;
+	NSString *otherButtonTitle = nil;
+	if (overWriteRev_) {
+		destructiveButtonTitle = NSLocalizedString(@"Dropbox OverWrite", nil); // 上書き保存　＜＜ overWriteRev_を使ってアップロード
+	} else {
+		otherButtonTitle = NSLocalizedString(@"Dropbox Save", nil); // 新規保存
+	}
+	UIActionSheet *as = [[UIActionSheet alloc] initWithTitle: filename  //NSLocalizedString(@"Dropbox Are you sure", nil) 
 													delegate:self 
-										   cancelButtonTitle:NSLocalizedString(@"Cancel", nil) 
-									  destructiveButtonTitle:nil 
-											otherButtonTitles:NSLocalizedString(@"Dropbox Save", nil), nil];
+										   cancelButtonTitle: NSLocalizedString(@"Cancel", nil) 
+									  destructiveButtonTitle: destructiveButtonTitle
+											otherButtonTitles: otherButtonTitle, nil];
 	as.tag = TAG_ACTION_Save;
 	[as showInView:self.view];
 	[ibTfName resignFirstResponder]; // キーボードを隠す
@@ -96,11 +114,16 @@
 
 #pragma mark - View lifecycle
 
-- (id)init
+- (id)initWithE1:(E1*)e1upload
 {
-	self = [super initWithNibName:@"DropboxVC" bundle:nil];
+	if (e1upload) {
+		self = [super initWithNibName:@"DropboxUpVC" bundle:nil];
+	} else {
+		self = [super initWithNibName:@"DropboxDownVC" bundle:nil];
+	}
     if (self) {
         // Custom initialization
+		e1upload_ = e1upload;
 		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;  //   CGSizeMake(320, 416); //iPad-Popover
     }
     return self;
@@ -116,7 +139,11 @@
 	} else {
 		// iPhone
 		ibBuClose.hidden = YES;
-		self.title = @"Dropbox";
+		if (e1upload_) {
+			self.title = e1upload_.name;
+		} else {
+			self.title = @"PackList";
+		}
 	}
 	
 	ibTfName.keyboardType = UIKeyboardTypeDefault;
@@ -135,17 +162,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-	
-	if (Re1selected) {
-		ibTfName.text = Re1selected.name;
+
+	if (e1upload_) {
+		ibTfName.text = e1upload_.name;
 		ibTfName.enabled = YES;
 		ibBuSave.enabled = YES;
 	} 
-	else { // 取込専用　（保存関係は非表示）
-		ibTfName.text = NSLocalizedString(@"Dropbox NotSelected", nil);
-		ibTfName.enabled = NO;
-		ibBuSave.enabled = NO;
-	}
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -209,6 +231,10 @@
 
 - (void)restClient:(DBRestClient *)client loadedMetadata:(DBMetadata *)metadata 
 {	// メタデータ読み込み成功
+	// mMetadatasオブジェクトを解放
+	overWriteRev_ = nil;
+	deletePath_ = nil;
+
     if (metadata.isDirectory) {
 #ifdef DEBUG
         NSLog(@"Folder '%@' contains:", metadata.path);
@@ -313,6 +339,20 @@
 	[self alertCommError];
 }
 
+- (void)restClient:(DBRestClient*)client deletedPath:(NSString *)path
+{	// Folder is the metadata for the newly created folder
+    NSLog(@"File deleted successfully to path: %@", path);
+	[[self restClient] loadMetadata:@"/"];
+	[self alertIndicatorOff];
+}
+
+- (void)restClient:(DBRestClient*)client deletePathFailedWithError:(NSError*)error
+{	// [error userInfo] contains the root and path
+    NSLog(@"File deleted failed with error - %@", error);
+	[[self restClient] loadMetadata:@"/"];
+	[self alertIndicatorOff];
+}
+
 
 
 #pragma mark - <UITableViewDataSource>
@@ -372,11 +412,18 @@
 			mDidSelectRowAtIndexPath = [indexPath copy];
 			NSLog(@"dbm.filename=%@", dbm.filename);
 
-			UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Dropbox Are you sure", nil) 
+			NSString *destructiveButtonTitle = nil;
+			NSString *otherButtonTitle = nil;
+			if (e1upload_) {
+				destructiveButtonTitle = NSLocalizedString(@"Dropbox Delete", nil);
+			} else {
+				otherButtonTitle = NSLocalizedString(@"Dropbox Change", nil);
+			}
+			UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:[dbm.filename stringByDeletingPathExtension]
 															 delegate:self 
 													cancelButtonTitle:NSLocalizedString(@"Cancel", nil) 
-											   destructiveButtonTitle:nil
-													otherButtonTitles:NSLocalizedString(@"Dropbox Change", nil), nil];
+											   destructiveButtonTitle: destructiveButtonTitle
+													otherButtonTitles: otherButtonTitle, nil];
 			as.tag = TAG_ACTION_Retrieve;
 			[as showInView:self.view];
 		}
@@ -434,10 +481,10 @@ replacementString:(NSString *)string
 		case TAG_ACTION_Save:	// 保存
 			//NSLog(@"homeTmpPath_=%@", homeTmpPath_);
 			//if (Re1selected  &&  homeTmpPath_) {
-			if (Re1selected) {
+			if (e1upload_) {
 				[self alertIndicatorOn:NSLocalizedString(@"Dropbox Communicating", nil)];
 				// ファイルへ書き出す
-				NSString *zErr = [FileCsv zSave:Re1selected toLocalFileName:GD_CSVFILENAME4]; // この間、待たされるのが問題になるかも！！
+				NSString *zErr = [FileCsv zSave:e1upload_ toLocalFileName:GD_CSVFILENAME4]; // この間、待たされるのが問題になるかも！！
 				if (zErr) {
 					[self alertIndicatorOff];	// 進捗サインOFF
 					UIAlertView *alert = [[UIAlertView alloc] 
@@ -453,8 +500,9 @@ replacementString:(NSString *)string
 				NSString *pathCsv = [pathTmp stringByAppendingPathComponent:GD_CSVFILENAME4];
 				NSString *filename = [ibTfName.text stringByDeletingPathExtension]; // 拡張子を除く
 				filename = [filename stringByAppendingFormat:@".%@", DBOX_EXTENSION]; // 拡張子を付ける
-				NSLog(@"SAVE: pathCsv=%@ --Upload--> filename=%@", pathCsv, filename);
-				[[self restClient] uploadFile:filename toPath:@"/" withParentRev:nil fromPath:pathCsv];
+				NSLog(@"SAVE: pathCsv=%@ --Upload--> filename=%@　　overWriteRev_=%@", pathCsv, filename, overWriteRev_);
+				// overWriteRev_=nil ならば連番付加追記
+				[[self restClient] uploadFile:filename toPath:@"/" withParentRev:overWriteRev_ fromPath:pathCsv];
 			}
 			break;
 			
@@ -462,14 +510,45 @@ replacementString:(NSString *)string
 			if (mDidSelectRowAtIndexPath && mDidSelectRowAtIndexPath.row < [mMetadatas count]) {
 				DBMetadata *dbm = [mMetadatas objectAtIndex:mDidSelectRowAtIndexPath.row];
 				if (dbm) {
-					[self alertIndicatorOn:NSLocalizedString(@"Dropbox Communicating", nil)];
-					NSString *pathTmp = [NSHomeDirectory() stringByAppendingPathComponent:@"tmp"];  // "tmp"フォルダは、iCloud同期除外される
-					NSString *pathCsv = [pathTmp stringByAppendingPathComponent:GD_CSVFILENAME4];
-					NSLog(@"LOAD: dbm.path=%@ --Download--> pathCsv=%@", dbm.path, pathCsv);
-					[[self restClient] loadFile:dbm.path intoPath:pathCsv]; // DownLoad開始 ---> delagate loadedFile:
+					if (buttonIndex==actionSheet.destructiveButtonIndex) { 
+						// DELETE!!!
+						deletePath_ = dbm.path;
+						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Dropbox Delete LastAns", nil)
+											  message:nil
+											  delegate:self	
+											  cancelButtonTitle:NSLocalizedString(@"Cancel", nil) 
+											  otherButtonTitles:@"DELETE", nil];
+						[alert show];
+						alert.tag = TAG_ALERT_Delete;
+					}
+					else {
+						// Download
+						[self alertIndicatorOn:NSLocalizedString(@"Dropbox Communicating", nil)];
+						NSString *pathTmp = [NSHomeDirectory() stringByAppendingPathComponent:@"tmp"];  // "tmp"フォルダは、iCloud同期除外される
+						NSString *pathCsv = [pathTmp stringByAppendingPathComponent:GD_CSVFILENAME4];
+						NSLog(@"LOAD: dbm.path=%@ --Download--> pathCsv=%@", dbm.path, pathCsv);
+						[[self restClient] loadFile:dbm.path intoPath:pathCsv]; // DownLoad開始 ---> delagate loadedFile:
+						// この後 <DBRestClientDelegate> Call
+					}
 				}
 			}
 			break;
+	}
+}
+
+
+#pragma mark - <UIAlertViewDelegate>
+// Called when a button is clicked. The view will be automatically dismissed after this call returns
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+	if (buttonIndex==alertView.cancelButtonIndex) return;
+	
+	if (alertView.tag==TAG_ALERT_Delete && deletePath_) 
+	{	// Delete
+		[self alertIndicatorOn:NSLocalizedString(@"Dropbox Communicating", nil)];
+		NSLog(@"DELETE: dbm.path=%@", deletePath_);
+		[[self restClient] deletePath: deletePath_];
+		// この後 <DBRestClientDelegate> Call
 	}
 }
 
