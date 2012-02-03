@@ -57,31 +57,32 @@
 							<reference key="NSNextResponder" ref="782732981"/>
 							<int key="NSvFlags">1316</int>
 							<object class="NSPSMatrix" key="NSFrameMatrix"/>
-							<string key="NSFrame">{{101, 5}, {199, 130}}</string>
+							<string key="NSFrame">{{101, 26}, {199, 72}}</string>
 							<reference key="NSSuperview" ref="782732981"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="1032706092"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
 							<int key="IBUIContentMode">7</int>
 							<bool key="IBUIUserInteractionEnabled">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							<string key="IBUIText">PackList</string>
+							<string key="IBUIText">モチメモ</string>
 							<object class="NSColor" key="IBUITextColor" id="193881541">
 								<int key="NSColorSpace">3</int>
 								<bytes key="NSWhite">MQA</bytes>
 							</object>
 							<nil key="IBUIHighlightedColor"/>
-							<int key="IBUIBaselineAdjustment">1</int>
+							<int key="IBUIBaselineAdjustment">0</int>
 							<float key="IBUIMinimumFontSize">10</float>
 							<int key="IBUITextAlignment">1</int>
 							<object class="IBUIFontDescription" key="IBUIFontDescription">
-								<string key="name">Zapfino</string>
-								<string key="family">Zapfino</string>
-								<int key="traits">1</int>
+								<string key="name">HiraKakuProN-W3</string>
+								<string key="family">Hiragino Kaku Gothic ProN</string>
+								<int key="traits">0</int>
 								<double key="pointSize">40</double>
 							</object>
 							<object class="NSFont" key="IBUIFont">
-								<string key="NSName">Zapfino</string>
+								<string key="NSName">HiraKakuProN-W3</string>
 								<double key="NSSize">40</double>
 								<int key="NSfFlags">16</int>
 							</object>
@@ -176,7 +177,7 @@
 							<string key="NSFrame">{{20, 85}, {102, 97}}</string>
 							<reference key="NSSuperview" ref="782732981"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView"/>
+							<reference key="NSNextKeyView" ref="364659609"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
 							<int key="IBUIContentMode">7</int>
@@ -200,6 +201,7 @@
 							<string key="NSFrame">{{20, 302}, {280, 114}}</string>
 							<reference key="NSSuperview" ref="782732981"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIAutoresizesSubviews">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>

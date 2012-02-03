@@ -26,16 +26,6 @@
 @implementation SettingTVC
 
 
-- (void)changeAdvertising
-{
-	if (appDelegate_.app_is_iPad) {
-		[appDelegate_ AdRefresh:appDelegate_.app_opt_Ad];
-		// 再描画　　Adスペースを変化させるため
-		[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS 
-															object:self userInfo:nil];
-	} //iPhoneは、E1viewController:viewWillAppear:を通ってAd再開される
-}
-
 /***随時同期はしない。閉じてから同期で十分
 #pragma mark - iCloud
 - (void)kvsValueChange:(NSNotification*)note 
@@ -100,7 +90,7 @@
 	BOOL bAd = [[NSUbiquitousKeyValueStore defaultStore] boolForKey:KV_OptAdvertising];
 	if (appDelegate_.app_opt_Ad != bAd) {
 		appDelegate_.app_opt_Ad = bAd;
-		[self changeAdvertising];
+		// viewWillDisappear:にて再描画する
 	}
 }
 
@@ -135,6 +125,13 @@
 	[super viewWillDisappear:animated];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[NSUbiquitousKeyValueStore defaultStore] synchronize];
+
+	if (appDelegate_.app_is_iPad) {
+		[appDelegate_ AdRefresh:appDelegate_.app_opt_Ad];
+		// 再描画　　重量表示やAdスペースを変化させるため
+		[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS 
+															object:self userInfo:nil];
+	} //iPhoneは、E1viewController:viewWillAppear:を通ってAd再開される
 }
 
 /*
@@ -382,7 +379,7 @@
 		case TAG_OptAdvertising:
 			[kvs setBool:[sender isOn] forKey:KV_OptAdvertising];
 			appDelegate_.app_opt_Ad = [sender isOn];
-			[self changeAdvertising];
+			// viewWillDisappear:にて再描画する
 			break;
 	}
 	//[kvs synchronize]; ＜＜＜viewWillDisappear:にて保存する。
