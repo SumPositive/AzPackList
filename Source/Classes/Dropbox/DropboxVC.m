@@ -8,7 +8,6 @@
 
 #import "Global.h"
 #import "DropboxVC.h"
-#import "FileCsv.h"
 
 #define TAG_ACTION_Save			109
 #define TAG_ACTION_Retrieve		118
@@ -39,10 +38,15 @@
 	[mAlert dismissWithClickedButtonIndex:mAlert.cancelButtonIndex animated:YES];
 }
 
-- (void)alertCommError
+- (void)alertCommError:(NSString*)errmsg
 {
+	NSString *msg = NSLocalizedString(@"Dropbox CommErrorMsg", nil);
+	if (errmsg) {
+		msg = [msg stringByAppendingString:@"\n\n(Detail)"];
+		msg = [msg stringByAppendingString:errmsg];
+	}
 	UIAlertView *alv = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Dropbox CommError", nil) 
-												   message:NSLocalizedString(@"Dropbox CommErrorMsg", nil) 
+												   message: msg
 												  delegate:nil cancelButtonTitle:nil 
 										 otherButtonTitles:NSLocalizedString(@"Roger", nil), nil];
 	[alv show];
@@ -125,6 +129,9 @@
         // Custom initialization
 		e1upload_ = e1upload;
 		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;  //   CGSizeMake(320, 416); //iPad-Popover
+		
+		fileJson_ = [[FileJson alloc] init];
+		assert(fileJson_);
     }
     return self;
 }
@@ -275,13 +282,13 @@
 
 - (void)restClient:(DBRestClient *)client loadMetadataFailedWithError:(NSError *)error 
 {	// メタデータ読み込み失敗
-    NSLog(@"Error loading metadata: %@", error);
+    NSLog(@"Error loading metadata: %@", [error description]);
 	//[mMetadatas release];
 	mMetadatas = nil;
 	[ibTableView reloadData];
 	//
 	[self alertIndicatorOff];
-	[self alertCommError];
+	[self alertCommError:[error description]];
 }
 
 
@@ -290,11 +297,18 @@
     NSLog(@"File loaded into path: %@", localPath);
 	// ダウンロード成功
 	// CSV読み込み   "HOME/tmp/<GD_CSVFILENAME4>"
-	NSString *zErr = [FileCsv zLoadPath:localPath]; // この間、待たされるのが問題になるかも！！
+	//NSString *zErr = [FileCsv zLoadPath:localPath]; // この間、待たされるのが問題になるかも！！
+	
+	E1 *e1 = [fileJson_ readingE1];	// localPath = [fileJson_ tmpPathFile] から読み込む
 	[self alertIndicatorOff];	// 進捗サインOFF
-	if (zErr) {
-		// CSV読み込み失敗
-		[self alertCommError];
+	if (e1==nil) {
+		// 読み込み失敗
+		NSString *errmsg = nil;
+		int iNo = 1;
+		for (NSString *msg in fileJson_.errorMsgs) {
+			errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
+		}
+		[self alertCommError: errmsg];
 	}
 	else {
 		// 成功アラート
@@ -314,9 +328,9 @@
 
 - (void)restClient:(DBRestClient*)client loadFileFailedWithError:(NSError*)error 
 {	// ファイル読み込み失敗
-    NSLog(@"There was an error loading the file - %@", error);
+    NSLog(@"There was an error loading the file - %@", [error description]);
 	[self alertIndicatorOff];
-	[self alertCommError];
+	[self alertCommError:[error description]];
 }
 
 - (void)restClient:(DBRestClient*)client uploadedFile:(NSString*)destPath
@@ -334,9 +348,9 @@
 
 - (void)restClient:(DBRestClient*)client uploadFileFailedWithError:(NSError*)error 
 {	// ファイル書き込み失敗
-    NSLog(@"File upload failed with error - %@", error);
+    NSLog(@"File upload failed with error - %@", [error description]);
 	[self alertIndicatorOff];
-	[self alertCommError];
+	[self alertCommError:[error description]];
 }
 
 - (void)restClient:(DBRestClient*)client deletedPath:(NSString *)path
@@ -483,7 +497,8 @@ replacementString:(NSString *)string
 			//if (Re1selected  &&  homeTmpPath_) {
 			if (e1upload_) {
 				[self alertIndicatorOn:NSLocalizedString(@"Dropbox Communicating", nil)];
-				// ファイルへ書き出す
+				
+		/*		// ファイルへ書き出す
 				NSString *zErr = [FileCsv zSave:e1upload_ toLocalFileName:GD_CSVFILENAME4]; // この間、待たされるのが問題になるかも！！
 				if (zErr) {
 					[self alertIndicatorOff];	// 進捗サインOFF
@@ -495,14 +510,28 @@ replacementString:(NSString *)string
 					//[alert release];
 					break;
 				}
-				// Upload開始
 				NSString *pathTmp = [NSHomeDirectory() stringByAppendingPathComponent:@"tmp"];  // "tmp"フォルダは、iCloud同期除外される
 				NSString *pathCsv = [pathTmp stringByAppendingPathComponent:GD_CSVFILENAME4];
+				*/
+				
+				if ([fileJson_ writingE1:e1upload_]==NO) {
+					[self alertIndicatorOff];	// 進捗サインOFF
+					// ERROR
+					NSString *errmsg = nil;
+					int iNo = 1;
+					for (NSString *msg in fileJson_.errorMsgs) {
+						errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
+					}
+					[self alertCommError: errmsg];
+					break;
+				}
+				// Upload開始
+				NSString *filePath = [fileJson_ tmpPathFile];
 				NSString *filename = [ibTfName.text stringByDeletingPathExtension]; // 拡張子を除く
 				filename = [filename stringByAppendingFormat:@".%@", DBOX_EXTENSION]; // 拡張子を付ける
-				NSLog(@"SAVE: pathCsv=%@ --Upload--> filename=%@　　overWriteRev_=%@", pathCsv, filename, overWriteRev_);
+				NSLog(@"SAVE: filePath=%@ --Upload--> filename=%@　　overWriteRev_=%@", filePath, filename, overWriteRev_);
 				// overWriteRev_=nil ならば連番付加追記
-				[[self restClient] uploadFile:filename toPath:@"/" withParentRev:overWriteRev_ fromPath:pathCsv];
+				[[self restClient] uploadFile:filename toPath:@"/" withParentRev:overWriteRev_ fromPath:filePath];
 			}
 			break;
 			
@@ -524,10 +553,11 @@ replacementString:(NSString *)string
 					else {
 						// Download
 						[self alertIndicatorOn:NSLocalizedString(@"Dropbox Communicating", nil)];
-						NSString *pathTmp = [NSHomeDirectory() stringByAppendingPathComponent:@"tmp"];  // "tmp"フォルダは、iCloud同期除外される
-						NSString *pathCsv = [pathTmp stringByAppendingPathComponent:GD_CSVFILENAME4];
-						NSLog(@"LOAD: dbm.path=%@ --Download--> pathCsv=%@", dbm.path, pathCsv);
-						[[self restClient] loadFile:dbm.path intoPath:pathCsv]; // DownLoad開始 ---> delagate loadedFile:
+						//NSString *pathTmp = [NSHomeDirectory() stringByAppendingPathComponent:@"tmp"];
+						//NSString *pathCsv = [pathTmp stringByAppendingPathComponent:GD_CSVFILENAME4];
+						NSString *filePath = [fileJson_ tmpPathFile];
+						NSLog(@"LOAD: dbm.path=%@ --Download--> filePath=%@", dbm.path, filePath);
+						[[self restClient] loadFile:dbm.path intoPath:filePath]; // DownLoad開始 ---> delagate loadedFile:
 						// この後 <DBRestClientDelegate> Call
 					}
 				}
