@@ -153,3 +153,32 @@ NSString *getMacAddress()
 }
 
 
+
+//******************************************************************************
+//***** Device側はデフォルトタイムゾーン時刻を使用。　通信(JSON)やGAE側はUTCを使用。
+//******************************************************************************
+// UTC協定世界時 文字列 "2010-12-31T00:00:00" を デフォルトタイムゾーンのNSDate型にする
+NSDate *dateFromUTC( NSString *zUTC )
+{
+	// 任意の日付をNSDate型に変換
+	NSDateFormatter *dfmt = [[NSDateFormatter alloc] init];
+	[dfmt setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]]; // 協定世界時(+0000)
+	[dfmt setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+	NSDate *dTZ = [dfmt dateFromString:zUTC];	
+	//[dfmt release];
+	return dTZ;
+}
+
+// デフォルトタイムゾーンのNSDate型 を UTC協定世界時 文字列 "2010-12-31T00:00:00" にする
+NSString *utcFromDate( NSDate *dTZ )
+{
+	NSDateFormatter *dfmt = [[NSDateFormatter alloc] init];
+	[dfmt setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]]; // 協定世界時(+0000)
+	[dfmt setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+	NSString *zUTC = [dfmt stringFromDate:dTZ];
+	//[dfmt release];
+	return zUTC; // autorelease
+}
+
+
+

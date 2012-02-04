@@ -75,6 +75,8 @@ UIColor *GcolorBlue(float percent);
 UIImage *GimageFromString(float Pfx, float Pfy, float PfSize, NSString* str);
 NSString *GstringFromNumber( NSNumber *num );
 NSString *getMacAddress();
+NSDate *dateFromUTC( NSString *zUTC );
+NSString *utcFromDate( NSDate *dTZ );
 
 
 

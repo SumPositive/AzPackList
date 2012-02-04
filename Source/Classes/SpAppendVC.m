@@ -466,11 +466,12 @@
 	
 	// planCsv
 	NSMutableString *zCsv = [NSMutableString new]; //こちら側でメモリ管理する
-	NSString *zCsvErr = [FileCsv zSave:Re1selected toMutableString:zCsv]; // E1 ⇒ CSV string
-	if (zCsvErr) {
+	FileCsv *fcsv = [[FileCsv alloc] init];
+	NSString *zErr = [fcsv zSave:Re1selected toMutableString:zCsv]; // E1 ⇒ CSV string
+	if (zErr) {
 		//[zCsv release];
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
-		return zCsvErr; // pool変数
+		return zErr; // pool変数
 	}
 	postCmd = [postCmd stringByAppendingString:@"&planCsv="];
 	postCmd = [postCmd stringByAppendingString:zCsv];

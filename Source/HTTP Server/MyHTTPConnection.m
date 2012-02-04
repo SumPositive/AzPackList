@@ -258,7 +258,8 @@
 		
 		// ダウンロード成功
 		// CSV読み込み
-		NSString *zErr = [FileCsv zLoad:GD_CSVFILENAME4]; // この間、待たされるのが問題になるかも！！
+		FileCsv *fcsv = [[[FileCsv alloc] init] autorelease];
+		NSString *zErr = [fcsv zLoadFromTmpFile:YES];
 		if (zErr) {
 			NSLog(@"FileCsv zLoad ERR: %@", zErr);
 			// CSV読み込み失敗

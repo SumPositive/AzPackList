@@ -39,7 +39,7 @@
 //- (void)storeReset;
 
 - (NSString *)applicationDocumentsDirectory;
-- (void) managedObjectContextReset;
+//- (void) managedObjectContextReset;
 
 - (void)AdRefresh;
 - (void)AdRefresh:(BOOL)bCanVisible;

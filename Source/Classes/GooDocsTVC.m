@@ -24,7 +24,7 @@
 	- (void)refreshView;
 	- (void)fetchDocList;
 	- (void)cancelDocListFetchClicked:(id)sender;
-	- (void)uploadFileAtPath:(NSString *)path;
+	- (void)uploadFile:(NSString *)pathLocal;
 	- (void)saveDocumentEntry:(GDataEntryBase *)docEntry toPath:(NSString *)path;
 	- (void)saveDocEntry:(GDataEntryBase *)entry toPath:(NSString *)savePath exportFormat:(NSString *)exportFormat authService:(GDataServiceGoogle *)service;
 	- (GDataServiceGoogleDocs *)docsService;
@@ -564,7 +564,8 @@
 	else {
 		// ダウンロード成功
 		// CSV読み込み
-		NSString *zErr = [FileCsv zLoad:GD_CSVFILENAME4]; // この間、待たされるのが問題になるかも！！
+		FileCsv *fcsv = [[FileCsv alloc] init];
+		NSString *zErr = [fcsv zLoadFromTmpFile:YES];
 		if (zErr) {
 			// CSV読み込み失敗
 			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Fail", @"ダウンロード失敗")
@@ -573,7 +574,6 @@
 												  cancelButtonTitle:nil 
 												  otherButtonTitles:@"OK", nil];
 			[alert show];
-			//[alert release];
 		}
 		else {
 			// 連続追加に備えてインクリメントする
@@ -649,11 +649,11 @@
 
 #pragma mark UPLOAD
 
-- (void)uploadFile {
-    
-	NSString *dir1 = NSHomeDirectory();
-	NSString *dir2 = [dir1 stringByAppendingPathComponent:@"tmp"];
-	NSString *pathLocal = [dir2 stringByAppendingPathComponent:GD_CSVFILENAME4]; // ローカルファイル名
+- (void)uploadFile:(NSString*)pathLocal
+{
+	//NSString *dir1 = NSHomeDirectory();
+	//NSString *dir2 = [dir1 stringByAppendingPathComponent:@"tmp"];
+	//NSString *pathLocal = [dir2 stringByAppendingPathComponent:GD_CSVFILENAME4]; // ローカルファイル名
 	// ローカルファイル名も .csv を付けないこと。さもなくばExcelタイプで登録されてしまい、ダウンロードしても読めなくなる。
 	@try {
 		NSString *errorMsg = nil;
@@ -1152,7 +1152,8 @@
 				}
 
 				// Upload直前にファイルへ書き出す
-				NSString *zErr = [FileCsv zSave:Re1selected toLocalFileName:GD_CSVFILENAME4]; // この間、待たされるのが問題になるかも！！
+				FileCsv *fcsv = [[FileCsv alloc] init];
+				NSString *zErr = [fcsv zSave:Re1selected toTmpFile:YES];
 				if (zErr) {
 					// 進捗サインOFF
 					if (MactionProgress) [MactionProgress dismissWithClickedButtonIndex:0 animated:YES];
@@ -1166,10 +1167,10 @@
 					break;
 				}
 				// Upload開始
-				//[self uploadFile];
-				[self performSelectorOnMainThread:@selector(uploadFile)
+				[self uploadFile:fcsv.tmpPathFile];
+				/*[self performSelectorOnMainThread:@selector(uploadFile)
 									   withObject:nil
-									waitUntilDone:NO];
+									waitUntilDone:NO];*/
 			}
 			break;
 

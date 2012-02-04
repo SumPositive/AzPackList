@@ -244,7 +244,8 @@
 	[picker setSubject:zSubj];  
 
 	// CSV SAVE
-	NSString *zErr = [FileCsv zSave:e1selected_ toLocalFileName:GD_CSVFILENAME4]; // この間、待たされるのが問題になるかも！！
+	FileCsv *fcsv = [[FileCsv alloc] init];
+	NSString *zErr = [fcsv zSave:e1selected_ toTmpFile:YES];
 	if (zErr) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
 		UIAlertView *alert = [[UIAlertView alloc] 
@@ -252,12 +253,12 @@
 							  message:zErr
 							  delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
 		[alert show];
-		//[alert release];
 		return;
 	}
-	NSString *home_dir = NSHomeDirectory();
-	NSString *doc_dir = [home_dir stringByAppendingPathComponent:@"tmp"];
-	NSString *csvPath = [doc_dir stringByAppendingPathComponent:GD_CSVFILENAME4];
+	//NSString *home_dir = NSHomeDirectory();
+	//NSString *doc_dir = [home_dir stringByAppendingPathComponent:@"tmp"];
+	//NSString *csvPath = [doc_dir stringByAppendingPathComponent:GD_CSVFILENAME4];
+	NSString *csvPath = fcsv.tmpPathFile;
 	// Body: 添付ファイル
 	//NSString* fileName = @"attachement.packlist";
 	NSString* fileName = [NSString stringWithFormat:@"%@.%@", e1selected_.name, GD_EXTENSION];
@@ -426,7 +427,8 @@
 	[alertHttpServer_ show];
 	//[MalertHttpServer release];
 	// CSV SAVE
-	NSString *zErr = [FileCsv zSave:e1selected_ toLocalFileName:GD_CSVFILENAME4]; // この間、待たされるのが問題になるかも！！
+	FileCsv *fcsv = [[FileCsv alloc] init];
+	NSString *zErr = [fcsv zSave:e1selected_ toTmpFile:YES];
 	if (zErr) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
 		UIAlertView *alert = [[UIAlertView alloc] 
@@ -434,11 +436,12 @@
 							  message:zErr
 							  delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
 		[alert show];
-		//[alert release];
 		return;
 	}
 	// if (httpServer) return; <<< didSelectRowAtIndexPath:直後に配置してダブルクリック回避している。
-	NSString *root = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
+	//NSString *root = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
+	NSString *root = NSTemporaryDirectory();
+	
 	httpServer_ = [HTTPServer new];
 	[httpServer_ setType:@"_http._tcp."];
 	[httpServer_ setConnectionClass:[MyHTTPConnection class]];
@@ -469,7 +472,8 @@
 	alert.title = NSLocalizedString(@"Please Wait",nil);
 	[alert show];
 	//---------------------------------------CSV SAVE Start.
-	NSString *zErr = [FileCsv zSave:e1selected_ toLocalFileName:nil]; // nil:PasteBoard Copy mode.
+	FileCsv *fcsv = [[FileCsv alloc] init];
+	NSString *zErr = [fcsv zSave:e1selected_ toTmpFile:NO]; //NO= to Pasteboard
 	//---------------------------------------CSV SAVE End.
 	[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
 	//[alert release];

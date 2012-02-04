@@ -434,7 +434,8 @@
 	alert.title = NSLocalizedString(@"Please Wait",nil);
 	[alert show];
 	//---------------------------------------CSV LOAD Start.
-	NSString *zErr = [FileCsv zLoad:nil];  //==nil:PasteBoardから取り込む
+	FileCsv *fcsv = [[FileCsv alloc] init];
+	NSString *zErr = [fcsv zLoadFromTmpFile:NO];  //NO:PasteBoardから取り込む
 	//---------------------------------------CSV LOAD End.
 	[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
 	//[alert release];

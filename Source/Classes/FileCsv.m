@@ -14,9 +14,9 @@
 
 
 @implementation FileCsv
+@synthesize tmpPathFile = tmpPathFile_;
+@synthesize errorMsgs = errorMsgs_;
 
-// CSV形式　　["]で囲まれた文字列に限り、その中に[,]と[改行]を使用可能。
-//           書き込み(SAVE)時に文字列中の["]は[']に置き換えられる。
 
 // string ⇒ csv : 文字列中にあるCSV予約文字を取り除くか置き換えてCSV保存できるようにする
 static NSString *strToCsv( NSString *inStr ) {
@@ -36,21 +36,61 @@ static NSString *csvToStr( NSString *inCsv ) {
 }
 
 
-+ (NSString *)zSave:(E1 *)Pe1 
-	toLocalFileName:(NSString *)PzFname //==nil:PasteBoardへ書き出す
+- (void)errorMsg:(NSString*)msg
+{
+	if (errorMsgs_==nil) {
+		errorMsgs_ = [NSMutableArray new];
+	}
+	[errorMsgs_ addObject:msg];
+}
+
+// CSV形式　　["]で囲まれた文字列に限り、その中に[,]と[改行]を使用可能。
+//           書き込み(SAVE)時に文字列中の["]は[']に置き換えられる。
+
+
+#pragma mark - Lifecycle
+
+- (id)init
+{
+	self = [super init];
+    if (self) {
+        // Custom initialization
+		// 一時ファイルパス
+		// <Application_Home>/tmp/ 　＜＜iCloudバックアップされない、iOSから消される場合あり
+		NSString *tempDir = NSTemporaryDirectory();
+		tmpPathFile_ = [tempDir stringByAppendingPathComponent:@"PackListTmp.azp"];
+		NSLog(@"FileJson: init: tempPath_ = '%@'", tmpPathFile_);
+		if (tmpPathFile_==nil) {
+			[self errorMsg:@"NG tmp path"];
+		}
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+	//if (tmpPathFile_) {	// 一時ファイルを削除する
+	//	[[NSFileManager defaultManager] removeItemAtPath:tmpPathFile_ error:nil];		
+	//}
+}
+
+
+#pragma mark - Saveing
+
+- (NSString *)zSave:(E1 *)Pe1  toTmpFile:(BOOL)bTmpFile  //NO:PasteBoardへ書き出す
 {
 	@autoreleasepool {
 		NSMutableString *zCsv = [NSMutableString new];
-		NSString *err = [FileCsv zSave:Pe1 toMutableString:zCsv];
+		NSString *err = [self zSave:Pe1 toMutableString:zCsv];
 		if (err == nil) {
-			if (PzFname) { // ファイル出力
-				NSString *home_dir = NSHomeDirectory();
-				NSString *doc_dir = [home_dir stringByAppendingPathComponent:@"tmp"];
-				NSString *csvPath = [doc_dir stringByAppendingPathComponent:PzFname]; //GD_CSVFILENAME or GD_CSVFILENAME4
+			if (bTmpFile && tmpPathFile_) { // ファイル出力
+				//NSString *home_dir = NSHomeDirectory();
+				//NSString *doc_dir = [home_dir stringByAppendingPathComponent:@"tmp"];
+				//NSString *csvPath = [doc_dir stringByAppendingPathComponent:PzFname]; //GD_CSVFILENAME or GD_CSVFILENAME4
 				// UTF-8 出力ファイルをCREATE
-				[[NSFileManager defaultManager] createFileAtPath:csvPath contents:nil attributes:nil];
+				[[NSFileManager defaultManager] createFileAtPath:tmpPathFile_ contents:nil attributes:nil];
 				// UTF-8 出力ファイルをOPEN
-				NSFileHandle *output = [NSFileHandle fileHandleForWritingAtPath:csvPath];
+				NSFileHandle *output = [NSFileHandle fileHandleForWritingAtPath:tmpPathFile_];
 				if (output) {
 					@try {
 						// UTF8 エンコーディングしてファイルへ書き出す
@@ -76,8 +116,8 @@ static NSString *csvToStr( NSString *inCsv ) {
 	}
 }
 
-+ (NSString *)zSave:(E1 *)Pe1 
-	toMutableString:(NSMutableString *)PzCsv
+// Pe1 から PzCsv 生成する
+- (NSString *)zSave:(E1 *)Pe1 toMutableString:(NSMutableString *)PzCsv
 {
 	@autoreleasepool {
 		NSParameterAssert(PzCsv);
@@ -168,6 +208,8 @@ static NSString *csvToStr( NSString *inCsv ) {
 	}
 }
 
+
+#pragma mark - Loading
 
 static unsigned long csvLineOffset = 0;
 // zBoard の位置 csvLineOffset から1行分をCSV区切りで分割して aStrings にセットする。
@@ -271,7 +313,8 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 	return lSplitCount;
 }
 
-+ (NSString *)zLoadURL:(NSURL*)Url
+// Mail添付ファイルを読み込むため
+- (NSString *)zLoadURL:(NSURL*)Url
 {
 	NSError *err = nil;
 	//NSString *zCsv = [[NSString alloc] initWithContentsOfURL:Url encoding:NSUTF8StringEncoding error:&err];
@@ -282,95 +325,88 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 	//NSLog(@"zCsv=%@", zCsv);
 	E1 *e1add = nil;
 	if (zCsv) {
-		e1add = [FileCsv zLoad:zCsv
-					  withSave:YES
-						 error:&err];
+		e1add = [self zLoad:zCsv  withSave:YES];
 	}
-	//[zCsv release];
+
 	if (e1add==nil) return @"No Data";
 	return [err localizedDescription];
 }
 
+/*
 // Pe1 を生成し、Pe1.row をセットしてから呼び出すこと。
 // <HOME/tmp/PzFname>
-+ (NSString *)zLoad:(NSString *)PzFname  //==nil:PasteBoardから読み込む
+- (NSString *)zLoad:(NSString *)PzFname  //==nil:PasteBoardから読み込む
 {
-	NSString *doc_dir = [NSHomeDirectory() stringByAppendingPathComponent:@"tmp"]; // @"Documents"];
-	NSString *zFullPath = [doc_dir stringByAppendingPathComponent:PzFname];  //GD_CSVFILENAME or GD_CSVFILENAME4	
-	return [FileCsv zLoadPath:zFullPath];
-}
+	//NSString *doc_dir = [NSHomeDirectory() stringByAppendingPathComponent:@"tmp"]; // @"Documents"];
+	//NSString *zFullPath = [doc_dir stringByAppendingPathComponent:PzFname];  //GD_CSVFILENAME or GD_CSVFILENAME4	
+	return [self zLoadPath:tmpPathFile_];
+}*/
 
-+ (NSString *)zLoadPath:(NSString *)PzFillPath  //==nil:PasteBoardから読み込む
+//- (NSString *)zLoadPath:(NSString *)PzFillPath  //==nil:PasteBoardから読み込む
+- (NSString *)zLoadFromTmpFile:(BOOL)bTmpFile  //NO:PasteBoardから読み込む
 {
-	@autoreleasepool {
-		NSString *zCsv = nil;
-		
-		if (PzFillPath) {
-			// input OPEN
-			NSFileHandle *csvHandle = [NSFileHandle fileHandleForReadingAtPath:PzFillPath];
-			// バイナリファイル対策：先頭で強制判定
-			if (csvHandle) {
-				@try {
-					[csvHandle seekToFileOffset:0];
-					NSData *data = [csvHandle readDataOfLength:[GD_CSV_HEADER_ID length]*3];
-					if ([data length] != [GD_CSV_HEADER_ID length]*3) {
-						[csvHandle closeFile];
-						// File size too small.
-						//[methodPool release];
-						return NSLocalizedString(@"File error",nil);
-					}
-					NSString *csvStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-					if (![csvStr hasPrefix:GD_CSV_HEADER_ID]) { 
-						// 先頭部分が一致しない
-						//[csvStr release];
-						[csvHandle closeFile];
-						//[methodPool release];
-						return [NSString stringWithFormat:NSLocalizedString(@"This is not a %@ file",nil), GD_CSVFILENAME4];
-					}
-					//[csvStr release];
-					// 先頭へ戻す
-					[csvHandle seekToFileOffset:0];
-					data = [csvHandle readDataToEndOfFile];  // ファイルの終わりまでデータを読んで返す
-					zCsv = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-				}
-				@catch(id error) {
+	NSString *zCsv = nil;
+	
+	if (bTmpFile && tmpPathFile_) {
+		// input OPEN
+		NSFileHandle *csvHandle = [NSFileHandle fileHandleForReadingAtPath:tmpPathFile_];
+		// バイナリファイル対策：先頭で強制判定
+		if (csvHandle) {
+			@try {
+				[csvHandle seekToFileOffset:0];
+				NSData *data = [csvHandle readDataOfLength:[GD_CSV_HEADER_ID length]*3];
+				if ([data length] != [GD_CSV_HEADER_ID length]*3) {
+					[csvHandle closeFile];
+					// File size too small.
 					//[methodPool release];
 					return NSLocalizedString(@"File error",nil);
 				}
-				@finally {
+				NSString *csvStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+				if (![csvStr hasPrefix:GD_CSV_HEADER_ID]) { 
+					// 先頭部分が一致しない
+					//[csvStr release];
 					[csvHandle closeFile];
+					//[methodPool release];
+					return [NSString stringWithFormat:NSLocalizedString(@"This is not a %@ file",nil), GD_CSVFILENAME4];
 				}
-			} else {
-				//[methodPool release];
-				return NSLocalizedString(@"No File",nil);
+				//[csvStr release];
+				// 先頭へ戻す
+				[csvHandle seekToFileOffset:0];
+				data = [csvHandle readDataToEndOfFile];  // ファイルの終わりまでデータを読んで返す
+				zCsv = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 			}
-		}
-		else if (5 < [[UIPasteboard generalPasteboard].string length]) {
-			// PasteBoard からペーストする
-			zCsv = [[NSString alloc] initWithString:[UIPasteboard generalPasteboard].string];  // 共有領域
-		}
-		else {
+			@catch(id error) {
+				//[methodPool release];
+				return NSLocalizedString(@"File error",nil);
+			}
+			@finally {
+				[csvHandle closeFile];
+			}
+		} else {
 			//[methodPool release];
-			return NSLocalizedString(@"Pasteboard is empty",nil);
+			return NSLocalizedString(@"No File",nil);
 		}
-		
-		//NSString *err = @"No Data";
-		NSError *err = nil;
-		E1 *e1add = nil;
-		if (zCsv) {
-			e1add = [FileCsv zLoad:zCsv
-						  withSave:YES
-							 error:&err];
-		}
-		//[zCsv release];
-		if (e1add==nil) return @"No Data";
-		return [err localizedDescription];
 	}
+	else if (5 < [[UIPasteboard generalPasteboard].string length]) {
+		// PasteBoard からペーストする
+		zCsv = [[NSString alloc] initWithString:[UIPasteboard generalPasteboard].string];  // 共有領域
+	}
+	else {
+		//[methodPool release];
+		return NSLocalizedString(@"Pasteboard is empty",nil);
+	}
+	
+	//NSString *err = @"No Data";
+	E1 *e1add = nil;
+	if (zCsv) {
+		e1add = [self zLoad:zCsv   withSave:YES];
+	}
+	if (e1add==nil) return @"No Data";
+	return nil;
 }
 
-+ (E1 *)zLoad:(NSString *)PzCsv
-	 withSave:(BOOL)PbSave		// NO=共有プラン詳細表示時、SAVEせずにRollBackするために使用。
-		error:(NSError **)Perror;
+// PzCsv から E1 生成する
+- (E1 *)zLoad:(NSString *)PzCsv  withSave:(BOOL)PbSave // NO=共有プラン詳細表示時、SAVEせずにRollBackするために使用。
 {
 	@autoreleasepool {
 		NSManagedObjectContext *moc = [EntityRelation getMoc];
@@ -535,7 +571,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 				}
 			} //while(1)
 			
-			if (*Perror==nil && e1node) {
+			if (e1node) {
 				for (e2node in e1node.childs) {
 					// E2 sum属性　＜高速化＞ 親sum保持させる
 					[e2node setValue:[e2node valueForKeyPath:@"childs.@sum.noGray"] forKey:@"sumNoGray"];
@@ -555,19 +591,13 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 					NSError *err = nil;
 					if (![moc save:&err]) {
 						// 保存失敗
+						[self errorMsg:@"Moc save error"];
 						if (e1node) {
 							[moc rollback];
 							//rollbackで十分//[moc deleteObject:e1node]; // insertNewObjectForEntityForNameしたEntityを削除する
 							e1node = nil;
 						}
-						AzLOG(@"Unresolved error %@, %@", err, [err userInfo]);
-						//if (!(*PpzErr)) *PpzErr = NSLocalizedString(@"CoreData failed to save.", @"CoreData 保存失費");
-						if (!(*Perror)) {
-							NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:
-												 NSLocalizedString(@"CoreData failed to save.",nil), @"NSLocalizedDescriptionKey", nil];
-							*Perror = [NSError errorWithDomain:NSCocoaErrorDomain code:1000 userInfo:dic];
-							//[dic release];
-						}
+						NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
 					}
 					else {
 						// 保存成功
@@ -576,53 +606,29 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 			}
 			else {
 				// Endが無い ＆ [Plan]も無い
+				[self errorMsg:@"No End"];
 				if (e1node) {
 					[moc rollback];
 					//rollbackで十分//[moc deleteObject:e1node]; // insertNewObjectForEntityForNameしたEntityを削除する
 					e1node = nil;
 				}
-				//if (!(*PpzErr)) *PpzErr = NSLocalizedString(@"No file content.", @"CSV内容なし");
-				if (!(*Perror)) {
-					NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:
-										 NSLocalizedString(@"No file content.",nil), @"NSLocalizedDescriptionKey", nil];
-					*Perror = [NSError errorWithDomain:NSCocoaErrorDomain code:1000 userInfo:dic];
-					//[dic release];
-				}
 			}
 		} //@try
 		@catch (NSException *errEx) {
+			NSString *msg = [NSString stringWithFormat:@"zLoad: NSException: %@: %@", [errEx name], [errEx reason]];
+			[self errorMsg:msg];
 			if (e1node) {
 				[moc rollback];
 				//rollbackで十分//[moc deleteObject:e1node]; // insertNewObjectForEntityForNameしたEntityを削除する
 				e1node = nil;
-			}
-			if (!(*Perror)) {
-				//*PpzErr = NSLocalizedString(@"File read error",nil);
-				NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:
-									 NSLocalizedString(@"File read error",nil), @"NSLocalizedDescriptionKey", nil];
-				*Perror = [NSError errorWithDomain:NSCocoaErrorDomain code:1000 userInfo:dic];
-				//[dic release];
-			}
-			NSString *name = [errEx name];
-			AzLOG(@"◆ %@ : %@\n", name, [errEx reason]);
-			if ([name isEqualToString:NSRangeException]) {
-				AzLOG(@"Exception was caught successfully.\n");
-			} else {
-				[errEx raise];
 			}
 		}
 		@catch (NSString *errMsg) {
+			[self errorMsg:errMsg];
 			if (e1node) {
 				[moc rollback];
 				//rollbackで十分//[moc deleteObject:e1node]; // insertNewObjectForEntityForNameしたEntityを削除する
 				e1node = nil;
-			}
-			//*PpzErr = [NSString stringWithFormat:@"FileCsv (%ld) %@", iErrLine, errMsg];
-			if (!(*Perror)) {
-				NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:
-									 [NSString stringWithFormat:@"FileCsv (%ld) %@", iErrLine, errMsg], @"NSLocalizedDescriptionKey", nil];
-				*Perror = [NSError errorWithDomain:NSCocoaErrorDomain code:1000 userInfo:dic];
-				//[dic release];
 			}
 		}
 		//@finally {

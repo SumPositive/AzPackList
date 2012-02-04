@@ -64,7 +64,7 @@
 
 #pragma mark - Application lifecycle
 
-static BOOL cleanUbiquitousFolder__ = YES;
+//static BOOL cleanUbiquitousFolder__ = YES;
 
 //[1.1]メール添付ファイル"*.packlist" をタッチしてモチメモを選択すると、launchOptions にファイルの URL (file://…というスキーマ) で渡される。
 //- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -124,7 +124,7 @@ static BOOL cleanUbiquitousFolder__ = YES;
 	app_is_iPad_ = [[[UIDevice currentDevice] model] hasPrefix:@"iPad"];	// iPad
 	NSLog(@"app_is_iPad_=%d,  app_is_Ad_=%d,  app_pid_AdOff_=%d", app_is_iPad_, app_opt_Ad_, app_pid_AdOff_);
 	
-	// iCloud完全クリアする　＜＜＜同期矛盾が生じたときや構造変更時に使用
+/*	// iCloud完全クリアする　＜＜＜同期矛盾が生じたときや構造変更時に使用
 	//[[NSFileManager defaultManager] removeItemAtURL:cloudURL error:nil];
 	if (cleanUbiquitousFolder__) {
 		cleanUbiquitousFolder__ = NO;
@@ -137,7 +137,7 @@ static BOOL cleanUbiquitousFolder__ = YES;
 			NSLog(@"Removed %@", file);
 		}
 		//return;
-	}
+	}*/
 	
 	
 	//-------------------------------------------------
@@ -221,7 +221,8 @@ static BOOL cleanUbiquitousFolder__ = YES;
 			[alert show];
 			// 一時CSVファイルから取り込んで追加する
 			//---------------------------------------CSV LOAD Start.
-			NSString *zErr = [FileCsv zLoadURL:url];
+			FileCsv *fcsv = [[FileCsv alloc] init];
+			NSString *zErr = [fcsv zLoadURL:url];
 			//---------------------------------------CSV LOAD End.
 			[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
 			//[alert release];
@@ -432,8 +433,7 @@ static BOOL cleanUbiquitousFolder__ = YES;
 	
 	app_enable_iCloud_ = NO;
 	
-	//if (app_pid_AdOff_) {
-	if (IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0")) {
+	if (DEBUG==1 && IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0")) {
 		 // do this asynchronously since if this is the first time this particular device is syncing with preexisting
 		 // iCloud content it may take a long long time to download
 		 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -519,8 +519,7 @@ static BOOL cleanUbiquitousFolder__ = YES;
 	NSManagedObjectContext* moc = nil;
 	
     if (coordinator != nil) {
-		//if (app_pid_AdOff_) {
-		if (IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0")) {
+		if (DEBUG==1 && IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0")) {
 			moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
 			//moc = [[NSManagedObjectContext alloc] init];
 			
@@ -557,14 +556,14 @@ static BOOL cleanUbiquitousFolder__ = YES;
 {
     [moc_ mergeChangesFromContextDidSaveNotification:notification];
 }
-
+/*
 - (void) managedObjectContextReset 
 {	// iCloud OFF--->ON したときのため。
 	moc_ = nil;
 	persistentStoreCoordinator_ = nil;
 	// 再生成
 	[EntityRelation setMoc:[self managedObjectContext]];
-}
+}*/
 
 #pragma mark - Application's documents directory
 

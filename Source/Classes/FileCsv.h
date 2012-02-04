@@ -10,25 +10,19 @@
 
 @class E1;
 
-@interface FileCsv : NSObject {
-	//--------------------------retain
-	//--------------------------assign
-}
+@interface FileCsv : NSObject 
 
-// クラスメソッド（グローバル関数）
-+ (NSString *)zSave:(E1 *)Pe1 
-	toLocalFileName:(NSString *)PzFname;
+@property (nonatomic, strong, readonly) NSString					*tmpPathFile;
+@property (nonatomic, strong, readonly) NSMutableArray		*errorMsgs;
 
-+ (NSString *)zSave:(E1 *)Pe1
-	toMutableString:(NSMutableString *)PzCsv;
+- (id)init;
 
+- (NSString *)zSave:(E1 *)Pe1  toTmpFile:(BOOL)bTmpFile;  //NO:PasteBoardへ書き出す
+- (NSString *)zSave:(E1 *)Pe1 toMutableString:(NSMutableString *)PzCsv;
 
-+ (NSString *)zLoad:(NSString *)PzFname;
-+ (NSString *)zLoadURL:(NSURL*)Url;
-+ (NSString *)zLoadPath:(NSString *)PzFillPath;
+- (NSString *)zLoadURL:(NSURL*)Url;
+- (NSString *)zLoadFromTmpFile:(BOOL)bTmpFile;  //NO:PasteBoardから読み込む
+- (E1 *)zLoad:(NSString *)PzCsv  withSave:(BOOL)PbSave;
 
-+ (E1 *)zLoad:(NSString *)PzCsv
-	 withSave:(BOOL)PbSave
-		error:(NSError **)err;
 
 @end

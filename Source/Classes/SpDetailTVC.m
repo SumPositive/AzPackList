@@ -231,16 +231,15 @@
 					NSDictionary *dic = [jsonArray objectAtIndex:0];
 					NSString *planCsv = [dic objectForKey:@"planCsv"];
 					//---------------------------------------CSV LOAD Start.
-					NSError *err = nil;
-					Re1add = [FileCsv zLoad:planCsv
-								   withSave:NO	// NO = Moc-SAVE しない！ ゆえに、Re1add は rollback だけで取り消し可能。
-									  error:&err];	// 常に最終行に追加するようになった。
+					FileCsv *fcsv = [[FileCsv alloc] init];
+					Re1add = [fcsv zLoad:planCsv   withSave:NO];	// NO = Moc-SAVE しない！ ゆえに、Re1add は rollback だけで取り消し可能。
 					if (Re1add) {
 						[self.tableView reloadData];
 					} 
 					else {
+						NSString *msg = [NSString stringWithFormat:@"SpDetail: FileCsv zLoad: %@", fcsv.errorMsgs];
 						alertMsgBox( NSLocalizedString(@"Download Err",nil), 
-									[err localizedDescription],
+									msg,
 									NSLocalizedString(@"Roger",nil) );
 						// 前Viewへ戻す
 					}
