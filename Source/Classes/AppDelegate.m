@@ -84,6 +84,7 @@
 	NSDictionary *azOptDef = [NSDictionary dictionaryWithObjectsAndKeys: // コンビニエンスコンストラクタにつきrelease不要
 							  @"YES",	UD_OptShouldAutorotate,		// 回転
 							  @"NO",	UD_OptPasswordSave,
+							  @"NO",	UD_OptCrypt,
 							  nil];
 	[userDefaults registerDefaults:azOptDef];	// 未定義のKeyのみ更新される
 	[userDefaults synchronize]; // plistへ書き出す
@@ -100,6 +101,7 @@
 	if ([kvs objectForKey: KV_OptCheckingAtEditMode]==nil)	[kvs setBool:NO  forKey: KV_OptCheckingAtEditMode];
 	if ([kvs objectForKey: KV_OptSearchItemsNote]==nil)		[kvs setBool:YES forKey: KV_OptSearchItemsNote];
 	if ([kvs objectForKey: KV_OptAdvertising]==nil)					[kvs setBool:YES forKey: KV_OptAdvertising];
+	
 	// AZStore PID  ＜＜productIdentifier をそのままKEYにする
 	if ([kvs objectForKey: SK_PID_AdOff]==nil)							[kvs setBool:NO  forKey: SK_PID_AdOff];
 	[kvs synchronize]; // 最新同期
@@ -219,39 +221,49 @@
 			UIAlertView *alert = [[UIAlertView alloc] init];
 			alert.title = NSLocalizedString(@"Please Wait",nil);
 			[alert show];
-			// 一時CSVファイルから取り込んで追加する
-			//---------------------------------------CSV LOAD Start.
-			FileCsv *fcsv = [[FileCsv alloc] init];
-			NSString *zErr = [fcsv zLoadURL:url];
-			//---------------------------------------CSV LOAD End.
-			[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
-			//[alert release];
-			if (zErr) {
-				alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Fail",nil)  //ダウンロード失敗
-												   message:zErr
-												  delegate:nil 
-										 cancelButtonTitle:nil 
-										 otherButtonTitles:@"OK", nil];
-			} else {
-				alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Compleat!",nil)  //ダウンロード成功
-												   message:NSLocalizedString(@"Added Plan",nil)  //プランを追加しました
-												  delegate:nil 
-										 cancelButtonTitle:nil 
-										 otherButtonTitles:@"OK", nil];
-			}
-			[alert show];
-			//[alert release];
-			// 再表示
-			if (app_is_iPad_) {
-				UIViewController *vc = [mainSVC_.viewControllers  objectAtIndex:1]; //[1]Right
-				if ([vc respondsToSelector:@selector(viewWillAppear:)]) {
-					[vc viewWillAppear:YES];
-				}
-			} else {
-				if ([mainNC_.visibleViewController respondsToSelector:@selector(viewWillAppear:)]) {
-					[mainNC_.visibleViewController viewWillAppear:YES];
-				}
-			}
+			
+			dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+			dispatch_async(queue, ^{
+				// 一時CSVファイルから取り込んで追加する
+				FileCsv *fcsv = [[FileCsv alloc] init];
+				BOOL bCsv = [fcsv zLoadURL:url];
+				
+				dispatch_async(dispatch_get_main_queue(), ^{
+					[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
+					if (bCsv) {
+						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Compleat!",nil)  //ダウンロード成功
+														   message:NSLocalizedString(@"Added Plan",nil)  //プランを追加しました
+														  delegate:nil 
+												 cancelButtonTitle:nil 
+												 otherButtonTitles:@"OK", nil];
+						[alert show];
+					} 
+					else {
+						NSString *errmsg = nil;
+						int iNo = 1;
+						for (NSString *msg in fcsv.errorMsgs) {
+							errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
+						}
+						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Fail",nil)  //ダウンロード失敗
+														   message:errmsg
+														  delegate:nil 
+												 cancelButtonTitle:nil 
+												 otherButtonTitles:@"OK", nil];
+						[alert show];
+					}
+					// 再表示
+					if (app_is_iPad_) {
+						UIViewController *vc = [mainSVC_.viewControllers  objectAtIndex:1]; //[1]Right
+						if ([vc respondsToSelector:@selector(viewWillAppear:)]) {
+							[vc viewWillAppear:YES];
+						}
+					} else {
+						if ([mainNC_.visibleViewController respondsToSelector:@selector(viewWillAppear:)]) {
+							[mainNC_.visibleViewController viewWillAppear:YES];
+						}
+					}
+				});
+			});
 			return YES;
 		}
 		else {

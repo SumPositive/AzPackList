@@ -11,7 +11,7 @@
 #import <DropboxSDK/DropboxSDK.h>
 #import <DropboxSDK/JSON.h>
 #import "Elements.h"
-#import "FileJson.h"
+//#import "FileJson.h"
 
 #define DBOX_APPKEY			@"jngoip8t4z187ot"	// PackList
 #define DBOX_SECRET			@"l6rho4qt0jpiarq"
@@ -37,7 +37,7 @@
 	NSString							*overWriteRev_;
 	NSString							*deletePath_;
 	
-	FileJson							*fileJson_;
+	//FileJson							*fileJson_;
 }
 
 //@property (nonatomic, assign) id				delegate;

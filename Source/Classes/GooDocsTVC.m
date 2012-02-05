@@ -559,39 +559,47 @@
 											  cancelButtonTitle:nil 
 											  otherButtonTitles:@"OK", nil];
 		[alert show];
-		//[alert release];
 	}
 	else {
 		// ダウンロード成功
-		// CSV読み込み
-		FileCsv *fcsv = [[FileCsv alloc] init];
-		NSString *zErr = [fcsv zLoadFromTmpFile:YES];
-		if (zErr) {
-			// CSV読み込み失敗
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Fail", @"ダウンロード失敗")
-															message:zErr
-														   delegate:nil 
-												  cancelButtonTitle:nil 
-												  otherButtonTitles:@"OK", nil];
-			[alert show];
-		}
-		else {
-			// 連続追加に備えてインクリメントする
-			PiSelectedRow++;
-			// 成功アラート
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Compleat!", @"ダウンロード成功")
-															message:NSLocalizedString(@"Added Plan", @"プランを追加しました")
-														   delegate:self 
-												  cancelButtonTitle:nil 
-												  otherButtonTitles:@"OK", nil];
-			alert.tag = 101;
-			[alert show];
-			//[alert release];
-			//self.bDownloading = YES; // 完了したので繰り返し禁止するため
-		}
+		dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+		dispatch_async(queue, ^{
+			// CSV読み込み
+			FileCsv *fcsv = [[FileCsv alloc] init];
+			BOOL bCsv = [fcsv zLoadTmpFile];
+			
+			dispatch_async(dispatch_get_main_queue(), ^{
+				// 進捗サインOFF
+				if (MactionProgress) [MactionProgress dismissWithClickedButtonIndex:0 animated:YES];
+				if (bCsv) {
+					// 連続追加に備えてインクリメントする
+					PiSelectedRow++;
+					// 成功アラート
+					UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Compleat!", @"ダウンロード成功")
+																	message:NSLocalizedString(@"Added Plan", @"プランを追加しました")
+																   delegate:self 
+														  cancelButtonTitle:nil 
+														  otherButtonTitles:@"OK", nil];
+					alert.tag = 101;
+					[alert show];
+				}
+				else {
+					// CSV読み込み失敗
+					NSString *errmsg = nil;
+					int iNo = 1;
+					for (NSString *msg in fcsv.errorMsgs) {
+						errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
+					}
+					UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Fail", @"ダウンロード失敗")
+																	message:errmsg
+																   delegate:nil 
+														  cancelButtonTitle:nil 
+														  otherButtonTitles:@"OK", nil];
+					[alert show];
+				}
+			});
+		});
 	}
-	// 進捗サインOFF
-	if (MactionProgress) [MactionProgress dismissWithClickedButtonIndex:0 animated:YES];
 }
 
 - (void)alertView:(UIAlertView *)alert clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -1150,27 +1158,35 @@
 					[MactionProgress showInView:self.view];
 					//deallocへ [actionProgress release];
 				}
+				
+				dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+				dispatch_async(queue, ^{
+					// Upload直前にファイルへ書き出す
+					FileCsv *fcsv = [[FileCsv alloc] init];
+					BOOL bCsv = [fcsv zSaveTmpFile:Re1selected crypt:YES];
 
-				// Upload直前にファイルへ書き出す
-				FileCsv *fcsv = [[FileCsv alloc] init];
-				NSString *zErr = [fcsv zSave:Re1selected toTmpFile:YES];
-				if (zErr) {
-					// 進捗サインOFF
-					if (MactionProgress) [MactionProgress dismissWithClickedButtonIndex:0 animated:YES];
-					[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
-					UIAlertView *alert = [[UIAlertView alloc] 
-										  initWithTitle:NSLocalizedString(@"Upload Fail", @"アップロード失敗")
-										  message:zErr
-										  delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-					[alert show];
-					//[alert release];
-					break;
-				}
-				// Upload開始
-				[self uploadFile:fcsv.tmpPathFile];
-				/*[self performSelectorOnMainThread:@selector(uploadFile)
-									   withObject:nil
-									waitUntilDone:NO];*/
+					dispatch_async(dispatch_get_main_queue(), ^{
+						if (bCsv) {
+							// Upload開始
+							[self uploadFile:fcsv.tmpPathFile];
+						}
+						else {
+							// 進捗サインOFF
+							if (MactionProgress) [MactionProgress dismissWithClickedButtonIndex:0 animated:YES];
+							[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
+							NSString *errmsg = nil;
+							int iNo = 1;
+							for (NSString *msg in fcsv.errorMsgs) {
+								errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
+							}
+							UIAlertView *alert = [[UIAlertView alloc] 
+												  initWithTitle:NSLocalizedString(@"Upload Fail", @"アップロード失敗")
+												  message:errmsg
+												  delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+							[alert show];
+						}
+					});
+				});
 			}
 			break;
 

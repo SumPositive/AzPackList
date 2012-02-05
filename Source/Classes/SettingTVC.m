@@ -6,6 +6,7 @@
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
+#import "SFHFKeychainUtils.h"
 #import "Global.h"
 #import "AppDelegate.h"
 #import "SettingTVC.h"
@@ -18,12 +19,21 @@
 #define TAG_OptShowTotalWeightReq			993
 #define TAG_OptSearchItemsNote				992
 #define TAG_OptAdvertising							991
+#define TAG_OptCryptKey1							990
+#define TAG_OptCryptKey2							989
+
 
 @interface SettingTVC (PrivateMethods)
 - (void)switchAction:(UISwitch *)sender;
 @end
 
 @implementation SettingTVC
+{
+@private
+	AppDelegate		*appDelegate_;
+	UITextField			*tfPass1_;
+	UITextField			*tfPass2_;
+}
 
 
 /***随時同期はしない。閉じてから同期で十分
@@ -167,9 +177,9 @@
 	switch (section) {
 		case 0: // 
 			if (appDelegate_.app_is_iPad) {
-				return 6;	// (0)回転は不要
+				return 7;	// (0)回転は不要
 			} else {
-				return 7;
+				return 8;
 			}
 			break;
 	}
@@ -179,6 +189,12 @@
 // セルの高さを指示する
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
+	int iRaw = indexPath.row;
+	if (appDelegate_.app_is_iPad) iRaw++;
+	switch (iRaw) {
+		case 7: // Crypt
+			return 75;
+	}
 	return 60; // デフォルト：44ピクセル
 }
 
@@ -333,13 +349,60 @@
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptAdvertising;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
-				sw.enabled = appDelegate_.app_pid_AdOff;
+				sw.enabled = appDelegate_.app_pid_AdOff; // AdOff支払により有効化
 				[cell.contentView  addSubview:sw]; //[sw release];
 				cell.textLabel.text = NSLocalizedString(@"Advertising",nil);
-				cell.detailTextLabel.text = NSLocalizedString(@"Advertising msg",nil);
+			}
+			if (appDelegate_.app_pid_AdOff) {
+				cell.detailTextLabel.text = NSLocalizedString(@"Advertising enable",nil);
+			} else {
+				cell.detailTextLabel.text = NSLocalizedString(@"Advertising disable",nil);
 			}
 			sw.frame = CGRectMake(fX, 5, 120, 25); // 回転対応
 			[sw setOn:[kvs boolForKey:KV_OptAdvertising] animated:YES];
+		}	break;
+
+		case 7:
+		{ // KV_OptCrypt
+			cell.textLabel.text = NSLocalizedString(@"PackListCrypt",nil);
+			if (appDelegate_.app_pid_AdOff) {
+				cell.detailTextLabel.text = NSLocalizedString(@"PackListCrypt enable",nil);
+			} else {
+				cell.detailTextLabel.text = NSLocalizedString(@"PackListCrypt disable",nil);
+			}
+			// add UITextField1
+			if (tfPass1_==nil) {
+				tfPass1_ = [[UITextField alloc] init];
+				tfPass1_.borderStyle = UITextBorderStyleRoundedRect;
+				tfPass1_.placeholder = NSLocalizedString(@"PackListCrypt Key1 place",nil);
+				tfPass1_.keyboardType = UIKeyboardTypeASCIICapable;
+				tfPass1_.secureTextEntry = YES;
+				tfPass1_.returnKeyType = UIReturnKeyNext;
+				tfPass1_.tag = TAG_OptCryptKey1;
+				tfPass1_.enabled = appDelegate_.app_pid_AdOff; // AdOff支払により有効化
+				tfPass1_.delegate = self;
+				// KeyChainから保存しているパスワードを取得する
+				NSError *error; // nilを渡すと異常終了するので注意
+				tfPass1_.text = [SFHFKeychainUtils getPasswordForUsername:UD_OptCrypt
+														   andServiceName:GD_PRODUCTNAME error:&error];
+				[cell.contentView  addSubview:tfPass1_];
+			}
+			tfPass1_.frame = CGRectMake(fX-45, 8, 140, 25); // 回転対応
+			// add UITextField2
+			if (tfPass2_==nil) {
+				tfPass2_ = [[UITextField alloc] init];
+				tfPass2_.borderStyle = UITextBorderStyleRoundedRect;
+				tfPass2_.placeholder = NSLocalizedString(@"PackListCrypt Key2 place",nil);
+				tfPass2_.keyboardType = UIKeyboardTypeASCIICapable;
+				tfPass2_.secureTextEntry = YES;
+				tfPass2_.returnKeyType = UIReturnKeyDone;
+				tfPass2_.tag = TAG_OptCryptKey2;
+				tfPass2_.hidden = !(appDelegate_.app_pid_AdOff); // AdOff支払により有効化 ＜＜detailTextLabelを見せるために.hiddenにしている。
+				tfPass2_.delegate = self;
+				tfPass2_.text = tfPass1_.text;
+				[cell.contentView  addSubview:tfPass2_];
+			}
+			tfPass2_.frame = CGRectMake(fX-45,38, 140, 25); // 回転対応
 		}	break;
 	}
     return cell;
@@ -392,6 +455,53 @@
 	[self.navigationController popViewControllerAnimated:YES];
 }
 */
+
+#pragma make - <UITextFieldDelegate>
+
+// キーボードのリターンキーを押したときに呼ばれる
+- (BOOL)textFieldShouldReturn:(UITextField *)sender 
+{
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	[defaults setBool:NO forKey:UD_OptCrypt];
+
+	if (sender==tfPass1_) {
+		if ([sender.text length] < 3 OR 20 < [sender.text length]) {
+			sender.text = @"";
+			alertBox(NSLocalizedString(@"PackListCrypt Key Over",nil), nil, @"OK");
+			return NO;
+		}
+		tfPass2_.hidden = NO;
+		tfPass2_.text = @"";
+		[tfPass2_ becomeFirstResponder];
+	}
+	else if (sender==tfPass2_) {
+		[tfPass2_ resignFirstResponder];
+		if ([tfPass1_.text isEqualToString:tfPass2_.text]) {
+			// 一致、パス変更
+			// PasswordをKeyChainに保存する
+			NSError *error; // nilを渡すと異常終了するので注意
+			[SFHFKeychainUtils storeUsername:UD_OptCrypt
+								 andPassword:tfPass1_.text 
+							  forServiceName:GD_PRODUCTNAME 
+							  updateExisting:YES error:&error];
+			if (error) {
+				alertBox(NSLocalizedString(@"PackListCrypt Key Error",nil), 
+									[error localizedDescription], @"OK");
+			} else {
+				[defaults setBool:YES forKey:UD_OptCrypt];
+				alertBox(NSLocalizedString(@"PackListCrypt Key Changed",nil), nil, @"OK");
+			}
+		}
+		else {
+			// 不一致　　Does not match.
+			alertBox(NSLocalizedString(@"PackListCrypt Key NoMatch",nil), nil, @"OK");
+			tfPass2_.text = @"";
+			[tfPass2_ becomeFirstResponder];
+		}
+	}
+    return YES;
+}
+
 
 @end
 

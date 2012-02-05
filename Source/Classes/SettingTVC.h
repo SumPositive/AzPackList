@@ -8,15 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SettingTVC : UITableViewController 
-{
-
-@private
-	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
-	//----------------------------------------------Owner移管につきdealloc時のrelese不要
-	//----------------------------------------------assign
-	AppDelegate		*appDelegate_;
-	//BOOL MbOptShouldAutorotate;
-}
+@interface SettingTVC : UITableViewController <UITextFieldDelegate>
 
 @end

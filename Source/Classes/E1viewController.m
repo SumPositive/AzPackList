@@ -419,45 +419,54 @@
 	if (appDelegate_.app_is_iPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 	}
-	NSRange range = [[UIPasteboard generalPasteboard].string rangeOfString:GD_CSV_HEADER_ID];
-	if (range.location == NSNotFound) {
-		UIAlertView *alert = [[UIAlertView alloc] 
-							  initWithTitle:NSLocalizedString(@"PBoard Paste NG1",nil)
-							  message:nil //NSLocalizedString(@"PBoard Paste NG1",nil)
-							  delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-		[alert show];
-		//[alert release];
-		return;
+	// ヘッダーチェック
+	if ([[UIPasteboard generalPasteboard].string hasPrefix:GD_CSV_HEADER_ID]==NO) {
+		if ([[UIPasteboard generalPasteboard].string hasPrefix:CRYPT_HEADER]==NO) {
+			UIAlertView *alert = [[UIAlertView alloc] 
+								  initWithTitle:NSLocalizedString(@"PBoard Paste NG1",nil)
+								  message:nil //NSLocalizedString(@"PBoard Paste NG1",nil)
+								  delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+			[alert show];
+			return;
+		}
 	}
 	// ペーストボードから取り込んで追加する
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.title = NSLocalizedString(@"Please Wait",nil);
 	[alert show];
-	//---------------------------------------CSV LOAD Start.
-	FileCsv *fcsv = [[FileCsv alloc] init];
-	NSString *zErr = [fcsv zLoadFromTmpFile:NO];  //NO:PasteBoardから取り込む
-	//---------------------------------------CSV LOAD End.
-	[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
-	//[alert release];
-	if (zErr) {
-		alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"PBoard Error",nil)
-										   message:zErr
-										  delegate:nil 
-								 cancelButtonTitle:nil 
-								 otherButtonTitles:@"OK", nil];
-		[alert show];
-		//[alert release];
-		return;
-	}
-	alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"PBoard Paste",nil)
-									   message:NSLocalizedString(@"PBoard Paste OK",nil)
-									  delegate:nil 
-							 cancelButtonTitle:nil 
-							 otherButtonTitles:@"OK", nil];
-	[alert show];
-	//[alert release];
-	// 再表示
-	[self viewWillAppear:YES]; // Fech データセットさせるため
+	
+	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+	dispatch_async(queue, ^{
+		FileCsv *fcsv = [[FileCsv alloc] init];
+		BOOL bCsv = [fcsv zLoadPasteboard];
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
+			if (bCsv) {
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"PBoard Paste",nil)
+												   message:NSLocalizedString(@"PBoard Paste OK",nil)
+												  delegate:nil 
+										 cancelButtonTitle:nil 
+										 otherButtonTitles:@"OK", nil];
+				[alert show];
+				// 再表示
+				[self viewWillAppear:YES]; // Fech データセットさせるため
+			}
+			else {
+				NSString *errmsg = nil;
+				int iNo = 1;
+				for (NSString *msg in fcsv.errorMsgs) {
+					errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
+				}
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"PBoard Error",nil)
+												   message:errmsg
+												  delegate:nil 
+										 cancelButtonTitle:nil 
+										 otherButtonTitles:@"OK", nil];
+				[alert show];
+			}
+		});
+	});
 }
 
 - (void)actionInformation

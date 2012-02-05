@@ -6,11 +6,14 @@
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
+#import "SFHFKeychainUtils.h"
+#import "NSDataAddition.h"	// Crypt
 #import "Global.h"
 #import "AppDelegate.h"
 #import "Elements.h"
 #import "EntityRelation.h"
 #import "FileCsv.h"
+
 
 
 @implementation FileCsv
@@ -59,7 +62,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 		// <Application_Home>/tmp/ 　＜＜iCloudバックアップされない、iOSから消される場合あり
 		NSString *tempDir = NSTemporaryDirectory();
 		tmpPathFile_ = [tempDir stringByAppendingPathComponent:@"PackListTmp.azp"];
-		NSLog(@"FileJson: init: tempPath_ = '%@'", tmpPathFile_);
+		NSLog(@"FileCsv: init: tempPath_ = '%@'", tmpPathFile_);
 		if (tmpPathFile_==nil) {
 			[self errorMsg:@"NG tmp path"];
 		}
@@ -77,135 +80,187 @@ static NSString *csvToStr( NSString *inCsv ) {
 
 #pragma mark - Saveing
 
-- (NSString *)zSave:(E1 *)Pe1  toTmpFile:(BOOL)bTmpFile  //NO:PasteBoardへ書き出す
-{
-	@autoreleasepool {
-		NSMutableString *zCsv = [NSMutableString new];
-		NSString *err = [self zSave:Pe1 toMutableString:zCsv];
-		if (err == nil) {
-			if (bTmpFile && tmpPathFile_) { // ファイル出力
-				//NSString *home_dir = NSHomeDirectory();
-				//NSString *doc_dir = [home_dir stringByAppendingPathComponent:@"tmp"];
-				//NSString *csvPath = [doc_dir stringByAppendingPathComponent:PzFname]; //GD_CSVFILENAME or GD_CSVFILENAME4
-				// UTF-8 出力ファイルをCREATE
-				[[NSFileManager defaultManager] createFileAtPath:tmpPathFile_ contents:nil attributes:nil];
-				// UTF-8 出力ファイルをOPEN
-				NSFileHandle *output = [NSFileHandle fileHandleForWritingAtPath:tmpPathFile_];
-				if (output) {
-					@try {
-						// UTF8 エンコーディングしてファイルへ書き出す
-						[output writeData:[zCsv dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES]];
-					}
-					@catch(id error) {
-						// File size too small.
-						err = NSLocalizedString(@"File error",nil);
-					}
-					@finally {
-						[output closeFile];
-					}
-				} else {
-					err = NSLocalizedString(@"File error",nil);
+- (BOOL)zSavePrivate:(E1 *)Pe1 toMutableString:(NSMutableString *)PzCsv
+{	// Private
+	assert(PzCsv);
+	NSSortDescriptor *key1 = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
+	NSArray *sortRow = [[NSArray alloc] initWithObjects:key1, nil];  
+	NSString *str;
+	
+	@try {
+		//----------------------------------------------------------------------------Header
+		//OLD str = GD_CSV_HEADER_ID  @",CSV,UTF-8,Copyright,(C)2011,Azukid,,,\n";
+		//[1.1.0]これまでLoad時には、GD_CSV_HEADER_ID だけ比較チェックしている。
+		//[1.1.0],CSV,の次に,4,を追加。 4 は、xcdatamodel 4 を示している。　　近未来JSON対応すれば、,CSV,⇒,JSON, とする。
+		str = GD_CSV_HEADER_ID  @",UTF-8,CSV,5,,,Copyright,(C)2012,Azukid,,\n";
+		[PzCsv appendString:str];
+		
+		//----------------------------------------------------------------------------Body
+		
+		//----------------------------------------------------------------------------[Begin]
+		str = @"Begin,,,,,,,,\n";
+		[PzCsv appendString:str];
+		
+		//----------------------------------------------------------------------------E1 [Plan]
+		//[1.0]  ,"name","note",
+		str = [NSString stringWithFormat:@",\"%@\",\"%@\",\n", strToCsv(Pe1.name), strToCsv(Pe1.note)];
+		AzLOG(@"E1> %@", str);
+		[PzCsv appendString:str];
+		
+		//------------------------------------------------------------------------------E2 [Index]
+		//[1.0] , ,"name","note",
+		NSMutableArray *e2list = [[NSMutableArray alloc] initWithArray:[Pe1.childs allObjects]];
+		[e2list sortUsingDescriptors:sortRow];	// .row 昇順にCSV書き出す
+		for (E2 *e2node in e2list) {
+			str = [NSString stringWithFormat:@",,\"%@\",\"%@\",\n", strToCsv(e2node.name), strToCsv(e2node.note)];
+			AzLOG(@"E2> %@", str);
+			[PzCsv appendString:str];
+			
+			//----------------------------------------------------------------------------E3 [Goods]
+			//[1.0] ,,,"name","note",stock,need,weight,
+			//[1.1] ,,,"name","note",stock,need,weight,"shopKeyword","shopNote",
+			NSMutableArray *e3list = [[NSMutableArray alloc] initWithArray:[e2node.childs allObjects]];
+			[e3list sortUsingDescriptors:sortRow];	// .row 昇順にCSV書き出す
+			for (E3 *e3node in e3list) {
+				if ((-1) < [e3node.need integerValue]) { //(-1)Add専用ノードを除外する
+					str = [NSString stringWithFormat:@",,,\"%@\",\"%@\",%ld,%ld,%ld,\"%@\",\"%@\",\n", 
+						   strToCsv(e3node.name),
+						   strToCsv(e3node.note),
+						   [e3node.stock longValue], 
+						   [e3node.need longValue], 
+						   [e3node.weight longValue],
+						   strToCsv(e3node.shopKeyword),
+						   strToCsv(e3node.shopNote)   ];
+					AzLOG(@"E3> %@", str);
+					[PzCsv appendString:str];
 				}
-			} else {
-				// PasteBoard出力
-				[UIPasteboard generalPasteboard].string = zCsv;  // 共有領域にコピーされる
 			}
+			//[e3list release];
+			e3list = nil;
 		}
-		//[zCsv release];
-		return err;
+		// release
+		//[e2list release];
+		e2list = nil;
+		
+		//----------------------------------------------------------------------------[End]
+		str = @"End,,,,,,,,\n";
+		AzLOG(@"End> %@", str);
+		[PzCsv appendString:str];
+		// Compleat!
+		return YES;
 	}
+	@catch(id error) {
+		[self errorMsg:@"zSave:NG catch"];
+	}
+	@catch (NSException *errEx) {
+		NSString *msg = [NSString stringWithFormat:@"zSave: NSException: %@: %@", [errEx name], [errEx reason]];
+		[self errorMsg:msg];
+	}
+	@finally {
+		//
+	}
+	return NO;
 }
 
 // Pe1 から PzCsv 生成する
-- (NSString *)zSave:(E1 *)Pe1 toMutableString:(NSMutableString *)PzCsv
+// crypt = NO; 公開アップするとき暗号化しないため
+- (BOOL)zSave:(E1 *)Pe1 toMutableString:(NSMutableString *)PzCsv  crypt:(BOOL)bCrypt
 {
 	@autoreleasepool {
-		NSParameterAssert(PzCsv);
-		NSString *zErrMsg = NSLocalizedString(@"File write error",nil);
-		
-		// E2, E3 Sort  "row"
-		NSSortDescriptor *key1 = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
-		NSArray *sortRow = [[NSArray alloc] initWithObjects:key1, nil];  
-		//[key1 release];
-		//	NSMutableString *zBoard = [NSMutableString new];
-		// 以上 @finally にて release
-		NSString *str;
-		
-		@try {
-			//----------------------------------------------------------------------------Header
-			//str = GD_CSV_HEADER_ID  @",CSV,UTF-8,Copyright,(C)2011,Azukid,,,\n";
-			//[1.1.0]これまでLoad時には、GD_CSV_HEADER_ID だけ比較チェックしている。
-			//[1.1.0],CSV,の次に,4,を追加。 4 は、xcdatamodel 4 を示している。　　近未来JSON対応すれば、,CSV,⇒,JSON, とする。
-			str = GD_CSV_HEADER_ID  @",UTF-8,CSV,4,,,Copyright,(C)2012,Azukid,,\n";
-			[PzCsv appendString:str];
-			
-			//----------------------------------------------------------------------------Structure
-			
-			//----------------------------------------------------------------------------[Begin]
-			str = @"Begin,,,,,,,,\n";
-			[PzCsv appendString:str];
-			
-			//----------------------------------------------------------------------------E1 [Plan]
-			//[1.0]  ,"name","note",
-			str = [NSString stringWithFormat:@",\"%@\",\"%@\",\n", strToCsv(Pe1.name), strToCsv(Pe1.note)];
-			AzLOG(@"E1> %@", str);
-			[PzCsv appendString:str];
-			
-			//------------------------------------------------------------------------------E2 [Index]
-			//[1.0] , ,"name","note",
-			NSMutableArray *e2list = [[NSMutableArray alloc] initWithArray:[Pe1.childs allObjects]];
-			[e2list sortUsingDescriptors:sortRow];	// .row 昇順にCSV書き出す
-			for (E2 *e2node in e2list) {
-				str = [NSString stringWithFormat:@",,\"%@\",\"%@\",\n", strToCsv(e2node.name), strToCsv(e2node.note)];
-				AzLOG(@"E2> %@", str);
-				[PzCsv appendString:str];
-				
-				//----------------------------------------------------------------------------E3 [Goods]
-				//[1.0] ,,,"name","note",stock,need,weight,
-				//[1.1] ,,,"name","note",stock,need,weight,"shopKeyword","shopNote",
-				NSMutableArray *e3list = [[NSMutableArray alloc] initWithArray:[e2node.childs allObjects]];
-				[e3list sortUsingDescriptors:sortRow];	// .row 昇順にCSV書き出す
-				for (E3 *e3node in e3list) {
-					if ((-1) < [e3node.need integerValue]) { //(-1)Add専用ノードを除外する
-						str = [NSString stringWithFormat:@",,,\"%@\",\"%@\",%ld,%ld,%ld,\"%@\",\"%@\",\n", 
-							   strToCsv(e3node.name),
-							   strToCsv(e3node.note),
-							   [e3node.stock longValue], 
-							   [e3node.need longValue], 
-							   [e3node.weight longValue],
-							   strToCsv(e3node.shopKeyword),
-							   strToCsv(e3node.shopNote)   ];
-						AzLOG(@"E3> %@", str);
-						[PzCsv appendString:str];
-					}
-				}
-				//[e3list release];
-				e3list = nil;
-			}
-			// release
-			//[e2list release];
-			e2list = nil;
-			
-			//----------------------------------------------------------------------------[End]
-			str = @"End,,,,,,,,\n";
-			AzLOG(@"End> %@", str);
-			[PzCsv appendString:str];
-			zErrMsg = nil;  // Compleat!
+		if ([self zSavePrivate:Pe1 toMutableString:PzCsv]==NO) {
+			return NO;
 		}
-		@catch (NSException *errEx) {
-			NSString *name = [errEx name];
-			AzLOG(@"Err: %@ : %@\n", name, [errEx reason]);
-			if ([name isEqualToString:NSRangeException])
-				NSLog(@"Exception was caught successfully.\n");
-			else
-				[errEx raise];
-		}
-		@finally {
-			// release
-			//[sortRow release];
-		}
-		return zErrMsg;
 	}
+	//----------------------------------------------------------------------------Crypt 暗号化
+	if (bCrypt) {
+		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+		if ([userDefaults boolForKey:UD_OptCrypt]) {
+			// KeyChainから保存しているパスワードを取得する
+			NSError *error; // nilを渡すと異常終了するので注意
+			NSString *secKey = [SFHFKeychainUtils getPasswordForUsername:UD_OptCrypt
+														  andServiceName:GD_PRODUCTNAME error:&error];
+			if (2 < [secKey length]) {
+				// 暗号化
+				NSData *plain = [PzCsv dataUsingEncoding:NSUTF8StringEncoding];	//--> NSData
+				NSData *data = [plain AES256EncryptWithKey:secKey];	//--> AES256
+				//NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+				NSString *str = [data stringEncodedWithBase64];	// NSData --> NSString(Base64)
+				NSLog(@"FileCsv: zSave: Crypt: Base64 str=%@", str);
+				[PzCsv setString:CRYPT_HEADER];	// Crypt Header を先頭へ追加
+				[PzCsv appendString:str];
+			}
+			else {
+				[self errorMsg:NSLocalizedString(@"PackListCrypt NoKey",nil)];
+				return NO;
+			}
+		}
+	}
+	return YES;
+}
+
+- (BOOL)zSaveTmpFile:(E1 *)Pe1  crypt:(BOOL)bCrypt
+{
+	if (tmpPathFile_==nil) {
+		[self errorMsg:@"tmpPathFile_=nil"];
+		return NO;
+	}
+	
+	NSMutableString *zCsv = [NSMutableString new];
+	// Pe1 ---> zCsv
+	if ([self zSave:Pe1 toMutableString:zCsv crypt:bCrypt]==NO) {
+		return NO;
+	}
+	// UTF-8 出力ファイルをCREATE
+	[[NSFileManager defaultManager] createFileAtPath:tmpPathFile_ contents:nil attributes:nil];
+	// UTF-8 出力ファイルをOPEN
+	NSFileHandle *output = [NSFileHandle fileHandleForWritingAtPath:tmpPathFile_];
+	if (output==nil) {
+		[self errorMsg:NSLocalizedString(@"File error",nil)];
+		return NO;
+	}
+	
+	@try {
+		// UTF8 エンコーディングしてファイルへ書き出す
+		[output writeData:[zCsv dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES]];
+		return YES;
+	}
+	@catch(id error) {
+		[self errorMsg:NSLocalizedString(@"File error",nil)];
+	}
+	@catch (NSException *errEx) {
+		NSString *msg = [NSString stringWithFormat:@"zSaveTmpFile: NSException: %@: %@", [errEx name], [errEx reason]];
+		[self errorMsg:msg];
+	}
+	@finally {
+		[output closeFile];
+	}
+	return NO;
+}
+
+- (BOOL)zSavePasteboard:(E1 *)Pe1  crypt:(BOOL)bCrypt
+{
+	NSMutableString *zCsv = [NSMutableString new];
+	// Pe1 ---> zCsv
+	if ([self zSave:Pe1 toMutableString:zCsv crypt:bCrypt]==NO) {
+		return NO;
+	}
+
+	@try {
+		// PasteBoard出力
+		[UIPasteboard generalPasteboard].string = zCsv;  // 共有領域にコピーされる
+		return YES;
+	}
+	@catch(id error) {
+		[self errorMsg:NSLocalizedString(@"File error",nil)];
+	}
+	@catch (NSException *errEx) {
+		NSString *msg = [NSString stringWithFormat:@"zSavePasteboard: NSException: %@: %@", [errEx name], [errEx reason]];
+		[self errorMsg:msg];
+	}
+	@finally {
+		//
+	}
+	return NO;
 }
 
 
@@ -313,329 +368,344 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 	return lSplitCount;
 }
 
+- (E1 *)zLoadPrivate:(NSString *)PzCsv  withSave:(BOOL)PbSave // NO=共有プラン詳細表示時、SAVEせずにRollBackするために使用。
+{
+	NSManagedObjectContext *moc = [EntityRelation getMoc];
+	NSInteger iErrLine = 0;
+	E1 *e1node = nil;
+	E2 *e2node = nil;
+	NSInteger e2row = 0;  // CSV読み込み順に連番付与する
+	NSInteger e3row = 0;
+	NSMutableArray *aSplit = [NSMutableArray new];  // @finallyにて [aSplit release]
+	csvLineOffset = 0;
+	@try {
+		iErrLine = 0;
+		//----------------------------------------------------------------------[HEADER]
+		iErrLine++;
+		/*	//[1.0]"AzPacking,CSV,UTF-8,Copyright,(C)2011,Azukid,,,\n";
+		 //[1.1]"AzPacking,UTF-8,CSV,4,,,Copyright,(C)2011,Azukid,,\n"
+		 while (1) { 
+		 iErrLine++;
+		 if (csvLineSplit(PzCsv, aSplit) < 0 OR 10 < iErrLine) { // 10行以内に無ければ中断
+		 @throw NSLocalizedString(@"Err CsvHeaderNG",nil);
+		 }
+		 if ([[aSplit objectAtIndex:0] isEqualToString:GD_CSV_HEADER_ID]) {
+		 break; // OK
+		 } 
+		 }*/
+		
+		//----------------------------------------------------------------------[Begin]
+		//[1.0] "Begin,"
+		while (1) { 
+			iErrLine++;
+			if (csvLineSplit(PzCsv, aSplit) < 0 OR 10 < iErrLine) { // 10行以内に無ければ中断
+				@throw NSLocalizedString(@"Err CsvHeaderNG",nil);
+			}
+			if ([[aSplit objectAtIndex:0] isEqualToString:@"Begin"]) {
+				break; // OK
+			} 
+		}
+		
+		//----------------------------------------------------------------------[Plan]
+		//[1.0] " ,name,note,"
+		//[1.0] "0,   1,   2,"
+		while (1) { 
+			iErrLine++;
+			if (csvLineSplit(PzCsv, aSplit) < 0 OR 10 < iErrLine) { // 10行以内に無ければ中断
+				@throw NSLocalizedString(@"Err CsvHeaderNG",nil);
+			}
+			if ([[aSplit objectAtIndex:0] isEqualToString:@""] && ![[aSplit objectAtIndex:1] isEqualToString:@""]) {
+				break; // OK                                      ↑notです！
+			} 
+		}
+		//-----------------------------------------------E1.row の最大値を求める
+		NSInteger maxRow = [EntityRelation E1_maxRow];
+		//-----------------------------------------------E1
+		// ContextにE1ノードを追加する　ERROR発生すれば、RollBackしている
+		e1node = [NSEntityDescription insertNewObjectForEntityForName:@"E1" inManagedObjectContext:moc];
+		//-----------------------------------------------
+		e1node.row  = [NSNumber numberWithInteger:1 + maxRow];
+		e1node.name = [aSplit objectAtIndex:1];  //csvToStr([aSplit objectAtIndex:1]);
+		e1node.note = [aSplit objectAtIndex:2];
+		//-----------------------------------------------
+		e2row = 0;
+		e2node = nil;
+		
+		while (1) 
+		{
+			iErrLine++;
+			//if (csvLineSplit(PzCsv, aSplit) < 0) {
+			//	//[0.5.3]空白行に対応：行末やエラー発生時に中断
+			//	@throw NSLocalizedString(@"Err CsvHeaderNG",nil);
+			//}
+			// [0.7.3] "End,,,," が無いケースに対応
+			long lCount = csvLineSplit(PzCsv, aSplit);
+			if (lCount == -1) {	// EOF
+				break;
+			}
+			else if	(lCount < -1) {	// ERROR
+				@throw NSLocalizedString(@"Err CsvHeaderNG",nil);
+			}
+			//lCount==0 : 空白行
+			
+			//----------------------------------------------------------------------[Group] E2
+			//[1.0] " , ,name,note,"
+			//[1.0] "0,1,   2,   3,"
+			else if ([[aSplit objectAtIndex:0] isEqualToString:@""] 
+					 && [[aSplit objectAtIndex:1] isEqualToString:@""] 
+					 && ![[aSplit objectAtIndex:2] isEqualToString:@""]) // 最後だけ ! NOT
+			{
+				// トリム（両端のスペース除去）　＜＜Load時に zNameで検索するから厳密にする＞＞
+				NSString *zName = [[aSplit objectAtIndex:2] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+				if (![zName isEqualToString:@""])
+				{ // zNameが有効
+					e2node = [NSEntityDescription insertNewObjectForEntityForName:@"E2" inManagedObjectContext:moc];
+					//-----------------------------------------------
+					e2node.row		= [NSNumber numberWithInteger:e2row++];
+					e2node.name		= zName; // csvToStr()後にトリム済み
+					e2node.note		= [aSplit objectAtIndex:3];
+					//-----------------------------------------------
+					[e1node addChildsObject:e2node];
+					e3row = 0;
+				}
+			} 
+			//--------------------------------------------------------------------------------[Item] E3
+			//[1.0] [  ,  ,   ,"name","note",stock,need,weight,]
+			//[1.0] [0,1,2,          3,         4,       5,      6,         7,]
+			//[1.1] [  ,  ,   ,"name","note",stock,need,weight,"shopKeyword","shopNote",]
+			//[1.1] [0,1,2,          3,         4,       5,      6,         7,                       8,                 9,]
+			else if (e2node
+					 && [[aSplit objectAtIndex:0] isEqualToString:@""] 
+					 && [[aSplit objectAtIndex:1] isEqualToString:@""] 
+					 && [[aSplit objectAtIndex:2] isEqualToString:@""]) // 3桁ともヌル
+			{
+				NSString *zName = [[aSplit objectAtIndex:3] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+				if (![zName isEqualToString:@""]) 
+				{ // zNameが有効
+					E3 *e3node = [NSEntityDescription insertNewObjectForEntityForName:@"E3" inManagedObjectContext:moc];
+					e3node.row		= [NSNumber numberWithInteger:e3row++];
+					e3node.name				= zName;
+					e3node.note				= [aSplit objectAtIndex:4];
+					//-----------------------------------------------E3:冗長計算処理
+					NSInteger iStock	= [[aSplit objectAtIndex:5] integerValue];
+					NSInteger iNeed		= [[aSplit objectAtIndex:6] integerValue];
+					NSInteger iWeight	= [[aSplit objectAtIndex:7] integerValue];
+					e3node.stock		= [NSNumber numberWithInteger:iStock];
+					e3node.need			= [NSNumber numberWithInteger:iNeed];
+					e3node.weight		= [NSNumber numberWithInteger:iWeight];
+					e3node.weightStk	= [NSNumber numberWithInteger:(iWeight * iStock)];
+					e3node.weightNed	= [NSNumber numberWithInteger:(iWeight * iNeed)];
+					e3node.lack			= [NSNumber numberWithInteger:(iNeed - iStock)];
+					e3node.weightLack	= [NSNumber numberWithInteger:((iNeed - iStock) * iWeight)];
+					//-----------------------------------------------
+					if (0 < iNeed)
+						e3node.noGray = [NSNumber numberWithInteger:1];
+					else
+						e3node.noGray = [NSNumber numberWithInteger:0];
+					//-----------------------------------------------
+					if (0 < iNeed && iStock < iNeed)
+						e3node.noCheck = [NSNumber numberWithInteger:1];
+					else
+						e3node.noCheck = [NSNumber numberWithInteger:0];
+					//-----------------------------------------------
+					[e2node addChildsObject:e3node];
+					//-----------------------------------------------
+					//[1.1]
+					if (8 < [aSplit count]) {
+						e3node.shopKeyword	= [aSplit objectAtIndex:8];
+					}
+					if (9 < [aSplit count]) {
+						e3node.shopNote		= [aSplit objectAtIndex:9];
+					}
+				}
+			} 
+			//--------------------------------------------------------------------------------[End]
+			// "End,"
+			else if (![[aSplit objectAtIndex:0] isEqualToString:@""]) // [0]がヌルで無い場合全て
+			{
+				break; // LOOP OUT
+			}
+		} //while(1)
+		
+		if (e1node) {
+			for (e2node in e1node.childs) {
+				// E2 sum属性　＜高速化＞ 親sum保持させる
+				[e2node setValue:[e2node valueForKeyPath:@"childs.@sum.noGray"] forKey:@"sumNoGray"];
+				[e2node setValue:[e2node valueForKeyPath:@"childs.@sum.noCheck"] forKey:@"sumNoCheck"];
+				[e2node setValue:[e2node valueForKeyPath:@"childs.@sum.weightStk"] forKey:@"sumWeightStk"];
+				[e2node setValue:[e2node valueForKeyPath:@"childs.@sum.weightNed"] forKey:@"sumWeightNed"];
+			}
+			
+			// E1 sum属性　＜高速化＞ 親sum保持させる
+			[e1node setValue:[e1node valueForKeyPath:@"childs.@sum.sumNoGray"] forKey:@"sumNoGray"];
+			[e1node setValue:[e1node valueForKeyPath:@"childs.@sum.sumNoCheck"] forKey:@"sumNoCheck"];
+			[e1node setValue:[e1node valueForKeyPath:@"childs.@sum.sumWeightStk"] forKey:@"sumWeightStk"];
+			[e1node setValue:[e1node valueForKeyPath:@"childs.@sum.sumWeightNed"] forKey:@"sumWeightNed"];
+			
+			if (PbSave) {
+				// 保存する
+				NSError *err = nil;
+				if (![moc save:&err]) {
+					// 保存失敗
+					NSString *msg = [NSString stringWithFormat:@"Moc save error: %@", [err localizedDescription]];
+					NSLog(@"Unresolved error %@", msg);
+					@throw msg;
+				}
+			}
+			return e1node; // OK
+		}
+		else {
+			// Endが無い ＆ [Plan]も無い
+			@throw @"No End";
+		}
+	} //@try
+	@catch (NSString *errMsg) {
+		[self errorMsg:errMsg];
+		if (e1node) {
+			[moc rollback];
+			//rollbackで十分//[moc deleteObject:e1node]; // insertNewObjectForEntityForNameしたEntityを削除する
+			e1node = nil;
+		}
+	}
+	@catch (NSException *errEx) {
+		NSString *msg = [NSString stringWithFormat:@"zLoad: NSException: %@: %@", [errEx name], [errEx reason]];
+		[self errorMsg:msg];
+		if (e1node) {
+			[moc rollback];
+			//rollbackで十分//[moc deleteObject:e1node]; // insertNewObjectForEntityForNameしたEntityを削除する
+			e1node = nil;
+		}
+	}
+	//@finally {
+	//	[aSplit release];
+	//}	
+	return nil; // NG
+}
+
+- (E1 *)zLoad:(NSString *)PzCsv  withSave:(BOOL)PbSave // NO=共有プラン詳細表示時、SAVEせずにRollBackするために使用。
+{
+	//--------------------------------------------------------------------------------Crypt Headerチェック
+	if ([PzCsv hasPrefix:CRYPT_HEADER]) {
+		// PzCsv から CRYPT_HEADER を取り除く
+		PzCsv = [PzCsv substringFromIndex:[CRYPT_HEADER length]];
+		//----------------------------------------------------------------------------Crypt 復号化
+		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+		if ([userDefaults boolForKey:UD_OptCrypt]) {
+			// KeyChainから保存しているパスワードを取得する
+			NSError *error; // nilを渡すと異常終了するので注意
+			NSString *secKey = [SFHFKeychainUtils getPasswordForUsername:UD_OptCrypt
+														  andServiceName:GD_PRODUCTNAME error:&error];
+			if (2 < [secKey length]) {
+				// 復号
+				NSData *data = [NSData dataWithBase64String:PzCsv];	// NSString(Base64) --> NSData
+				NSData *plain = [data AES256DecryptWithKey:secKey];	// 復号化
+				 PzCsv = [[NSString alloc] initWithData:plain encoding:NSUTF8StringEncoding]; //-->NSString
+				NSLog(@"FileCsv: zLoad: Crypt PzCsv=%@", PzCsv);
+			} else {
+				[self errorMsg:NSLocalizedString(@"PackListCrypt NoKey",nil)];
+				return nil;
+			}
+		} else {
+			[self errorMsg:NSLocalizedString(@"PackListCrypt NoKey",nil)];
+			return nil;
+		}
+	}
+	//--------------------------------------------------------------------------------CSV 読み込み
+	@autoreleasepool {
+		return [self zLoadPrivate:PzCsv withSave:PbSave];
+	}
+	return nil;
+}
+
 // Mail添付ファイルを読み込むため
-- (NSString *)zLoadURL:(NSURL*)Url
+- (BOOL)zLoadURL:(NSURL*)Url
 {
 	NSError *err = nil;
-	//NSString *zCsv = [[NSString alloc] initWithContentsOfURL:Url encoding:NSUTF8StringEncoding error:&err];
 	NSString *zCsv = [NSString stringWithContentsOfURL:Url encoding:NSUTF8StringEncoding error:&err];
 	if (err) {
-		return [err localizedDescription];
+		[self errorMsg:[err localizedDescription]];
+		return NO;
 	}
 	//NSLog(@"zCsv=%@", zCsv);
 	E1 *e1add = nil;
 	if (zCsv) {
 		e1add = [self zLoad:zCsv  withSave:YES];
 	}
-
-	if (e1add==nil) return @"No Data";
-	return [err localizedDescription];
+	if (e1add) return YES;
+	return NO;
 }
 
-/*
-// Pe1 を生成し、Pe1.row をセットしてから呼び出すこと。
-// <HOME/tmp/PzFname>
-- (NSString *)zLoad:(NSString *)PzFname  //==nil:PasteBoardから読み込む
-{
-	//NSString *doc_dir = [NSHomeDirectory() stringByAppendingPathComponent:@"tmp"]; // @"Documents"];
-	//NSString *zFullPath = [doc_dir stringByAppendingPathComponent:PzFname];  //GD_CSVFILENAME or GD_CSVFILENAME4	
-	return [self zLoadPath:tmpPathFile_];
-}*/
-
 //- (NSString *)zLoadPath:(NSString *)PzFillPath  //==nil:PasteBoardから読み込む
-- (NSString *)zLoadFromTmpFile:(BOOL)bTmpFile  //NO:PasteBoardから読み込む
+- (BOOL)zLoadTmpFile
+{
+	if (tmpPathFile_==nil) {
+		[self errorMsg:@"tmpPathFile_=nil"];
+		return NO;
+	}
+
+	NSString *zCsv = nil;
+	// input OPEN
+	NSFileHandle *csvHandle = [NSFileHandle fileHandleForReadingAtPath:tmpPathFile_];
+	if (csvHandle==nil) {
+		[self errorMsg:@"zLoadTmpFile:NG Read open"];
+		return NO;
+	}
+	// バイナリファイル対策：先頭で強制判定
+	@try {
+		[csvHandle seekToFileOffset:0];
+		NSData *data = [csvHandle readDataOfLength:[GD_CSV_HEADER_ID length]*3];
+		if ([data length] != [GD_CSV_HEADER_ID length]*3) {
+			[self errorMsg:@"zLoadTmpFile:NG Header length"];
+			return NO;
+		}
+		NSString *csvStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+		if (![csvStr hasPrefix:GD_CSV_HEADER_ID]) {	// Plain Header
+			if (![csvStr hasPrefix:CRYPT_HEADER]) {		// Crypt Header
+				// 先頭部分が一致しない
+				[self errorMsg:@"zLoadTmpFile:NG Header ID"];
+				return NO;
+			}
+		}
+		// 先頭へ戻す
+		[csvHandle seekToFileOffset:0];
+		data = [csvHandle readDataToEndOfFile];  // ファイルの終わりまでデータを読んで返す
+		zCsv = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+		E1 *e1add = nil;
+		if (zCsv) {
+			e1add = [self zLoad:zCsv   withSave:YES];
+		}
+		if (e1add) return YES;
+		return NO;
+	}
+	@catch(id error) {
+		[self errorMsg:NSLocalizedString(@"File error",nil)];
+	}
+	@catch (NSException *errEx) {
+		NSString *msg = [NSString stringWithFormat:@"zLoadTmpFile: NSException: %@: %@", [errEx name], [errEx reason]];
+		[self errorMsg:msg];
+	}
+	@finally {
+		[csvHandle closeFile];
+	}
+	return NO;
+}
+
+- (BOOL)zLoadPasteboard
 {
 	NSString *zCsv = nil;
+	if ([[UIPasteboard generalPasteboard].string length] < 15) {
+		[self errorMsg:NSLocalizedString(@"Pasteboard is empty",nil)];
+		return NO;
+	}
+	// PasteBoard からペーストする
+	zCsv = [[NSString alloc] initWithString:[UIPasteboard generalPasteboard].string];  // 共有領域
 	
-	if (bTmpFile && tmpPathFile_) {
-		// input OPEN
-		NSFileHandle *csvHandle = [NSFileHandle fileHandleForReadingAtPath:tmpPathFile_];
-		// バイナリファイル対策：先頭で強制判定
-		if (csvHandle) {
-			@try {
-				[csvHandle seekToFileOffset:0];
-				NSData *data = [csvHandle readDataOfLength:[GD_CSV_HEADER_ID length]*3];
-				if ([data length] != [GD_CSV_HEADER_ID length]*3) {
-					[csvHandle closeFile];
-					// File size too small.
-					//[methodPool release];
-					return NSLocalizedString(@"File error",nil);
-				}
-				NSString *csvStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-				if (![csvStr hasPrefix:GD_CSV_HEADER_ID]) { 
-					// 先頭部分が一致しない
-					//[csvStr release];
-					[csvHandle closeFile];
-					//[methodPool release];
-					return [NSString stringWithFormat:NSLocalizedString(@"This is not a %@ file",nil), GD_CSVFILENAME4];
-				}
-				//[csvStr release];
-				// 先頭へ戻す
-				[csvHandle seekToFileOffset:0];
-				data = [csvHandle readDataToEndOfFile];  // ファイルの終わりまでデータを読んで返す
-				zCsv = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-			}
-			@catch(id error) {
-				//[methodPool release];
-				return NSLocalizedString(@"File error",nil);
-			}
-			@finally {
-				[csvHandle closeFile];
-			}
-		} else {
-			//[methodPool release];
-			return NSLocalizedString(@"No File",nil);
-		}
-	}
-	else if (5 < [[UIPasteboard generalPasteboard].string length]) {
-		// PasteBoard からペーストする
-		zCsv = [[NSString alloc] initWithString:[UIPasteboard generalPasteboard].string];  // 共有領域
-	}
-	else {
-		//[methodPool release];
-		return NSLocalizedString(@"Pasteboard is empty",nil);
-	}
-	
-	//NSString *err = @"No Data";
 	E1 *e1add = nil;
 	if (zCsv) {
 		e1add = [self zLoad:zCsv   withSave:YES];
 	}
-	if (e1add==nil) return @"No Data";
-	return nil;
-}
-
-// PzCsv から E1 生成する
-- (E1 *)zLoad:(NSString *)PzCsv  withSave:(BOOL)PbSave // NO=共有プラン詳細表示時、SAVEせずにRollBackするために使用。
-{
-	@autoreleasepool {
-		NSManagedObjectContext *moc = [EntityRelation getMoc];
-		NSInteger iErrLine = 0;
-		E1 *e1node = nil;
-		E2 *e2node = nil;
-		NSInteger e2row = 0;  // CSV読み込み順に連番付与する
-		NSInteger e3row = 0;
-		NSMutableArray *aSplit = [NSMutableArray new];  // @finallyにて [aSplit release]
-		csvLineOffset = 0;
-		@try {
-			iErrLine = 0;
-			//----------------------------------------------------------------------[HEADER]
-			//[1.0]"AzPacking,CSV,UTF-8,Copyright,(C)2011,Azukid,,,\n";
-			//[1.1]"AzPacking,UTF-8,CSV,4,,,Copyright,(C)2011,Azukid,,\n"
-			while (1) { 
-				iErrLine++;
-				if (csvLineSplit(PzCsv, aSplit) < 0 OR 10 < iErrLine) { // 10行以内に無ければ中断
-					@throw NSLocalizedString(@"Err CsvHeaderNG",nil);
-				}
-				if ([[aSplit objectAtIndex:0] isEqualToString:GD_CSV_HEADER_ID]) {
-					break; // OK
-				} 
-			}
-			/***** 近未来予定
-			 if ([[aSplit objectAtIndex:2] isEqualToString:@"JSON"]) {
-			 // JSON 対応
-			 }
-			 int iModelVersion = [[aSplit objectAtIndex:3] intValue];
-			 *****/
-			
-			//----------------------------------------------------------------------[Begin]
-			//[1.0] "Begin,"
-			while (1) { 
-				iErrLine++;
-				if (csvLineSplit(PzCsv, aSplit) < 0 OR 10 < iErrLine) { // 10行以内に無ければ中断
-					@throw NSLocalizedString(@"Err CsvHeaderNG",nil);
-				}
-				if ([[aSplit objectAtIndex:0] isEqualToString:@"Begin"]) {
-					break; // OK
-				} 
-			}
-			
-			//----------------------------------------------------------------------[Plan]
-			//[1.0] " ,name,note,"
-			//[1.0] "0,   1,   2,"
-			while (1) { 
-				iErrLine++;
-				if (csvLineSplit(PzCsv, aSplit) < 0 OR 10 < iErrLine) { // 10行以内に無ければ中断
-					@throw NSLocalizedString(@"Err CsvHeaderNG",nil);
-				}
-				if ([[aSplit objectAtIndex:0] isEqualToString:@""] && ![[aSplit objectAtIndex:1] isEqualToString:@""]) {
-					break; // OK                                      ↑notです！
-				} 
-			}
-			//-----------------------------------------------E1.row の最大値を求める
-			NSInteger maxRow = [EntityRelation E1_maxRow];
-			//-----------------------------------------------E1
-			// ContextにE1ノードを追加する　ERROR発生すれば、RollBackしている
-			e1node = [NSEntityDescription insertNewObjectForEntityForName:@"E1" inManagedObjectContext:moc];
-			//-----------------------------------------------
-			e1node.row  = [NSNumber numberWithInteger:1 + maxRow];
-			e1node.name = [aSplit objectAtIndex:1];  //csvToStr([aSplit objectAtIndex:1]);
-			e1node.note = [aSplit objectAtIndex:2];
-			//-----------------------------------------------
-			e2row = 0;
-			e2node = nil;
-			
-			while (1) 
-			{
-				iErrLine++;
-				//if (csvLineSplit(PzCsv, aSplit) < 0) {
-				//	//[0.5.3]空白行に対応：行末やエラー発生時に中断
-				//	@throw NSLocalizedString(@"Err CsvHeaderNG",nil);
-				//}
-				// [0.7.3] "End,,,," が無いケースに対応
-				long lCount = csvLineSplit(PzCsv, aSplit);
-				if (lCount == -1) {	// EOF
-					break;
-				}
-				else if	(lCount < -1) {	// ERROR
-					@throw NSLocalizedString(@"Err CsvHeaderNG",nil);
-				}
-				//lCount==0 : 空白行
-				
-				//----------------------------------------------------------------------[Group] E2
-				//[1.0] " , ,name,note,"
-				//[1.0] "0,1,   2,   3,"
-				else if ([[aSplit objectAtIndex:0] isEqualToString:@""] 
-						 && [[aSplit objectAtIndex:1] isEqualToString:@""] 
-						 && ![[aSplit objectAtIndex:2] isEqualToString:@""]) // 最後だけ ! NOT
-				{
-					// トリム（両端のスペース除去）　＜＜Load時に zNameで検索するから厳密にする＞＞
-					NSString *zName = [[aSplit objectAtIndex:2] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-					if (![zName isEqualToString:@""])
-					{ // zNameが有効
-						e2node = [NSEntityDescription insertNewObjectForEntityForName:@"E2" inManagedObjectContext:moc];
-						//-----------------------------------------------
-						e2node.row		= [NSNumber numberWithInteger:e2row++];
-						e2node.name		= zName; // csvToStr()後にトリム済み
-						e2node.note		= [aSplit objectAtIndex:3];
-						//-----------------------------------------------
-						[e1node addChildsObject:e2node];
-						e3row = 0;
-					}
-				} 
-				//--------------------------------------------------------------------------------[Item] E3
-				//[1.0] [  ,  ,   ,"name","note",stock,need,weight,]
-				//[1.0] [0,1,2,          3,         4,       5,      6,         7,]
-				//[1.1] [  ,  ,   ,"name","note",stock,need,weight,"shopKeyword","shopNote",]
-				//[1.1] [0,1,2,          3,         4,       5,      6,         7,                       8,                 9,]
-				else if (e2node
-						 && [[aSplit objectAtIndex:0] isEqualToString:@""] 
-						 && [[aSplit objectAtIndex:1] isEqualToString:@""] 
-						 && [[aSplit objectAtIndex:2] isEqualToString:@""]) // 3桁ともヌル
-				{
-					NSString *zName = [[aSplit objectAtIndex:3] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-					if (![zName isEqualToString:@""]) 
-					{ // zNameが有効
-						E3 *e3node = [NSEntityDescription insertNewObjectForEntityForName:@"E3" inManagedObjectContext:moc];
-						e3node.row		= [NSNumber numberWithInteger:e3row++];
-						e3node.name				= zName;
-						e3node.note				= [aSplit objectAtIndex:4];
-						//-----------------------------------------------E3:冗長計算処理
-						NSInteger iStock	= [[aSplit objectAtIndex:5] integerValue];
-						NSInteger iNeed		= [[aSplit objectAtIndex:6] integerValue];
-						NSInteger iWeight	= [[aSplit objectAtIndex:7] integerValue];
-						e3node.stock		= [NSNumber numberWithInteger:iStock];
-						e3node.need			= [NSNumber numberWithInteger:iNeed];
-						e3node.weight		= [NSNumber numberWithInteger:iWeight];
-						e3node.weightStk	= [NSNumber numberWithInteger:(iWeight * iStock)];
-						e3node.weightNed	= [NSNumber numberWithInteger:(iWeight * iNeed)];
-						e3node.lack			= [NSNumber numberWithInteger:(iNeed - iStock)];
-						e3node.weightLack	= [NSNumber numberWithInteger:((iNeed - iStock) * iWeight)];
-						//-----------------------------------------------
-						if (0 < iNeed)
-							e3node.noGray = [NSNumber numberWithInteger:1];
-						else
-							e3node.noGray = [NSNumber numberWithInteger:0];
-						//-----------------------------------------------
-						if (0 < iNeed && iStock < iNeed)
-							e3node.noCheck = [NSNumber numberWithInteger:1];
-						else
-							e3node.noCheck = [NSNumber numberWithInteger:0];
-						//-----------------------------------------------
-						[e2node addChildsObject:e3node];
-						//-----------------------------------------------
-						//[1.1]
-						if (8 < [aSplit count]) {
-							e3node.shopKeyword	= [aSplit objectAtIndex:8];
-						}
-						if (9 < [aSplit count]) {
-							e3node.shopNote		= [aSplit objectAtIndex:9];
-						}
-					}
-				} 
-				//--------------------------------------------------------------------------------[End]
-				// "End,"
-				else if (![[aSplit objectAtIndex:0] isEqualToString:@""]) // [0]がヌルで無い場合全て
-				{
-					break; // LOOP OUT
-				}
-			} //while(1)
-			
-			if (e1node) {
-				for (e2node in e1node.childs) {
-					// E2 sum属性　＜高速化＞ 親sum保持させる
-					[e2node setValue:[e2node valueForKeyPath:@"childs.@sum.noGray"] forKey:@"sumNoGray"];
-					[e2node setValue:[e2node valueForKeyPath:@"childs.@sum.noCheck"] forKey:@"sumNoCheck"];
-					[e2node setValue:[e2node valueForKeyPath:@"childs.@sum.weightStk"] forKey:@"sumWeightStk"];
-					[e2node setValue:[e2node valueForKeyPath:@"childs.@sum.weightNed"] forKey:@"sumWeightNed"];
-				}
-				
-				// E1 sum属性　＜高速化＞ 親sum保持させる
-				[e1node setValue:[e1node valueForKeyPath:@"childs.@sum.sumNoGray"] forKey:@"sumNoGray"];
-				[e1node setValue:[e1node valueForKeyPath:@"childs.@sum.sumNoCheck"] forKey:@"sumNoCheck"];
-				[e1node setValue:[e1node valueForKeyPath:@"childs.@sum.sumWeightStk"] forKey:@"sumWeightStk"];
-				[e1node setValue:[e1node valueForKeyPath:@"childs.@sum.sumWeightNed"] forKey:@"sumWeightNed"];
-				
-				if (PbSave) {
-					// 保存する
-					NSError *err = nil;
-					if (![moc save:&err]) {
-						// 保存失敗
-						[self errorMsg:@"Moc save error"];
-						if (e1node) {
-							[moc rollback];
-							//rollbackで十分//[moc deleteObject:e1node]; // insertNewObjectForEntityForNameしたEntityを削除する
-							e1node = nil;
-						}
-						NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
-					}
-					else {
-						// 保存成功
-					}
-				}
-			}
-			else {
-				// Endが無い ＆ [Plan]も無い
-				[self errorMsg:@"No End"];
-				if (e1node) {
-					[moc rollback];
-					//rollbackで十分//[moc deleteObject:e1node]; // insertNewObjectForEntityForNameしたEntityを削除する
-					e1node = nil;
-				}
-			}
-		} //@try
-		@catch (NSException *errEx) {
-			NSString *msg = [NSString stringWithFormat:@"zLoad: NSException: %@: %@", [errEx name], [errEx reason]];
-			[self errorMsg:msg];
-			if (e1node) {
-				[moc rollback];
-				//rollbackで十分//[moc deleteObject:e1node]; // insertNewObjectForEntityForNameしたEntityを削除する
-				e1node = nil;
-			}
-		}
-		@catch (NSString *errMsg) {
-			[self errorMsg:errMsg];
-			if (e1node) {
-				[moc rollback];
-				//rollbackで十分//[moc deleteObject:e1node]; // insertNewObjectForEntityForNameしたEntityを削除する
-				e1node = nil;
-			}
-		}
-		//@finally {
-		//	[aSplit release];
-		//}	
-		return e1node; // moc(Entity)インスタンス
-	}
+	if (e1add) return YES;
+	return NO;
 }
 
 

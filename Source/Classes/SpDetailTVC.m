@@ -212,37 +212,36 @@
 					[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
 					break;
 				}
-				/***
-				// JSON --> NSArray   ＜＜＜ Dropbox標準のSBJSONを使用
-				NSError *err = nil;
-				SBJSON	*js = [SBJSON new];
-				NSArray *jsonArray = [js objectWithString:jsonStr error:&err];
-				js = nil;
-				if (err) {
-					NSLog(@"tmpFileLoad: SBJSON: objectWithString: (err=%@) zJson=%@", [err description], jsonStr);
-					alertMsgBox( NSLocalizedString(@"Connection Error",nil), 
-								[err description],
-								NSLocalizedString(@"Roger",nil) );
-					[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
-					break;
-				}***/
 				NSLog(@"jsonArray=%@", jsonArray);
 				if (0 < [jsonArray count]) {
 					NSDictionary *dic = [jsonArray objectAtIndex:0];
 					NSString *planCsv = [dic objectForKey:@"planCsv"];
-					//---------------------------------------CSV LOAD Start.
-					FileCsv *fcsv = [[FileCsv alloc] init];
-					Re1add = [fcsv zLoad:planCsv   withSave:NO];	// NO = Moc-SAVE しない！ ゆえに、Re1add は rollback だけで取り消し可能。
-					if (Re1add) {
-						[self.tableView reloadData];
-					} 
-					else {
-						NSString *msg = [NSString stringWithFormat:@"SpDetail: FileCsv zLoad: %@", fcsv.errorMsgs];
-						alertMsgBox( NSLocalizedString(@"Download Err",nil), 
-									msg,
-									NSLocalizedString(@"Roger",nil) );
-						// 前Viewへ戻す
-					}
+					
+					dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+					dispatch_async(queue, ^{		// 非同期マルチスレッド処理
+						FileCsv *fcsv = [[FileCsv alloc] init];
+						Re1add = [fcsv zLoad:planCsv   withSave:NO];	// NO = Moc-SAVE しない！ ゆえに、Re1add は rollback だけで取り消し可能。
+						
+						dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理
+							if (Re1add) {
+								[self.tableView reloadData];
+							} 
+							else {
+								NSString *errmsg = nil;
+								int iNo = 1;
+								for (NSString *msg in fcsv.errorMsgs) {
+									errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
+								}
+								alertMsgBox( NSLocalizedString(@"Download Err",nil), 
+											errmsg,
+											NSLocalizedString(@"Roger",nil) );
+								// 前Viewへ戻す
+							}
+							MiConnectTag = 0; // 通信してません
+							[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
+						});
+					});
+					return; // 非同期につき、最後の MiConnectTag = 0; を通さないようにするため
 				}
 			}	break;
 				
@@ -271,7 +270,6 @@
 			default:
 				break;
 		}
-		//[jsonStr release];
 	}
 	MiConnectTag = 0; // 通信してません
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF

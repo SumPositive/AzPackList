@@ -153,6 +153,7 @@ NSString *getMacAddress()
 }
 
 
+#pragma mark - UTC協定世界時
 
 //******************************************************************************
 //***** Device側はデフォルトタイムゾーン時刻を使用。　通信(JSON)やGAE側はUTCを使用。
@@ -180,5 +181,7 @@ NSString *utcFromDate( NSDate *dTZ )
 	return zUTC; // autorelease
 }
 
+
+//END
 
 

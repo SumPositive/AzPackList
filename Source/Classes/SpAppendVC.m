@@ -132,7 +132,7 @@
 	MlbNickname = [[UILabel alloc] init];
 	MlbNickname.font = [UIFont systemFontOfSize:12];
 	MlbNickname.text = NSLocalizedString(@"Nickname info",nil);
-	MlbNickname.numberOfLines = 3;
+	MlbNickname.numberOfLines = 6;
 	MlbNickname.textAlignment = UITextAlignmentCenter;
 	MlbNickname.backgroundColor = [UIColor clearColor];
 	[self.view addSubview:MlbNickname]; //[MlbNickname release];
@@ -296,7 +296,7 @@
 		rect.origin.y = 115;		rect.size.height = 30;
 		MtfNickname.frame = rect;
 
-		rect.origin.y = 170;		rect.size.height = 60; // 3行
+		rect.origin.y = 170;		rect.size.height = 120; // 6行
 		MlbNickname.frame = rect;
 		
 /*		rect.origin.y = 160;	rect.size.height = 216;
@@ -324,7 +324,7 @@
 		//rect.origin.x = 330;	rect.size.width = self.view.bounds.size.width - rect.origin.x - 10;
 		MtfNickname.frame = rect;
 		
-		rect.origin.y += 25;	rect.size.height = 60; // 3行
+		rect.origin.y += 25;	rect.size.height = 120; // 6行
 		MlbNickname.frame = rect;
 		
 		rect.origin.y = self.view.bounds.size.height - 50;	rect.size.height = 32;
@@ -466,16 +466,20 @@
 	
 	// planCsv
 	NSMutableString *zCsv = [NSMutableString new]; //こちら側でメモリ管理する
+	// この呼び出し元から「非同期マルチスレッド処理」している
 	FileCsv *fcsv = [[FileCsv alloc] init];
-	NSString *zErr = [fcsv zSave:Re1selected toMutableString:zCsv]; // E1 ⇒ CSV string
-	if (zErr) {
-		//[zCsv release];
+	BOOL bCsv = [fcsv zSave:Re1selected toMutableString:zCsv crypt:NO]; //crypt:NO 公開につき暗号化禁止
+	if (bCsv==NO) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
-		return zErr; // pool変数
+		NSString *errmsg = nil;
+		int iNo = 1;
+		for (NSString *msg in fcsv.errorMsgs) {
+			errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
+		}
+		return errmsg; // pool変数
 	}
 	postCmd = [postCmd stringByAppendingString:@"&planCsv="];
 	postCmd = [postCmd stringByAppendingString:zCsv];
-	//[zCsv release];
 	
 /*	// tag
 	for (NSString *zz in maTags) {
@@ -557,39 +561,32 @@
 		
 		case ALERT_TAG_PUBLISH: 
 			if (buttonIndex==1) {
-		/*		// Tag
-				NSMutableArray *ma = [NSMutableArray new];
-				for (int comp=0; comp<3; comp++) {
-					NSInteger iRow = [Mpicker selectedRowInComponent:comp];
-					if (0 < iRow) {
-						[ma addObject:[[RaPickerSource objectAtIndex:comp] objectAtIndex:iRow]];
-					}
-				}*/
 				// Append - Upload - Publish
-				@autoreleasepool {
-					//NSString *err = [self vSharePlanAppend:ma];
+				dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+				dispatch_async(queue, ^{		// 非同期マルチスレッド処理
+					
 					NSString *err = [self vSharePlanAppend];
-					if (err) {
-						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append Err",nil)
-																		message:err
-																	   delegate:self 
-															  cancelButtonTitle:NSLocalizedString(@"Roger",nil)
-															  otherButtonTitles:nil];
-						alert.tag = ALERT_TAG_PREVIEW; // 前のViewへ戻る
-						[alert show];
-						//[alert release];
-					} else {
-						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append OK",nil)
-																		message:NSLocalizedString(@"Append OK Msg",nil)
-																	   delegate:self 
-															  cancelButtonTitle:@"OK"
-															  otherButtonTitles:nil];
-						alert.tag = ALERT_TAG_PREVIEW; // 前のViewへ戻る
-						[alert show];
-						//[alert release];
-					}
-				}
-				//[ma release];
+
+					dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理
+						if (err) {
+							UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append Err",nil)
+																			message:err
+																		   delegate:self 
+																  cancelButtonTitle:NSLocalizedString(@"Roger",nil)
+																  otherButtonTitles:nil];
+							alert.tag = ALERT_TAG_PREVIEW; // 前のViewへ戻る
+							[alert show];
+						} else {
+							UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append OK",nil)
+																			message:NSLocalizedString(@"Append OK Msg",nil)
+																		   delegate:self 
+																  cancelButtonTitle:@"OK"
+																  otherButtonTitles:nil];
+							alert.tag = ALERT_TAG_PREVIEW; // 前のViewへ戻る
+							[alert show];
+						}
+					});
+				});
 			}
 			break;
 	}

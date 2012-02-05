@@ -17,12 +17,16 @@
 
 - (id)init;
 
-- (NSString *)zSave:(E1 *)Pe1  toTmpFile:(BOOL)bTmpFile;  //NO:PasteBoardへ書き出す
-- (NSString *)zSave:(E1 *)Pe1 toMutableString:(NSMutableString *)PzCsv;
+//Private//- (BOOL)zSavePrivate:(E1 *)Pe1  toMutableString:(NSMutableString *)PzCsv;
+- (BOOL)zSave:(E1 *)Pe1 toMutableString:(NSMutableString *)PzCsv  crypt:(BOOL)bCrypt;
+- (BOOL)zSaveTmpFile:(E1 *)Pe1  crypt:(BOOL)bCrypt;
+- (BOOL)zSavePasteboard:(E1 *)Pe1  crypt:(BOOL)bCrypt;
 
-- (NSString *)zLoadURL:(NSURL*)Url;
-- (NSString *)zLoadFromTmpFile:(BOOL)bTmpFile;  //NO:PasteBoardから読み込む
+//- (E1 *)zLoadPrivate:(NSString *)PzCsv  withSave:(BOOL)PbSave;
 - (E1 *)zLoad:(NSString *)PzCsv  withSave:(BOOL)PbSave;
+- (BOOL)zLoadTmpFile;
+- (BOOL)zLoadPasteboard;
+- (BOOL)zLoadURL:(NSURL*)Url;
 
 
 @end

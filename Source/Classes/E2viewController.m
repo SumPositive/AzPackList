@@ -243,45 +243,52 @@
 	NSString* zSubj = [NSString stringWithFormat:@"%@ : %@ ", NSLocalizedString(@"Product Title",nil), e1selected_.name];
 	[picker setSubject:zSubj];  
 
-	// CSV SAVE
-	FileCsv *fcsv = [[FileCsv alloc] init];
-	NSString *zErr = [fcsv zSave:e1selected_ toTmpFile:YES];
-	if (zErr) {
-		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
-		UIAlertView *alert = [[UIAlertView alloc] 
-							  initWithTitle:NSLocalizedString(@"CSV Save Fail",nil)
-							  message:zErr
-							  delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-		[alert show];
-		return;
-	}
-	//NSString *home_dir = NSHomeDirectory();
-	//NSString *doc_dir = [home_dir stringByAppendingPathComponent:@"tmp"];
-	//NSString *csvPath = [doc_dir stringByAppendingPathComponent:GD_CSVFILENAME4];
-	NSString *csvPath = fcsv.tmpPathFile;
-	// Body: 添付ファイル
-	//NSString* fileName = @"attachement.packlist";
-	NSString* fileName = [NSString stringWithFormat:@"%@.%@", e1selected_.name, GD_EXTENSION];
-	NSData* fileData = [NSData dataWithContentsOfFile:csvPath];
-	[picker addAttachmentData:fileData mimeType:@"application/packlist" fileName:fileName];
-	
-	// Body: 本文
-	NSString* zBody = [NSString stringWithFormat:@"%@%@%@%@%@", 
-					   NSLocalizedString(@"Email send Body1",nil),
-					   NSLocalizedString(@"Email send Body2",nil),
-					   NSLocalizedString(@"Email send Body3",nil),
-					   NSLocalizedString(@"Email send Body4",nil),
-					   NSLocalizedString(@"Email send Body5",nil) ];
-	[picker setMessageBody:zBody isHTML:YES];
-	
-	// Email オープン
-	if (appDelegate_.app_is_iPad) {
-		picker.modalPresentationStyle = UIModalPresentationFormSheet;
-		[appDelegate_.mainSVC presentModalViewController:picker animated:YES];
-	} else {
-		[appDelegate_.mainNC presentModalViewController:picker animated:YES];
-	}
-	//[picker release];
+	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+	dispatch_async(queue, ^{
+		// CSV SAVE
+		FileCsv *fcsv = [[FileCsv alloc] init];
+		BOOL bCsv = [fcsv zSaveTmpFile:e1selected_ crypt:YES];
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
+			if (bCsv==NO) {
+				NSString *errmsg = nil;
+				int iNo = 1;
+				for (NSString *msg in fcsv.errorMsgs) {
+					errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
+				}
+				UIAlertView *alert = [[UIAlertView alloc] 
+									  initWithTitle:NSLocalizedString(@"CSV Save Fail",nil)
+									  message:errmsg
+									  delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+				[alert show];
+				return;
+			}
+			NSString *csvPath = fcsv.tmpPathFile;
+
+			// Body: 添付ファイル
+			NSString* fileName = [NSString stringWithFormat:@"%@.%@", e1selected_.name, GD_EXTENSION];
+			NSData* fileData = [NSData dataWithContentsOfFile:csvPath];
+			[picker addAttachmentData:fileData mimeType:@"application/packlist" fileName:fileName];
+			
+			// Body: 本文
+			NSString* zBody = [NSString stringWithFormat:@"%@%@%@%@%@", 
+							   NSLocalizedString(@"Email send Body1",nil),
+							   NSLocalizedString(@"Email send Body2",nil),
+							   NSLocalizedString(@"Email send Body3",nil),
+							   NSLocalizedString(@"Email send Body4",nil),
+							   NSLocalizedString(@"Email send Body5",nil) ];
+			[picker setMessageBody:zBody isHTML:YES];
+			
+			// Email オープン
+			if (appDelegate_.app_is_iPad) {
+				picker.modalPresentationStyle = UIModalPresentationFormSheet;
+				[appDelegate_.mainSVC presentModalViewController:picker animated:YES];
+			} else {
+				[appDelegate_.mainNC presentModalViewController:picker animated:YES];
+			}
+		});
+	});
 }
 
 - (void)actionSharedPackListUp:(NSIndexPath*)indexPath
@@ -425,39 +432,50 @@
 	}
 	alertHttpServer_.tag = ALERT_TAG_HTTPServerStop;
 	[alertHttpServer_ show];
-	//[MalertHttpServer release];
-	// CSV SAVE
-	FileCsv *fcsv = [[FileCsv alloc] init];
-	NSString *zErr = [fcsv zSave:e1selected_ toTmpFile:YES];
-	if (zErr) {
-		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
-		UIAlertView *alert = [[UIAlertView alloc] 
-							  initWithTitle:NSLocalizedString(@"CSV Save Fail",nil)
-							  message:zErr
-							  delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-		[alert show];
-		return;
-	}
-	// if (httpServer) return; <<< didSelectRowAtIndexPath:直後に配置してダブルクリック回避している。
-	//NSString *root = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
-	NSString *root = NSTemporaryDirectory();
-	
-	httpServer_ = [HTTPServer new];
-	[httpServer_ setType:@"_http._tcp."];
-	[httpServer_ setConnectionClass:[MyHTTPConnection class]];
-	[httpServer_ setDocumentRoot:[NSURL fileURLWithPath:root]];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(httpInfoUpdate:) name:@"LocalhostAdressesResolved" object:nil];
-	[localhostAddresses performSelectorInBackground:@selector(list) withObject:nil];
-	[httpServer_ setPort:8080];
-	[httpServer_ setBackup:YES]; // BACKUP Mode
-	[httpServer_ setPlanName:e1selected_.name]; // ファイル名を "プラン名.AzPack.csv" にするため
-	NSError *error;
-	if(![httpServer_ start:&error])
-	{
-		NSLog(@"Error starting HTTP Server: %@", error);
-		//[RhttpServer release];
-		httpServer_ = nil;
-	}
+
+	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+	dispatch_async(queue, ^{
+		// CSV SAVE
+		FileCsv *fcsv = [[FileCsv alloc] init];
+		BOOL bCsv = [fcsv zSaveTmpFile:e1selected_ crypt:YES];
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if (bCsv==NO) {
+				[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
+				NSString *errmsg = nil;
+				int iNo = 1;
+				for (NSString *msg in fcsv.errorMsgs) {
+					errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
+				}
+				UIAlertView *alert = [[UIAlertView alloc] 
+									  initWithTitle:NSLocalizedString(@"CSV Save Fail",nil)
+									  message:errmsg
+									  delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+				[alert show];
+				return;
+			}
+			// if (httpServer) return; <<< didSelectRowAtIndexPath:直後に配置してダブルクリック回避している。
+			//NSString *root = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
+			NSString *root = NSTemporaryDirectory();
+			
+			httpServer_ = [HTTPServer new];
+			[httpServer_ setType:@"_http._tcp."];
+			[httpServer_ setConnectionClass:[MyHTTPConnection class]];
+			[httpServer_ setDocumentRoot:[NSURL fileURLWithPath:root]];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(httpInfoUpdate:) name:@"LocalhostAdressesResolved" object:nil];
+			[localhostAddresses performSelectorInBackground:@selector(list) withObject:nil];
+			[httpServer_ setPort:8080];
+			[httpServer_ setBackup:YES]; // BACKUP Mode
+			[httpServer_ setPlanName:e1selected_.name]; // ファイル名を "プラン名.AzPack.csv" にするため
+			NSError *error;
+			if(![httpServer_ start:&error])
+			{
+				NSLog(@"Error starting HTTP Server: %@", error);
+				//[RhttpServer release];
+				httpServer_ = nil;
+			}
+		});
+	});
 }
 
 - (void)actionCopiedPasteBoard
@@ -471,36 +489,38 @@
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.title = NSLocalizedString(@"Please Wait",nil);
 	[alert show];
-	//---------------------------------------CSV SAVE Start.
-	FileCsv *fcsv = [[FileCsv alloc] init];
-	NSString *zErr = [fcsv zSave:e1selected_ toTmpFile:NO]; //NO= to Pasteboard
-	//---------------------------------------CSV SAVE End.
-	[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
-	//[alert release];
-	if (zErr) {
-		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
-		alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"PBoard Error",nil)
-										   message:zErr
-										  delegate:nil 
-								 cancelButtonTitle:nil 
-								 otherButtonTitles:@"OK", nil];
-		[alert show];
-		//alert.title = NSLocalizedString(@"PBoard Error",nil);
-		//alert.message = zErr;
-		//[alert addButtonWithTitle:@"OK"];
-		//[alert release];
-		return;
-	}
-	alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"PBoard Copy",nil)
-									   message:NSLocalizedString(@"PBoard Copy OK",nil)
-									  delegate:nil
-							 cancelButtonTitle:nil
-							 otherButtonTitles:@"OK", nil];
-	[alert show];
-	//alert.title = NSLocalizedString(@"PBoard Copy",nil);
-	//alert.message = NSLocalizedString(@"PBoard Copy OK",nil);
-	//[alert addButtonWithTitle:@"OK"];
-	//[alert release];
+	
+	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+	dispatch_async(queue, ^{		// 非同期マルチスレッド処理
+		FileCsv *fcsv = [[FileCsv alloc] init];
+		BOOL bCsv = [fcsv zSavePasteboard:e1selected_ crypt:YES];
+		
+		dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理
+			[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
+			[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
+			if (bCsv) {
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"PBoard Copy",nil)
+																message:NSLocalizedString(@"PBoard Copy OK",nil)
+															   delegate:nil
+													  cancelButtonTitle:nil
+													  otherButtonTitles:@"OK", nil];
+				[alert show];
+			}
+			else {
+				NSString *errmsg = nil;
+				int iNo = 1;
+				for (NSString *msg in fcsv.errorMsgs) {
+					errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
+				}
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"PBoard Error",nil)
+												   message:errmsg
+												  delegate:nil 
+										 cancelButtonTitle:nil 
+										 otherButtonTitles:@"OK", nil];
+				[alert show];
+			}
+		});
+	});
 }
 
 

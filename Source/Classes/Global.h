@@ -30,6 +30,7 @@
 #define GD_CSVFILENAME4		@"AzPack.packlist"	//[1.1.0:xcdatamodel-4]以降 HOME/tmp/file name
 #define GD_GDOCS_EXT4			@".packlist"			//[1.1.0:xcdatamodel-4]以降 Google Document Spredseet.拡張子
 #define GD_EXTENSION				@"azp"					//[2.0]
+#define CRYPT_HEADER				@"AzPackListCrypt"	//変更禁止//固定長
 
 #define GD_SECTION_TIMES	100000				// .tag = .section * GD_SECTION_TIMES + .row に使用
 #define GD_E2SORTLIST_COUNT		3				// E2 Sort Listの有効行数
@@ -38,6 +39,8 @@
 // UserDefaults: UD_KEY   機種個別設定   初期値定義は、<applicationDidFinishLaunching>内
 #define UD_OptShouldAutorotate				@"UD_OptShouldAutorotate"
 #define UD_OptPasswordSave					@"UD_OptPasswordSave"
+#define UD_OptCrypt									@"UD_OptCrypt"	// YES=PackList暗号化 ＜＜秘密Keyはデバイス別に保存
+
 #define UD_CurrentVersion						@"UD_CurrentVersion"
 //#define UD_DeviceID									@"UD_DeviceID"		//2.0// Original UDID
 #define GD_DefPassword							@"DefPassword"
@@ -51,8 +54,7 @@
 #define KV_OptItemsGrayShow					@"KV_OptItemsGrayShow"
 #define KV_OptCheckingAtEditMode		@"KV_OptCheckingAtEditMode" // 編集モードでチェックする
 #define KV_OptSearchItemsNote				@"KV_OptSearchItemsNote"	// アイテムのNote内も検索する
-#define KV_OptAdvertising						@"KV_OptAdvertising"		// YES=広告あり／NO=なし
-//#define KV_UnLock									@"KV_UnLock"					// YES=購入済み／NO=なし
+#define KV_OptAdvertising						@"KV_OptAdvertising"			// YES=広告あり／NO=なし
 
 
 #define GD_KeyboardHeightPortrait	216.0f	// タテ向きのときのキーボード高さ
