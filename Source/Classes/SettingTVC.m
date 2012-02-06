@@ -364,12 +364,6 @@
 
 		case 7:
 		{ // KV_OptCrypt
-			cell.textLabel.text = NSLocalizedString(@"PackListCrypt",nil);
-			if (appDelegate_.app_pid_AdOff) {
-				cell.detailTextLabel.text = NSLocalizedString(@"PackListCrypt enable",nil);
-			} else {
-				cell.detailTextLabel.text = NSLocalizedString(@"PackListCrypt disable",nil);
-			}
 			// add UITextField1
 			if (tfPass1_==nil) {
 				tfPass1_ = [[UITextField alloc] init];
@@ -380,11 +374,8 @@
 				tfPass1_.returnKeyType = UIReturnKeyNext;
 				tfPass1_.tag = TAG_OptCryptKey1;
 				tfPass1_.enabled = appDelegate_.app_pid_AdOff; // AdOff支払により有効化
+				tfPass1_.text = @"";
 				tfPass1_.delegate = self;
-				// KeyChainから保存しているパスワードを取得する
-				NSError *error; // nilを渡すと異常終了するので注意
-				tfPass1_.text = [SFHFKeychainUtils getPasswordForUsername:UD_OptCrypt
-														   andServiceName:GD_PRODUCTNAME error:&error];
 				[cell.contentView  addSubview:tfPass1_];
 			}
 			tfPass1_.frame = CGRectMake(fX-45, 8, 140, 25); // 回転対応
@@ -397,12 +388,28 @@
 				tfPass2_.secureTextEntry = YES;
 				tfPass2_.returnKeyType = UIReturnKeyDone;
 				tfPass2_.tag = TAG_OptCryptKey2;
-				tfPass2_.hidden = !(appDelegate_.app_pid_AdOff); // AdOff支払により有効化 ＜＜detailTextLabelを見せるために.hiddenにしている。
+				tfPass2_.hidden = YES;  // tfPass1_入力直後にだけ表示する
+				tfPass2_.text = @"";
 				tfPass2_.delegate = self;
-				tfPass2_.text = tfPass1_.text;
 				[cell.contentView  addSubview:tfPass2_];
 			}
 			tfPass2_.frame = CGRectMake(fX-45,38, 140, 25); // 回転対応
+			//
+			cell.textLabel.text = NSLocalizedString(@"PackListCrypt",nil);
+			if (appDelegate_.app_pid_AdOff) {
+				NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+				if ([defaults boolForKey:UD_OptCrypt]) {
+					// KeyChainから保存しているパスワードを取得する
+					NSError *error; // nilを渡すと異常終了するので注意
+					tfPass1_.text = [SFHFKeychainUtils getPasswordForUsername:UD_OptCrypt
+															   andServiceName:GD_PRODUCTNAME error:&error];
+					cell.detailTextLabel.text = NSLocalizedString(@"PackListCrypt enable",nil);
+				} else {
+					cell.detailTextLabel.text = NSLocalizedString(@"PackListCrypt enable NoKey",nil);
+				}
+			} else {
+				cell.detailTextLabel.text = NSLocalizedString(@"PackListCrypt disable",nil);
+			}
 		}	break;
 	}
     return cell;
@@ -462,10 +469,23 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)sender 
 {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setBool:NO forKey:UD_OptCrypt];
+	[defaults setBool:NO forKey:UD_OptCrypt];  // 解除
 
 	if (sender==tfPass1_) {
-		if ([sender.text length] < 3 OR 20 < [sender.text length]) {
+		if ([sender.text length] <= 0) {
+			// 秘密キーを破棄する
+			NSError *error; // nilを渡すと異常終了するので注意
+			[SFHFKeychainUtils deleteItemForUsername:UD_OptCrypt 
+									  andServiceName:GD_PRODUCTNAME error:&error];
+			sender.text = @"";
+			[tfPass1_ resignFirstResponder];
+			tfPass2_.hidden = YES;
+			tfPass2_.text = @"";
+			[self.tableView reloadData];  // cell表示更新のため
+			alertBox(NSLocalizedString(@"PackListCrypt Disable",nil), nil, @"OK");
+			return YES;
+		}
+		else if ([sender.text length] < 3 OR 20 < [sender.text length]) {
 			sender.text = @"";
 			alertBox(NSLocalizedString(@"PackListCrypt Key Over",nil), nil, @"OK");
 			return NO;
@@ -478,25 +498,32 @@
 		[tfPass2_ resignFirstResponder];
 		if ([tfPass1_.text isEqualToString:tfPass2_.text]) {
 			// 一致、パス変更
-			// PasswordをKeyChainに保存する
+			// 秘密キーをKeyChainに保存する
 			NSError *error; // nilを渡すと異常終了するので注意
 			[SFHFKeychainUtils storeUsername:UD_OptCrypt
 								 andPassword:tfPass1_.text 
 							  forServiceName:GD_PRODUCTNAME 
 							  updateExisting:YES error:&error];
 			if (error) {
+				tfPass1_.text = @"";
+				[tfPass1_ becomeFirstResponder];
+				tfPass2_.hidden = YES;
+				tfPass2_.text = @"";
 				alertBox(NSLocalizedString(@"PackListCrypt Key Error",nil), 
-									[error localizedDescription], @"OK");
+						 [error localizedDescription], @"OK");
 			} else {
-				[defaults setBool:YES forKey:UD_OptCrypt];
+				[defaults setBool:YES forKey:UD_OptCrypt]; // 有効
+				[self.tableView reloadData];  // cell表示更新のため
 				alertBox(NSLocalizedString(@"PackListCrypt Key Changed",nil), nil, @"OK");
 			}
+			tfPass2_.hidden = YES;
 		}
 		else {
 			// 不一致　　Does not match.
-			alertBox(NSLocalizedString(@"PackListCrypt Key NoMatch",nil), nil, @"OK");
+			tfPass2_.hidden = NO;
 			tfPass2_.text = @"";
 			[tfPass2_ becomeFirstResponder];
+			alertBox(NSLocalizedString(@"PackListCrypt Key NoMatch",nil), nil, @"OK");
 		}
 	}
     return YES;

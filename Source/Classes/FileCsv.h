@@ -12,8 +12,8 @@
 
 @interface FileCsv : NSObject 
 
-@property (nonatomic, strong, readonly) NSString					*tmpPathFile;
-@property (nonatomic, strong, readonly) NSMutableArray		*errorMsgs;
+@property (nonatomic, strong, readonly) NSString		*tmpPathFile;
+@property (nonatomic, strong) NSMutableArray			*errorMsgs;
 
 - (id)init;
 

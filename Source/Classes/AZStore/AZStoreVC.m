@@ -276,7 +276,7 @@ replacementString:(NSString *)string
 // セルの高さを指示する
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-	return 66; // デフォルト：44ピクセル
+	return 88; // デフォルト：44ピクセル
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -315,7 +315,9 @@ replacementString:(NSString *)string
 						cell.detailTextLabel.textColor = [UIColor blueColor];
 						cell.detailTextLabel.text = NSLocalizedString(@"SK Purchased", nil);
 					} else {
-						cell.detailTextLabel.font = [UIFont systemFontOfSize:10];
+						cell.detailTextLabel.adjustsFontSizeToFitWidth = YES;
+						cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
+						cell.detailTextLabel.minimumFontSize = 10.0;
 						cell.detailTextLabel.textColor = [UIColor brownColor];
 						//NSString *zPrice = [prod.price descriptionWithLocale: [NSLocale currentLocale]];
 						// Price 金額単位表示する

@@ -41,10 +41,9 @@ static NSString *csvToStr( NSString *inCsv ) {
 
 - (void)errorMsg:(NSString*)msg
 {
-	if (errorMsgs_==nil) {
-		errorMsgs_ = [NSMutableArray new];
+	if (errorMsgs_) {		// ここで生成しない。親から受け取る
+		[errorMsgs_ addObject:msg];
 	}
-	[errorMsgs_ addObject:msg];
 }
 
 // CSV形式　　["]で囲まれた文字列に限り、その中に[,]と[改行]を使用可能。
@@ -382,17 +381,17 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		iErrLine = 0;
 		//----------------------------------------------------------------------[HEADER]
 		iErrLine++;
-		/*	//[1.0]"AzPacking,CSV,UTF-8,Copyright,(C)2011,Azukid,,,\n";
-		 //[1.1]"AzPacking,UTF-8,CSV,4,,,Copyright,(C)2011,Azukid,,\n"
-		 while (1) { 
-		 iErrLine++;
-		 if (csvLineSplit(PzCsv, aSplit) < 0 OR 10 < iErrLine) { // 10行以内に無ければ中断
-		 @throw NSLocalizedString(@"Err CsvHeaderNG",nil);
-		 }
-		 if ([[aSplit objectAtIndex:0] isEqualToString:GD_CSV_HEADER_ID]) {
-		 break; // OK
-		 } 
-		 }*/
+		//[1.0]"AzPacking,CSV,UTF-8,Copyright,(C)2011,Azukid,,,\n";
+		//[1.1]"AzPacking,UTF-8,CSV,4,,,Copyright,(C)2011,Azukid,,\n"
+		while (1) { 
+			iErrLine++;
+			if (csvLineSplit(PzCsv, aSplit) < 0 OR 10 < iErrLine) { // 10行以内に無ければ中断
+				@throw NSLocalizedString(@"Err CsvHeaderNG",nil);
+			}
+			if ([[aSplit objectAtIndex:0] isEqualToString:GD_CSV_HEADER_ID]) {
+				break; // OK
+			} 
+		}
 		
 		//----------------------------------------------------------------------[Begin]
 		//[1.0] "Begin,"
@@ -607,6 +606,11 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 			}
 		} else {
 			[self errorMsg:NSLocalizedString(@"PackListCrypt NoKey",nil)];
+			return nil;
+		}
+		// 復号後のヘッダーチェック
+		if ([PzCsv hasPrefix:GD_CSV_HEADER_ID]==NO) {
+			[self errorMsg:NSLocalizedString(@"PackListCrypt NoDecrypted",nil)];
 			return nil;
 		}
 	}

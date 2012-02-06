@@ -40,18 +40,36 @@
 	[mAlert dismissWithClickedButtonIndex:mAlert.cancelButtonIndex animated:YES];
 }
 
-- (void)alertCommError:(NSString*)errmsg
-{
-	NSString *msg = NSLocalizedString(@"Dropbox CommErrorMsg", nil);
-	if (errmsg) {
-		msg = [msg stringByAppendingString:@"\n\n(Detail)"];
-		msg = [msg stringByAppendingString:errmsg];
+- (NSMutableArray*)errorMsgs {
+	if (errorMsgs_==nil) {
+		errorMsgs_ = [NSMutableArray new];
 	}
-	UIAlertView *alv = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Dropbox CommError", nil) 
-												   message: msg
+	return errorMsgs_;
+}
+
+- (void)alertMsg:(NSString*)msg  detail:(NSString*)detail
+{
+	//NSString *msg = NSLocalizedString(@"Dropbox CommErrorMsg", nil);
+	if (detail) {
+		detail = [@"\n--- Detail ---\n" stringByAppendingString:detail];
+	}
+	UIAlertView *alv = [[UIAlertView alloc] initWithTitle: msg
+												   message: detail
 												  delegate:nil cancelButtonTitle:nil 
 										 otherButtonTitles:NSLocalizedString(@"Roger", nil), nil];
 	[alv show];
+}
+
+- (void)alertMsgErrors:(NSString*)msg
+{
+	NSString *detail = nil;
+	if (0 < [errorMsgs_ count]) {
+		int iNo = 1;
+		for (NSString *zz in errorMsgs_) {
+			detail = [detail stringByAppendingFormat:@"(%d) %@\n", iNo++, zz];
+		}
+	}
+	[self alertMsg:msg detail:detail];
 }
 
 #pragma mark - Dropbox DBRestClient
@@ -98,6 +116,7 @@
 	NSString *otherButtonTitle = nil;
 	if (overWriteRev_) {
 		destructiveButtonTitle = NSLocalizedString(@"Dropbox OverWrite", nil); // 上書き保存　＜＜ overWriteRev_を使ってアップロード
+		otherButtonTitle = NSLocalizedString(@"Dropbox Sequential", nil); // 連番を付けて保存
 	} else {
 		otherButtonTitle = NSLocalizedString(@"Dropbox Save", nil); // 新規保存
 	}
@@ -290,7 +309,7 @@
 	[ibTableView reloadData];
 	//
 	[self alertIndicatorOff];
-	[self alertCommError:[error description]];
+	[self alertMsg:NSLocalizedString(@"Dropbox CommErrorMsg", nil) detail:[error localizedDescription]];
 }
 
 
@@ -302,6 +321,7 @@
 	dispatch_async(queue, ^{
 		// CSV読み込み
 		FileCsv *fcsv = [[FileCsv alloc] init];
+		fcsv.errorMsgs = [self errorMsgs];
 		BOOL bCsv = [fcsv zLoadTmpFile];
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -312,7 +332,7 @@
 															  message:nil
 															 delegate:nil
 													cancelButtonTitle:nil
-													otherButtonTitles:NSLocalizedString(@"Roger", nil), nil];
+													otherButtonTitles:@"OK", nil];
 				[alv	show];
 				// 再読み込み 通知発信
 				[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
@@ -320,12 +340,7 @@
 			}
 			else {
 				// 読み込み失敗
-				NSString *errmsg = nil;
-				int iNo = 1;
-				for (NSString *msg in fcsv.errorMsgs) {
-					errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
-				}
-				[self alertCommError: errmsg];
+				[self alertMsgErrors:NSLocalizedString(@"Dropbox DL error", nil)];
 			}
 			// 閉じる
 			[self dismissModalViewControllerAnimated:YES];
@@ -337,7 +352,7 @@
 {	// ファイル読み込み失敗
     NSLog(@"There was an error loading the file - %@", [error description]);
 	[self alertIndicatorOff];
-	[self alertCommError:[error description]];
+	[self alertMsg:NSLocalizedString(@"Dropbox DL error", nil) detail:[error localizedDescription]];
 }
 
 - (void)restClient:(DBRestClient*)client uploadedFile:(NSString*)destPath
@@ -349,7 +364,7 @@
 	[self alertIndicatorOff];
 	UIAlertView *alv = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Dropbox SaveDone", nil) 
 												   message:nil  delegate:nil cancelButtonTitle:nil 
-										 otherButtonTitles:NSLocalizedString(@"Roger", nil), nil];
+										 otherButtonTitles:@"OK", nil];
 	[alv show];
 }
 
@@ -357,7 +372,7 @@
 {	// ファイル書き込み失敗
     NSLog(@"File upload failed with error - %@", [error description]);
 	[self alertIndicatorOff];
-	[self alertCommError:[error description]];
+	[self alertMsg:NSLocalizedString(@"Dropbox UP error", nil) detail:[error localizedDescription]];
 }
 
 - (void)restClient:(DBRestClient*)client deletedPath:(NSString *)path
@@ -499,14 +514,18 @@ replacementString:(NSString *)string
 	if (buttonIndex==actionSheet.cancelButtonIndex) return; // CANCEL
 	
 	switch (actionSheet.tag) {
-		case TAG_ACTION_Save:	// 保存
+		case TAG_ACTION_Save:	// アップロード
 			if (e1upload_) {
 				[self alertIndicatorOn:NSLocalizedString(@"Dropbox Communicating", nil)];
-				
+				if (buttonIndex != actionSheet.destructiveButtonIndex) { // otherbutton
+					// < Overwrite > しない！
+					overWriteRev_ = nil; // 連番を付けて保存
+				}
 				dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 				dispatch_async(queue, ^{		// 非同期マルチスレッド処理
 					// ファイルへ書き出す
 					FileCsv *fcsv = [[FileCsv alloc] init];
+					fcsv.errorMsgs = [self errorMsgs];
 					BOOL bCsv = [fcsv zSaveTmpFile:e1upload_ crypt:YES];
 					
 					dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理
@@ -521,13 +540,7 @@ replacementString:(NSString *)string
 						}
 						else {
 							[self alertIndicatorOff];	// 進捗サインOFF
-							// ERROR
-							NSString *errmsg = nil;
-							int iNo = 1;
-							for (NSString *msg in fcsv.errorMsgs) {
-								errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
-							}
-							[self alertCommError: errmsg];
+							[self alertMsgErrors:NSLocalizedString(@"Dropbox UP error", nil)];
 						}
 					});
 				});
