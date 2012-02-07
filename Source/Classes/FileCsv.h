@@ -13,20 +13,20 @@
 @interface FileCsv : NSObject 
 
 @property (nonatomic, strong, readonly) NSString		*tmpPathFile;
-@property (nonatomic, strong) NSMutableArray			*errorMsgs;
+//@property (nonatomic, strong) NSMutableArray			*errorMsgs;
 
 - (id)init;
 
 //Private//- (BOOL)zSavePrivate:(E1 *)Pe1  toMutableString:(NSMutableString *)PzCsv;
-- (BOOL)zSave:(E1 *)Pe1 toMutableString:(NSMutableString *)PzCsv  crypt:(BOOL)bCrypt;
-- (BOOL)zSaveTmpFile:(E1 *)Pe1  crypt:(BOOL)bCrypt;
-- (BOOL)zSavePasteboard:(E1 *)Pe1  crypt:(BOOL)bCrypt;
+- (NSString *)zSave:(E1 *)Pe1 toMutableString:(NSMutableString *)PzCsv  crypt:(BOOL)bCrypt;
+- (NSString *)zSaveTmpFile:(E1 *)Pe1  crypt:(BOOL)bCrypt;
+- (NSString *)zSavePasteboard:(E1 *)Pe1  crypt:(BOOL)bCrypt;
 
-//- (E1 *)zLoadPrivate:(NSString *)PzCsv  withSave:(BOOL)PbSave;
-- (E1 *)zLoad:(NSString *)PzCsv  withSave:(BOOL)PbSave;
-- (BOOL)zLoadTmpFile;
-- (BOOL)zLoadPasteboard;
-- (BOOL)zLoadURL:(NSURL*)Url;
+//Private//- (E1 *)e1LoadPrivate:(NSString *)PzCsv  withSave:(BOOL)PbSave;
+- (E1 *)e1Load:(NSString *)PzCsv  withSave:(BOOL)PbSave;
+- (NSString *)zLoadTmpFile;
+- (NSString *)zLoadPasteboard;
+- (NSString *)zLoadURL:(NSURL*)Url;
 
 
 @end

@@ -247,19 +247,14 @@
 	dispatch_async(queue, ^{
 		// CSV SAVE
 		FileCsv *fcsv = [[FileCsv alloc] init];
-		BOOL bCsv = [fcsv zSaveTmpFile:e1selected_ crypt:YES];
+		NSString *zErr = [fcsv zSaveTmpFile:e1selected_ crypt:YES];
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
-			if (bCsv==NO) {
-				NSString *errmsg = nil;
-				int iNo = 1;
-				for (NSString *msg in fcsv.errorMsgs) {
-					errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
-				}
+			if (zErr) {
 				UIAlertView *alert = [[UIAlertView alloc] 
 									  initWithTitle:NSLocalizedString(@"CSV Save Fail",nil)
-									  message:errmsg
+									  message:zErr
 									  delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
 				[alert show];
 				return;
@@ -437,19 +432,14 @@
 	dispatch_async(queue, ^{
 		// CSV SAVE
 		FileCsv *fcsv = [[FileCsv alloc] init];
-		BOOL bCsv = [fcsv zSaveTmpFile:e1selected_ crypt:YES];
+		NSString *zErr = [fcsv zSaveTmpFile:e1selected_ crypt:YES];
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
-			if (bCsv==NO) {
+			if (zErr) {
 				[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
-				NSString *errmsg = nil;
-				int iNo = 1;
-				for (NSString *msg in fcsv.errorMsgs) {
-					errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
-				}
 				UIAlertView *alert = [[UIAlertView alloc] 
 									  initWithTitle:NSLocalizedString(@"CSV Save Fail",nil)
-									  message:errmsg
+									  message:zErr
 									  delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
 				[alert show];
 				return;
@@ -493,12 +483,12 @@
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	dispatch_async(queue, ^{		// 非同期マルチスレッド処理
 		FileCsv *fcsv = [[FileCsv alloc] init];
-		BOOL bCsv = [fcsv zSavePasteboard:e1selected_ crypt:YES];
+		NSString *zErr = [fcsv zSavePasteboard:e1selected_ crypt:YES];
 		
 		dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理
 			[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
 			[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
-			if (bCsv) {
+			if (zErr==nil) {
 				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"PBoard Copy",nil)
 																message:NSLocalizedString(@"PBoard Copy OK",nil)
 															   delegate:nil
@@ -507,13 +497,8 @@
 				[alert show];
 			}
 			else {
-				NSString *errmsg = nil;
-				int iNo = 1;
-				for (NSString *msg in fcsv.errorMsgs) {
-					errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
-				}
 				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"PBoard Error",nil)
-												   message:errmsg
+												   message:zErr
 												  delegate:nil 
 										 cancelButtonTitle:nil 
 										 otherButtonTitles:@"OK", nil];

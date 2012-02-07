@@ -328,10 +328,10 @@
 				str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 				if (str) {
 					FileCsv *fcsv = [[FileCsv alloc] init];
-					E1 *e1 = [fcsv zLoad:str  withSave:YES];
+					E1 *e1 = [fcsv e1Load:str  withSave:YES];
 					if (e1==nil) {
-						NSString *msg = [NSString stringWithFormat:@"readingE1: FileCsv: err=%@", fcsv.errorMsgs];
-						[self errorMsg:msg];
+						//NSString *msg = [NSString stringWithFormat:@"readingE1: FileCsv: err=%@", fcsv.errorMsgs];
+						[self errorMsg:@"readingE1: FileCsv: err"];
 					}
 					return e1;
 				}

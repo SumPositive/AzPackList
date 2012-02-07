@@ -17,8 +17,11 @@
 
 
 @implementation FileCsv
+{
+	NSString	*errorMsg_;
+}
 @synthesize tmpPathFile = tmpPathFile_;
-@synthesize errorMsgs = errorMsgs_;
+//@synthesize errorMsgs = errorMsgs_;
 
 
 // string ⇒ csv : 文字列中にあるCSV予約文字を取り除くか置き換えてCSV保存できるようにする
@@ -41,9 +44,10 @@ static NSString *csvToStr( NSString *inCsv ) {
 
 - (void)errorMsg:(NSString*)msg
 {
-	if (errorMsgs_) {		// ここで生成しない。親から受け取る
-		[errorMsgs_ addObject:msg];
+	if (errorMsg_==nil) {
+		errorMsg_ = NSLocalizedString(@"errorMsg Title",nil);
 	}
+	errorMsg_ = [errorMsg_ stringByAppendingFormat:@"%@\n", msg];
 }
 
 // CSV形式　　["]で囲まれた文字列に限り、その中に[,]と[改行]を使用可能。
@@ -79,7 +83,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 
 #pragma mark - Saveing
 
-- (BOOL)zSavePrivate:(E1 *)Pe1 toMutableString:(NSMutableString *)PzCsv
+- (NSString *)zSavePrivate:(E1 *)Pe1 toMutableString:(NSMutableString *)PzCsv
 {	// Private
 	assert(PzCsv);
 	NSSortDescriptor *key1 = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
@@ -146,28 +150,28 @@ static NSString *csvToStr( NSString *inCsv ) {
 		AzLOG(@"End> %@", str);
 		[PzCsv appendString:str];
 		// Compleat!
-		return YES;
+		return errorMsg_; //=nil
 	}
 	@catch(id error) {
 		[self errorMsg:@"zSave:NG catch"];
 	}
 	@catch (NSException *errEx) {
-		NSString *msg = [NSString stringWithFormat:@"zSave: NSException: %@: %@", [errEx name], [errEx reason]];
+		NSString *msg = [NSString stringWithFormat:@"zSave: Exception: %@: %@", [errEx name], [errEx reason]];
 		[self errorMsg:msg];
 	}
 	@finally {
 		//
 	}
-	return NO;
+	return errorMsg_;
 }
 
 // Pe1 から PzCsv 生成する
 // crypt = NO; 公開アップするとき暗号化しないため
-- (BOOL)zSave:(E1 *)Pe1 toMutableString:(NSMutableString *)PzCsv  crypt:(BOOL)bCrypt
+- (NSString *)zSave:(E1 *)Pe1 toMutableString:(NSMutableString *)PzCsv  crypt:(BOOL)bCrypt
 {
 	@autoreleasepool {
-		if ([self zSavePrivate:Pe1 toMutableString:PzCsv]==NO) {
-			return NO;
+		if ([self zSavePrivate:Pe1 toMutableString:PzCsv] != nil) {
+			return errorMsg_;
 		}
 	}
 	//----------------------------------------------------------------------------Crypt 暗号化
@@ -190,24 +194,24 @@ static NSString *csvToStr( NSString *inCsv ) {
 			}
 			else {
 				[self errorMsg:NSLocalizedString(@"PackListCrypt NoKey",nil)];
-				return NO;
+				return errorMsg_;
 			}
 		}
 	}
-	return YES;
+	return errorMsg_; //=nil
 }
 
-- (BOOL)zSaveTmpFile:(E1 *)Pe1  crypt:(BOOL)bCrypt
+- (NSString *)zSaveTmpFile:(E1 *)Pe1  crypt:(BOOL)bCrypt
 {
 	if (tmpPathFile_==nil) {
 		[self errorMsg:@"tmpPathFile_=nil"];
-		return NO;
+		return errorMsg_;
 	}
 	
 	NSMutableString *zCsv = [NSMutableString new];
 	// Pe1 ---> zCsv
-	if ([self zSave:Pe1 toMutableString:zCsv crypt:bCrypt]==NO) {
-		return NO;
+	if ([self zSave:Pe1 toMutableString:zCsv crypt:bCrypt] != nil) {
+		return errorMsg_;
 	}
 	// UTF-8 出力ファイルをCREATE
 	[[NSFileManager defaultManager] createFileAtPath:tmpPathFile_ contents:nil attributes:nil];
@@ -215,13 +219,13 @@ static NSString *csvToStr( NSString *inCsv ) {
 	NSFileHandle *output = [NSFileHandle fileHandleForWritingAtPath:tmpPathFile_];
 	if (output==nil) {
 		[self errorMsg:NSLocalizedString(@"File error",nil)];
-		return NO;
+		return errorMsg_;
 	}
 	
 	@try {
 		// UTF8 エンコーディングしてファイルへ書き出す
 		[output writeData:[zCsv dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES]];
-		return YES;
+		return errorMsg_; //=nil
 	}
 	@catch(id error) {
 		[self errorMsg:NSLocalizedString(@"File error",nil)];
@@ -233,33 +237,33 @@ static NSString *csvToStr( NSString *inCsv ) {
 	@finally {
 		[output closeFile];
 	}
-	return NO;
+	return errorMsg_;
 }
 
-- (BOOL)zSavePasteboard:(E1 *)Pe1  crypt:(BOOL)bCrypt
+- (NSString *)zSavePasteboard:(E1 *)Pe1  crypt:(BOOL)bCrypt
 {
 	NSMutableString *zCsv = [NSMutableString new];
 	// Pe1 ---> zCsv
-	if ([self zSave:Pe1 toMutableString:zCsv crypt:bCrypt]==NO) {
-		return NO;
+	if ([self zSave:Pe1 toMutableString:zCsv crypt:bCrypt] != nil) {
+		return errorMsg_;
 	}
 
 	@try {
 		// PasteBoard出力
 		[UIPasteboard generalPasteboard].string = zCsv;  // 共有領域にコピーされる
-		return YES;
+		return errorMsg_; //=nil
 	}
 	@catch(id error) {
 		[self errorMsg:NSLocalizedString(@"File error",nil)];
 	}
 	@catch (NSException *errEx) {
-		NSString *msg = [NSString stringWithFormat:@"zSavePasteboard: NSException: %@: %@", [errEx name], [errEx reason]];
+		NSString *msg = [NSString stringWithFormat:@"zSavePasteboard: Exception: %@: %@", [errEx name], [errEx reason]];
 		[self errorMsg:msg];
 	}
 	@finally {
 		//
 	}
-	return NO;
+	return errorMsg_;
 }
 
 
@@ -367,7 +371,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 	return lSplitCount;
 }
 
-- (E1 *)zLoadPrivate:(NSString *)PzCsv  withSave:(BOOL)PbSave // NO=共有プラン詳細表示時、SAVEせずにRollBackするために使用。
+- (E1 *)e1LoadPrivate:(NSString *)PzCsv  withSave:(BOOL)PbSave // NO=共有プラン詳細表示時、SAVEせずにRollBackするために使用。
 {
 	NSManagedObjectContext *moc = [EntityRelation getMoc];
 	NSInteger iErrLine = 0;
@@ -567,7 +571,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		}
 	}
 	@catch (NSException *errEx) {
-		NSString *msg = [NSString stringWithFormat:@"zLoad: NSException: %@: %@", [errEx name], [errEx reason]];
+		NSString *msg = [NSString stringWithFormat:@"zLoad: Exception: %@: %@", [errEx name], [errEx reason]];
 		[self errorMsg:msg];
 		if (e1node) {
 			[moc rollback];
@@ -581,7 +585,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 	return nil; // NG
 }
 
-- (E1 *)zLoad:(NSString *)PzCsv  withSave:(BOOL)PbSave // NO=共有プラン詳細表示時、SAVEせずにRollBackするために使用。
+- (E1 *)e1Load:(NSString *)PzCsv  withSave:(BOOL)PbSave // NO=共有プラン詳細表示時、SAVEせずにRollBackするために使用。
 {
 	//--------------------------------------------------------------------------------Crypt Headerチェック
 	if ([PzCsv hasPrefix:CRYPT_HEADER]) {
@@ -616,58 +620,60 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 	}
 	//--------------------------------------------------------------------------------CSV 読み込み
 	@autoreleasepool {
-		return [self zLoadPrivate:PzCsv withSave:PbSave];
+		return [self e1LoadPrivate:PzCsv withSave:PbSave];
 	}
 	return nil;
 }
 
 // Mail添付ファイルを読み込むため
-- (BOOL)zLoadURL:(NSURL*)Url
+- (NSString *)zLoadURL:(NSURL*)Url
 {
 	NSError *err = nil;
 	NSString *zCsv = [NSString stringWithContentsOfURL:Url encoding:NSUTF8StringEncoding error:&err];
 	if (err) {
 		[self errorMsg:[err localizedDescription]];
-		return NO;
+		return errorMsg_;
 	}
 	//NSLog(@"zCsv=%@", zCsv);
 	E1 *e1add = nil;
 	if (zCsv) {
-		e1add = [self zLoad:zCsv  withSave:YES];
+		e1add = [self e1Load:zCsv  withSave:YES];
 	}
-	if (e1add) return YES;
-	return NO;
+	if (e1add==nil) {
+		[self errorMsg:@"E1 not added."];
+	}
+	return errorMsg_;
 }
 
 //- (NSString *)zLoadPath:(NSString *)PzFillPath  //==nil:PasteBoardから読み込む
-- (BOOL)zLoadTmpFile
+- (NSString *)zLoadTmpFile
 {
 	if (tmpPathFile_==nil) {
 		[self errorMsg:@"tmpPathFile_=nil"];
-		return NO;
+		return errorMsg_;
 	}
 
 	NSString *zCsv = nil;
 	// input OPEN
 	NSFileHandle *csvHandle = [NSFileHandle fileHandleForReadingAtPath:tmpPathFile_];
 	if (csvHandle==nil) {
-		[self errorMsg:@"zLoadTmpFile:NG Read open"];
-		return NO;
+		[self errorMsg:@"NG Read open"];
+		return errorMsg_;
 	}
 	// バイナリファイル対策：先頭で強制判定
 	@try {
 		[csvHandle seekToFileOffset:0];
 		NSData *data = [csvHandle readDataOfLength:[GD_CSV_HEADER_ID length]*3];
 		if ([data length] != [GD_CSV_HEADER_ID length]*3) {
-			[self errorMsg:@"zLoadTmpFile:NG Header length"];
-			return NO;
+			[self errorMsg:@"NG Header length"];
+			return errorMsg_;
 		}
 		NSString *csvStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 		if (![csvStr hasPrefix:GD_CSV_HEADER_ID]) {	// Plain Header
 			if (![csvStr hasPrefix:CRYPT_HEADER]) {		// Crypt Header
 				// 先頭部分が一致しない
-				[self errorMsg:@"zLoadTmpFile:NG Header ID"];
-				return NO;
+				[self errorMsg:@"NG Header ID"];
+				return errorMsg_;
 			}
 		}
 		// 先頭へ戻す
@@ -676,40 +682,44 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		zCsv = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 		E1 *e1add = nil;
 		if (zCsv) {
-			e1add = [self zLoad:zCsv   withSave:YES];
+			e1add = [self e1Load:zCsv   withSave:YES];
 		}
-		if (e1add) return YES;
-		return NO;
+		if (e1add==nil) {
+			[self errorMsg:@"E1 not added."];
+		}
+		return errorMsg_;
 	}
 	@catch(id error) {
 		[self errorMsg:NSLocalizedString(@"File error",nil)];
 	}
 	@catch (NSException *errEx) {
-		NSString *msg = [NSString stringWithFormat:@"zLoadTmpFile: NSException: %@: %@", [errEx name], [errEx reason]];
+		NSString *msg = [NSString stringWithFormat:@"zLoadTmpFile: Exception: %@: %@", [errEx name], [errEx reason]];
 		[self errorMsg:msg];
 	}
 	@finally {
 		[csvHandle closeFile];
 	}
-	return NO;
+	return errorMsg_;
 }
 
-- (BOOL)zLoadPasteboard
+- (NSString *)zLoadPasteboard
 {
 	NSString *zCsv = nil;
 	if ([[UIPasteboard generalPasteboard].string length] < 15) {
 		[self errorMsg:NSLocalizedString(@"Pasteboard is empty",nil)];
-		return NO;
+		return errorMsg_;
 	}
 	// PasteBoard からペーストする
 	zCsv = [[NSString alloc] initWithString:[UIPasteboard generalPasteboard].string];  // 共有領域
 	
 	E1 *e1add = nil;
 	if (zCsv) {
-		e1add = [self zLoad:zCsv   withSave:YES];
+		e1add = [self e1Load:zCsv   withSave:YES];
 	}
-	if (e1add) return YES;
-	return NO;
+	if (e1add==nil) {
+		[self errorMsg:@"E1 not added."];
+	}
+	return errorMsg_;
 }
 
 

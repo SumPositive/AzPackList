@@ -259,15 +259,10 @@
 		// ダウンロード成功
 		// CSV読み込み
 		FileCsv *fcsv = [[[FileCsv alloc] init] autorelease];
-		BOOL bCsv = [fcsv zLoadTmpFile];
-		if (bCsv==NO) {
+		NSString *zErr = [fcsv zLoadTmpFile];
+		if (zErr) {
 			// CSV読み込み失敗
-			NSString *errmsg = nil;
-			int iNo = 1;
-			for (NSString *msg in fcsv.errorMsgs) {
-				errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
-			}
-			NSLog(@"FileCsv zLoad ERR: %@", errmsg);
+			NSLog(@"FileCsv zLoad ERR: %@", zErr);
 			NSData *browseData = [[self postResponseNG:@"zLoad ERROR"] dataUsingEncoding:NSUTF8StringEncoding];
 			return [[[HTTPDataResponse alloc] initWithData:browseData] autorelease];
 		} else {

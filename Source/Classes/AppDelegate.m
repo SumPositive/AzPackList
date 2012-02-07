@@ -226,11 +226,11 @@
 			dispatch_async(queue, ^{
 				// 一時CSVファイルから取り込んで追加する
 				FileCsv *fcsv = [[FileCsv alloc] init];
-				BOOL bCsv = [fcsv zLoadURL:url];
+				NSString *zErr = [fcsv zLoadURL:url];
 				
 				dispatch_async(dispatch_get_main_queue(), ^{
 					[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
-					if (bCsv) {
+					if (zErr==nil) {
 						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Compleat!",nil)  //ダウンロード成功
 														   message:NSLocalizedString(@"Added Plan",nil)  //プランを追加しました
 														  delegate:nil 
@@ -239,13 +239,8 @@
 						[alert show];
 					} 
 					else {
-						NSString *errmsg = nil;
-						int iNo = 1;
-						for (NSString *msg in fcsv.errorMsgs) {
-							errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
-						}
 						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Fail",nil)  //ダウンロード失敗
-														   message:errmsg
+														   message: zErr
 														  delegate:nil 
 												 cancelButtonTitle:nil 
 												 otherButtonTitles:@"OK", nil];

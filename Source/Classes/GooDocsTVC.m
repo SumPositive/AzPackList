@@ -566,12 +566,12 @@
 		dispatch_async(queue, ^{
 			// CSV読み込み
 			FileCsv *fcsv = [[FileCsv alloc] init];
-			BOOL bCsv = [fcsv zLoadTmpFile];
+			NSString *zErr = [fcsv zLoadTmpFile];
 			
 			dispatch_async(dispatch_get_main_queue(), ^{
 				// 進捗サインOFF
 				if (MactionProgress) [MactionProgress dismissWithClickedButtonIndex:0 animated:YES];
-				if (bCsv) {
+				if (zErr==nil) {
 					// 連続追加に備えてインクリメントする
 					PiSelectedRow++;
 					// 成功アラート
@@ -585,13 +585,8 @@
 				}
 				else {
 					// CSV読み込み失敗
-					NSString *errmsg = nil;
-					int iNo = 1;
-					for (NSString *msg in fcsv.errorMsgs) {
-						errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
-					}
 					UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Fail", @"ダウンロード失敗")
-																	message:errmsg
+																	message: zErr
 																   delegate:nil 
 														  cancelButtonTitle:nil 
 														  otherButtonTitles:@"OK", nil];
@@ -1163,10 +1158,10 @@
 				dispatch_async(queue, ^{
 					// Upload直前にファイルへ書き出す
 					FileCsv *fcsv = [[FileCsv alloc] init];
-					BOOL bCsv = [fcsv zSaveTmpFile:Re1selected crypt:YES];
+					NSString *zErr = [fcsv zSaveTmpFile:Re1selected crypt:YES];
 
 					dispatch_async(dispatch_get_main_queue(), ^{
-						if (bCsv) {
+						if (zErr==nil) {
 							// Upload開始
 							[self uploadFile:fcsv.tmpPathFile];
 						}
@@ -1174,14 +1169,9 @@
 							// 進捗サインOFF
 							if (MactionProgress) [MactionProgress dismissWithClickedButtonIndex:0 animated:YES];
 							[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
-							NSString *errmsg = nil;
-							int iNo = 1;
-							for (NSString *msg in fcsv.errorMsgs) {
-								errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
-							}
 							UIAlertView *alert = [[UIAlertView alloc] 
 												  initWithTitle:NSLocalizedString(@"Upload Fail", @"アップロード失敗")
-												  message:errmsg
+												  message: zErr
 												  delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
 							[alert show];
 						}

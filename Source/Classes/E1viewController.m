@@ -438,11 +438,11 @@
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	dispatch_async(queue, ^{
 		FileCsv *fcsv = [[FileCsv alloc] init];
-		BOOL bCsv = [fcsv zLoadPasteboard];
+		NSString *zErr = [fcsv zLoadPasteboard];
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
-			if (bCsv) {
+			if (zErr==nil) {
 				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"PBoard Paste",nil)
 												   message:NSLocalizedString(@"PBoard Paste OK",nil)
 												  delegate:nil 
@@ -453,13 +453,8 @@
 				[self viewWillAppear:YES]; // Fech データセットさせるため
 			}
 			else {
-				NSString *errmsg = nil;
-				int iNo = 1;
-				for (NSString *msg in fcsv.errorMsgs) {
-					errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
-				}
 				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"PBoard Error",nil)
-												   message:errmsg
+												   message: zErr
 												  delegate:nil 
 										 cancelButtonTitle:nil 
 										 otherButtonTitles:@"OK", nil];

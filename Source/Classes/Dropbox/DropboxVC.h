@@ -38,7 +38,7 @@
 	NSString							*deletePath_;
 	
 	//FileJson							*fileJson_;
-	NSMutableArray				*errorMsgs_;
+	//NSMutableArray				*errorMsgs_;
 }
 
 //@property (nonatomic, assign) id				delegate;

@@ -468,15 +468,10 @@
 	NSMutableString *zCsv = [NSMutableString new]; //こちら側でメモリ管理する
 	// この呼び出し元から「非同期マルチスレッド処理」している
 	FileCsv *fcsv = [[FileCsv alloc] init];
-	BOOL bCsv = [fcsv zSave:Re1selected toMutableString:zCsv crypt:NO]; //crypt:NO 公開につき暗号化禁止
-	if (bCsv==NO) {
+	NSString *zErr = [fcsv zSave:Re1selected toMutableString:zCsv crypt:NO]; //crypt:NO 公開につき暗号化禁止
+	if (zErr) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
-		NSString *errmsg = nil;
-		int iNo = 1;
-		for (NSString *msg in fcsv.errorMsgs) {
-			errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
-		}
-		return errmsg; // pool変数
+		return zErr;
 	}
 	postCmd = [postCmd stringByAppendingString:@"&planCsv="];
 	postCmd = [postCmd stringByAppendingString:zCsv];

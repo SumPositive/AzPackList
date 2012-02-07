@@ -40,19 +40,17 @@
 	[mAlert dismissWithClickedButtonIndex:mAlert.cancelButtonIndex animated:YES];
 }
 
+/*
 - (NSMutableArray*)errorMsgs {
 	if (errorMsgs_==nil) {
 		errorMsgs_ = [NSMutableArray new];
 	}
 	return errorMsgs_;
-}
+}*/
 
 - (void)alertMsg:(NSString*)msg  detail:(NSString*)detail
 {
 	//NSString *msg = NSLocalizedString(@"Dropbox CommErrorMsg", nil);
-	if (detail) {
-		detail = [@"\n--- Detail ---\n" stringByAppendingString:detail];
-	}
 	UIAlertView *alv = [[UIAlertView alloc] initWithTitle: msg
 												   message: detail
 												  delegate:nil cancelButtonTitle:nil 
@@ -60,17 +58,6 @@
 	[alv show];
 }
 
-- (void)alertMsgErrors:(NSString*)msg
-{
-	NSString *detail = nil;
-	if (0 < [errorMsgs_ count]) {
-		int iNo = 1;
-		for (NSString *zz in errorMsgs_) {
-			detail = [detail stringByAppendingFormat:@"(%d) %@\n", iNo++, zz];
-		}
-	}
-	[self alertMsg:msg detail:detail];
-}
 
 #pragma mark - Dropbox DBRestClient
 
@@ -321,12 +308,11 @@
 	dispatch_async(queue, ^{
 		// CSV読み込み
 		FileCsv *fcsv = [[FileCsv alloc] init];
-		fcsv.errorMsgs = [self errorMsgs];
-		BOOL bCsv = [fcsv zLoadTmpFile];
+		NSString *zErr = [fcsv zLoadTmpFile];
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[self alertIndicatorOff];	// 進捗サインOFF
-			if (bCsv) {
+			if (zErr==nil) {
 				// 成功アラート
 				UIAlertView *alv = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Dropbox QuoteDone", nil)
 															  message:nil
@@ -340,7 +326,7 @@
 			}
 			else {
 				// 読み込み失敗
-				[self alertMsgErrors:NSLocalizedString(@"Dropbox DL error", nil)];
+				[self alertMsg:NSLocalizedString(@"Dropbox DL error", nil) detail:zErr];
 			}
 			// 閉じる
 			[self dismissModalViewControllerAnimated:YES];
@@ -525,11 +511,10 @@ replacementString:(NSString *)string
 				dispatch_async(queue, ^{		// 非同期マルチスレッド処理
 					// ファイルへ書き出す
 					FileCsv *fcsv = [[FileCsv alloc] init];
-					fcsv.errorMsgs = [self errorMsgs];
-					BOOL bCsv = [fcsv zSaveTmpFile:e1upload_ crypt:YES];
+					NSString *zErr = [fcsv zSaveTmpFile:e1upload_ crypt:YES];
 					
 					dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理
-						if (bCsv) {
+						if (zErr==nil) {
 							// Upload開始
 							NSString *filePath = fcsv.tmpPathFile;
 							NSString *filename = [ibTfName.text stringByDeletingPathExtension]; // 拡張子を除く
@@ -540,7 +525,7 @@ replacementString:(NSString *)string
 						}
 						else {
 							[self alertIndicatorOff];	// 進捗サインOFF
-							[self alertMsgErrors:NSLocalizedString(@"Dropbox UP error", nil)];
+							[self alertMsg:NSLocalizedString(@"Dropbox UP error", nil) detail:zErr];
 						}
 					});
 				});
