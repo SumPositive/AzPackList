@@ -39,6 +39,68 @@
 @synthesize PbOwner;
 
 
+#pragma mark - Send Mail
+
+- (void)sendmail:(NSString*)packListName  key:(NSString*)key
+{
+	MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
+	picker.mailComposeDelegate = self;
+	// To: 宛先
+	NSArray *toRecipients = [NSArray arrayWithObject:@"packlist@azukid.com"];
+	[picker setToRecipients:toRecipients];
+	
+	// Subject: 件名
+	NSString* zSubj = NSLocalizedString(@"Product Title",nil);
+	zSubj = [zSubj stringByAppendingString:@"   "];
+	zSubj = [zSubj stringByAppendingString:NSLocalizedString(@"Share　Reporting",nil)];
+	[picker setSubject:zSubj];  
+	
+	// Body: 本文
+	NSArray *languages = [NSLocale preferredLanguages];
+	NSString* zBody = NSLocalizedString(@"Product Title",nil);
+	zBody = [zBody stringByAppendingFormat:@"\nLocale: %@ (%@)\n",
+			 [[NSLocale currentLocale] objectForKey:NSLocaleIdentifier],
+			 [languages objectAtIndex:0]];
+	
+	zBody = [zBody stringByAppendingFormat:@"PackList ID [%@]\n\n", key];
+	
+	zBody = [zBody stringByAppendingFormat:NSLocalizedString(@"Share　Reporting msg",nil), packListName];
+	[picker setMessageBody:zBody isHTML:NO];
+	
+	picker.modalPresentationStyle = UIModalPresentationFormSheet;
+	[self presentModalViewController:picker animated:YES];
+}
+
+#pragma mark  <MFMailComposeViewControllerDelegate>
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller 
+		  didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error 
+{
+    switch (result){
+        case MFMailComposeResultCancelled:
+            //キャンセルした場合
+            break;
+        case MFMailComposeResultSaved:
+            //保存した場合
+            break;
+        case MFMailComposeResultSent:
+            //送信した場合
+			alertBox( NSLocalizedString(@"Contact Sent",nil), NSLocalizedString(@"Contact Sent msg",nil), @"OK" );
+            break;
+        case MFMailComposeResultFailed:
+            //[self setAlert:@"メール送信失敗！":@"メールの送信に失敗しました。ネットワークの設定などを確認して下さい"];
+			alertBox( NSLocalizedString(@"Contact Failed",nil), NSLocalizedString(@"Contact Failed msg",nil), @"OK" );
+            break;
+        default:
+            break;
+    }
+	// Close
+	[self dismissModalViewControllerAnimated:YES];
+}
+
+
+#pragma mark - View Lifecicle
+
 - (void)unloadRelease	// dealloc, viewDidUnload から呼び出される
 {
 	NSLog(@"--- unloadRelease --- SpDetailTVC");
@@ -220,20 +282,15 @@
 					dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 					dispatch_async(queue, ^{		// 非同期マルチスレッド処理
 						FileCsv *fcsv = [[FileCsv alloc] init];
-						Re1add = [fcsv zLoad:planCsv   withSave:NO];	// NO = Moc-SAVE しない！ ゆえに、Re1add は rollback だけで取り消し可能。
+						Re1add = [fcsv e1Load:planCsv   withSave:NO];	// NO = Moc-SAVE しない！ ゆえに、Re1add は rollback だけで取り消し可能。
 						
 						dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理
 							if (Re1add) {
 								[self.tableView reloadData];
 							} 
 							else {
-								NSString *errmsg = nil;
-								int iNo = 1;
-								for (NSString *msg in fcsv.errorMsgs) {
-									errmsg = [errmsg stringByAppendingFormat:@"(%d) %@\n", iNo++, msg];
-								}
 								alertMsgBox( NSLocalizedString(@"Download Err",nil), 
-											errmsg,
+											nil,
 											NSLocalizedString(@"Roger",nil) );
 								// 前Viewへ戻す
 							}
@@ -295,7 +352,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	if (Re1add) {
-		return 2;
+		return 3;
 	}
     return 1;
 }
@@ -306,12 +363,14 @@
 	switch (section) {
 		case 0:
 			if (Re1add) return 2;
-			break;
+			return 1;
 		case 1:
 			if (PbOwner) return 2;
-			break;
+			return 1;
+		case 2:
+			return 1;
 	}
-	return 1;
+	return 0;
 }
 
 // TableView セクション名を応答
@@ -512,6 +571,22 @@
 			}
 			return cell;
 		} break;
+
+		case 2: { //-----------------------------------------------------------Section(2) 不快感を報告
+			UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:zCellFunc];
+			if (cell == nil) {
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+											  reuseIdentifier:zCellFunc];
+			}
+			cell.textLabel.font = [UIFont systemFontOfSize:16];
+			cell.textLabel.textAlignment = UITextAlignmentCenter; // 中央寄せ
+			cell.textLabel.textColor = [UIColor blackColor];
+			cell.imageView.image = [UIImage imageNamed:@"Icon32-MailNew.png"];
+			cell.accessoryType = UITableViewCellAccessoryNone;  // なし
+			cell.showsReorderControl = NO;
+			cell.textLabel.text = NSLocalizedString(@"Share　Reporting",nil);
+			return cell;
+		} break;
 	}
 	return nil;
 }
@@ -571,6 +646,17 @@
 			[alert show];
 			//[alert release];
 		}
+	}
+	else if (indexPath.section==2) {
+		// 不快感を報告
+		//メール送信可能かどうかのチェック　　＜＜＜MessageUI.framework が必要＞＞＞
+		if (![MFMailComposeViewController canSendMail]) {
+			//[self setAlert:@"メールが起動出来ません！":@"メールの設定をしてからこの機能は使用下さい。"];
+			alertBox( NSLocalizedString(@"Contact NoMail",nil), NSLocalizedString(@"Contact NoMail msg",nil), @"OK" );
+			return;
+		}
+		// Send Mail
+		[self sendmail:Re1add.name  key:[self RzSharePlanKey]];
 	}
 }	
 

@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
+#import <MessageUI/MFMailComposeViewController.h>
 
 @class E1;
 
-@interface SpDetailTVC : UITableViewController //<UIActionSheetDelegate> 
+@interface SpDetailTVC : UITableViewController  <MFMailComposeViewControllerDelegate> 
 {
 	
 @private
