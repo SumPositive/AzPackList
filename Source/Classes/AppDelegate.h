@@ -21,7 +21,7 @@
 @property (nonatomic, retain) PadRootVC	*padRootVC;  //解放されないようにretain
 @property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
 
-@property (nonatomic, retain) NSMutableArray *clipE3objects_;  // 外部から参照されるため
+@property (nonatomic, retain) NSMutableArray *clipE3objects;  // 外部から参照されるため
 @property (nonatomic, retain) E1			*dropboxSaveE1selected;
 
 @property (nonatomic, assign) BOOL	app_opt_Autorotate;

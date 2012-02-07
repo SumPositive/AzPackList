@@ -18,8 +18,12 @@
 #import "DropboxVC.h"
 #import "AZStoreVC.h"
 
+#define CoreData_iCloud_SYNC		NO	// YES or NO
+
 
 @interface AppDelegate (PrivateMethods) // メソッドのみ記述：ここに変数を書くとグローバルになる。他に同じ名称があると不具合発生する
+- (NSPersistentStoreCoordinator *)persistentStoreCoordinator;
+
 #define FREE_AD_OFFSET_Y			200.0	// iAdを上に隠すため
 - (void)AdRefresh;
 - (void)AdRemove;
@@ -30,8 +34,6 @@
 
 @implementation AppDelegate
 {
-@public		// 外部公開 ＜＜使用禁止！@propertyで外部公開すること＞＞
-@protected	// 自クラスおよびサブクラスから参照できる（無指定時のデフォルト）
 @private	// 自クラス内からだけ参照できる
 	NSManagedObjectModel				*moModel_;
 	NSPersistentStoreCoordinator		*persistentStoreCoordinator_;
@@ -41,7 +43,7 @@
 	BOOL								adCanVisible_;		//YES:表示可能な状況　 NO:表示してはいけない状況
 	
 	// Clip Borad
-	NSMutableArray				*clipE3objects_; //(V0.4.4) [Cut][Copy]されたE3をPUSHスタックする。[Paste]でPOPする
+	//NSMutableArray				*clipE3objects; //(V0.4.4) [Cut][Copy]されたE3をPUSHスタックする。[Paste]でPOPする
 
 	UIAlertView						*alertProgress_;
 	UIActivityIndicatorView	*alertIndicator_;
@@ -51,7 +53,7 @@
 @synthesize mainNC = mainNC_;
 @synthesize mainSVC = mainSVC_;
 @synthesize padRootVC = padRootVC_;
-@synthesize clipE3objects_;
+@synthesize clipE3objects = clipE3objects_;		// [Cut][Copy]されたE3をPUSHスタックする。[Paste]でPOPする
 @synthesize dropboxSaveE1selected = dropboxSaveE1selected_;
 @synthesize app_opt_Autorotate = app_opt_Autorotate_;
 @synthesize app_opt_Ad = app_opt_Ad_;				//Setting選択フラグ
@@ -115,7 +117,9 @@
 	//-------------------------------------------------初期化
 	app_UpdateSave_ = NO;
 	adCanVisible_ = NO;			// 現在状況、(NO)表示禁止  (YES)表示可能
-	clipE3objects_ = [NSMutableArray array];	//　[Clip Board] クリップボード初期化
+	if (clipE3objects_==nil) {
+		clipE3objects_ = [NSMutableArray array];	//　[Clip Board] クリップボード初期化
+	}
 
 	//-------------------------------------------------デバイス、ＯＳ確認
 	if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0"]==NSOrderedAscending) { // ＜ "5.0"
@@ -180,13 +184,6 @@
 
 	// 初期生成
 	[EntityRelation setMoc:[self managedObjectContext]];
-	
-	
-	// iCloud-KVS 変更通知を受ける
-    [[NSNotificationCenter defaultCenter] addObserver:self			// viewDidUnload:にて removeObserver:必須
-											 selector:@selector(kvsValueChange:) 
-												 name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification	// KVSの値が変化したとき
-											   object:nil];  //=nil: 全てのオブジェクトからの通知を受ける
 	
 	return;  // YES;  //iOS4
 }
@@ -308,7 +305,7 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application 
 {	//iOS4: アプリケーションがバックグラウンドになったら呼ばれる
 	NSLog(@"applicationDidEnterBackground");
-	[self applicationWillTerminate:application];
+	//NG//[self applicationWillTerminate:application];＜＜NSNotificationCenterが破棄されてしまう。
 }
 
 
@@ -321,10 +318,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application 
 {	//iOS4: アプリケーションがアクティブになったら呼ばれる
-	/*
-	 Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-	 */
-	AzLOG(@"applicationDidBecomeActive");
+	NSLog(@"applicationDidBecomeActive");
 }
 
 
@@ -332,30 +326,27 @@
 - (void)applicationWillTerminate:(UIApplication *)application 
 {	// バックグラウンド実行中にアプリが終了された場合に呼ばれる。
 	// ただしアプリがサスペンド状態の場合アプリを終了してもこのメソッドは呼ばれない。
-	
 	// iOS3互換のためにはここが必要。　iOS4以降、applicationDidEnterBackground から呼び出される。
+	NSLog(@"applicationWillTerminate ***");
+    
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	//--------------------------------------------------[Clip Board] クリップボード後処理
-	if (self.clipE3objects_ && 0 < [self.clipE3objects_ count]) {
-		for (E3 *e3 in self.clipE3objects_) {
+	//--------------------------------------------------[Clip Board] クリップボード クリア処理
+	if (clipE3objects_ && 0 < [clipE3objects_ count]) {
+		for (E3 *e3 in clipE3objects_) {
 			if (e3.parent == nil) {
 				// [Cut]されたE3なので削除する
 				[moc_ deleteObject:e3];
-				assert(NO); //DEBUGでは落とす
 			}
 		}
 	}
-    // Commit!
-	NSError *error;
-    if (moc_ != nil) {
-        if ([moc_ hasChanges] && ![moc_ save:&error]) {
-			// Handle error.
+	if (moc_ && [moc_ hasChanges]) { //未保存があれば保存する
+		NSError *error;
+        if (![moc_ save:&error]) {
 			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 			assert(NO); //DEBUGでは落とす
         } 
-    }
+	}
 }
 
 - (void)dealloc 
@@ -440,7 +431,7 @@
 	
 	app_enable_iCloud_ = NO;
 	
-	if (DEBUG==1 && IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0")) {
+	if (CoreData_iCloud_SYNC  && IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0")) {
 		 // do this asynchronously since if this is the first time this particular device is syncing with preexisting
 		 // iCloud content it may take a long long time to download
 		 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -526,7 +517,7 @@
 	NSManagedObjectContext* moc = nil;
 	
     if (coordinator != nil) {
-		if (DEBUG==1 && IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0")) {
+		if (CoreData_iCloud_SYNC  && IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0")) {
 			moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
 			//moc = [[NSManagedObjectContext alloc] init];
 			
@@ -534,19 +525,19 @@
 				// even the post initialization needs to be done within the Block
 				[moc setPersistentStoreCoordinator: coordinator];
 
-				// iCloudに変化があれば通知を受ける
+				// iCloudに変化があれば通知を受ける　＜＜初期ミス！ applicationDidEnterBackground:にて破棄してしまっていた。
 				[[NSNotificationCenter defaultCenter] addObserver:self 
-														selector:@selector(mergeChangesFrom_iCloud:) 
-															name:NSPersistentStoreDidImportUbiquitousContentChangesNotification 
-														  object:coordinator];
-
+														 selector:@selector(mergeChangesFrom_iCloud:) 
+															 name:NSPersistentStoreDidImportUbiquitousContentChangesNotification 
+														   object:coordinator];
+				
 				// 競合解決方法   Context <<>> SQLite <<>> iCloud
 				// NSErrorMergePolicy - マージコンフリクトを起こすとSQLite保存に失敗する（デフォルト）
 				// NSMergeByPropertyStoreTrumpMergePolicy - SQLite(Store)を優先にマージする
 				// NSMergeByPropertyObjectTrumpMergePolicy - Context(Object)を優先にマージする
 				// NSOverwriteMergePolicy - ContextでSQLiteを上書きする		<<<<<<<<<<
 				//　NSRollbackMergePolicy　-　Contextの変更を破棄する
-				[moc setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
+				//[moc setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
 			}];
         }
 		else {	// iCloudなし
