@@ -156,7 +156,7 @@
 	id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedE1_ sections] objectAtIndex:0];
 	BOOL bRefetch = NO;
 	NSArray *arE1 = [sectionInfo objects];
-	if (arE1 && 0<[arE1 count]) {
+	if (0 < [arE1 count]) {
 		E1 *e1last = [arE1 lastObject];
 		if (0 < [e1last.childs count]) {
 			NSArray *arE2 = [e1last.childs allObjects];
@@ -172,15 +172,16 @@
 							&& [e3.weight integerValue]<=0
 							) {
 							// 「新しいアイテム」かつ「未編集」 なので削除する
-							e3.parent = nil;
+							e3.parent = nil; // e2とのリンクを切る
 							[moc_ deleteObject:e3];
 							bRefetch = YES;
 						}
 					}
 				}
+				//NSLog(@"e2.name=[%@]  e2.childs=[%@]", e2.name, e2.childs);
 				if ([e2.name length]<=0 && [e2.childs count]<=0) {
 					//配下E3なし & 「新しいグループ」 なので削除する
-					e2.parent = nil;
+					e2.parent = nil; // e1とのリンクを切る
 					[moc_ deleteObject:e2];
 					bRefetch = YES;
 				}
@@ -203,6 +204,8 @@
 			}
 			id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedE1_ sections] objectAtIndex:0];
 			section0Rows_ = [sectionInfo numberOfObjects];
+			// 再描画
+			[self.tableView reloadData];
 		}
 	}
 }
@@ -902,8 +905,8 @@
 	// CoreData 読み込み
 	[self refetcheAllData];	//この中で処理済み [self.tableView reloadData];
 
-	// E3に有効レコードが無ければ削除する。E2,E1も遡って配下が無ければ削除する。
-	//[self deleteBlankData];
+	// refetcheAllDataの後、E3に有効レコードが無ければ削除する。E2,E1も遡って配下が無ければ削除する。
+	[self deleteBlankData];
 	
 	if (0 < contentOffsetDidSelect_.y) {
 		// app.Me3dateUse=nil のときや、メモリ不足発生時に元の位置に戻すための処理。
@@ -1141,13 +1144,13 @@
 	switch (section) {
 		case 2: {
 			NSString *zz = @"";  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
-			if (appDelegate_.app_pid_AdOff) {
+		/*	if (appDelegate_.app_pid_AdOff) {
 				if (appDelegate_.app_enable_iCloud) {
 					zz = NSLocalizedString(@"iCloud ON",nil); // 同期中
 				} else {
 					zz = NSLocalizedString(@"iCloud OFF",nil); // 無効
 				}
-			}
+			}*/
 			zz = [zz stringByAppendingString:@"\n\nAzukiSoft Project\n"  COPYRIGHT];
 			if (appDelegate_.app_opt_Ad) {
 				if (appDelegate_.app_is_iPad) {
