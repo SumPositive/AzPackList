@@ -13,6 +13,7 @@
 @interface FileCsv : NSObject 
 
 @property (nonatomic, strong, readonly) NSString		*tmpPathFile;
+@property (nonatomic, assign, readonly) BOOL			didEncryption;
 //@property (nonatomic, strong) NSMutableArray			*errorMsgs;
 
 - (id)init;

@@ -239,10 +239,18 @@
 	[picker setToRecipients:toRecipients];
 #endif
 	
+	NSString *zPackName;
+	if (e1selected_.name) {
+		zPackName = e1selected_.name;
+	} else { // 名称未定
+		zPackName = NSLocalizedString(@"(New Pack)",nil);
+	}
+	
 	// Subject: 件名
-	NSString* zSubj = [NSString stringWithFormat:@"%@ : %@ ", NSLocalizedString(@"Product Title",nil), e1selected_.name];
+	NSString* zSubj = [NSString stringWithFormat:@"%@ : %@", NSLocalizedString(@"Product Title",nil), zPackName];
 	[picker setSubject:zSubj];  
 
+	// 添付ファイル生成
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	dispatch_async(queue, ^{
 		// CSV SAVE
@@ -261,11 +269,6 @@
 			}
 			NSString *csvPath = fcsv.tmpPathFile;
 
-			// Body: 添付ファイル
-			NSString* fileName = [NSString stringWithFormat:@"%@.%@", e1selected_.name, GD_EXTENSION];
-			NSData* fileData = [NSData dataWithContentsOfFile:csvPath];
-			[picker addAttachmentData:fileData mimeType:@"application/packlist" fileName:fileName];
-			
 			// Body: 本文
 			NSString* zBody = [NSString stringWithFormat:@"%@%@%@%@%@", 
 							   NSLocalizedString(@"Email send Body1",nil),
@@ -273,7 +276,17 @@
 							   NSLocalizedString(@"Email send Body3",nil),
 							   NSLocalizedString(@"Email send Body4",nil),
 							   NSLocalizedString(@"Email send Body5",nil) ];
+			if (fcsv.didEncryption) {
+				zBody = [zBody stringByAppendingString:NSLocalizedString(@"Email send Body6 didEncryption",nil)];
+			} else {
+				//不要//zBody = [zBody stringByAppendingString:NSLocalizedString(@"Email send Body6 NoEncryption",nil)];
+			}
 			[picker setMessageBody:zBody isHTML:YES];
+			
+			// Body: 添付ファイル
+			NSString* fileName = [NSString stringWithFormat:@"%@.%@", zPackName, GD_EXTENSION];
+			NSData* fileData = [NSData dataWithContentsOfFile:csvPath];
+			[picker addAttachmentData:fileData mimeType:@"application/packlist" fileName:fileName];
 			
 			// Email オープン
 			if (appDelegate_.app_is_iPad) {

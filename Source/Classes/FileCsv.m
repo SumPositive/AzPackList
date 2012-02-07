@@ -21,6 +21,7 @@
 	NSString	*errorMsg_;
 }
 @synthesize tmpPathFile = tmpPathFile_;
+@synthesize didEncryption = didEncryption_;
 //@synthesize errorMsgs = errorMsgs_;
 
 
@@ -69,6 +70,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 		if (tmpPathFile_==nil) {
 			[self errorMsg:@"NG tmp path"];
 		}
+		didEncryption_ = NO;
     }
     return self;
 }
@@ -175,6 +177,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 		}
 	}
 	//----------------------------------------------------------------------------Crypt 暗号化
+	didEncryption_ = NO;
 	if (bCrypt) {
 		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 		if ([userDefaults boolForKey:UD_OptCrypt]) {
@@ -191,6 +194,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 				NSLog(@"FileCsv: zSave: Crypt: Base64 str=%@", str);
 				[PzCsv setString:CRYPT_HEADER];	// Crypt Header を先頭へ追加
 				[PzCsv appendString:str];
+				didEncryption_ = YES;
 			}
 			else {
 				[self errorMsg:NSLocalizedString(@"PackListCrypt NoKey",nil)];
@@ -587,6 +591,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 
 - (E1 *)e1Load:(NSString *)PzCsv  withSave:(BOOL)PbSave // NO=共有プラン詳細表示時、SAVEせずにRollBackするために使用。
 {
+	didEncryption_ = NO;
 	//--------------------------------------------------------------------------------Crypt Headerチェック
 	if ([PzCsv hasPrefix:CRYPT_HEADER]) {
 		// PzCsv から CRYPT_HEADER を取り除く
@@ -604,6 +609,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 				NSData *plain = [data AES256DecryptWithKey:secKey];	// 復号化
 				 PzCsv = [[NSString alloc] initWithData:plain encoding:NSUTF8StringEncoding]; //-->NSString
 				NSLog(@"FileCsv: zLoad: Crypt PzCsv=%@", PzCsv);
+				didEncryption_ = YES;
 			} else {
 				[self errorMsg:NSLocalizedString(@"PackListCrypt NoKey",nil)];
 				return nil;
