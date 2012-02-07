@@ -409,7 +409,10 @@
 	
 	switch (indexPath.section) {
 		case 0: {
-			if (0 < [mMetadatas count]) {
+			if (mMetadatas==nil) {
+				cell.textLabel.text = @"  Please wait.";
+			}
+			else if (0 < [mMetadatas count]) {
 				DBMetadata *dbm = [mMetadatas objectAtIndex:indexPath.row];
 				cell.textLabel.text = [dbm.filename stringByDeletingPathExtension]; // 拡張子を除く
 			} else {
