@@ -223,6 +223,12 @@
 
 	// この時点でようやく self.managedObjectContext self.bUpload などがセットされている。
 
+	if (self.PbUpload) {
+		self.title = Re1selected.name;
+	} else {
+		self.title = @"PackList";
+	}
+
 	[self viewDesign];
 }
 
@@ -949,12 +955,16 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	switch (section) {
 		case 0:
-			return NSLocalizedString(@"Google Login", @"Google ログイン");
+			if (self.PbUpload) {
+				return NSLocalizedString(@"Upload Google",nil);
+			} else {
+				return NSLocalizedString(@"Import Google",nil);
+			}
 			break;
 		case 1:
 			if (self.PbUpload) {
-				if (MbLogin) return NSLocalizedString(@"Upload - click start", @"アップロード - クリックすれば開始");
-				else return NSLocalizedString(@"Upload - Please login first", @"アップロード - 先にログインしてください");
+				if (MbLogin) return NSLocalizedString(@"Upload - click start",nil);
+				else return NSLocalizedString(@"Upload - Please login first",nil);
 			}
 			return nil;  // Download時は非表示にするため
 			break;
@@ -963,10 +973,10 @@
 				return @"";
 			}
 			else if (self.PbUpload) {
-				return NSLocalizedString(@"AzPack - References", @"AzPack - ファイル一覧");
+				return NSLocalizedString(@"AzPack - References",nil);
 			}
 			else {
-				return NSLocalizedString(@"AzPack - please select one.", @"AzPack - 1つ選択してください");
+				return NSLocalizedString(@"AzPack - please select one.", nil);
 			}
 			break;
 	}

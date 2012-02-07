@@ -82,7 +82,7 @@
 	// 画面表示に関係する Option Setting を取得する
 	//NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	
-	self.title = NSLocalizedString(@"Setting", nil);
+	//self.title = NSLocalizedString(@"menu Setting", nil);
 	
 	[[NSUbiquitousKeyValueStore defaultStore] synchronize]; // 最新取得
 	// テーブルビューを更新します。
@@ -349,6 +349,7 @@
 				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
 				sw.tag = TAG_OptAdvertising;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
+				//sw.hidden = !(appDelegate_.app_pid_AdOff); // AdOff支払により可視化 ＜＜NG 購入後の状態が解るように見せることにする
 				sw.enabled = appDelegate_.app_pid_AdOff; // AdOff支払により有効化
 				[cell.contentView  addSubview:sw]; //[sw release];
 				cell.textLabel.text = NSLocalizedString(@"Advertising",nil);

@@ -17,13 +17,7 @@
 
 
 @interface PadRootVC : UIViewController <UISplitViewControllerDelegate>
-{
-@private
-    //UIPopoverController		*popoverController;    
-    UIBarButtonItem				*popoverButtonItem;
-}
 
-//@property (nonatomic, retain) UIPopoverController		*popoverController;
 @property (nonatomic, retain) UIBarButtonItem			*popoverButtonItem;
 
 @end

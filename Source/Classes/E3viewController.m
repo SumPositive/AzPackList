@@ -959,7 +959,7 @@
 	if (@selector(paste:) == action) {
 		if (sharePlanList_) return NO;
 		// クリップボード(clipE3objects) にE3があるか調べる
-		if (0 < [appDelegate_.clipE3objects_ count]) return YES; // クリップあり
+		if (0 < [appDelegate_.clipE3objects count]) return YES; // クリップあり
 		return NO; // クリップボードが空なのでPaste無効
 	}
 	return NO;
@@ -972,15 +972,15 @@
 	if ([[e3array_ objectAtIndex:indexPathClip_.section] count] <= indexPathClip_.row) return;
 	
 	// クリップボード(clipE3objects) 前処理
-	if (hasClipPaste_ && 0 < [appDelegate_.clipE3objects_ count]) { // 未[Paste]ならばPUSHスタックするため
+	if (hasClipPaste_ && 0 < [appDelegate_.clipE3objects count]) { // 未[Paste]ならばPUSHスタックするため
 		// 1回でもPasteしたならば、先ずクリップをクリアする
-		for (E3 *e3 in appDelegate_.clipE3objects_) {
+		for (E3 *e3 in appDelegate_.clipE3objects) {
 			if (e3.parent == nil) {
 				// [Cut]されたE3なので削除する
 				[e1selected_.managedObjectContext deleteObject:e3];
 			}
 		}
-		[appDelegate_.clipE3objects_ removeAllObjects]; // 全て削除する
+		[appDelegate_.clipE3objects removeAllObjects]; // 全て削除する
 	}
 	hasClipPaste_ = NO;
 	//
@@ -988,7 +988,7 @@
 	E2 *e2obj = e3obj.parent; // 後半のsum更新のため親E2を保持する
 	e3obj.parent = nil; // リンクを切った状態で残す。Pasteできるようにするため。
 	// e3obj をクリップボード(clipE3objects) へ追加する
-	[appDelegate_.clipE3objects_ addObject:e3obj];
+	[appDelegate_.clipE3objects addObject:e3obj];
 	
 	[[e3array_ objectAtIndex:indexPathClip_.section] removeObjectAtIndex:indexPathClip_.row]; // TableViewCell削除
 	// アニメーション付きで、MpathClip行をテーブルから削除する　＜＜表示だけの更新＞＞
@@ -1030,21 +1030,21 @@
 	if ([[e3array_ objectAtIndex:indexPathClip_.section] count] <= indexPathClip_.row) return;
 	
 	// クリップボード(clipE3objects) 前処理
-	if (hasClipPaste_ && 0 < [appDelegate_.clipE3objects_ count]) { // 未[Paste]ならばPUSHスタックするため
+	if (hasClipPaste_ && 0 < [appDelegate_.clipE3objects count]) { // 未[Paste]ならばPUSHスタックするため
 		// 1回でもPasteしたならば、先ずクリップをクリアする
-		for (E3 *e3 in appDelegate_.clipE3objects_) {
+		for (E3 *e3 in appDelegate_.clipE3objects) {
 			if (e3.parent == nil) {
 				// [Cut]されたE3なので削除する
 				[e1selected_.managedObjectContext deleteObject:e3];
 			}
 		}
-		[appDelegate_.clipE3objects_ removeAllObjects]; // 全て削除する
+		[appDelegate_.clipE3objects removeAllObjects]; // 全て削除する
 	}
 	hasClipPaste_ = NO;
 	//
 	E3 *e3obj = [[e3array_ objectAtIndex:indexPathClip_.section] objectAtIndex:indexPathClip_.row];
 	// e3obj をクリップボード(clipE3objects) へ追加する
-	[appDelegate_.clipE3objects_ addObject:e3obj];
+	[appDelegate_.clipE3objects addObject:e3obj];
 }
 
 - (void)paste:(id)sender {  // これはプロトコルとして予約されている
@@ -1057,7 +1057,7 @@
 	if (e3paste == nil) return;
 	
 	// クリップボード(clipE3objects) の末尾から e3clip を取り出す(POP)
-	E3 *e3clip = [appDelegate_.clipE3objects_ lastObject]; // 最後のオブジェクト参照
+	E3 *e3clip = [appDelegate_.clipE3objects lastObject]; // 最後のオブジェクト参照
 	if (e3clip == nil) return; // クリップなし
 	
 	// MpathClip位置へ追加する
@@ -1087,13 +1087,13 @@
 		e3new.weightLack = e3clip.weightLack;
 	}
 	
-	if (1 < [appDelegate_.clipE3objects_ count]) { // 最後の1個を残すため。それが次にCutやCopyしたものと置き換わる
+	if (1 < [appDelegate_.clipE3objects count]) { // 最後の1個を残すため。それが次にCutやCopyしたものと置き換わる
 		// クリップボード(clipE3objects) の末尾を削除し、参照(e3clip)を無効にする
 		if (e3clip.parent == nil) {
 			// [Cut]されたE3なので削除する
 			[e1selected_.managedObjectContext deleteObject:e3clip];
 		}
-		[appDelegate_.clipE3objects_ removeLastObject]; // 末尾のオブジェクトを削除する
+		[appDelegate_.clipE3objects removeLastObject]; // 末尾のオブジェクトを削除する
 		e3clip = nil;
 	}
 	hasClipPaste_ = YES;
