@@ -434,6 +434,21 @@
 	if (CoreData_iCloud_SYNC  && IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0")) {
 		 // do this asynchronously since if this is the first time this particular device is syncing with preexisting
 		 // iCloud content it may take a long long time to download
+
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"iCloud sync",nil)
+														message:NSLocalizedString(@"iCloud sync msg",nil)
+													   delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
+		UIActivityIndicatorView *alertAct = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+		alertAct.frame = CGRectMake((alert.frame.size.width-50)/2, 20, 50, 50);
+		[alert addSubview:alertAct];
+		[alertAct startAnimating];
+		if (app_is_iPad_) {
+			[mainSVC_.splitViewController.view addSubview:alert];
+		} else {
+			[mainNC_.navigationController.view addSubview:alert];
+		}
+		[window_ addSubview:alert];
+		
 		 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			 NSFileManager *fileManager = [NSFileManager defaultManager];
 			 // Migrate datamodel
@@ -481,6 +496,8 @@
 				 NSLog(@"asynchronously added persistent store!");
 				 [[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
 																	 object:self userInfo:nil];
+				 [alertAct stopAnimating];
+				 [alert dismissWithClickedButtonIndex:alert.cancelButtonIndex animated:YES];
 			 });
 		 });
 	 } 

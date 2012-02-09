@@ -132,7 +132,7 @@
 	MlbNickname = [[UILabel alloc] init];
 	MlbNickname.font = [UIFont systemFontOfSize:12];
 	MlbNickname.text = NSLocalizedString(@"Nickname info",nil);
-	MlbNickname.numberOfLines = 6;
+	MlbNickname.numberOfLines = 7;
 	MlbNickname.textAlignment = UITextAlignmentCenter;
 	MlbNickname.backgroundColor = [UIColor clearColor];
 	[self.view addSubview:MlbNickname]; //[MlbNickname release];
@@ -468,6 +468,7 @@
 	NSMutableString *zCsv = [NSMutableString new]; //こちら側でメモリ管理する
 	// この呼び出し元から「非同期マルチスレッド処理」している
 	FileCsv *fcsv = [[FileCsv alloc] init];
+	fcsv.isShardMode = YES; // 写真データをアップしない。
 	NSString *zErr = [fcsv zSave:Re1selected toMutableString:zCsv crypt:NO]; //crypt:NO 公開につき暗号化禁止
 	if (zErr) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF

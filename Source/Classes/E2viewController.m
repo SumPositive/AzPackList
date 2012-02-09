@@ -445,6 +445,7 @@
 	dispatch_async(queue, ^{
 		// CSV SAVE
 		FileCsv *fcsv = [[FileCsv alloc] init];
+		fcsv.isShardMode = YES; // 写真を除外する
 		NSString *zErr = [fcsv zSaveTmpFile:e1selected_ crypt:YES];
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -496,6 +497,7 @@
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	dispatch_async(queue, ^{		// 非同期マルチスレッド処理
 		FileCsv *fcsv = [[FileCsv alloc] init];
+		fcsv.isShardMode = YES; // 写真を除外する
 		NSString *zErr = [fcsv zSavePasteboard:e1selected_ crypt:YES];
 		
 		dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理

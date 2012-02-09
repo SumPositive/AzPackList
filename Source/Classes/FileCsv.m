@@ -20,6 +20,7 @@
 {
 	NSString	*errorMsg_;
 }
+@synthesize isShardMode = isShardMode_;
 @synthesize tmpPathFile = tmpPathFile_;
 @synthesize didEncryption = didEncryption_;
 //@synthesize errorMsgs = errorMsgs_;
@@ -70,6 +71,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 		if (tmpPathFile_==nil) {
 			[self errorMsg:@"NG tmp path"];
 		}
+		isShardMode_ = NO;
 		didEncryption_ = NO;
     }
     return self;
@@ -91,6 +93,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 	NSSortDescriptor *key1 = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
 	NSArray *sortRow = [[NSArray alloc] initWithObjects:key1, nil];  
 	NSString *str;
+	NSString *strBase64;
 	
 	@try {
 		//----------------------------------------------------------------------------Header
@@ -108,43 +111,71 @@ static NSString *csvToStr( NSString *inCsv ) {
 		
 		//----------------------------------------------------------------------------E1 [Plan]
 		//[1.0]  ,"name","note",
-		str = [NSString stringWithFormat:@",\"%@\",\"%@\",\n", strToCsv(Pe1.name), strToCsv(Pe1.note)];
+		//[2.0]  ,"name","note","photoUrl","photoData",
+		if (Pe1.photoData && isShardMode_==NO) {
+			strBase64 = [Pe1.photoData stringEncodedWithBase64];
+		} else {
+			strBase64 = @"";
+		}
+		if ([Pe1.name length] <= 0) {
+			Pe1.name = NSLocalizedString(@"(New Pack)", nil);
+		}
+		str = [NSString stringWithFormat:@",\"%@\",\"%@\",\"%@\",\"%@\",\n", 
+			   strToCsv(Pe1.name), strToCsv(Pe1.note), strToCsv(Pe1.photoUrl), strBase64];
 		AzLOG(@"E1> %@", str);
 		[PzCsv appendString:str];
 		
 		//------------------------------------------------------------------------------E2 [Index]
 		//[1.0] , ,"name","note",
+		//[2.0] , ,"name","note","photoUrl","photoData",
 		NSMutableArray *e2list = [[NSMutableArray alloc] initWithArray:[Pe1.childs allObjects]];
 		[e2list sortUsingDescriptors:sortRow];	// .row 昇順にCSV書き出す
-		for (E2 *e2node in e2list) {
-			str = [NSString stringWithFormat:@",,\"%@\",\"%@\",\n", strToCsv(e2node.name), strToCsv(e2node.note)];
+		for (E2 *e2node in e2list) 
+		{
+			if (e2node.photoData && isShardMode_==NO) {
+				strBase64 = [e2node.photoData stringEncodedWithBase64];
+			} else {
+				strBase64 = @"";
+			}
+			if ([e2node.name length] <= 0) {
+				e2node.name = NSLocalizedString(@"(New Index)", nil);
+			}
+			str = [NSString stringWithFormat:@",,\"%@\",\"%@\",\"%@\",\"%@\",\n", 
+				   strToCsv(e2node.name), strToCsv(e2node.note), strToCsv(e2node.photoUrl), strBase64];
 			AzLOG(@"E2> %@", str);
 			[PzCsv appendString:str];
 			
 			//----------------------------------------------------------------------------E3 [Goods]
 			//[1.0] ,,,"name","note",stock,need,weight,
 			//[1.1] ,,,"name","note",stock,need,weight,"shopKeyword","shopNote",
+			//[2.0] ,,,"name","note",stock,need,weight,"shopKeyword","shopNote","photoUrl","photoData"
 			NSMutableArray *e3list = [[NSMutableArray alloc] initWithArray:[e2node.childs allObjects]];
 			[e3list sortUsingDescriptors:sortRow];	// .row 昇順にCSV書き出す
-			for (E3 *e3node in e3list) {
-				if ((-1) < [e3node.need integerValue]) { //(-1)Add専用ノードを除外する
-					str = [NSString stringWithFormat:@",,,\"%@\",\"%@\",%ld,%ld,%ld,\"%@\",\"%@\",\n", 
+			for (E3 *e3node in e3list) 
+			{
+				if ((-1) < [e3node.need integerValue] && 0 < [e3node.name length]) 
+				{ //(-1)Add専用ノードを除外する
+					if (e3node.photoData && isShardMode_==NO) {
+						strBase64 = [e3node.photoData stringEncodedWithBase64];
+					} else {
+						strBase64 = @"";
+					}
+					str = [NSString stringWithFormat:@",,,\"%@\",\"%@\",%ld,%ld,%ld,\"%@\",\"%@\",\"%@\",\"%@\",\n", 
 						   strToCsv(e3node.name),
 						   strToCsv(e3node.note),
 						   [e3node.stock longValue], 
 						   [e3node.need longValue], 
 						   [e3node.weight longValue],
 						   strToCsv(e3node.shopKeyword),
-						   strToCsv(e3node.shopNote)   ];
+						   strToCsv(e3node.shopNote),
+						   strToCsv(e3node.photoUrl),
+						   strBase64];
 					AzLOG(@"E3> %@", str);
 					[PzCsv appendString:str];
 				}
 			}
-			//[e3list release];
 			e3list = nil;
 		}
-		// release
-		//[e2list release];
 		e2list = nil;
 		
 		//----------------------------------------------------------------------------[End]
@@ -155,10 +186,10 @@ static NSString *csvToStr( NSString *inCsv ) {
 		return errorMsg_; //=nil
 	}
 	@catch(id error) {
-		[self errorMsg:@"zSave:NG catch"];
+		[self errorMsg:@"Save NG catch"];
 	}
 	@catch (NSException *errEx) {
-		NSString *msg = [NSString stringWithFormat:@"zSave: Exception: %@: %@", [errEx name], [errEx reason]];
+		NSString *msg = [NSString stringWithFormat:@"Save Exception: %@: %@", [errEx name], [errEx reason]];
 		[self errorMsg:msg];
 	}
 	@finally {
@@ -394,7 +425,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		while (1) { 
 			iErrLine++;
 			if (csvLineSplit(PzCsv, aSplit) < 0 OR 10 < iErrLine) { // 10行以内に無ければ中断
-				@throw NSLocalizedString(@"Err CsvHeaderNG",nil);
+				@throw @"Load error (10)";
 			}
 			if ([[aSplit objectAtIndex:0] isEqualToString:GD_CSV_HEADER_ID]) {
 				break; // OK
@@ -406,7 +437,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		while (1) { 
 			iErrLine++;
 			if (csvLineSplit(PzCsv, aSplit) < 0 OR 10 < iErrLine) { // 10行以内に無ければ中断
-				@throw NSLocalizedString(@"Err CsvHeaderNG",nil);
+				@throw @"Load error (20)";
 			}
 			if ([[aSplit objectAtIndex:0] isEqualToString:@"Begin"]) {
 				break; // OK
@@ -414,16 +445,20 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		}
 		
 		//----------------------------------------------------------------------[Plan]
-		//[1.0] " ,name,note,"
-		//[1.0] "0,   1,   2,"
+		//[1.0][  ,"name","note",]
+		//[2.0][  ,"name","note","photoUrl","photoData",]
+		//[2.0][0,          1,   　 　　　　2,       　　　　　　  3,　　　   　　　　　　　　　　　　 4,]
 		while (1) { 
 			iErrLine++;
 			if (csvLineSplit(PzCsv, aSplit) < 0 OR 10 < iErrLine) { // 10行以内に無ければ中断
-				@throw NSLocalizedString(@"Err CsvHeaderNG",nil);
+				@throw [NSString stringWithFormat:@"Load error (30) %d", iErrLine];
 			}
 			if ([[aSplit objectAtIndex:0] isEqualToString:@""] && ![[aSplit objectAtIndex:1] isEqualToString:@""]) {
-				break; // OK                                      ↑notです！
+				break; // OK                                                             ↑notです！
 			} 
+		}
+		if ([aSplit count]<3) {
+			@throw @"Load error (40)";
 		}
 		//-----------------------------------------------E1.row の最大値を求める
 		NSInteger maxRow = [EntityRelation E1_maxRow];
@@ -434,6 +469,11 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		e1node.row  = [NSNumber numberWithInteger:1 + maxRow];
 		e1node.name = [aSplit objectAtIndex:1];  //csvToStr([aSplit objectAtIndex:1]);
 		e1node.note = [aSplit objectAtIndex:2];
+		//-----------------------------------------------[2.0]
+		if (4 < [aSplit count]) {
+			e1node.photoUrl = [aSplit objectAtIndex:3];
+			e1node.photoData = [NSData dataWithBase64String:[aSplit objectAtIndex:4]];
+		}
 		//-----------------------------------------------
 		e2row = 0;
 		e2node = nil;
@@ -447,18 +487,19 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 			//}
 			// [0.7.3] "End,,,," が無いケースに対応
 			long lCount = csvLineSplit(PzCsv, aSplit);
+			//lCount==0 : 空白行
 			if (lCount == -1) {	// EOF
 				break;
 			}
 			else if	(lCount < -1) {	// ERROR
-				@throw NSLocalizedString(@"Err CsvHeaderNG",nil);
+				@throw @"Load error (50)";
 			}
-			//lCount==0 : 空白行
-			
 			//----------------------------------------------------------------------[Group] E2
-			//[1.0] " , ,name,note,"
-			//[1.0] "0,1,   2,   3,"
-			else if ([[aSplit objectAtIndex:0] isEqualToString:@""] 
+			//[1.0][  ,  ,"name","note",]
+			//[2.0][  ,  ,"name","note","photoUrl","photoData",]
+			//[2.0][0,1,   　　　　　　　2, 　　　　　　  3,　　　　　　　　　　　　　　　　4,                  5,]
+			else if (3 < [aSplit count] 
+					 && [[aSplit objectAtIndex:0] isEqualToString:@""] 
 					 && [[aSplit objectAtIndex:1] isEqualToString:@""] 
 					 && ![[aSplit objectAtIndex:2] isEqualToString:@""]) // 最後だけ ! NOT
 			{
@@ -471,17 +512,22 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 					e2node.row		= [NSNumber numberWithInteger:e2row++];
 					e2node.name		= zName; // csvToStr()後にトリム済み
 					e2node.note		= [aSplit objectAtIndex:3];
-					//-----------------------------------------------
+					//-----------------------------------------------[2.0]
+					if (5 < [aSplit count]) {
+						e2node.photoUrl = [aSplit objectAtIndex:4];
+						e2node.photoData = [NSData dataWithBase64String:[aSplit objectAtIndex:5]];
+					}
+					//-----------------------------------------------Linking
 					[e1node addChildsObject:e2node];
 					e3row = 0;
 				}
 			} 
 			//--------------------------------------------------------------------------------[Item] E3
 			//[1.0] [  ,  ,   ,"name","note",stock,need,weight,]
-			//[1.0] [0,1,2,          3,         4,       5,      6,         7,]
 			//[1.1] [  ,  ,   ,"name","note",stock,need,weight,"shopKeyword","shopNote",]
-			//[1.1] [0,1,2,          3,         4,       5,      6,         7,                       8,                 9,]
-			else if (e2node
+			//[2.0] [  ,  ,   ,"name","note",stock,need,weight,"shopKeyword","shopNote","photoUrl","photoData",]
+			//[2.0] [0,1,2,          3,         4,       5,      6,         7,                       8,                 9,             10,                 11,]
+			else if (e2node && 7 < [aSplit count] 
 					 && [[aSplit objectAtIndex:0] isEqualToString:@""] 
 					 && [[aSplit objectAtIndex:1] isEqualToString:@""] 
 					 && [[aSplit objectAtIndex:2] isEqualToString:@""]) // 3桁ともヌル
@@ -493,7 +539,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 					e3node.row		= [NSNumber numberWithInteger:e3row++];
 					e3node.name				= zName;
 					e3node.note				= [aSplit objectAtIndex:4];
-					//-----------------------------------------------E3:冗長計算処理
+					//-----------------------------------------------
 					NSInteger iStock	= [[aSplit objectAtIndex:5] integerValue];
 					NSInteger iNeed		= [[aSplit objectAtIndex:6] integerValue];
 					NSInteger iWeight	= [[aSplit objectAtIndex:7] integerValue];
@@ -514,16 +560,19 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 						e3node.noCheck = [NSNumber numberWithInteger:1];
 					else
 						e3node.noCheck = [NSNumber numberWithInteger:0];
-					//-----------------------------------------------
-					[e2node addChildsObject:e3node];
-					//-----------------------------------------------
-					//[1.1]
-					if (8 < [aSplit count]) {
-						e3node.shopKeyword	= [aSplit objectAtIndex:8];
-					}
+					//-----------------------------------------------[1.1]
 					if (9 < [aSplit count]) {
+						e3node.shopKeyword	= [aSplit objectAtIndex:8];
 						e3node.shopNote		= [aSplit objectAtIndex:9];
 					}
+					//-----------------------------------------------[2.0]
+					if (11 < [aSplit count]) {
+						e3node.photoUrl = [aSplit objectAtIndex:10];
+						e3node.photoData = [NSData dataWithBase64String:[aSplit objectAtIndex:11]];
+					}
+					//-----------------------------------------------Linking
+					[e2node addChildsObject:e3node];
+					//-----------------------------------------------
 				}
 			} 
 			//--------------------------------------------------------------------------------[End]
@@ -555,7 +604,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 				if (![moc save:&err]) {
 					// 保存失敗
 					NSString *msg = [NSString stringWithFormat:@"Moc save error: %@", [err localizedDescription]];
-					NSLog(@"Unresolved error %@", msg);
+					NSLog(@"Load error (60) %@", msg);
 					@throw msg;
 				}
 			}
@@ -563,7 +612,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		}
 		else {
 			// Endが無い ＆ [Plan]も無い
-			@throw @"No End";
+			@throw @"Load error (70)";
 		}
 	} //@try
 	@catch (NSString *errMsg) {

@@ -214,58 +214,34 @@
 	rect.size.width = fWidth - 60;
 	tfKeyword_.frame = rect;
 	
-/*	rect = MlbStock.frame;
-	rect.origin.x = fWidth / 2 - OFSX2;
-	MlbStock.frame = rect;
-	MlbNeed.frame = rect;
-	MlbWeight.frame = rect;*/
-	
 	rect = dialStock_.frame;
 	rect.size.width = fWidth - 80;
 	[dialStock_ setFrame:rect]; 	//NG//mDialStock.frame = rect;
 	[dialNeed_ setFrame:rect];
-#ifdef WEIGHT_DIAL
 	[dialWeight_ setFrame:rect];
-#else
-	rect = MsliderStock.frame;
-	rect.size.width = fWidth - 80;
-	MsliderWeight.frame = rect;
-#endif
-	
-/*	NSInteger iVal;
-	iVal = [e3target_.stock integerValue];  //  MlbStock.text integerValue];
-	MsliderStock.maximumValue = 10 + (iVal / 10) * 10;
-	MlbStockMax.text = [NSString stringWithFormat:@"%4ld", (long)MsliderStock.maximumValue];
-	MsliderStock.value = (float)iVal; // Min,Maxを変えてから、その範囲でしか代入できないため、最後に代入
-	
-	iVal = [e3target_.need integerValue];  // MlbNeed.text integerValue];
-	MsliderNeed.maximumValue = 10 + (iVal / 10) * 10;
-	MlbNeedMax.text = [NSString stringWithFormat:@"%4ld", (long)MsliderNeed.maximumValue];
-	MsliderNeed.value = (float)iVal;
-*/	
-#ifdef WEIGHT_DIAL
-#else
-	NSInteger iVal;
-	// One Weight
-	iVal = [e3target_.weight integerValue];  // MlbWeight.text integerValue];
-	// Min
-	MsliderWeight.minimumValue = (float)(iVal - WEIGHT_CENTER_OFFSET);
-	if (MsliderWeight.minimumValue < 0) MsliderWeight.minimumValue = 0.0f;
-	MlbWeightMin.text = [NSString stringWithFormat:@"%ld", (long)MsliderWeight.minimumValue];
-	// Max										  //  ↑左寄せにつき数字不要
-	MsliderWeight.maximumValue = (float)(iVal + WEIGHT_CENTER_OFFSET);
-	if (WEIGHT_MAX < MsliderWeight.maximumValue) MsliderWeight.maximumValue = WEIGHT_MAX;
-	MlbWeightMax.text = [NSString stringWithFormat:@"%5ld", (long)MsliderWeight.maximumValue];
-	// Value
-	MsliderWeight.value = (float)iVal;
-#endif
-	
-/*	rect = MlbStockMax.frame;
-	rect.origin.x = fWidth - OFSX1;
-	MlbStockMax.frame = rect;
-	MlbNeedMax.frame = rect;
-	MlbWeightMax.frame = rect;
- */
+
+	rect = imageView_.frame;
+	if (fWidth < 400) {	// デバイス縦
+		if (imageView_.image.size.width < 600) {	// 写真タテ
+			rect.size.width = 240;
+			rect.size.height = 320;
+		} else {		// 写真ヨコ
+			rect.size.width = 288;	//= 320 * 0.45
+			rect.size.height = 216;	//= 240 * 0.45
+		}
+		rect.origin.x = (fWidth - rect.size.width)/2 - 10;  // -10:TableView左余白分
+	}
+	else {		// デバイス横
+		if (imageView_.image.size.width < 600) {	// 写真タテ
+			rect.size.width = 240;
+			rect.size.height = 320;
+		} else {		// 写真ヨコ
+			rect.size.width = 320;
+			rect.size.height = 240;
+		}
+		rect.origin.x = (fWidth - rect.size.width)/2 - 10;  // -10:TableView左余白分
+	}
+	imageView_.frame = rect;
 }
 
 - (void)performNameFirstResponder
@@ -297,7 +273,13 @@
 		
 		imageView_.contentMode = UIViewContentModeScaleAspectFit; // 縦横比率保持して伸縮
 		if (e3target_.photoData) {
-			imageView_.image = [UIImage imageWithData: e3target_.photoData];
+			UIImage *img = [UIImage imageWithData: e3target_.photoData];
+			if (img.size.width < 600) {		// VGA:640x480
+				imageView_.frame = CGRectMake(20, 20, 240, 320);	// Portrate
+			} else {
+				imageView_.frame = CGRectMake(5, 20, 288, 216);		// Landscape
+			}
+			imageView_.image = img;
 		} else {
 			// タッチすれば撮影することを示すアイコン
 			imageView_.image = [UIImage imageNamed:@"DropIcon128-PackList"]; // DEBUG

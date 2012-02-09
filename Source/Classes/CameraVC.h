@@ -11,19 +11,23 @@
 @class E3;
 @interface CameraVC : UIViewController
 {
-	IBOutlet UIImageView		*ibImageView;
+/*
 	IBOutlet UIButton			*ibBuTake;
 	IBOutlet UIButton			*ibBuRetry;
-
 	IBOutlet UILabel				*ibLbTorch;
-	IBOutlet UISwitch			*ibSwTorch;
+	IBOutlet UISwitch			*ibSwTorch;*/
+
+	IBOutlet UIImageView		*ibImageView;
+	IBOutlet UILabel				*ibLbCamera;
 }
 
 @property (nonatomic, retain) UIImageView	*imageView;
 @property (nonatomic, retain) E3						*e3target;
 
+/*
 - (IBAction)ibBuTakeTouch:(UIButton *)button;
 - (IBAction)ibBuRetryTouch:(UIButton *)button;
 - (IBAction)ibSwTorch:(UISwitch *)sender;
+*/
 
 @end

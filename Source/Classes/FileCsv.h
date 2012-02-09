@@ -12,6 +12,7 @@
 
 @interface FileCsv : NSObject 
 
+@property (nonatomic, assign) BOOL							isShardMode;  // 共有アップ：写真を除外する
 @property (nonatomic, strong, readonly) NSString		*tmpPathFile;
 @property (nonatomic, assign, readonly) BOOL			didEncryption;
 //@property (nonatomic, strong) NSMutableArray			*errorMsgs;
