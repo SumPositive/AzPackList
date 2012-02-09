@@ -17,6 +17,7 @@
 #import "CalcView.h"
 #import "WebSiteVC.h"
 #import "PatternImageView.h"
+#import "CameraVC.h"
 
 
 //#define LABEL_NOTE_SUFFIX   @"\n\n\n\n\n"  // UILabel *MlbNoteを上寄せするための改行（5行）
@@ -70,7 +71,8 @@
 	UILabel		*MlbWeightMin;
 #endif
 	
-	CalcView		*calcView_;
+	CalcView				*calcView_;
+	UIImageView		*imageView_;
 	
 	AppDelegate		*appDelegate_;
 	float						tableViewContentY_;
@@ -284,7 +286,29 @@
 		// 各viewDidAppear:にて「許可/禁止」を設定する
 		[appDelegate_ AdRefresh:NO];	//広告禁止
 	}
-
+	
+	UIActivityIndicatorView *aiv = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+	[aiv setFrame:CGRectMake((imageView_.bounds.size.width-50)/2, -15, 50, 50)];
+	[imageView_ addSubview:aiv];
+	[aiv startAnimating];
+	
+	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
+	dispatch_async(queue, ^{		// 非同期マルチスレッド処理
+		
+		imageView_.contentMode = UIViewContentModeScaleAspectFit; // 縦横比率保持して伸縮
+		if (e3target_.photoData) {
+			imageView_.image = [UIImage imageWithData: e3target_.photoData];
+		} else {
+			// タッチすれば撮影することを示すアイコン
+			imageView_.image = [UIImage imageNamed:@"DropIcon128-PackList"]; // DEBUG
+		}
+		
+		dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理
+			[aiv stopAnimating];
+			[aiv removeFromSuperview];
+		});
+	});
+	
 	//この時点で MtfName は未生成だから、0.5秒後に処理する
 	[self performSelector:@selector(performNameFirstResponder) withObject:nil afterDelay:0.5f]; // 0.5秒後に呼び出す
 }
@@ -840,7 +864,7 @@
 {
 	switch (section) {
 		case 0: // 
-			return 6;
+			return 7;
 			break;
 		case 1: // Shopping
 			return 4;
@@ -885,7 +909,9 @@
 			case 3:
 			case 4:
 			case 5:
-				return 58;  // etc
+				return 58;
+			case 6:
+				return 350;  // Photo 640x480
 		}
 	}
 
@@ -921,7 +947,7 @@
 	
 	switch (indexPath.section) {
 		case 0: // 
-			if (3 <= indexPath.row) {  // stock, need, weight
+			if (3 <= indexPath.row && indexPath.row <= 5) {  // stock, need, weight
 				// Calcボタン ------------------------------------------------------------------
 				UIButton *bu = [UIButton buttonWithType:UIButtonTypeCustom]; // autorelease
 				bu.frame = CGRectMake(0,16, 44,44);
@@ -1164,6 +1190,25 @@
 #endif
 				}
 					break;
+				case 6: // Photo
+				{
+					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 100,12)];
+					label.font = [UIFont systemFontOfSize:12];
+					label.text = NSLocalizedString(@"Photo", nil);
+					label.textColor = [UIColor grayColor];
+					label.backgroundColor = [UIColor clearColor];
+					[cell.contentView addSubview:label];
+					
+					// 640x480
+					if (appDelegate_.app_is_iPad) {
+						imageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(20,20, 240,320)];
+					} else {
+						imageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(20,20, 240,320)];
+					}
+					[cell.contentView addSubview:imageView_];
+					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // > 撮影
+				}
+					break;
 			}
 			break;
 			
@@ -1304,7 +1349,6 @@
 					selectGroup.RaE2array = e2array_;
 					selectGroup.RlbGroup = lbGroup_; // .tag=E2.row  .text=E2.name
 					[self.navigationController pushViewController:selectGroup animated:YES];
-					//[selectGroup release];
 				}
 					break;
 				case 1: // Name
@@ -1315,6 +1359,14 @@
 				case 2: // Note
 				{
 					[tvNote_ becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
+				}
+					break;
+				case 6: // Photo
+				{	// CameraVC へ
+					CameraVC *cam = [[CameraVC alloc] init];
+					cam.imageView = imageView_;
+					cam.e3target = e3target_;
+					[self.navigationController pushViewController:cam animated:YES];
 				}
 					break;
 			}

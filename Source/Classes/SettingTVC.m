@@ -355,9 +355,13 @@
 				cell.textLabel.text = NSLocalizedString(@"Advertising",nil);
 			}
 			if (appDelegate_.app_pid_AdOff) {
+				cell.textLabel.enabled = YES;
 				cell.detailTextLabel.text = NSLocalizedString(@"Advertising enable",nil);
+				cell.detailTextLabel.textColor = [UIColor grayColor];
 			} else {
+				cell.textLabel.enabled = NO;
 				cell.detailTextLabel.text = NSLocalizedString(@"Advertising disable",nil);
+				cell.detailTextLabel.textColor = [UIColor blueColor];
 			}
 			sw.frame = CGRectMake(fX, 5, 120, 25); // 回転対応
 			[sw setOn:[kvs boolForKey:KV_OptAdvertising] animated:YES];
@@ -408,8 +412,14 @@
 				} else {
 					cell.detailTextLabel.text = NSLocalizedString(@"PackListCrypt enable NoKey",nil);
 				}
+				cell.textLabel.enabled = YES;
+				cell.detailTextLabel.textColor = [UIColor grayColor];
+				cell.detailTextLabel.numberOfLines = 2;
 			} else {
+				cell.textLabel.enabled = NO;
 				cell.detailTextLabel.text = NSLocalizedString(@"PackListCrypt disable",nil);
+				cell.detailTextLabel.textColor = [UIColor blueColor];
+				cell.detailTextLabel.numberOfLines = 1;
 			}
 		}	break;
 	}

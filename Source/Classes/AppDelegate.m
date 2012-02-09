@@ -18,7 +18,7 @@
 #import "DropboxVC.h"
 #import "AZStoreVC.h"
 
-#define CoreData_iCloud_SYNC		NO	// YES or NO
+#define CoreData_iCloud_SYNC		YES	// YES or NO
 
 
 @interface AppDelegate (PrivateMethods) // メソッドのみ記述：ここに変数を書くとグローバルになる。他に同じ名称があると不具合発生する

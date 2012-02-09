@@ -17,6 +17,8 @@
 	@dynamic sumNoCheck;	// Data Model Version.2
 	@dynamic sumWeightStk;
 	@dynamic sumWeightNed;
+	@dynamic photoUrl;			// Data Model Version.5
+	@dynamic photoData;		// Data Model Version.5
 	@dynamic childs;
 @end
 
@@ -29,6 +31,8 @@
 	@dynamic sumNoCheck;	// Data Model Version.2
 	@dynamic sumWeightStk;
 	@dynamic sumWeightNed;
+	@dynamic photoUrl;			// Data Model Version.5
+	@dynamic photoData;		// Data Model Version.5
 	@dynamic parent;
 	@dynamic childs;
 @end
@@ -47,10 +51,11 @@
 	@dynamic weightStk;
 	@dynamic weightNed;
 	@dynamic weightLack;
-	@dynamic parent;
 	@dynamic shopKeyword;	// Data Model Version.4
 	@dynamic shopNote;			// Data Model Version.4
-	@dynamic image;				// Data Model Version.4
+	@dynamic photoUrl;			// Data Model Version.5
+	@dynamic photoData;		// Data Model Version.5
+	@dynamic parent;
 @end
 
 // END
