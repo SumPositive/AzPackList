@@ -13,6 +13,7 @@
 #import <AVFoundation/AVFoundation.h>	//Camera
 
 @interface CameraVC (PrivateMethods)
+- (void)cameraReset;
 - (void)rotateToOrientation:(UIInterfaceOrientation)orientation;
 @end
 
@@ -112,29 +113,33 @@
 	// 回転対応
 	UIInterfaceOrientation interOri;
 	if (appDelegate_.app_is_iPad) {
-		interOri = appDelegate_.mainSVC.interfaceOrientation;
+		interOri = appDelegate_.mainSVC.parentViewController.interfaceOrientation;
 	} else {
-		interOri = appDelegate_.mainNC.interfaceOrientation;
+		//interOri = appDelegate_.mainNC.visibleViewController.interfaceOrientation;
+		interOri = self.interfaceOrientation;
 	}
 	[self rotateToOrientation:interOri];
 
 	//[self.view.layer insertSublayer: previewLayer atIndex: 0];
 	[self.view.layer  addSublayer: previewLayer_];
 	
-	[captureSession_ startRunning];
-	//
-	//self.navigationItem.rightBarButtonItem.enabled = NO; //[Done]
-	buDone_.enabled = NO;
-	ibImageView.hidden = YES;
-/*	ibBuRetry.hidden = YES;
-	ibBuTake.hidden = NO;
-	ibLbTorch.hidden = NO;
-	ibSwTorch.hidden = NO;*/
+	[self cameraReset];
+}
 
+- (void)cameraReset
+{
+	// OFF
+	ibImageView.hidden = YES;
 	buRedo_.enabled = NO;
+	buDone_.enabled = NO;
+
+	// ON
+	previewLayer_.hidden = NO;
 	buCamera_.enabled = YES;
 	[buTorch_ setEnabled:YES]; //buTorch_=nil の場合があるため
-	buDone_.enabled = NO;
+	[captureSession_ startRunning];
+
+	ibLbCamera.text = NSLocalizedString(@"Camera msg1",nil);
 }
 
 - (void)cameraTake
@@ -156,14 +161,18 @@
 													// 静止画表示する
 													[captureSession_ stopRunning];
 													ibImageView.image = [UIImage imageWithData: captureData_];
-													ibImageView.hidden = NO;
-													//
-													//self.navigationItem.rightBarButtonItem.enabled = YES; //[Done]
-													//ibBuRetry.hidden = NO;
-													buRedo_.enabled = YES;
+													[self rotateToOrientation:self.interfaceOrientation]; //回転位置
+													// OFF
+													previewLayer_.hidden = YES;
 													buCamera_.enabled = NO;
 													[buTorch_ setEnabled:NO]; //buTorch_=nil の場合があるため
+													[captureSession_ startRunning];
+													// ON
+													ibImageView.hidden = NO;
+													buRedo_.enabled = YES;
 													buDone_.enabled = YES;
+													
+													ibLbCamera.text = NSLocalizedString(@"Camera msg2",nil);
 											   } 
 	 ];
 }
@@ -173,21 +182,16 @@
 
 - (void)actionCamera:(UIButton *)button
 {
-	buCamera_.enabled = NO;
-	[buTorch_ setEnabled:NO]; //buTorch_=nil の場合があるため
-	[self cameraTake];	// カメラ撮影  ＜＜この中で saveClose を呼び出している
+	if (buCamera_.enabled) {
+		buCamera_.enabled = NO;
+		[buTorch_ setEnabled:NO]; //buTorch_=nil の場合があるため
+		[self cameraTake];	// カメラ撮影  ＜＜この中で saveClose を呼び出している
+	}
 }
 
 - (void)actionRedo:(UIButton *)button
 {
-	buRedo_.enabled = NO;
-	buDone_.enabled = NO;
-	ibImageView.hidden = YES;
-	ibImageView.image = nil;
-	// Start
-	[captureSession_ startRunning];
-	buCamera_.enabled = YES;
-	[buTorch_ setEnabled:YES]; //buTorch_=nil の場合があるため
+	[self cameraReset];
 }
 
 - (void)actionTorch:(UIButton *)button
@@ -266,20 +270,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
 
-/*	//self.title = NSLocalizedString(@"Photo", nil);
-	// [Done] ボタンを右側に追加する
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] 
-											  initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-											  target:self action:@selector(doneClose:)];
-	self.navigationItem.rightBarButtonItem.enabled = NO;
-	
-	[ibBuTake setTitle:NSLocalizedString(@"Camera Take",nil) forState:UIControlStateNormal];
-	[ibBuRetry setTitle:NSLocalizedString(@"Camera Retry",nil) forState:UIControlStateNormal];
-	ibLbTorch.text = NSLocalizedString(@"Camera Torch",nil);
-	*/
-
-	ibLbCamera.text = NSLocalizedString(@"Camera msg",nil);
-
 	// フロントカメラを取得する	=nil:カメラなし
 	NSArray	*camArry = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
 	for (AVCaptureDevice *cam in camArry) {
@@ -316,21 +306,19 @@
 	} else {
 		buTorch_ = nil;
 	}
-	
 	self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects: buDone_, buCamera_, buRedo_, buTorch_, nil];	
 	
-	buRedo_.enabled = NO;
-	buCamera_.enabled = NO;
-	[buTorch_ setEnabled:NO]; //buTorch_=nil の場合があるため
-	buDone_.enabled = NO;
-	
+	// 1指タップ
+	UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actionCamera:)];
+	tap.numberOfTouchesRequired =1; // 指数
+	tap.numberOfTapsRequired = 1; // タップ数
+	[self.view addGestureRecognizer:tap];
 }
 
 //Viewが表示された直後に実行される
 - (void)viewDidAppear:(BOOL)animated 
 {
 	[super viewDidAppear:animated];
-	
 	[self cameraPreview];
 }
 
@@ -361,61 +349,52 @@
 		}
 	}
 
-	CGRect rect = ibImageView.frame;
-	if (ibImageView.hidden==NO) {
-		if (UIInterfaceOrientationIsPortrait(orientation)) {	// デバイス縦
-			if (ibImageView.image.size.width < 600) {	// 写真タテ
-				rect.size = CGSizeMake(240, 320);
-			} else {		// 写真ヨコ
-				rect.size = CGSizeMake(288, 216); //288 = 320 * 0.45
-			}
-		}
-		else {		// デバイス横
-			if (ibImageView.image.size.width < 600) {	// 写真タテ
-				rect.size = CGSizeMake(240, 320);
-			} else {		// 写真ヨコ
-				rect.size = CGSizeMake(320, 240);
-			}
-		}
-		//rect.origin.x = (self.view.frame.size.width - rect.size.width)/2;
-		ibImageView.frame = rect;
+	CGRect rect;
+	// ファインダーをカメラの縦横に合わせる
+	switch (orientation) {
+		case UIInterfaceOrientationPortrait:
+			previewLayer_.orientation = AVCaptureVideoOrientationPortrait;
+			rect = CGRectMake(40, 40, 240, 320);
+			break;
+		case UIInterfaceOrientationPortraitUpsideDown:
+			previewLayer_.orientation = AVCaptureVideoOrientationPortraitUpsideDown;
+			rect = CGRectMake(40, 40, 240, 320);
+			break;
+		case UIInterfaceOrientationLandscapeLeft:
+			previewLayer_.orientation = AVCaptureVideoOrientationLandscapeLeft;
+			rect = CGRectMake(80, 5, 320, 240);
+			break;
+		case UIInterfaceOrientationLandscapeRight:
+			previewLayer_.orientation = AVCaptureVideoOrientationLandscapeRight;
+			rect = CGRectMake(80, 5, 320, 240);
+			break;
 	}
-	else {
-		switch (orientation) {
-			case UIInterfaceOrientationPortrait:
-				previewLayer_.orientation = AVCaptureVideoOrientationPortrait;
-				rect.size = CGSizeMake(240, 320);
-				break;
-			case UIInterfaceOrientationPortraitUpsideDown:
-				previewLayer_.orientation = AVCaptureVideoOrientationPortraitUpsideDown;
-				rect.size = CGSizeMake(240, 320);
-				break;
-			case UIInterfaceOrientationLandscapeLeft:
-				previewLayer_.orientation = AVCaptureVideoOrientationLandscapeLeft;
-				rect.size = CGSizeMake(320, 240);
-				break;
-			case UIInterfaceOrientationLandscapeRight:
-				previewLayer_.orientation = AVCaptureVideoOrientationLandscapeRight;
-				rect.size = CGSizeMake(320, 240);
-				break;
-		}
-		//rect.origin.x = (self.view.frame.size.width - rect.size.width)/2;
-		ibImageView.frame = rect;
-		previewLayer_.frame = rect;
+	if (appDelegate_.app_is_iPad) {
+		rect.size.width *= 1.5;
+		rect.size.height *= 1.5;
 	}
-	
-/*	if (UIInterfaceOrientationIsPortrait(orientation)) {	// デバイス縦
-		rect = ibLbTorch.frame;		rect.origin = CGPointMake(221, 349);		ibLbTorch.frame = rect;
-		rect = ibSwTorch.frame;	rect.origin = CGPointMake(221, 369);		ibSwTorch.frame = rect;
-		rect = ibBuTake.frame;		rect.origin = CGPointMake(128, 365);		ibBuTake.frame = rect;
-		rect = ibBuRetry.frame;		rect.origin = CGPointMake(  40, 362);		ibBuRetry.frame = rect;
+	previewLayer_.frame = rect;
+
+	// 撮影イメージを写真の縦横に合わせる
+	if (UIInterfaceOrientationIsPortrait(orientation)) {	// デバイス縦
+		if (ibImageView.image.size.width < 600) {	// 写真タテ
+			rect = CGRectMake(40, 40, 240, 320);
+		} else {		// 写真ヨコ
+			rect = CGRectMake(16, 40, 288, 216);
+		}
 	}
 	else {		// デバイス横
-		rect = ibLbTorch.frame;		rect.origin = CGPointMake(20+320+30,   10);		ibLbTorch.frame = rect;
-		rect = ibSwTorch.frame;	rect.origin = CGPointMake(20+320+30,   30);		ibSwTorch.frame = rect;
-		rect = ibBuTake.frame;		rect.origin = CGPointMake(20+320+30, 150);		ibBuTake.frame = rect;
-		rect = ibBuRetry.frame;		rect.origin = CGPointMake(20+320+30, 250);		ibBuRetry.frame = rect;
-	}*/
+		if (ibImageView.image.size.width < 600) {	// 写真タテ
+			rect = CGRectMake(150, 5, 180, 240);
+		} else {		// 写真ヨコ
+			rect = CGRectMake(80, 5, 320, 240);
+		}
+	}
+	if (appDelegate_.app_is_iPad) {
+		rect.size.width *= 1.5;
+		rect.size.height *= 1.5;
+	}
+	ibImageView.frame = rect;
 }
 
 // ユーザインタフェースの回転を始める前にこの処理が呼ばれる。 ＜＜OS 3.0以降の推奨メソッド＞＞
