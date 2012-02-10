@@ -93,7 +93,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 	NSSortDescriptor *key1 = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
 	NSArray *sortRow = [[NSArray alloc] initWithObjects:key1, nil];  
 	NSString *str;
-	NSString *strBase64;
+	//NSString *strBase64;  写真はCSV保存しない。Picasaを利用することにした。
 	
 	@try {
 		//----------------------------------------------------------------------------Header
@@ -111,56 +111,47 @@ static NSString *csvToStr( NSString *inCsv ) {
 		
 		//----------------------------------------------------------------------------E1 [Plan]
 		//[1.0]  ,"name","note",
-		//[2.0]  ,"name","note","photoUrl","photoData",
+		//[2.0]  ,"name","note","photoUrl",
+		/***写真はCSV保存しない。Picasaを利用する。
 		if (Pe1.photoData && isShardMode_==NO) {
 			strBase64 = [Pe1.photoData stringEncodedWithBase64];
 		} else {
 			strBase64 = @"";
-		}
+		}*/
 		if ([Pe1.name length] <= 0) {
 			Pe1.name = NSLocalizedString(@"(New Pack)", nil);
 		}
-		str = [NSString stringWithFormat:@",\"%@\",\"%@\",\"%@\",\"%@\",\n", 
-			   strToCsv(Pe1.name), strToCsv(Pe1.note), strToCsv(Pe1.photoUrl), strBase64];
+		str = [NSString stringWithFormat:@",\"%@\",\"%@\",\"%@\",\n", 
+			   strToCsv(Pe1.name), strToCsv(Pe1.note), strToCsv(Pe1.photoUrl)];
 		AzLOG(@"E1> %@", str);
 		[PzCsv appendString:str];
 		
 		//------------------------------------------------------------------------------E2 [Index]
 		//[1.0] , ,"name","note",
-		//[2.0] , ,"name","note","photoUrl","photoData",
+		//[2.0] , ,"name","note","photoUrl",
 		NSMutableArray *e2list = [[NSMutableArray alloc] initWithArray:[Pe1.childs allObjects]];
 		[e2list sortUsingDescriptors:sortRow];	// .row 昇順にCSV書き出す
 		for (E2 *e2node in e2list) 
 		{
-			if (e2node.photoData && isShardMode_==NO) {
-				strBase64 = [e2node.photoData stringEncodedWithBase64];
-			} else {
-				strBase64 = @"";
-			}
 			if ([e2node.name length] <= 0) {
 				e2node.name = NSLocalizedString(@"(New Index)", nil);
 			}
-			str = [NSString stringWithFormat:@",,\"%@\",\"%@\",\"%@\",\"%@\",\n", 
-				   strToCsv(e2node.name), strToCsv(e2node.note), strToCsv(e2node.photoUrl), strBase64];
+			str = [NSString stringWithFormat:@",,\"%@\",\"%@\",\"%@\",\n", 
+				   strToCsv(e2node.name), strToCsv(e2node.note), strToCsv(e2node.photoUrl)];
 			AzLOG(@"E2> %@", str);
 			[PzCsv appendString:str];
 			
 			//----------------------------------------------------------------------------E3 [Goods]
 			//[1.0] ,,,"name","note",stock,need,weight,
 			//[1.1] ,,,"name","note",stock,need,weight,"shopKeyword","shopNote",
-			//[2.0] ,,,"name","note",stock,need,weight,"shopKeyword","shopNote","photoUrl","photoData"
+			//[2.0] ,,,"name","note",stock,need,weight,"shopKeyword","shopNote","photoUrl",
 			NSMutableArray *e3list = [[NSMutableArray alloc] initWithArray:[e2node.childs allObjects]];
 			[e3list sortUsingDescriptors:sortRow];	// .row 昇順にCSV書き出す
 			for (E3 *e3node in e3list) 
 			{
 				if ((-1) < [e3node.need integerValue] && 0 < [e3node.name length]) 
 				{ //(-1)Add専用ノードを除外する
-					if (e3node.photoData && isShardMode_==NO) {
-						strBase64 = [e3node.photoData stringEncodedWithBase64];
-					} else {
-						strBase64 = @"";
-					}
-					str = [NSString stringWithFormat:@",,,\"%@\",\"%@\",%ld,%ld,%ld,\"%@\",\"%@\",\"%@\",\"%@\",\n", 
+					str = [NSString stringWithFormat:@",,,\"%@\",\"%@\",%ld,%ld,%ld,\"%@\",\"%@\",\"%@\",\n", 
 						   strToCsv(e3node.name),
 						   strToCsv(e3node.note),
 						   [e3node.stock longValue], 
@@ -168,8 +159,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 						   [e3node.weight longValue],
 						   strToCsv(e3node.shopKeyword),
 						   strToCsv(e3node.shopNote),
-						   strToCsv(e3node.photoUrl),
-						   strBase64];
+						   strToCsv(e3node.photoUrl)];
 					AzLOG(@"E3> %@", str);
 					[PzCsv appendString:str];
 				}
@@ -446,8 +436,8 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		
 		//----------------------------------------------------------------------[Plan]
 		//[1.0][  ,"name","note",]
-		//[2.0][  ,"name","note","photoUrl","photoData",]
-		//[2.0][0,          1,   　 　　　　2,       　　　　　　  3,　　　   　　　　　　　　　　　　 4,]
+		//[2.0][  ,"name","note","photoUrl",]
+		//[2.0][0,          1,   　 　　　　2,       　　　　　　  3,]
 		while (1) { 
 			iErrLine++;
 			if (csvLineSplit(PzCsv, aSplit) < 0 OR 10 < iErrLine) { // 10行以内に無ければ中断
@@ -470,9 +460,9 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		e1node.name = [aSplit objectAtIndex:1];  //csvToStr([aSplit objectAtIndex:1]);
 		e1node.note = [aSplit objectAtIndex:2];
 		//-----------------------------------------------[2.0]
-		if (4 < [aSplit count]) {
+		if (3 < [aSplit count]) {
 			e1node.photoUrl = [aSplit objectAtIndex:3];
-			e1node.photoData = [NSData dataWithBase64String:[aSplit objectAtIndex:4]];
+			//e1node.photoData = [NSData dataWithBase64String:[aSplit objectAtIndex:4]];  写真はCSV保存しない。Picasaを利用することにした。
 		}
 		//-----------------------------------------------
 		e2row = 0;
@@ -496,8 +486,8 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 			}
 			//----------------------------------------------------------------------[Group] E2
 			//[1.0][  ,  ,"name","note",]
-			//[2.0][  ,  ,"name","note","photoUrl","photoData",]
-			//[2.0][0,1,   　　　　　　　2, 　　　　　　  3,　　　　　　　　　　　　　　　　4,                  5,]
+			//[2.0][  ,  ,"name","note","photoUrl",]
+			//[2.0][0,1,   　　　　　　　2, 　　　　　　  3,　　　　　　　　　　　　　　　　4,]
 			else if (3 < [aSplit count] 
 					 && [[aSplit objectAtIndex:0] isEqualToString:@""] 
 					 && [[aSplit objectAtIndex:1] isEqualToString:@""] 
@@ -513,9 +503,8 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 					e2node.name		= zName; // csvToStr()後にトリム済み
 					e2node.note		= [aSplit objectAtIndex:3];
 					//-----------------------------------------------[2.0]
-					if (5 < [aSplit count]) {
+					if (4 < [aSplit count]) {
 						e2node.photoUrl = [aSplit objectAtIndex:4];
-						e2node.photoData = [NSData dataWithBase64String:[aSplit objectAtIndex:5]];
 					}
 					//-----------------------------------------------Linking
 					[e1node addChildsObject:e2node];
@@ -525,8 +514,8 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 			//--------------------------------------------------------------------------------[Item] E3
 			//[1.0] [  ,  ,   ,"name","note",stock,need,weight,]
 			//[1.1] [  ,  ,   ,"name","note",stock,need,weight,"shopKeyword","shopNote",]
-			//[2.0] [  ,  ,   ,"name","note",stock,need,weight,"shopKeyword","shopNote","photoUrl","photoData",]
-			//[2.0] [0,1,2,          3,         4,       5,      6,         7,                       8,                 9,             10,                 11,]
+			//[2.0] [  ,  ,   ,"name","note",stock,need,weight,"shopKeyword","shopNote","photoUrl",]
+			//[2.0] [0,1,2,          3,         4,       5,      6,         7,                       8,                 9,             10,]
 			else if (e2node && 7 < [aSplit count] 
 					 && [[aSplit objectAtIndex:0] isEqualToString:@""] 
 					 && [[aSplit objectAtIndex:1] isEqualToString:@""] 
@@ -566,9 +555,8 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 						e3node.shopNote		= [aSplit objectAtIndex:9];
 					}
 					//-----------------------------------------------[2.0]
-					if (11 < [aSplit count]) {
+					if (10 < [aSplit count]) {
 						e3node.photoUrl = [aSplit objectAtIndex:10];
-						e3node.photoData = [NSData dataWithBase64String:[aSplit objectAtIndex:11]];
 					}
 					//-----------------------------------------------Linking
 					[e2node addChildsObject:e3node];
