@@ -14,6 +14,12 @@
 #import "FileCsv.h"
 #import "E1viewController.h"
 
+#import "GData.h"
+#import "GTMHTTPFetcher.h" //[1.12.0] Replaced GDataHTTPFetcher with GTMHTTPFetcher
+#import "GDataDocs.h"
+
+
+
 #define TAG_ACTION_DOWNLOAD_START	900
 #define TAG_ACTION_FETCH_CANCEL		901
 #define TAG_ACTION_DOWNLOAD_CANCEL	902
@@ -71,7 +77,7 @@
 	//----------------------------------------------assign
 	AppDelegate *appDelegate_;
 	BOOL	MbLogin;
-	GDataHTTPFetcher *MfetcherActive;  // STOPのため保持
+	GTMHTTPFetcher *MfetcherActive;  // STOPのため保持
 	NSInteger  MiRowDownload;		// Download対象行
 	//BOOL MbOptShouldAutorotate;
 }
@@ -324,7 +330,7 @@
 		service = [[GDataServiceGoogleDocs alloc] init];
 		
 		[service setUserAgent:@"Azukid.com-AzPacking-0.6"]; // set this to yourName-appName-appVersion
-		[service setShouldCacheDatedData:YES];
+		//[service setShouldCacheDatedData:YES];
 		[service setServiceShouldFollowNextLinks:YES];
 		
 		// iPhone apps will typically disable caching dated data or will call
@@ -487,60 +493,28 @@
 	}
 }
 
-//- (void)downloadTxt:(GDataEntryBase *)entry
-//         authService:(GDataServiceGoogle *)service 
-//			toPath:(NSString *)savePath {
-- (void)saveDocEntry:(GDataEntryBase *)entry
-					toPath:(NSString *)savePath
-					exportFormat:(NSString *)exportFormat
-					authService:(GDataServiceGoogle *)service 
+- (void)downloadFile:(GTMHTTPFetcher *)fetcher failedWithError:(NSError *)error 
 {
-	// 進捗サインON
-	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES; // NetworkアクセスサインON
-	{
-		MactionProgress = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Please Wait",nil) 
-													 delegate:self 
-											cancelButtonTitle:NSLocalizedString(@"Cancel",nil) 
-									   destructiveButtonTitle:nil
-											otherButtonTitles:nil];
-		UIActivityIndicatorView *ai = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 32.0f, 32.0f)];
-		[MactionProgress setMessage:NSLocalizedString(@"Downloading...",nil)];
-		MactionProgress.tag = TAG_ACTION_DOWNLOAD_CANCEL;
-		[ai setCenter:CGPointMake(self.view.frame.size.width/2.0, 60.0f)];
-		[ai setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
-		[ai startAnimating];
-		[MactionProgress addSubview:ai];
-		//[ai release];
-		//[actionProgress showInView:self.view.window]; windowでは回転非対応
-		[MactionProgress showInView:self.view];
-		//deallocへ [actionProgress release];
+	NSLog(@"Fetcher error: %@", error);
+	// ＜＜＜エラー発生！何らかのアラートを出すこと＞＞
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Fail", @"ダウンロード失敗")
+													message:NSLocalizedString(@"Login please try again.", @"ログインからやり直してみてください")
+												   delegate:nil 
+										  cancelButtonTitle:nil 
+										  otherButtonTitles:@"OK", nil];
+	[alert show];
+	//[alert release];
+	if (MfetcherActive) {
+		// Cancel the fetch of the request that's currently in progress
+		[MfetcherActive stopFetching];
+		MfetcherActive = nil;
 	}
-	
-	// the content src attribute is used for downloading
-	NSURL *exportURL = [[entry content] sourceURL];
-	if (exportURL != nil) {
-		
-		// we'll use GDataQuery as a convenient way to append the exportFormat
-		// parameter of the docs export API to the content src URL
-		GDataQuery *query = [GDataQuery queryWithFeedURL:exportURL];
-		[query addCustomParameterWithName:@"exportFormat" value:exportFormat];
-		NSURL *downloadURL = [query URL];
-		AzLOG(@"downloadURL=%@", [downloadURL absoluteString]);
-		// read the document's contents asynchronously from the network
-		NSURLRequest *request = [service requestForURL:downloadURL
-												  ETag:nil
-											httpMethod:nil];
-		
-		GDataHTTPFetcher *fetcher = [GDataHTTPFetcher httpFetcherWithRequest:request];
-		[fetcher setUserData:savePath];
-		[fetcher beginFetchWithDelegate:self
-					  didFinishSelector:@selector(downloadFile:finishedWithData:)
-						didFailSelector:@selector(downloadFile:failedWithError:)];
-		MfetcherActive = fetcher;
-	}
+	// 進捗サインOFF
+	if (MactionProgress) [MactionProgress dismissWithClickedButtonIndex:0 animated:YES];
+	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
 }
 
-- (void)downloadFile:(GDataHTTPFetcher *)fetcher finishedWithData:(NSData *)data 
+- (void)downloadFile:(GTMHTTPFetcher *)fetcher finishedWithData:(NSData *)data 
 {
 	// save the file to the local path specified by the user
 	NSString *savePath = [fetcher userData];
@@ -548,7 +522,7 @@
 	BOOL didWrite = [data writeToFile:savePath
 							  options:NSAtomicWrite
 								error:&error];
-
+	
 	if (MfetcherActive) {
 		// Cancel the fetch of the request that's currently in progress
 		[MfetcherActive stopFetching];
@@ -603,6 +577,68 @@
 	}
 }
 
+
+//- (void)downloadTxt:(GDataEntryBase *)entry
+//         authService:(GDataServiceGoogle *)service 
+//			toPath:(NSString *)savePath {
+- (void)saveDocEntry:(GDataEntryBase *)entry
+					toPath:(NSString *)savePath
+					exportFormat:(NSString *)exportFormat
+					authService:(GDataServiceGoogle *)service 
+{
+	// 進捗サインON
+	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES; // NetworkアクセスサインON
+	{
+		MactionProgress = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Please Wait",nil) 
+													 delegate:self 
+											cancelButtonTitle:NSLocalizedString(@"Cancel",nil) 
+									   destructiveButtonTitle:nil
+											otherButtonTitles:nil];
+		UIActivityIndicatorView *ai = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 32.0f, 32.0f)];
+		[MactionProgress setMessage:NSLocalizedString(@"Downloading...",nil)];
+		MactionProgress.tag = TAG_ACTION_DOWNLOAD_CANCEL;
+		[ai setCenter:CGPointMake(self.view.frame.size.width/2.0, 60.0f)];
+		[ai setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
+		[ai startAnimating];
+		[MactionProgress addSubview:ai];
+		//[ai release];
+		//[actionProgress showInView:self.view.window]; windowでは回転非対応
+		[MactionProgress showInView:self.view];
+		//deallocへ [actionProgress release];
+	}
+	
+	// the content src attribute is used for downloading
+	NSURL *exportURL = [[entry content] sourceURL];
+	if (exportURL != nil) {
+		
+		// we'll use GDataQuery as a convenient way to append the exportFormat
+		// parameter of the docs export API to the content src URL
+		GDataQuery *query = [GDataQuery queryWithFeedURL:exportURL];
+		[query addCustomParameterWithName:@"exportFormat" value:exportFormat];
+		NSURL *downloadURL = [query URL];
+		AzLOG(@"downloadURL=%@", [downloadURL absoluteString]);
+		// read the document's contents asynchronously from the network
+		NSURLRequest *request = [service requestForURL:downloadURL
+												  ETag:nil
+											httpMethod:nil];
+		
+		GTMHTTPFetcher *fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+		[fetcher setUserData:savePath];
+		/*[1.11.0] old
+		[fetcher beginFetchWithDelegate:self
+					  didFinishSelector:@selector(downloadFile:finishedWithData:)
+						didFailSelector:@selector(downloadFile:failedWithError:)];*/
+		[fetcher beginFetchWithCompletionHandler:^(NSData *data, NSError *error) {
+			if (error) {
+				[self downloadFile:fetcher failedWithError:error];
+			} else {
+				[self downloadFile:fetcher finishedWithData:data];
+			}
+		}];
+		MfetcherActive = fetcher;
+	}
+}
+
 - (void)alertView:(UIAlertView *)alert clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if (alert.tag == 101) {
 		// (101) Download Compleat! OK
@@ -633,26 +669,6 @@
 			[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
 		}
 	}
-}
-
-- (void)downloadFile:(GDataHTTPFetcher *)fetcher failedWithError:(NSError *)error {
-	NSLog(@"Fetcher error: %@", error);
-	// ＜＜＜エラー発生！何らかのアラートを出すこと＞＞
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Fail", @"ダウンロード失敗")
-													message:NSLocalizedString(@"Login please try again.", @"ログインからやり直してみてください")
-												   delegate:nil 
-										  cancelButtonTitle:nil 
-										  otherButtonTitles:@"OK", nil];
-	[alert show];
-	//[alert release];
-	if (MfetcherActive) {
-		// Cancel the fetch of the request that's currently in progress
-		[MfetcherActive stopFetching];
-		MfetcherActive = nil;
-	}
-	// 進捗サインOFF
-	if (MactionProgress) [MactionProgress dismissWithClickedButtonIndex:0 animated:YES];
-	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
 }
 
 

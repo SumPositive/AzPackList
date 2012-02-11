@@ -1,9 +1,9 @@
 //
-//  GooDocsView.h
-//  iPack
+//  AZPicasa.h
+//  AzPackList5
 //
-//  Created by 松山 和正 on 09/12/25.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//  Created by Sum Positive on 12/02/11.
+//  Copyright (c) 2012 Azukid. All rights reserved.
 //
 /* -----------------------------------------------------------------------------------------------
  * GData API ライブラリの組み込み手順
@@ -21,18 +21,13 @@
  * -----------------------------------------------------------------------------------------------
  */
 
+#import <Foundation/Foundation.h>
+#import "GData.h"
+#import "GDataPhotos.h"
 
-#import <UIKit/UIKit.h>
+@interface AZPicasa : NSObject
 
-
-@interface GooDocsView : UITableViewController <UITextFieldDelegate, UIActionSheetDelegate> 
-
-@property (nonatomic, retain) NSManagedObjectContext *Rmoc;
-@property (nonatomic, retain) E1 *Re1selected;
-@property NSInteger PiSelectedRow;
-@property BOOL	 PbUpload; 
-@property (nonatomic, assign) id									delegate;
-@property (nonatomic, retain) UIPopoverController*	selfPopover;
+- (id)init;
+- (void)uploadData:(NSData*)photoData  photoTitle:(NSString*)photoTitle;
 
 @end
-

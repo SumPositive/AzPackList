@@ -11,6 +11,8 @@
 #import "Elements.h"
 #import "CameraVC.h"
 #import <AVFoundation/AVFoundation.h>	//Camera
+#import "AZPicasa.h"
+
 
 @interface CameraVC (PrivateMethods)
 - (void)cameraReset;
@@ -33,6 +35,7 @@
 	AVCaptureVideoPreviewLayer *previewLayer_;
 	NSData						*captureData_;
 	//UIPopoverController	*popRecordView;
+	AZPicasa						*picasa_;
 }
 @synthesize e3target = e3target_;
 @synthesize imageView = imageView_;
@@ -223,26 +226,15 @@
 	if (imageView_) {
 		imageView_.image = ibImageView.image;
 	}
-	
+
 	// PicasaID をセットする
 	if (e3target_) {
 		appDelegate_.app_UpdateSave = YES; // 変更あり
 		e3target_.photoUrl = nil; // PicasaID
-		dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
-		dispatch_async(queue, ^{		// 非同期マルチスレッド処理
-			e3target_.photoData = [NSData dataWithData:captureData_];
-		});
-		
-		/*							// Picasa Upload
-		 dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-		 dispatch_async(queue, ^{		// 非同期マルチスレッド処理
-		 
-		 //NSString *err = [self vSharePlanAppend];
-		 
-		 dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理
-		 e3target_.photoUrl = nil; // PicasaID
-		 });
-		 }); */
+		// Mocへキャッシュ保存
+		e3target_.photoData = [NSData dataWithData:captureData_];
+		// Moc[保存]時に Picasaへアップロードする
+		[picasa_ uploadData:e3target_.photoData photoTitle:e3target_.name];
 	}
 	
 	[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
@@ -269,6 +261,11 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+
+	// Picasaへアップロード
+	if (picasa_==nil) {
+		picasa_ = [[AZPicasa alloc] init];
+	}
 
 	// フロントカメラを取得する	=nil:カメラなし
 	NSArray	*camArry = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
