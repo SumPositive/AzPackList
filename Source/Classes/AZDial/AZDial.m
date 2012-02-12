@@ -169,12 +169,15 @@
 {
 	assert(delegate);
 	assert(min < max);
-	//assert(vmin <= value);
-	//assert(value <= vmax);
+
 	if (dial < min) dial = min;
 	else if (max < dial) dial = max;
-	//assert(1 <= vstep);
 	if (step < 1) step =1;
+	mDelegate = delegate;
+	mDialMin = min;
+	mDialMax = max;
+	mDialStep = step;
+	mStepperMag = 1.0;
 	
 	UIImage *imgTile = [UIImage imageNamed:@"AZDialTile"];	// H30 x W10の倍数
 	if (imgTile==nil) return nil;
@@ -184,12 +187,6 @@
     if (self==nil) return nil;
 	
 	// Initialization
-	//mIsMoved = YES;	// =YES:setDial:等の初期値セット中 ⇒ delegate呼び出ししない。
-	mDelegate = delegate;
-	mDialMin = min;
-	mDialMax = max;
-	mDialStep = step;
-	mStepperMag = 1.0;
 	//mValue は、mScrollView生成後、setDial:によりセットしている。
 	mIsOS5 = ([[[UIDevice currentDevice] systemVersion] compare:@"5.0"] != NSOrderedAscending);  // !<  (>=) "5.0"
 
