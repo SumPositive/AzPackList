@@ -306,9 +306,8 @@
 	}
 }
 
-// ユーザインタフェースの回転を始める前にこの処理が呼ばれる。 ＜＜OS 3.0以降の推奨メソッド＞＞
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration
-{
+{	// ユーザインタフェースの回転前に呼ばれる。 ＜＜OS 3.0以降の推奨メソッド＞＞
 	// この開始時に消す。　　この時点で self.view.frame は回転していない。
 	if (calcView_ && [calcView_ isShow]) {
 		[calcView_ hide]; //　ここでは隠すだけ。 removeFromSuperviewするとアニメ無く即消えてしまう。
@@ -316,9 +315,9 @@
 }
 
 // ユーザインタフェースの回転の最後の半分が始まる前にこの処理が呼ばれる　＜＜このタイミングで配置転換すると見栄え良い＞＞
-- (void)willAnimateSecondHalfOfRotationFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation 
-													   duration:(NSTimeInterval)duration
-{
+//DEP//- (void)willAnimateSecondHalfOfRotationFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation duration:(NSTimeInterval)duration
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{	// ユーザインタフェースの回転後に呼ばれる
 	//[self.tableView reloadData];
 	[self viewDesign]; // cell生成の後
 }
@@ -1121,6 +1120,18 @@
 						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // > 撮影
 						[self viewDesignPhoto]; //回転処理
 					}
+					
+					cell.imageView.alpha = 0.5;
+					if (e3target_.photoUrl) {	// Picasaアップ済み
+						cell.imageView.image = [UIImage imageNamed:@"Icon32-Picasa"];
+					}
+					else if (e3target_.photoData) {		// 写真あるが未アップ
+						cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaNon"];
+					}
+					else {
+						cell.imageView.image = nil;
+					}
+					
 					if (imageView_.image==nil) {	//特にデバイス横のとき、範囲外になり初期ロードされないため、範囲内になったときここでロードさせる必要あり。
 						// Loading
 						if (e3target_.photoData) {

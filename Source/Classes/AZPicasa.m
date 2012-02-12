@@ -40,16 +40,19 @@ NSString *uuidString()
 	}
 	// NEW
 	photoService_ = [[GDataServiceGooglePhotos alloc] init];
-	[photoService_ setUserCredentialsWithUsername:@"azpacking@gmail.com"   password:@"enjiSmei"];
+	//[photoService_ setUserCredentialsWithUsername:@"azpacking@gmail.com"   password:@"enjiSmei"];
 	return photoService_;
 }
 
-- (id)init		//WithDelegate:(id)delegate
-{	// 専用アルバムが無ければ追加する
-    self = [super init];
-    if (self==nil) return nil;
-
-	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+- (void)loginID:(NSString*)googleID  withPW:(NSString*)googlePW  isSetting:(BOOL)isSetting
+{
+	if ([googleID length]<=0 OR [googlePW length]<=0) {
+		if (isSetting) alertBox(NSLocalizedString(@"Picasa login NG", nil), nil, @"OK");
+		return;
+	}
+	
+	GDataServiceGooglePhotos *service = [self photoService];
+	[service setUserCredentialsWithUsername:googleID password:googlePW];
 
 	// get the URL for the user
 	NSURL *userURL = [GDataServiceGooglePhotos
@@ -63,8 +66,18 @@ NSString *uuidString()
 				if (error) {
 					// 失敗
 					NSLog(@"AZPicasa: init: Failed '%@'\n", error.localizedDescription);
+					if (isSetting) alertBox(NSLocalizedString(@"Picasa login NG", nil), nil, @"OK");
 				} else {
 					// 成功
+					if (isSetting) {
+						// PW KeyChainに保存する
+						NSError *error; // nilを渡すと異常終了するので注意
+						[SFHFKeychainUtils storeUsername:GD_PicasaPW
+											 andPassword: googlePW
+										  forServiceName:GD_PRODUCTNAME 
+										  updateExisting:YES error:&error];
+						alertBox(NSLocalizedString(@"Picasa login OK", nil), NSLocalizedString(@"Picasa login OK msg",nil), @"OK");
+					}
 					BOOL bNew = YES;
 					for (GDataEntryPhotoAlbum *album in [feed entries]) {
 						//NSLog(@"AZPicasa: init: album.title=[%@]  GPhotoID=[%@]", [album title], [album GPhotoID]);
@@ -121,6 +134,21 @@ NSString *uuidString()
 					}
 				}
 			}];
+}
+
+- (id)init
+{	// 専用アルバムが無ければ追加する
+    self = [super init];
+    if (self==nil) return nil;
+	
+	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
+	NSError *error;
+	NSString *uid = [SFHFKeychainUtils getPasswordForUsername:GD_PicasaID
+											   andServiceName:GD_PRODUCTNAME error:&error];
+	NSString *upw = [SFHFKeychainUtils getPasswordForUsername:GD_PicasaPW
+											   andServiceName:GD_PRODUCTNAME error:&error];
+	[self loginID:uid withPW:upw isSetting:NO];
 	return self;
 }
 

@@ -19,8 +19,6 @@
 #define TAG_OptShowTotalWeightReq			993
 #define TAG_OptSearchItemsNote				992
 #define TAG_OptAdvertising							991
-#define TAG_OptCryptKey1							990
-#define TAG_OptCryptKey2							989
 
 
 @interface SettingTVC (PrivateMethods)
@@ -30,9 +28,12 @@
 @implementation SettingTVC
 {
 @private
-	AppDelegate		*appDelegate_;
-	UITextField			*tfPass1_;
-	UITextField			*tfPass2_;
+	AppDelegate		*mAppDelegate;
+	UITextField			*mTfPicasaID;
+	UITextField			*mTfPicasaPW;
+
+	UITextField			*mTfPass1;
+	UITextField			*mTfPass2;
 }
 
 
@@ -53,9 +54,9 @@
 {
 	if ((self = [super initWithStyle:UITableViewStyleGrouped])) {  // セクションありテーブル
 
-		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		if (appDelegate_.app_is_iPad) {
-			self.contentSizeForViewInPopover = CGSizeMake(480, 420);
+		mAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		if (mAppDelegate.app_is_iPad) {
+			self.contentSizeForViewInPopover = CGSizeMake(480, 580);
 			self.navigationItem.hidesBackButton = YES;
 		}
 	}
@@ -98,8 +99,8 @@
 
 	// 広告表示に変化があれば、広告スペースを調整するための処理
 	BOOL bAd = [[NSUbiquitousKeyValueStore defaultStore] boolForKey:KV_OptAdvertising];
-	if (appDelegate_.app_opt_Ad != bAd) {
-		appDelegate_.app_opt_Ad = bAd;
+	if (mAppDelegate.app_opt_Ad != bAd) {
+		mAppDelegate.app_opt_Ad = bAd;
 		// viewWillDisappear:にて再描画する
 	}
 }
@@ -108,7 +109,7 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
-	if (appDelegate_.app_is_iPad) {
+	if (mAppDelegate.app_is_iPad) {
 		return (interfaceOrientation == UIInterfaceOrientationPortrait);	// Popover内につき回転不要 <正面は常に許可>
 	} else {
 		// 回転禁止でも、正面は常に許可しておくこと。
@@ -136,8 +137,8 @@
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[NSUbiquitousKeyValueStore defaultStore] synchronize];
 
-	if (appDelegate_.app_is_iPad) {
-		[appDelegate_ AdRefresh:appDelegate_.app_opt_Ad];
+	if (mAppDelegate.app_is_iPad) {
+		[mAppDelegate AdRefresh:mAppDelegate.app_opt_Ad];
 		// 再描画　　重量表示やAdスペースを変化させるため
 		[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS 
 															object:self userInfo:nil];
@@ -176,10 +177,10 @@
 {
 	switch (section) {
 		case 0: // 
-			if (appDelegate_.app_is_iPad) {
-				return 7;	// (0)回転は不要
+			if (mAppDelegate.app_is_iPad) {
+				return 8;	// (0)回転は不要
 			} else {
-				return 8;
+				return 9;
 			}
 			break;
 	}
@@ -190,9 +191,10 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
 	int iRaw = indexPath.row;
-	if (appDelegate_.app_is_iPad) iRaw++;
+	if (mAppDelegate.app_is_iPad) iRaw++;
 	switch (iRaw) {
-		case 7: // Crypt
+		case 6: // Google+
+		case 8: // Crypt
 			return 75;
 	}
 	return 60; // デフォルト：44ピクセル
@@ -227,7 +229,7 @@
 	
 	float fX;
 	int  iCase;
-	if (appDelegate_.app_is_iPad) {
+	if (mAppDelegate.app_is_iPad) {
 		fX = self.tableView.frame.size.width - 60 - 120;
 		 iCase = indexPath.row + 1;
 	} else {
@@ -341,6 +343,51 @@
 		}	break;
 
 		case 6:
+		{ // Google+ Picasa
+			if (mTfPicasaID==nil) {
+				mTfPicasaID = [[UITextField alloc] init];
+				mTfPicasaID.borderStyle = UITextBorderStyleRoundedRect;
+				mTfPicasaID.placeholder = @"ID@gmail.com";  //NSLocalizedString(@"Picasa Login ID",nil);
+				mTfPicasaID.keyboardType = UIKeyboardTypeASCIICapable;
+				mTfPicasaID.returnKeyType = UIReturnKeyNext;
+				mTfPicasaID.text = @"";
+				mTfPicasaID.delegate = self;
+				[cell.contentView  addSubview:mTfPicasaID];
+				// KeyChainから保存しているパスワードを取得する
+				NSError *error; // nilを渡すと異常終了するので注意
+				mTfPicasaID.text = [SFHFKeychainUtils getPasswordForUsername:GD_PicasaID
+															  andServiceName:GD_PRODUCTNAME error:&error];
+			}
+			mTfPicasaID.frame = CGRectMake(fX-45, 8, 140, 25); // 回転対応
+			// add UITextField2
+			if (mTfPicasaPW==nil) {
+				mTfPicasaPW = [[UITextField alloc] init];
+				mTfPicasaPW.borderStyle = UITextBorderStyleRoundedRect;
+				mTfPicasaPW.placeholder = @"Password";  //NSLocalizedString(@"PackListCrypt Key2 place",nil);
+				mTfPicasaPW.keyboardType = UIKeyboardTypeASCIICapable;
+				mTfPicasaPW.secureTextEntry = YES;
+				mTfPicasaPW.returnKeyType = UIReturnKeyDone;
+				mTfPicasaPW.hidden = YES;  // mTfPicasaID入力直後にだけ表示する
+				mTfPicasaPW.text = @"";
+				mTfPicasaPW.delegate = self;
+				[cell.contentView  addSubview:mTfPicasaPW];
+				// KeyChainから保存しているパスワードを取得する
+				NSError *error; // nilを渡すと異常終了するので注意
+				NSString *pw = [SFHFKeychainUtils getPasswordForUsername:GD_PicasaPW
+															  andServiceName:GD_PRODUCTNAME error:&error];
+				if (6 <= [pw length]) {
+					mTfPicasaPW.text = @"xxxxxxxxxx";  //偽装// pwをセットしない
+				}
+			}
+			mTfPicasaPW.frame = CGRectMake(fX-45,38, 140, 25); // 回転対応
+			//
+			cell.textLabel.text = NSLocalizedString(@"Picasa Setting",nil);
+			cell.detailTextLabel.text = NSLocalizedString(@"Picasa Setting msg",nil);
+			cell.detailTextLabel.textColor = [UIColor blackColor];
+			cell.detailTextLabel.numberOfLines = 2;
+		}	break;
+
+		case 7:
 		{ // KV_OptAdvertising
 			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptAdvertising];
 			if (sw==nil) {
@@ -350,11 +397,11 @@
 				sw.tag = TAG_OptAdvertising;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
 				//sw.hidden = !(appDelegate_.app_pid_AdOff); // AdOff支払により可視化 ＜＜NG 購入後の状態が解るように見せることにする
-				sw.enabled = appDelegate_.app_pid_AdOff; // AdOff支払により有効化
+				sw.enabled = mAppDelegate.app_pid_AdOff; // AdOff支払により有効化
 				[cell.contentView  addSubview:sw]; //[sw release];
 				cell.textLabel.text = NSLocalizedString(@"Advertising",nil);
 			}
-			if (appDelegate_.app_pid_AdOff) {
+			if (mAppDelegate.app_pid_AdOff) {
 				cell.textLabel.enabled = YES;
 				cell.detailTextLabel.text = NSLocalizedString(@"Advertising enable",nil);
 				cell.detailTextLabel.textColor = [UIColor grayColor];
@@ -367,46 +414,44 @@
 			[sw setOn:[kvs boolForKey:KV_OptAdvertising] animated:YES];
 		}	break;
 
-		case 7:
+		case 8:
 		{ // KV_OptCrypt
 			// add UITextField1
-			if (tfPass1_==nil) {
-				tfPass1_ = [[UITextField alloc] init];
-				tfPass1_.borderStyle = UITextBorderStyleRoundedRect;
-				tfPass1_.placeholder = NSLocalizedString(@"PackListCrypt Key1 place",nil);
-				tfPass1_.keyboardType = UIKeyboardTypeASCIICapable;
-				tfPass1_.secureTextEntry = YES;
-				tfPass1_.returnKeyType = UIReturnKeyNext;
-				tfPass1_.tag = TAG_OptCryptKey1;
-				tfPass1_.enabled = appDelegate_.app_pid_AdOff; // AdOff支払により有効化
-				tfPass1_.text = @"";
-				tfPass1_.delegate = self;
-				[cell.contentView  addSubview:tfPass1_];
+			if (mTfPass1==nil) {
+				mTfPass1 = [[UITextField alloc] init];
+				mTfPass1.borderStyle = UITextBorderStyleRoundedRect;
+				mTfPass1.placeholder = NSLocalizedString(@"PackListCrypt Key1 place",nil);
+				mTfPass1.keyboardType = UIKeyboardTypeASCIICapable;
+				mTfPass1.secureTextEntry = YES;
+				mTfPass1.returnKeyType = UIReturnKeyNext;
+				mTfPass1.enabled = mAppDelegate.app_pid_AdOff; // AdOff支払により有効化
+				mTfPass1.text = @"";
+				mTfPass1.delegate = self;
+				[cell.contentView  addSubview:mTfPass1];
 			}
-			tfPass1_.frame = CGRectMake(fX-45, 8, 140, 25); // 回転対応
+			mTfPass1.frame = CGRectMake(fX-45, 8, 140, 25); // 回転対応
 			// add UITextField2
-			if (tfPass2_==nil) {
-				tfPass2_ = [[UITextField alloc] init];
-				tfPass2_.borderStyle = UITextBorderStyleRoundedRect;
-				tfPass2_.placeholder = NSLocalizedString(@"PackListCrypt Key2 place",nil);
-				tfPass2_.keyboardType = UIKeyboardTypeASCIICapable;
-				tfPass2_.secureTextEntry = YES;
-				tfPass2_.returnKeyType = UIReturnKeyDone;
-				tfPass2_.tag = TAG_OptCryptKey2;
-				tfPass2_.hidden = YES;  // tfPass1_入力直後にだけ表示する
-				tfPass2_.text = @"";
-				tfPass2_.delegate = self;
-				[cell.contentView  addSubview:tfPass2_];
+			if (mTfPass2==nil) {
+				mTfPass2 = [[UITextField alloc] init];
+				mTfPass2.borderStyle = UITextBorderStyleRoundedRect;
+				mTfPass2.placeholder = NSLocalizedString(@"PackListCrypt Key2 place",nil);
+				mTfPass2.keyboardType = UIKeyboardTypeASCIICapable;
+				mTfPass2.secureTextEntry = YES;
+				mTfPass2.returnKeyType = UIReturnKeyDone;
+				mTfPass2.hidden = YES;  // tfPass1_入力直後にだけ表示する
+				mTfPass2.text = @"";
+				mTfPass2.delegate = self;
+				[cell.contentView  addSubview:mTfPass2];
 			}
-			tfPass2_.frame = CGRectMake(fX-45,38, 140, 25); // 回転対応
+			mTfPass2.frame = CGRectMake(fX-45,38, 140, 25); // 回転対応
 			//
 			cell.textLabel.text = NSLocalizedString(@"PackListCrypt",nil);
-			if (appDelegate_.app_pid_AdOff) {
+			if (mAppDelegate.app_pid_AdOff) {
 				NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 				if ([defaults boolForKey:UD_OptCrypt]) {
 					// KeyChainから保存しているパスワードを取得する
 					NSError *error; // nilを渡すと異常終了するので注意
-					tfPass1_.text = [SFHFKeychainUtils getPasswordForUsername:UD_OptCrypt
+					mTfPass1.text = [SFHFKeychainUtils getPasswordForUsername:UD_OptCrypt
 															   andServiceName:GD_PRODUCTNAME error:&error];
 					cell.detailTextLabel.text = NSLocalizedString(@"PackListCrypt enable",nil);
 				} else {
@@ -440,7 +485,7 @@
 	switch (sender.tag) {  // .tag は UIView にて NSInteger で存在する、　
 		case TAG_OptShouldAutorotate: {
 			[defaults setBool: [sender isOn]  forKey:UD_OptShouldAutorotate];
-			appDelegate_.app_opt_Autorotate = [sender isOn];
+			mAppDelegate.app_opt_Autorotate = [sender isOn];
 		}	break;
 		case TAG_OptTotlWeightRound:
 			[kvs setBool:[sender isOn] forKey:KV_OptWeightRound];
@@ -459,7 +504,7 @@
 			break;
 		case TAG_OptAdvertising:
 			[kvs setBool:[sender isOn] forKey:KV_OptAdvertising];
-			appDelegate_.app_opt_Ad = [sender isOn];
+			mAppDelegate.app_opt_Ad = [sender isOn];
 			// viewWillDisappear:にて再描画する
 			break;
 	}
@@ -479,19 +524,18 @@
 // キーボードのリターンキーを押したときに呼ばれる
 - (BOOL)textFieldShouldReturn:(UITextField *)sender 
 {
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setBool:NO forKey:UD_OptCrypt];  // 解除
-
-	if (sender==tfPass1_) {
+	if (sender==mTfPass1) {	//-------------------------------------------------------------Crypt Key1
+		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+		[defaults setBool:NO forKey:UD_OptCrypt];  // 解除
 		if ([sender.text length] <= 0) {
 			// 秘密キーを破棄する
 			NSError *error; // nilを渡すと異常終了するので注意
 			[SFHFKeychainUtils deleteItemForUsername:UD_OptCrypt 
 									  andServiceName:GD_PRODUCTNAME error:&error];
 			sender.text = @"";
-			[tfPass1_ resignFirstResponder];
-			tfPass2_.hidden = YES;
-			tfPass2_.text = @"";
+			[mTfPass1 resignFirstResponder];
+			mTfPass2.hidden = YES;
+			mTfPass2.text = @"";
 			[self.tableView reloadData];  // cell表示更新のため
 			alertBox(NSLocalizedString(@"PackListCrypt Disable",nil), nil, @"OK");
 			return YES;
@@ -501,25 +545,26 @@
 			alertBox(NSLocalizedString(@"PackListCrypt Key Over",nil), nil, @"OK");
 			return NO;
 		}
-		tfPass2_.hidden = NO;
-		tfPass2_.text = @"";
-		[tfPass2_ becomeFirstResponder];
+		mTfPass2.hidden = NO;
+		mTfPass2.text = @"";
+		[mTfPass2 becomeFirstResponder];
 	}
-	else if (sender==tfPass2_) {
-		[tfPass2_ resignFirstResponder];
-		if ([tfPass1_.text isEqualToString:tfPass2_.text]) {
+	else if (sender==mTfPass2) {	//-------------------------------------------------------------Crypt Key2
+		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+		[mTfPass2 resignFirstResponder];
+		if ([mTfPass1.text isEqualToString:mTfPass2.text]) {
 			// 一致、パス変更
 			// 秘密キーをKeyChainに保存する
 			NSError *error; // nilを渡すと異常終了するので注意
 			[SFHFKeychainUtils storeUsername:UD_OptCrypt
-								 andPassword:tfPass1_.text 
+								 andPassword:mTfPass1.text 
 							  forServiceName:GD_PRODUCTNAME 
 							  updateExisting:YES error:&error];
 			if (error) {
-				tfPass1_.text = @"";
-				[tfPass1_ becomeFirstResponder];
-				tfPass2_.hidden = YES;
-				tfPass2_.text = @"";
+				mTfPass1.text = @"";
+				[mTfPass1 becomeFirstResponder];
+				mTfPass2.hidden = YES;
+				mTfPass2.text = @"";
 				alertBox(NSLocalizedString(@"PackListCrypt Key Error",nil), 
 						 [error localizedDescription], @"OK");
 			} else {
@@ -527,14 +572,55 @@
 				[self.tableView reloadData];  // cell表示更新のため
 				alertBox(NSLocalizedString(@"PackListCrypt Key Changed",nil), nil, @"OK");
 			}
-			tfPass2_.hidden = YES;
+			mTfPass2.hidden = YES;
 		}
 		else {
 			// 不一致　　Does not match.
-			tfPass2_.hidden = NO;
-			tfPass2_.text = @"";
-			[tfPass2_ becomeFirstResponder];
+			mTfPass2.hidden = NO;
+			mTfPass2.text = @"";
+			[mTfPass2 becomeFirstResponder];
 			alertBox(NSLocalizedString(@"PackListCrypt Key NoMatch",nil), nil, @"OK");
+		}
+	}
+	else if (sender==mTfPicasaID) {	//-------------------------------------------------------------Google+ ID
+		if ([sender.text length] <= 0 OR 80 < [sender.text length]) {
+			// IDを破棄する
+			NSError *error; // nilを渡すと異常終了するので注意
+			[SFHFKeychainUtils deleteItemForUsername:GD_PicasaID
+									  andServiceName:GD_PRODUCTNAME error:&error];
+			sender.text = @"";
+			[mTfPicasaID resignFirstResponder];
+			mTfPicasaPW.text = @"";
+			[self.tableView reloadData];  // cell表示更新のため
+			alertBox(NSLocalizedString(@"Picasa ID delete",nil), nil, @"OK");
+			return YES;
+		}
+		// ID KeyChainに保存する
+		NSError *error; // nilを渡すと異常終了するので注意
+		[SFHFKeychainUtils storeUsername:GD_PicasaID
+							 andPassword: sender.text
+						  forServiceName:GD_PRODUCTNAME 
+						  updateExisting:YES error:&error];
+		mTfPicasaPW.text = @"";
+		mTfPicasaPW.hidden = NO;
+		[mTfPicasaPW becomeFirstResponder];
+	}
+	else if (sender==mTfPicasaPW) {	//-------------------------------------------------------------Google+ PW
+		[mTfPicasaPW resignFirstResponder];
+		mTfPicasaPW.hidden = YES;
+		if ([sender.text length] <= 0 OR 80 < [sender.text length]) {
+			// PWを破棄する
+			NSError *error; // nilを渡すと異常終了するので注意
+			[SFHFKeychainUtils deleteItemForUsername:GD_PicasaPW
+									  andServiceName:GD_PRODUCTNAME error:&error];
+			sender.text = @"";
+			[self.tableView reloadData];  // cell表示更新のため
+			alertBox(NSLocalizedString(@"Picasa PW delete",nil), nil, @"OK");
+			return YES;
+		}
+		if (0 < [mTfPicasaID.text length] && 0 < [mTfPicasaPW.text length]) {
+			// Picasa Login
+			[mAppDelegate.picasaBox loginID:mTfPicasaID.text withPW:mTfPicasaPW.text isSetting:YES];
 		}
 	}
     return YES;

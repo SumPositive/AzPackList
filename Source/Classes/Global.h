@@ -40,12 +40,14 @@
 #define UD_OptShouldAutorotate				@"UD_OptShouldAutorotate"
 #define UD_OptPasswordSave					@"UD_OptPasswordSave"
 #define UD_OptCrypt									@"UD_OptCrypt"	// YES=PackList暗号化 ＜＜秘密Keyはデバイス別に保存
-
 #define UD_CurrentVersion						@"UD_CurrentVersion"
 //#define UD_DeviceID									@"UD_DeviceID"		//2.0// Original UDID
+
 #define GD_DefPassword							@"DefPassword"
 #define GD_DefUsername							@"DefUsername"
 #define GD_DefNickname							@"DefNickname"
+#define GD_PicasaID									@"GD_PicasaID"
+#define GD_PicasaPW								@"GD_PicasaPW"
 
 // iCloud-KVS: KV_KEY  全機種共有設定
 #define KV_OptWeightRound					@"KV_OptWeightRound"

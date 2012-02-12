@@ -18,6 +18,7 @@
 @class E3;
 @interface AZPicasa : NSObject
 
+- (void)loginID:(NSString*)googleID  withPW:(NSString*)googlePW  isSetting:(BOOL)isSetting;
 - (id)init;
 - (void)uploadE3:(E3*)e3target;
 - (void)downloadE3:(E3*)e3target  imageView:(UIImageView*)imageView;
