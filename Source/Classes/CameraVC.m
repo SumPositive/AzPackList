@@ -11,7 +11,7 @@
 #import "Elements.h"
 #import "CameraVC.h"
 #import <AVFoundation/AVFoundation.h>	//Camera
-#import "AZPicasa.h"
+//#import "AZPicasa.h"
 
 
 @interface CameraVC (PrivateMethods)
@@ -35,7 +35,7 @@
 	AVCaptureVideoPreviewLayer *previewLayer_;
 	NSData						*captureData_;
 	//UIPopoverController	*popRecordView;
-	AZPicasa						*picasa_;
+	//AZPicasa						*picasa_;
 }
 @synthesize e3target = e3target_;
 @synthesize imageView = imageView_;
@@ -233,8 +233,8 @@
 		e3target_.photoUrl = nil; // PicasaID
 		// Mocへキャッシュ保存
 		e3target_.photoData = [NSData dataWithData:captureData_];
-		// Moc[保存]時に Picasaへアップロードする
-		[picasa_ uploadData:e3target_.photoData photoTitle:e3target_.name];
+		//Moc[保存]時にする// [picasa_ uploadData:e3target_.photoData photoTitle:e3target_.name];
+		//E3detailTVC:にてアップ状況をアイコン表示。 未アップならば自動的にアップリトライする ＜＜失敗やオフラインに対応するため
 	}
 	
 	[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
@@ -263,9 +263,9 @@
     // Do any additional setup after loading the view from its nib.
 
 	// Picasaへアップロード
-	if (picasa_==nil) {
-		picasa_ = [[AZPicasa alloc] init];
-	}
+	//if (picasa_==nil) {
+	//	picasa_ = [[AZPicasa alloc] init];
+	//}
 
 	// フロントカメラを取得する	=nil:カメラなし
 	NSArray	*camArry = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];

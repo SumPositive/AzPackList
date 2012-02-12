@@ -6,18 +6,8 @@
 //  Copyright (c) 2012 Azukid. All rights reserved.
 //
 /* -----------------------------------------------------------------------------------------------
- * GData API ライブラリの組み込み手順
- *
- * 1)ダウンロードした gdata-objectivec-client-1 の Source／GData.xcodeproj から Xcode起動
- *
- * 2)グループとファイルに表示される「GData Source」フォルダを丸ごとドラッグして自己のグループとファイルへ「リンク」する
- *																			　（コピーでなく「リンク」にすること）
- *
- * 3)Xcodeメニュー、プロジェクト設定を編集から「検索パス」をセットする
- *		ヘッダ検索パス		/usr/include/libxml2
- *		他のリンカフラグ	-lxml2		（既に他の定義があれば付け足すことになる）
- *
- * 以上でコンパイル可能になる。
+ * GData API ライブラリの組み込み手順 参照URL:
+ * http://hoishing.wordpress.com/2011/08/23/gdata-objective-c-client-setup-in-xcode-4/
  * -----------------------------------------------------------------------------------------------
  */
 
@@ -25,9 +15,12 @@
 #import "GData.h"
 #import "GDataPhotos.h"
 
+@class E3;
 @interface AZPicasa : NSObject
 
 - (id)init;
-- (void)uploadData:(NSData*)photoData  photoTitle:(NSString*)photoTitle;
+- (void)uploadE3:(E3*)e3target;
+- (void)downloadE3:(E3*)e3target  imageView:(UIImageView*)imageView;
 
 @end
+

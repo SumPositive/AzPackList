@@ -306,6 +306,17 @@
 		// 各viewDidAppear:にて「許可/禁止」を設定する
 		[appDelegate_ AdRefresh:NO];	//広告禁止
 	}
+	
+	// Photo 未アップがあればアップする
+	for (NSArray *e3section in e3array_) {
+		for (E3 *e3row in e3section) {
+			if (e3row.photoData && e3row.photoUrl==nil) {
+				// 写真キャッシュあるがＵＲＬなしにつき、Picasaアップする
+				[appDelegate_.picasaBox uploadE3:e3row];
+				// 写真キャッシュに無くてダウンロードするのは、E3detailTVCを開けたとき。
+			}
+		}
+	}
 }
 
 - (void)padE2refresh:(NSInteger)iRow
@@ -594,7 +605,7 @@
 				[self.tableView scrollToRowAtIndexPath:indexPathEdit_ 
 									  atScrollPosition:UITableViewScrollPositionMiddle animated:NO]; // YESだと次の座標取得までにアニメーションが終了せずに反映されない
 				CGRect rc = [self.tableView rectForRowAtIndexPath:indexPathEdit_];
-				rc.origin.x += (rc.size.width/2 - 100);	//(-100)ヨコのとき幅が縮小されてテンキーが欠けるため
+				rc.origin.x += 140;  //(rc.size.width/2 - 100);	//(-100)ヨコのとき幅が縮小されてテンキーが欠けるため
 				rc.size.width = 1;
 				[popOver_ presentPopoverFromRect:rc  inView:self.tableView 
 						permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
@@ -671,7 +682,7 @@
 		//[MindexPathEdit release], 
 		indexPathEdit_ = [indexPath copy];
 		CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
-		rc.origin.x += (rc.size.width/2 - 100);	//(-100)ヨコのとき幅が縮小されてテンキーが欠けるため
+		rc.origin.x += 140;  //(rc.size.width/2 - 100);	//(-100)ヨコのとき幅が縮小されてテンキーが欠けるため
 		rc.size.width = 1;
 		[popOver_ presentPopoverFromRect:rc
 								  inView:self.tableView  permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];

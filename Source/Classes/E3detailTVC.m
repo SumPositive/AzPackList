@@ -19,7 +19,6 @@
 #import "PatternImageView.h"
 #import "CameraVC.h"
 
-
 //#define LABEL_NOTE_SUFFIX   @"\n\n\n\n\n"  // UILabel *MlbNoteを上寄せするための改行（5行）
 #define TEXTFIELD_MAXLENGTH		50
 #define TEXTVIEW_MAXLENGTH		400
@@ -43,6 +42,7 @@
 - (void)cellButtonCalc: (UIButton *)button ;
 - (void)cancelClose:(id)sender;
 - (void)saveClose:(id)sender;
+- (void)viewDesignPhoto;
 - (void)viewDesign;
 - (void)alertWeightOver;
 @end
@@ -195,23 +195,24 @@
 - (void)viewDesignPhoto
 {
 	CGRect rect;
-	if (self.tableView.frame.size.width < 400) {	// デバイス縦
-		if (imageView_.image.size.width < 600) {	// 写真タテ
+	if (appDelegate_.app_is_iPad) { // iPad
+		rect = CGRectMake(5, 20, 390, 480);
+	}
+	else if (self.tableView.frame.size.width < 400) {	// iPhone縦
+	/*	if (imageView_.image.size.width < 600) {	// 写真タテ
 			rect = CGRectMake(30, 20, 240, 320);
 		} else {		// 写真ヨコ
 			rect = CGRectMake(5, 20, 288, 216);	//288 = 320 * 0.45
-		}
+		}*/
+		rect = CGRectMake(5, 20, 288, 320);
 	}
-	else {		// デバイス横
-		if (imageView_.image.size.width < 600) {	// 写真タテ
+	else {		// iPhone横
+	/*	if (imageView_.image.size.width < 600) {	// 写真タテ
 			rect = CGRectMake(120, 20, 240, 320);
 		} else {		// 写真ヨコ
 			rect = CGRectMake(80, 20, 320, 240);
-		}
-	}
-	if (appDelegate_.app_is_iPad) {
-		rect.size.width *= 1.5;
-		rect.size.height *= 1.5;
+		}*/
+		rect = CGRectMake(80, 20, 320, 320);
 	}
 	imageView_.frame = rect;
 }
@@ -268,6 +269,11 @@
 	
 	//この時点で MtfName は未生成だから、0.5秒後に処理する
 	[self performSelector:@selector(performNameFirstResponder) withObject:nil afterDelay:0.5f]; // 0.5秒後に呼び出す
+	
+	// 写真キャッシュに無いのでダウンロードする
+	if (e3target_.photoUrl && e3target_.photoData==nil) {
+		[appDelegate_.picasaBox downloadE3:e3target_  imageView:imageView_]; //非同期処理
+	}
 }
 
 // ビューが非表示にされる前や解放される前ににこの処理が呼ばれる
@@ -472,7 +478,6 @@
 		// 長さが50超ならば、0文字目から50文字を切り出して保存　＜以下で切り出すとフリーズする＞
 		[e3target_ setValue:[tfName_.text substringWithRange:NSMakeRange(0, 50)] forKey:@"name"];
 	} else {
-		//[Pe3target setValue:MlbName.text forKey:@"name"];
 		e3target_.name = tfName_.text;
 	}
 	
@@ -485,17 +490,6 @@
 	
 	NSString *zNote;
 	zNote = tvNote_.text;
-	/*
-	 if ([MlbNote.text length] <= 0) {
-	 zNote = @"";
-	 } 
-	 else if (0 < [LABEL_NOTE_SUFFIX length]) {
-	 // 末尾改行文字("\n")を PiSuffixLength 個除く -->> doneにて追加する
-	 zNote = [MlbNote.text substringToIndex:([MlbNote.text length] - [LABEL_NOTE_SUFFIX length])];
-	 } else {
-	 zNote = MlbNote.text;
-	 }
-	 */
 	if( TEXTVIEW_MAXLENGTH < [zNote length] ){
 		// 長さがTEXTVIEW_MAXLENGTH超ならば、0文字目からTEXTVIEW_MAXLENGTH文字を切り出して保存　＜以下で切り出すとフリーズする＞
 		[e3target_ setValue:[zNote substringWithRange:NSMakeRange(0, TEXTVIEW_MAXLENGTH)] forKey:@"note"];
@@ -868,10 +862,13 @@
 			case 5:
 				return 58;
 			case 6:
-				return 20+320+2;  // Photo 640x480
+				if (appDelegate_.app_is_iPad) {
+					return 20+480+5;
+				} else {
+					return 20+320+5;
+				}
 		}
 	}
-
 	if (appDelegate_.app_is_iPad) {
 		return 50;
 	}
@@ -894,6 +891,11 @@
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
 		}
 		cell.showsReorderControl = NO; // Move禁止
+	}
+	
+	CGFloat fDialWidth = self.tableView.frame.size.width-80;
+	if (appDelegate_.app_is_iPad) {
+		fDialWidth -= 40;  // 両端の余白が増えるため
 	}
 	
 	switch (indexPath.section) {
@@ -1038,7 +1040,7 @@
 							// 3桁コンマ付加
 							lbStock_.text = GstringFromNumber(e3target_.stock);
 						}
-						dialStock_ = [[AZDial alloc] initWithFrame:CGRectMake(10,16, self.tableView.frame.size.width-80,44)
+						dialStock_ = [[AZDial alloc] initWithFrame:CGRectMake(10,16, fDialWidth,44)
 														  delegate:self  dial:lVal  min:0  max:9999  step:1  stepper:YES];
 						dialStock_.backgroundColor = [UIColor clearColor];
 						[cell.contentView addSubview:dialStock_];
@@ -1066,7 +1068,7 @@
 							// 3桁コンマ付加
 							lbNeed_.text = GstringFromNumber(e3target_.need);
 						}
-						dialNeed_ = [[AZDial alloc] initWithFrame:CGRectMake(10,16, self.tableView.frame.size.width-80,44)
+						dialNeed_ = [[AZDial alloc] initWithFrame:CGRectMake(10,16, fDialWidth,44)
 														 delegate:self  dial:lVal  min:0  max:9999  step:1  stepper:YES];
 						dialNeed_.backgroundColor = [UIColor clearColor];
 						[cell.contentView addSubview:dialNeed_];
@@ -1097,7 +1099,7 @@
 							// 3桁コンマ付加
 							lbWeight_.text = GstringFromNumber(e3target_.weight);
 						}
-						dialWeight_ = [[AZDial alloc] initWithFrame:CGRectMake(10,16, self.tableView.frame.size.width-80,44)
+						dialWeight_ = [[AZDial alloc] initWithFrame:CGRectMake(10,16, fDialWidth,44)
 														   delegate:self  dial:lVal  min:0  max:WEIGHT_MAX  step:10  stepper:YES];
 						dialWeight_.backgroundColor = [UIColor clearColor];
 						//[mDialWeight setStepperMagnification:10.0];
@@ -1114,37 +1116,26 @@
 						[cell.contentView addSubview:label];
 						// 640x480
 						imageView_ = [[UIImageView alloc] init];
+						imageView_.contentMode = UIViewContentModeScaleAspectFit;
 						[cell.contentView addSubview:imageView_];
 						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // > 撮影
-						//[self viewDesignPhoto]; //回転処理
+						[self viewDesignPhoto]; //回転処理
 					}
 					if (imageView_.image==nil) {	//特にデバイス横のとき、範囲外になり初期ロードされないため、範囲内になったときここでロードさせる必要あり。
-						UIActivityIndicatorView *aiv = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-						[aiv setFrame:CGRectMake(50, 50, 50, 50)];
-						[cell.contentView addSubview:aiv];
-						[aiv startAnimating];
 						// Loading
-						dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
-						dispatch_async(queue, ^{		// 非同期マルチスレッド処理
-							imageView_.contentMode = UIViewContentModeScaleAspectFit; // 縦横比率保持して伸縮
-							if (e3target_.photoData) {
-								imageView_.image = [UIImage imageWithData: e3target_.photoData];
-								[self viewDesignPhoto];
-							}
-							else if (10 < [e3target_.photoUrl length]) {
-								// Picasaからダウンロードして、表示かつキャッシュ(e3target_.photoData)に保存する。
-								
-								[self viewDesignPhoto];
-							}
-							else {
-								// タッチすれば撮影することを示すアイコン
-								imageView_.image = [UIImage imageNamed:@"DropIcon128-PackList"]; // DEBUG
-							}
-							dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理
-								[aiv stopAnimating];
-								[aiv removeFromSuperview];
-							});
-						});
+						if (e3target_.photoData) {
+							imageView_.image = [UIImage imageWithData: e3target_.photoData];
+						}
+						/* viewDidAppear:にてダウンロード開始している。
+						 else if (10 < [e3target_.photoUrl length]) {
+							// Picasaからダウンロードして、表示かつキャッシュ(e3target_.photoData)に保存する。
+							[appDelegate_.picasaBox downloadE3:e3target_ imageView:imageView_];
+						}*/
+						else {
+							// タッチすれば撮影することを示すアイコン
+							imageView_.image = [UIImage imageNamed:@"DropIcon128-PackList"]; // DEBUG
+						}
+						[self viewDesignPhoto];
 					}
 					break;
 			}

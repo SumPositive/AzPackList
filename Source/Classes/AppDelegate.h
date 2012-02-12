@@ -10,6 +10,7 @@
 #import "padRootVC.h"
 #import <iAd/iAd.h>
 #import "GADBannerView.h"
+#import "AZPicasa.h"		// バックスレッド動作するため、ここに常駐
 
 
 @interface AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate
@@ -21,8 +22,9 @@
 @property (nonatomic, retain) PadRootVC	*padRootVC;  //解放されないようにretain
 @property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
 
-@property (nonatomic, retain) NSMutableArray *clipE3objects;  // 外部から参照されるため
-@property (nonatomic, retain) E1			*dropboxSaveE1selected;
+@property (nonatomic, retain) NSMutableArray	*clipE3objects;  // 外部から参照されるため
+@property (nonatomic, retain) E1							*dropboxSaveE1selected;
+@property (nonatomic, retain) AZPicasa				*picasaBox;
 
 @property (nonatomic, assign) BOOL	app_opt_Autorotate;
 @property (nonatomic, assign) BOOL	app_opt_Ad;	// YES=広告表示する

@@ -18,7 +18,8 @@
 #import "DropboxVC.h"
 #import "AZStoreVC.h"
 
-#define CoreData_iCloud_SYNC		YES	// YES or NO
+
+#define CoreData_iCloud_SYNC		NO	// YES or NO
 
 
 @interface AppDelegate (PrivateMethods) // メソッドのみ記述：ここに変数を書くとグローバルになる。他に同じ名称があると不具合発生する
@@ -55,6 +56,7 @@
 @synthesize padRootVC = padRootVC_;
 @synthesize clipE3objects = clipE3objects_;		// [Cut][Copy]されたE3をPUSHスタックする。[Paste]でPOPする
 @synthesize dropboxSaveE1selected = dropboxSaveE1selected_;
+@synthesize picasaBox = picasaBox_;
 @synthesize app_opt_Autorotate = app_opt_Autorotate_;
 @synthesize app_opt_Ad = app_opt_Ad_;				//Setting選択フラグ
 @synthesize app_is_iPad = app_is_iPad_;
@@ -62,7 +64,6 @@
 @synthesize app_pid_AdOff = app_pid_AdOff_;		//Store購入済フラグ
 @synthesize app_BagSwing = app_BagSwing_;		//YES=PadRootVC:が表示されたとき、バッグを振る。
 @synthesize app_enable_iCloud = app_enable_iCloud_;		// persistentStoreCoordinator:にて設定
-
 
 #pragma mark - Application lifecycle
 
@@ -184,6 +185,9 @@
 
 	// 初期生成
 	[EntityRelation setMoc:[self managedObjectContext]];
+	
+	// Photo Picasa
+	picasaBox_ = [[AZPicasa alloc] init];
 	
 	return;  // YES;  //iOS4
 }
@@ -357,6 +361,17 @@
 	mainNC_.delegate = nil;		mainNC_ = nil;
 	mainSVC_.delegate = nil;	mainSVC_ = nil;
 	padRootVC_ = nil;
+}
+
+#pragma mark - <AZPicasaDelegate>
+- (void)picasaDidUpload:(id)sender photoUrl:(NSString*)photoUrl
+{
+	
+}
+
+- (void)picasaDidDownload:(id)sender photoData:(NSData*)data
+{
+	
 }
 
 

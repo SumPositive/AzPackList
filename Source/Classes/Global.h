@@ -63,7 +63,7 @@
 #define GD_POPOVER_SIZE_INIT		CGSizeMake(480-1, 500-1)	//init初期化時に使用　＜＜＜変化ありにするため1廻り小さくする
 #define GD_POPOVER_SIZE				CGSizeMake(480, 500)			//viewDidAppear時に使用
 
-#define GD_POPOVER_E3detailTVC_SIZE		CGSizeMake(400, 610)	//590		//E3detailTVCおよびその配下に使用　＜＜下余白はテンキーエリア
+#define GD_POPOVER_E3detailTVC_SIZE		CGSizeMake(480, 650)	//横1.5倍	//E3detailTVCおよびその配下に使用　＜＜下余白はテンキーエリア
 
 // iCloud NSNotification messages
 #define NFM_REFRESH_ALL_VIEWS			@"RefreshAllViews"					// 再描画（MOC変更）
