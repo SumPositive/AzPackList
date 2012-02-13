@@ -72,7 +72,8 @@
 #endif
 	
 	CalcView				*calcView_;
-	UIImageView		*imageView_;
+	UIImageView		*mIvPhoto;
+	UIImageView		*mIvPicasa;
 	
 	AppDelegate		*appDelegate_;
 	float						tableViewContentY_;
@@ -196,25 +197,15 @@
 {
 	CGRect rect;
 	if (appDelegate_.app_is_iPad) { // iPad
-		rect = CGRectMake(5, 20, 390, 480);
+		rect = CGRectMake(5, 26, 390, 480);
 	}
 	else if (self.tableView.frame.size.width < 400) {	// iPhone縦
-	/*	if (imageView_.image.size.width < 600) {	// 写真タテ
-			rect = CGRectMake(30, 20, 240, 320);
-		} else {		// 写真ヨコ
-			rect = CGRectMake(5, 20, 288, 216);	//288 = 320 * 0.45
-		}*/
-		rect = CGRectMake(5, 20, 288, 320);
+		rect = CGRectMake(5, 5, 320-30, 320);
 	}
 	else {		// iPhone横
-	/*	if (imageView_.image.size.width < 600) {	// 写真タテ
-			rect = CGRectMake(120, 20, 240, 320);
-		} else {		// 写真ヨコ
-			rect = CGRectMake(80, 20, 320, 240);
-		}*/
-		rect = CGRectMake(80, 20, 320, 320);
+		rect = CGRectMake(5, 5, 480-30, 320);
 	}
-	imageView_.frame = rect;
+	mIvPhoto.frame = rect;
 }
 
 - (void)viewDesign
@@ -272,7 +263,7 @@
 	
 	// 写真キャッシュに無いのでダウンロードする
 	if (e3target_.photoUrl && e3target_.photoData==nil) {
-		[appDelegate_.picasaBox downloadE3:e3target_  imageView:imageView_]; //非同期処理
+		[appDelegate_.picasaBox downloadE3:e3target_  imageView:mIvPhoto]; //非同期処理
 	}
 }
 
@@ -862,9 +853,9 @@
 				return 58;
 			case 6:
 				if (appDelegate_.app_is_iPad) {
-					return 20+480+5;
+					return 26+480+5;
 				} else {
-					return 20+320+5;
+					return 5+320+5;
 				}
 		}
 	}
@@ -1106,36 +1097,40 @@
 					}
 					break;
 				case 6: // Photo
-					if (imageView_==nil) {
-						UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 100,12)];
+					if (mIvPhoto==nil) {
+					/*	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 100,12)];
 						label.font = [UIFont systemFontOfSize:12];
 						label.text = NSLocalizedString(@"Photo", nil);
 						label.textColor = [UIColor grayColor];
 						label.backgroundColor = [UIColor clearColor];
-						[cell.contentView addSubview:label];
-						// 640x480
-						imageView_ = [[UIImageView alloc] init];
-						imageView_.contentMode = UIViewContentModeScaleAspectFit;
-						[cell.contentView addSubview:imageView_];
+						[cell.contentView addSubview:label];*/
+						// Picasa Icon
+						mIvPicasa = [[UIImageView alloc] init];
+						mIvPicasa.contentMode = UIViewContentModeScaleAspectFit;
+						mIvPicasa.frame = CGRectMake(5, 2, 24, 24);
+						[cell.contentView addSubview:mIvPicasa];
+						// Photo 640x480
+						mIvPhoto = [[UIImageView alloc] init];
+						mIvPhoto.contentMode = UIViewContentModeScaleAspectFit;
+						[cell.contentView addSubview:mIvPhoto];
 						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // > 撮影
 						[self viewDesignPhoto]; //回転処理
 					}
 					
-					cell.imageView.alpha = 0.5;
 					if (e3target_.photoUrl) {	// Picasaアップ済み
-						cell.imageView.image = [UIImage imageNamed:@"Icon32-Picasa"];
+						mIvPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
 					}
 					else if (e3target_.photoData) {		// 写真あるが未アップ
-						cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaNon"];
+						mIvPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
 					}
 					else {
-						cell.imageView.image = nil;
+						mIvPicasa.image = [UIImage imageNamed:@"Icon24-Camera"];
 					}
 					
-					if (imageView_.image==nil) {	//特にデバイス横のとき、範囲外になり初期ロードされないため、範囲内になったときここでロードさせる必要あり。
+					if (mIvPhoto.image==nil) {	//特にデバイス横のとき、範囲外になり初期ロードされないため、範囲内になったときここでロードさせる必要あり。
 						// Loading
 						if (e3target_.photoData) {
-							imageView_.image = [UIImage imageWithData: e3target_.photoData];
+							mIvPhoto.image = [UIImage imageWithData: e3target_.photoData];
 						}
 						/* viewDidAppear:にてダウンロード開始している。
 						 else if (10 < [e3target_.photoUrl length]) {
@@ -1144,7 +1139,8 @@
 						}*/
 						else {
 							// タッチすれば撮影することを示すアイコン
-							imageView_.image = [UIImage imageNamed:@"DropIcon128-PackList"]; // DEBUG
+							//mIvPhoto.image = [UIImage imageNamed:@"Icon256-Camera"]; // DEBUG
+							//mIvPhoto.alpha = 0.2;
 						}
 						[self viewDesignPhoto];
 					}
@@ -1304,7 +1300,7 @@
 				case 6: // Photo
 				{	// CameraVC へ
 					CameraVC *cam = [[CameraVC alloc] init];
-					cam.imageView = imageView_;
+					cam.imageView = mIvPhoto;
 					cam.e3target = e3target_;
 					[self.navigationController pushViewController:cam animated:YES];
 				}
