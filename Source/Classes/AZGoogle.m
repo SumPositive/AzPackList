@@ -32,6 +32,9 @@
 // OAuth2認証を利用する方法
 // http://www.awaresoft.jp/ios-dev/item/104-google-data-api-objective-c-client-library%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9.html
 //-----------------------------------------------------------------------------
+// Google Toolbox for Mac - OAuth 2 Controllers
+// http://code.google.com/p/gtm-oauth2/wiki/Introduction#Adding_the_Controllers_to_Your_Project
+//-----------------------------------------------------------------------------
 
 #define ALBUM_NAME		@"PackList Photo"
 

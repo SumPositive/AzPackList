@@ -26,6 +26,7 @@
 #import "DropboxVC.h"
 #import "PatternImageView.h"
 #import "AZStoreVC.h"
+#import "GoogleAuth.h"
 
 
 #define ACTIONSEET_TAG_DELETEPACK	901
@@ -337,7 +338,11 @@
 	if (appDelegate_.app_is_iPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 	}
-
+	if (![GoogleAuth isAuthorized]) {
+		alertBox(NSLocalizedString(@"Google NoAuthorize", nil), NSLocalizedString(@"Google NoSetting",nil), @"OK");
+		return;
+	}
+	
 	GooDocsView *goodocs = [[GooDocsView alloc] init];
 	// 以下は、GooDocsViewの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
 	goodocs.Rmoc = moc_;

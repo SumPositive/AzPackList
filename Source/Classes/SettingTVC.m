@@ -10,6 +10,7 @@
 #import "Global.h"
 #import "AppDelegate.h"
 #import "SettingTVC.h"
+#import "GoogleAuth.h"
 
 #define TAG_OptShouldAutorotate				998  // UD_OptShouldAutorotate
 #define TAG_OptStartupRestoreLevel			997
@@ -344,7 +345,7 @@
 
 		case 6:
 		{ // Google+ Picasa
-			if (mTfPicasaID==nil) {
+/*			if (mTfPicasaID==nil) {
 				mTfPicasaID = [[UITextField alloc] init];
 				mTfPicasaID.borderStyle = UITextBorderStyleRoundedRect;
 				mTfPicasaID.placeholder = @"ID@gmail.com";  //NSLocalizedString(@"Picasa Login ID",nil);
@@ -380,11 +381,18 @@
 				}
 			}
 			mTfPicasaPW.frame = CGRectMake(fX-45,38, 140, 25); // 回転対応
-			//
-			cell.textLabel.text = NSLocalizedString(@"Picasa Setting",nil);
-			cell.detailTextLabel.text = NSLocalizedString(@"Picasa Setting msg",nil);
-			cell.detailTextLabel.textColor = [UIColor blackColor];
+*/			//
+
+			if ([GoogleAuth isAuthorized]) {
+				cell.textLabel.text = NSLocalizedString(@"Google Authorized",nil);
+				cell.detailTextLabel.text = NSLocalizedString(@"Google Authorized msg",nil);
+			} else {
+				cell.textLabel.text = NSLocalizedString(@"Google NoAuthorize",nil);
+				cell.detailTextLabel.text = NSLocalizedString(@"Google NoAuthorize msg",nil);
+			}
 			cell.detailTextLabel.numberOfLines = 2;
+			cell.selectionStyle = UITableViewCellSelectionStyleBlue; // 選択時ハイライト
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // >
 		}	break;
 
 		case 7:
@@ -474,6 +482,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];	// 選択状態を解除する
+	
+	if (indexPath.row==6) {
+		// Google OAuth2
+		[self.navigationController pushViewController:[GoogleAuth viewControllerOAuth2:self] animated:YES];
+	}
 }
 
 
@@ -519,8 +532,8 @@
 }
 */
 
-#pragma make - <UITextFieldDelegate>
 
+#pragma make - <UITextFieldDelegate>
 // キーボードのリターンキーを押したときに呼ばれる
 - (BOOL)textFieldShouldReturn:(UITextField *)sender 
 {
@@ -582,7 +595,7 @@
 			alertBox(NSLocalizedString(@"PackListCrypt Key NoMatch",nil), nil, @"OK");
 		}
 	}
-	else if (sender==mTfPicasaID) {	//-------------------------------------------------------------Google+ ID
+/*	else if (sender==mTfPicasaID) {	//-------------------------------------------------------------Google+ ID
 		if ([sender.text length] <= 0 OR 80 < [sender.text length]) {
 			// IDを破棄する
 			NSError *error; // nilを渡すと異常終了するので注意
@@ -620,9 +633,11 @@
 		}
 		if (0 < [mTfPicasaID.text length] && 0 < [mTfPicasaPW.text length]) {
 			// Picasa Login
-			[mAppDelegate.picasaBox loginID:mTfPicasaID.text withPW:mTfPicasaPW.text isSetting:YES];
+			//[mAppDelegate.picasaBox loginID:mTfPicasaID.text withPW:mTfPicasaPW.text isSetting:YES];
+			// Google OAuth2
+			[self presentModalViewController:[GoogleAuth viewControllerOAuth2] animated:YES];
 		}
-	}
+	}*/
     return YES;
 }
 

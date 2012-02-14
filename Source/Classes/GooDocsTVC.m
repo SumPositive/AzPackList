@@ -17,7 +17,7 @@
 #import "GData.h"
 #import "GTMHTTPFetcher.h" //[1.12.0] Replaced GDataHTTPFetcher with GTMHTTPFetcher
 #import "GDataDocs.h"
-
+#import "GoogleAuth.h"
 
 
 #define TAG_ACTION_DOWNLOAD_START	900
@@ -676,6 +676,24 @@
 
 - (void)uploadFile:(NSString*)pathLocal
 {
+	NSString *errorMsg = nil;
+	NSString *mimeType = @"text/csv";  //@"text/plain";
+
+	GDataEntryDocBase *newEntry = [GDataEntryStandardDoc documentEntry];
+
+	@try {
+		
+	}
+	@catch (NSException *exception) {
+		
+	}
+	@finally {
+		
+	}
+}
+
+- (void)XXXuploadFile:(NSString*)pathLocal
+{
 	//NSString *dir1 = NSHomeDirectory();
 	//NSString *dir2 = [dir1 stringByAppendingPathComponent:@"tmp"];
 	//NSString *pathLocal = [dir2 stringByAppendingPathComponent:GD_CSVFILENAME4]; // ローカルファイル名
@@ -939,27 +957,27 @@
 #pragma mark　-　Table view methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	if (MbLogin) return 3;
-	return 1; // Login sectionのみ
+	//if (MbLogin) return 3;
+	return 2;
 }
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	NSInteger rows;
 	switch (section) {
-		case 0:
+	/*	case 0:
 			if ([MtfUsername.text length] && [MtfPassword.text length]) {
 				return 3;  // Username, Password, Login
 			}
 			else {
 				return 2;  // Username, Password
 			}
-			break;
-		case 1:
+			break;*/
+		case 0:
 			if (self.PbUpload) return 1;  // Upload Plan name
 			else return 0;
 			break;
-		case 2:
+		case 1:
 			rows = [[mDocListFeed entries] count];
 			return rows;
 			break;
@@ -970,21 +988,21 @@
 // TableView セクション名を応答
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	switch (section) {
-		case 0:
+	/*	case 0:
 			if (self.PbUpload) {
 				return NSLocalizedString(@"Upload Google",nil);
 			} else {
 				return NSLocalizedString(@"Import Google",nil);
 			}
-			break;
-		case 1:
+			break;*/
+		case 0:
 			if (self.PbUpload) {
 				if (MbLogin) return NSLocalizedString(@"Upload - click start",nil);
 				else return NSLocalizedString(@"Upload - Please login first",nil);
 			}
 			return nil;  // Download時は非表示にするため
 			break;
-		case 2:
+		case 1:
 			if ([[mDocListFeed entries] count] <= 0) {
 				return @"";
 			}
@@ -1002,7 +1020,7 @@
 // TableView セクションフッタを応答
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
 	switch (section) {
-		case 2:
+		case 1:
 			if (self.PbUpload) {
 				return NSLocalizedString(@"Upload Footer",nil);
 			}
@@ -1013,11 +1031,12 @@
 
 // セルの高さを指示する
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if (indexPath.section == 0) {
+/*	if (indexPath.section == 0) {
 		if (indexPath.row == 2) return 50; // Login save
 		else return 40;  // Username, Password
 	}
-	else if (indexPath.section == 2 && self.PbUpload) {
+	else */
+	if (indexPath.section == 1 && self.PbUpload) {
 		return 25; // 参照のみだから
 	}
 	return 44; // デフォルト：44ピクセル
@@ -1055,7 +1074,7 @@
 	UITableViewCell *cell = nil;
 	
 	switch (indexPath.section) {
-		case 0: // Login Section
+	/*	case 0: // Login Section
 			switch (indexPath.row) {
 				case 0: // User name
 					cell = [tableView dequeueReusableCellWithIdentifier:zCellUser];
@@ -1111,8 +1130,8 @@
 					}
 					return cell;
 					break;
-			}
-		case 1: // Upload Section
+			}*/
+		case 0: // Upload Section
 			if (self.PbUpload) {
 				// Upload
 				cell = [tableView dequeueReusableCellWithIdentifier:zCellList];
@@ -1124,7 +1143,7 @@
 			}
 			return cell;
 			break;
-		case 2: // Download Section
+		case 1: // Download Section
 			cell = [tableView dequeueReusableCellWithIdentifier:zCellList];
 			if (cell == nil) {
 				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
@@ -1150,15 +1169,15 @@
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];	// 選択状態を解除する
 	
 	switch (indexPath.section) {
-		case 0: // Login Section
+	/*	case 0: // Login Section
 			if (indexPath.row == 2) { // Login
 				// Document list 抽出
 				MbLogin = NO; // 未ログイン ==>> 成功時にYES
 				[self fetchDocList];
 			}
-			break;
+			break;*/
 
-		case 1: // Upload Section
+		case 0: // Upload Section
 			if (MbLogin) {
 				// リスト取得開始、進捗サインON
 				[UIApplication sharedApplication].networkActivityIndicatorVisible = YES; // NetworkアクセスサインON
@@ -1206,7 +1225,7 @@
 			}
 			break;
 
-		case 2: // Document list Section
+		case 1: // Document list Section
 			if (!self.PbUpload) {
 				MiRowDownload = indexPath.row; // Download対象行
 				GDataEntryDocBase *doc = [mDocListFeed entryAtIndex:MiRowDownload];

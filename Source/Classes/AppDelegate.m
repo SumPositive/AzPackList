@@ -363,6 +363,9 @@
 	padRootVC_ = nil;
 }
 
+#pragma mark - Google OAuth2
+
+
 #pragma mark - <AZPicasaDelegate>
 - (void)picasaDidUpload:(id)sender photoUrl:(NSString*)photoUrl
 {
