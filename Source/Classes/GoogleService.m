@@ -143,12 +143,13 @@ NSString *uuidString()
 	
 	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
-	NSError *error;
+/*	NSError *error;
 	NSString *uid = [SFHFKeychainUtils getPasswordForUsername:GD_PicasaID
 											   andServiceName:GD_PRODUCTNAME error:&error];
 	NSString *upw = [SFHFKeychainUtils getPasswordForUsername:GD_PicasaPW
 											   andServiceName:GD_PRODUCTNAME error:&error];
 	[self loginID:uid withPW:upw isSetting:NO];
+*/	
 	return self;
 }
 
