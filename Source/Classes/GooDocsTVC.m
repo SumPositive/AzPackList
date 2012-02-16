@@ -17,7 +17,7 @@
 #import "GData.h"
 #import "GTMHTTPFetcher.h" //[1.12.0] Replaced GDataHTTPFetcher with GTMHTTPFetcher
 #import "GDataDocs.h"
-#import "GoogleAuth.h"
+#import "GoogleService.h"
 
 
 #define TAG_ACTION_DOWNLOAD_START	900
@@ -676,20 +676,8 @@
 
 - (void)uploadFile:(NSString*)pathLocal
 {
-	NSString *errorMsg = nil;
-	NSString *mimeType = @"text/csv";  //@"text/plain";
-
-	GDataEntryDocBase *newEntry = [GDataEntryStandardDoc documentEntry];
-
-	@try {
-		
-	}
-	@catch (NSException *exception) {
-		
-	}
-	@finally {
-		
-	}
+	//[GoogleAuth uploadPackList:pathLocal withName:[pathLocal lastPathComponent]];
+	[GoogleService docUploadFile:pathLocal withName:[pathLocal lastPathComponent]];
 }
 
 - (void)XXXuploadFile:(NSString*)pathLocal
@@ -1067,9 +1055,9 @@
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *zCellUser = @"CellUser";
-    static NSString *zCellPass = @"CellPass";
-    static NSString *zCellLogin = @"CellLogin";
+    //static NSString *zCellUser = @"CellUser";
+    //static NSString *zCellPass = @"CellPass";
+    //static NSString *zCellLogin = @"CellLogin";
     static NSString *zCellList = @"CellList";
 	UITableViewCell *cell = nil;
 	

@@ -111,7 +111,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 		
 		//----------------------------------------------------------------------------E1 [Plan]
 		//[1.0]  ,"name","note",
-		//[2.0]  ,"name","note","photoUrl",
+		//[2.0]  ,"name","note","photoUrl", 　　＜＜photoDataは添付しない。Picasaへアップする
 		/***写真はCSV保存しない。Picasaを利用する。
 		if (Pe1.photoData && isShardMode_==NO) {
 			strBase64 = [Pe1.photoData stringEncodedWithBase64];
@@ -436,7 +436,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		
 		//----------------------------------------------------------------------[Plan]
 		//[1.0][  ,"name","note",]
-		//[2.0][  ,"name","note","photoUrl",]
+		//[2.0][  ,"name","note","photoUrl",]  ＜＜photoDataは添付しない。
 		//[2.0][0,          1,   　 　　　　2,       　　　　　　  3,]
 		while (1) { 
 			iErrLine++;

@@ -17,7 +17,8 @@
 
 #import "PadRootVC.h"
 #import "E2viewController.h"
-//#import "PadPopoverInNaviCon.h"
+#import "GoogleService.h"
+
 
 //#define ACTIONSEET_TAG_DELETEITEM		101
 #define TAG_CELL_ITEM								102
@@ -310,9 +311,11 @@
 	// Photo 未アップがあればアップする
 	for (NSArray *e3section in e3array_) {
 		for (E3 *e3row in e3section) {
-			if (e3row.photoData && e3row.photoUrl==nil) {
-				// 写真キャッシュあるがＵＲＬなしにつき、Picasaアップする
-				[appDelegate_.picasaBox uploadE3:e3row];
+			if (e3row.photoData && [e3row.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {
+				// 写真キャッシュあるがＵＲＬ:UUIDにつき、Picasaアップする
+				//[appDelegate_.picasaBox uploadE3:e3row];
+				//[GoogleAuth uploadPhoto:e3row];
+				[GoogleService photoUploadE3:e3row];
 				// 写真キャッシュに無くてダウンロードするのは、E3detailTVCを開けたとき。
 			}
 		}
@@ -1096,6 +1099,12 @@
 		e3new.weightStk = e3clip.weightStk;
 		e3new.weightNed = e3clip.weightNed;
 		e3new.weightLack = e3clip.weightLack;
+		// Model-V4
+		e3new.shopKeyword = e3clip.shopKeyword;
+		e3new.shopNote = e3clip.shopNote;
+		// Model-V5
+		e3new.photoUrl = e3clip.photoUrl;
+		e3new.photoData = e3clip.photoData;
 	}
 	
 	if (1 < [appDelegate_.clipE3objects count]) { // 最後の1個を残すため。それが次にCutやCopyしたものと置き換わる

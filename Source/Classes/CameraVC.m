@@ -11,7 +11,16 @@
 #import "Elements.h"
 #import "CameraVC.h"
 #import <AVFoundation/AVFoundation.h>	//Camera
-//#import "AZPicasa.h"
+#import "GoogleService.h"
+
+
+NSString *uuidString()
+{
+	CFUUIDRef uuidObj = CFUUIDCreate(nil);	//create a new UUID
+	NSString *uuid = (__bridge_transfer NSString *)CFUUIDCreateString(nil, uuidObj);
+	CFRelease(uuidObj);
+	return uuid;
+}
 
 
 @interface CameraVC (PrivateMethods)
@@ -230,9 +239,9 @@
 	// PicasaID をセットする
 	if (e3target_) {
 		appDelegate_.app_UpdateSave = YES; // 変更あり
-		e3target_.photoUrl = nil; // PicasaID
 		// Mocへキャッシュ保存
 		e3target_.photoData = [NSData dataWithData:captureData_];
+		e3target_.photoUrl = [NSString stringWithFormat:GS_PHOTO_UUID_PREFIX @"%@", uuidString()];
 		//Moc[保存]時にする// [picasa_ uploadData:e3target_.photoData photoTitle:e3target_.name];
 		//E3detailTVC:にてアップ状況をアイコン表示。 未アップならば自動的にアップリトライする ＜＜失敗やオフラインに対応するため
 	}
@@ -316,7 +325,27 @@
 - (void)viewDidAppear:(BOOL)animated 
 {
 	[super viewDidAppear:animated];
+
+#ifdef DEBUG
+	NSString *modelname = [ [ UIDevice currentDevice] model];
+	if([modelname isEqualToString:@"iPhone Simulator"])
+	{	//iPhone and iPad Simulator
+		if (imageView_) {
+			imageView_.image = [UIImage imageNamed:@"Icon32-Amazon"];
+		}
+		
+		if (e3target_) {
+			appDelegate_.app_UpdateSave = YES; // 変更あり
+			// Mocへキャッシュ保存
+			e3target_.photoData = [NSData dataWithData:UIImagePNGRepresentation(imageView_.image)];
+			e3target_.photoUrl = [NSString stringWithFormat:PHOTO_URL_UUID_PRIFIX @"%@", uuidString()];
+		}
+	} else {
+		[self cameraPreview];
+	}
+#else
 	[self cameraPreview];
+#endif
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

@@ -56,7 +56,7 @@
 @synthesize padRootVC = padRootVC_;
 @synthesize clipE3objects = clipE3objects_;		// [Cut][Copy]されたE3をPUSHスタックする。[Paste]でPOPする
 @synthesize dropboxSaveE1selected = dropboxSaveE1selected_;
-@synthesize picasaBox = picasaBox_;
+//@synthesize picasaBox = picasaBox_;
 @synthesize app_opt_Autorotate = app_opt_Autorotate_;
 @synthesize app_opt_Ad = app_opt_Ad_;				//Setting選択フラグ
 @synthesize app_is_iPad = app_is_iPad_;
@@ -187,7 +187,7 @@
 	[EntityRelation setMoc:[self managedObjectContext]];
 	
 	// Photo Picasa
-	picasaBox_ = [[AZPicasa alloc] init];
+	//picasaBox_ = [[AZPicasa alloc] init];
 	
 	return;  // YES;  //iOS4
 }
@@ -361,20 +361,6 @@
 	mainNC_.delegate = nil;		mainNC_ = nil;
 	mainSVC_.delegate = nil;	mainSVC_ = nil;
 	padRootVC_ = nil;
-}
-
-#pragma mark - Google OAuth2
-
-
-#pragma mark - <AZPicasaDelegate>
-- (void)picasaDidUpload:(id)sender photoUrl:(NSString*)photoUrl
-{
-	
-}
-
-- (void)picasaDidDownload:(id)sender photoData:(NSData*)data
-{
-	
 }
 
 

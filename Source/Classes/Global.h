@@ -46,8 +46,6 @@
 #define GD_DefPassword							@"DefPassword"
 #define GD_DefUsername							@"DefUsername"
 #define GD_DefNickname							@"DefNickname"
-#define GD_PicasaID									@"GD_PicasaID"
-#define GD_PicasaPW								@"GD_PicasaPW"
 
 // iCloud-KVS: KV_KEY  全機種共有設定
 #define KV_OptWeightRound					@"KV_OptWeightRound"

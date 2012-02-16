@@ -10,7 +10,7 @@
 #import "Global.h"
 #import "AppDelegate.h"
 #import "SettingTVC.h"
-#import "GoogleAuth.h"
+#import "GoogleService.h"
 
 #define TAG_OptShouldAutorotate				998  // UD_OptShouldAutorotate
 #define TAG_OptStartupRestoreLevel			997
@@ -30,8 +30,8 @@
 {
 @private
 	AppDelegate		*mAppDelegate;
-	UITextField			*mTfPicasaID;
-	UITextField			*mTfPicasaPW;
+	UITextField			*mTfGoogleID;
+	UITextField			*mTfGooglePW;
 
 	UITextField			*mTfPass1;
 	UITextField			*mTfPass2;
@@ -345,45 +345,48 @@
 
 		case 6:
 		{ // Google+ Picasa
-/*			if (mTfPicasaID==nil) {
-				mTfPicasaID = [[UITextField alloc] init];
-				mTfPicasaID.borderStyle = UITextBorderStyleRoundedRect;
-				mTfPicasaID.placeholder = @"ID@gmail.com";  //NSLocalizedString(@"Picasa Login ID",nil);
-				mTfPicasaID.keyboardType = UIKeyboardTypeASCIICapable;
-				mTfPicasaID.returnKeyType = UIReturnKeyNext;
-				mTfPicasaID.text = @"";
-				mTfPicasaID.delegate = self;
-				[cell.contentView  addSubview:mTfPicasaID];
+			if (mTfGoogleID==nil) {
+				mTfGoogleID = [[UITextField alloc] init];
+				mTfGoogleID.borderStyle = UITextBorderStyleRoundedRect;
+				mTfGoogleID.placeholder = @"ID@gmail.com";
+				mTfGoogleID.keyboardType = UIKeyboardTypeASCIICapable;
+				mTfGoogleID.returnKeyType = UIReturnKeyNext;
+				mTfGoogleID.text = @"";
+				mTfGoogleID.delegate = self;
+				[cell.contentView  addSubview:mTfGoogleID];
 				// KeyChainから保存しているパスワードを取得する
 				NSError *error; // nilを渡すと異常終了するので注意
-				mTfPicasaID.text = [SFHFKeychainUtils getPasswordForUsername:GD_PicasaID
-															  andServiceName:GD_PRODUCTNAME error:&error];
+				mTfGoogleID.text = [SFHFKeychainUtils getPasswordForUsername:GS_KC_LoginName
+															  andServiceName:GS_KC_ServiceName error:&error];
 			}
-			mTfPicasaID.frame = CGRectMake(fX-45, 8, 140, 25); // 回転対応
+			mTfGoogleID.frame = CGRectMake(fX-45, 8, 140, 25); // 回転対応
 			// add UITextField2
-			if (mTfPicasaPW==nil) {
-				mTfPicasaPW = [[UITextField alloc] init];
-				mTfPicasaPW.borderStyle = UITextBorderStyleRoundedRect;
-				mTfPicasaPW.placeholder = @"Password";  //NSLocalizedString(@"PackListCrypt Key2 place",nil);
-				mTfPicasaPW.keyboardType = UIKeyboardTypeASCIICapable;
-				mTfPicasaPW.secureTextEntry = YES;
-				mTfPicasaPW.returnKeyType = UIReturnKeyDone;
-				mTfPicasaPW.hidden = YES;  // mTfPicasaID入力直後にだけ表示する
-				mTfPicasaPW.text = @"";
-				mTfPicasaPW.delegate = self;
-				[cell.contentView  addSubview:mTfPicasaPW];
+			if (mTfGooglePW==nil) {
+				mTfGooglePW = [[UITextField alloc] init];
+				mTfGooglePW.borderStyle = UITextBorderStyleRoundedRect;
+				mTfGooglePW.placeholder = @"Password";  //NSLocalizedString(@"PackListCrypt Key2 place",nil);
+				mTfGooglePW.keyboardType = UIKeyboardTypeASCIICapable;
+				mTfGooglePW.secureTextEntry = YES;
+				mTfGooglePW.returnKeyType = UIReturnKeyDone;
+				mTfGooglePW.hidden = YES;  // mTfPicasaID入力直後にだけ表示する
+				mTfGooglePW.text = @"";
+				mTfGooglePW.delegate = self;
+				[cell.contentView  addSubview:mTfGooglePW];
 				// KeyChainから保存しているパスワードを取得する
 				NSError *error; // nilを渡すと異常終了するので注意
-				NSString *pw = [SFHFKeychainUtils getPasswordForUsername:GD_PicasaPW
-															  andServiceName:GD_PRODUCTNAME error:&error];
+				NSString *pw = [SFHFKeychainUtils getPasswordForUsername:GS_KC_LoginPassword
+															  andServiceName:GS_KC_ServiceName error:&error];
 				if (6 <= [pw length]) {
-					mTfPicasaPW.text = @"xxxxxxxxxx";  //偽装// pwをセットしない
+					mTfGooglePW.text = @"xxxxxxxxxx";  //偽装// pwをセットしない
 				}
 			}
-			mTfPicasaPW.frame = CGRectMake(fX-45,38, 140, 25); // 回転対応
-*/			//
-
-			if ([GoogleAuth isAuthorized]) {
+			mTfGooglePW.frame = CGRectMake(fX-45,38, 140, 25); // 回転対応
+			//
+			cell.textLabel.text = NSLocalizedString(@"Google Login",nil);
+			cell.detailTextLabel.text = NSLocalizedString(@"Google Login msg",nil);
+			cell.detailTextLabel.numberOfLines = 2;
+			//
+/*			if ([GoogleAuth isAuthorized]) {
 				cell.textLabel.text = NSLocalizedString(@"Google Authorized",nil);
 				cell.detailTextLabel.text = NSLocalizedString(@"Google Authorized msg",nil);
 			} else {
@@ -393,6 +396,7 @@
 			cell.detailTextLabel.numberOfLines = 2;
 			cell.selectionStyle = UITableViewCellSelectionStyleBlue; // 選択時ハイライト
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // >
+ */
 		}	break;
 
 		case 7:
@@ -483,10 +487,10 @@
 {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];	// 選択状態を解除する
 	
-	if (indexPath.row==6) {
+/*	if (indexPath.row==6) {
 		// Google OAuth2
 		[self.navigationController pushViewController:[GoogleAuth viewControllerOAuth2:self] animated:YES];
-	}
+	}*/
 }
 
 
@@ -595,49 +599,49 @@
 			alertBox(NSLocalizedString(@"PackListCrypt Key NoMatch",nil), nil, @"OK");
 		}
 	}
-/*	else if (sender==mTfPicasaID) {	//-------------------------------------------------------------Google+ ID
+	else if (sender==mTfGoogleID) {	//-------------------------------------------------------------Google+ ID
 		if ([sender.text length] <= 0 OR 80 < [sender.text length]) {
 			// IDを破棄する
 			NSError *error; // nilを渡すと異常終了するので注意
-			[SFHFKeychainUtils deleteItemForUsername:GD_PicasaID
-									  andServiceName:GD_PRODUCTNAME error:&error];
+			[SFHFKeychainUtils deleteItemForUsername:GS_KC_LoginName
+									  andServiceName:GS_KC_ServiceName error:&error];
 			sender.text = @"";
-			[mTfPicasaID resignFirstResponder];
-			mTfPicasaPW.text = @"";
+			[mTfGoogleID resignFirstResponder];
+			mTfGooglePW.text = @"";
 			[self.tableView reloadData];  // cell表示更新のため
 			alertBox(NSLocalizedString(@"Picasa ID delete",nil), nil, @"OK");
 			return YES;
 		}
 		// ID KeyChainに保存する
 		NSError *error; // nilを渡すと異常終了するので注意
-		[SFHFKeychainUtils storeUsername:GD_PicasaID
+		[SFHFKeychainUtils storeUsername:GS_KC_LoginName
 							 andPassword: sender.text
-						  forServiceName:GD_PRODUCTNAME 
+						  forServiceName:GS_KC_ServiceName 
 						  updateExisting:YES error:&error];
-		mTfPicasaPW.text = @"";
-		mTfPicasaPW.hidden = NO;
-		[mTfPicasaPW becomeFirstResponder];
+		mTfGooglePW.text = @"";
+		mTfGooglePW.hidden = NO;
+		[mTfGooglePW becomeFirstResponder];
 	}
-	else if (sender==mTfPicasaPW) {	//-------------------------------------------------------------Google+ PW
-		[mTfPicasaPW resignFirstResponder];
-		mTfPicasaPW.hidden = YES;
+	else if (sender==mTfGooglePW) {	//-------------------------------------------------------------Google+ PW
+		[mTfGooglePW resignFirstResponder];
+		mTfGooglePW.hidden = YES;
 		if ([sender.text length] <= 0 OR 80 < [sender.text length]) {
 			// PWを破棄する
 			NSError *error; // nilを渡すと異常終了するので注意
-			[SFHFKeychainUtils deleteItemForUsername:GD_PicasaPW
-									  andServiceName:GD_PRODUCTNAME error:&error];
+			[SFHFKeychainUtils deleteItemForUsername:GS_KC_LoginPassword
+									  andServiceName:GS_KC_ServiceName error:&error];
 			sender.text = @"";
 			[self.tableView reloadData];  // cell表示更新のため
 			alertBox(NSLocalizedString(@"Picasa PW delete",nil), nil, @"OK");
 			return YES;
 		}
-		if (0 < [mTfPicasaID.text length] && 0 < [mTfPicasaPW.text length]) {
-			// Picasa Login
-			//[mAppDelegate.picasaBox loginID:mTfPicasaID.text withPW:mTfPicasaPW.text isSetting:YES];
-			// Google OAuth2
-			[self presentModalViewController:[GoogleAuth viewControllerOAuth2] animated:YES];
+		if (0 < [mTfGoogleID.text length] && 0 < [mTfGooglePW.text length]) {
+			//没// Google OAuth2
+			//没// [self presentModalViewController:[GoogleAuth viewControllerOAuth2] animated:YES];
+			// Google Service Login
+			[GoogleService loginID: mTfGoogleID.text  withPW: mTfGooglePW.text  isSetting:YES];
 		}
-	}*/
+	}
     return YES;
 }
 

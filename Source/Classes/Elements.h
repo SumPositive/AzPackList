@@ -11,8 +11,7 @@
 #define AzDataModelVersion	3
 
 //---------------------------------------------------------------------------------------E1
-@interface E1 : NSManagedObject {
-}
+@interface E1 : NSManagedObject
 	@property (nonatomic, retain) NSNumber	*row;
 	@property (nonatomic, retain) NSString		*name;
 	@property (nonatomic, retain) NSString		*note;
@@ -34,8 +33,7 @@
 @end
 
 //---------------------------------------------------------------------------------------E2
-@interface E2 : NSManagedObject {
-}
+@interface E2 : NSManagedObject
 	@property (nonatomic, retain) NSNumber	*row;
 	@property (nonatomic, retain) NSString		*name;
 	@property (nonatomic, retain) NSString		*note;
@@ -58,8 +56,8 @@
 @end
 
 //---------------------------------------------------------------------------------------E3
-@interface E3 : NSManagedObject {
-}
+// 変更した場合は、E3viewController:paste:を確認すること。
+@interface E3 : NSManagedObject
 	@property (nonatomic, retain) NSNumber	*row;
 	@property (nonatomic, retain) NSString		*name;
 	@property (nonatomic, retain) NSString		*note;
@@ -78,5 +76,6 @@
 	@property (nonatomic, retain) NSData			*photoData;		//5//
 	@property (nonatomic, retain) E2					*parent;				// E3---> E2
 @end
+#define PHOTO_URL_UUID_PRIFIX			@"PackList:"
 
 // END

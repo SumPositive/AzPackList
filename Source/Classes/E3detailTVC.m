@@ -12,12 +12,14 @@
 #import "E3viewController.h"
 #import "E3detailTVC.h"
 #import "selectGroupTVC.h"
-//#import "editLabelTextVC.h"
 #import "editLabelNumberVC.h"
 #import "CalcView.h"
 #import "WebSiteVC.h"
 #import "PatternImageView.h"
+
+#import "GoogleService.h"
 #import "CameraVC.h"
+
 
 //#define LABEL_NOTE_SUFFIX   @"\n\n\n\n\n"  // UILabel *MlbNoteを上寄せするための改行（5行）
 #define TEXTFIELD_MAXLENGTH		50
@@ -263,7 +265,9 @@
 	
 	// 写真キャッシュに無いのでダウンロードする
 	if (e3target_.photoUrl && e3target_.photoData==nil) {
-		[appDelegate_.picasaBox downloadE3:e3target_  imageView:mIvPhoto]; //非同期処理
+		//[appDelegate_.picasaBox downloadE3:e3target_  imageView:mIvPhoto]; //非同期処理
+		//[GoogleAuth downloadPhotoE3:e3target_  imageView:mIvPhoto]; //非同期処理
+		
 	}
 }
 
@@ -467,7 +471,12 @@
 	if( 50 < [tfName_.text length] ){
 		// 長さが50超ならば、0文字目から50文字を切り出して保存　＜以下で切り出すとフリーズする＞
 		[e3target_ setValue:[tfName_.text substringWithRange:NSMakeRange(0, 50)] forKey:@"name"];
-	} else {
+	}
+	else if ([tfName_.text length]<=0) {
+		// 品名未定ならば代入する　＜＜[Save]ボタンを押したのだから、削除されないようにする
+		e3target_.name = NSLocalizedString(@"Untitled", nil);
+	}
+	else {
 		e3target_.name = tfName_.text;
 	}
 	
@@ -1116,8 +1125,18 @@
 						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // > 撮影
 						[self viewDesignPhoto]; //回転処理
 					}
-					
-					if (e3target_.photoUrl) {	// Picasaアップ済み
+#ifdef DEBUG
+					mIvPhoto.alpha = 0.3;
+					cell.textLabel.text = e3target_.photoUrl;
+					cell.textLabel.numberOfLines = 6;
+					cell.textLabel.backgroundColor = [UIColor clearColor];
+#endif
+					if ([e3target_.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// Picasaアップ済みだがURL未取得
+						// 写真あるが未アップの状態でPackListを保存やメール送信した場合、
+						// それを表示すると、.phoneDataが無く、.phoneUrlにUUIDが入っている。
+						mIvPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+					}
+					else if (e3target_.photoUrl) {	// Picasaアップ済み
 						mIvPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
 					}
 					else if (e3target_.photoData) {		// 写真あるが未アップ
@@ -1132,15 +1151,9 @@
 						if (e3target_.photoData) {
 							mIvPhoto.image = [UIImage imageWithData: e3target_.photoData];
 						}
-						/* viewDidAppear:にてダウンロード開始している。
-						 else if (10 < [e3target_.photoUrl length]) {
+						else if (10 < [e3target_.photoUrl length]) {
 							// Picasaからダウンロードして、表示かつキャッシュ(e3target_.photoData)に保存する。
-							[appDelegate_.picasaBox downloadE3:e3target_ imageView:imageView_];
-						}*/
-						else {
-							// タッチすれば撮影することを示すアイコン
-							//mIvPhoto.image = [UIImage imageNamed:@"Icon256-Camera"]; // DEBUG
-							//mIvPhoto.alpha = 0.2;
+							[GoogleService photoDownloadE3:e3target_ imageView:mIvPhoto];
 						}
 						[self viewDesignPhoto];
 					}
