@@ -117,6 +117,12 @@
 	[ibTfName resignFirstResponder]; // キーボードを隠す
 }
 
+- (IBAction)ibSwEncrypt:(UISwitch *)sender
+{
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	[defaults setBool:ibSwEncrypt.selected forKey:UD_Crypt_Switch];
+}
+
 - (IBAction)ibSegSort:(UISegmentedControl *)segment
 {
 	[self alertIndicatorOn:NSLocalizedString(@"Dropbox Communicating", nil)];
@@ -163,6 +169,13 @@
 	
 	ibTfName.keyboardType = UIKeyboardTypeDefault;
 	ibTfName.returnKeyType = UIReturnKeyDone;
+	
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	if ([defaults boolForKey:UD_OptCrypt]) {
+		ibLbEncrypt.enabled = YES;
+		ibSwEncrypt.enabled = YES;
+		ibSwEncrypt.selected = [defaults boolForKey:UD_Crypt_Switch];
+	}
 	
 	// alertIndicatorOn: alertIndicatorOff: のための準備
 	//[mAlert release];
@@ -514,7 +527,7 @@ replacementString:(NSString *)string
 				dispatch_async(queue, ^{		// 非同期マルチスレッド処理
 					// ファイルへ書き出す
 					FileCsv *fcsv = [[FileCsv alloc] init];
-					NSString *zErr = [fcsv zSaveTmpFile:e1upload_ crypt:YES];
+					NSString *zErr = [fcsv zSaveTmpFile:e1upload_ crypt:ibSwEncrypt.selected];
 					
 					dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理
 						if (zErr==nil) {

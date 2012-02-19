@@ -13,6 +13,10 @@
 
 #import <Foundation/Foundation.h>
 #import "Elements.h"
+#import "GData.h"
+#import "GDataDocs.h"
+#import "GDataPhotos.h"
+
 
 // KeyChain Name リリース後、変更禁止
 #define GS_KC_ServiceName					@"PackListGSKC"
@@ -24,13 +28,19 @@
 #define GS_PHOTO_UUID_PREFIX				@"PackList:"	//この後にUUIDが続く。 setPhotoDescriptionWithString:でセット
 
 
-@interface GoogleService : NSObject
+@interface GoogleService : NSObject <UIAlertViewDelegate>
+
++ (void)alertIndicatorOn:(NSString*)zTitle;
++ (void)alertIndicatorOff;
 
 + (void)loginID:(NSString*)googleID  withPW:(NSString*)googlePW  isSetting:(BOOL)isSetting;
 
 // Document
-+ (void)docUploadFile:(NSString*)pathLocal  withName:(NSString*)name;
-+ (void)docDownloadFile:(NSString*)pathLocal;
++ (GDataServiceGoogleDocs *)docService;
++ (void)docUploadErrorNo:(NSInteger)errNo  description:(NSString*)description;
++ (void)docUploadE1:(E1 *)e1node  title:(NSString*)title  crypt:(BOOL)crypt;
++ (void)docDownloadErrorNo:(NSInteger)errNo  description:(NSString*)description;
++ (void)docDownloadEntry:(GDataEntryDocBase *)docEntry;
 
 // Photo <Picasa>
 + (void)photoUploadE3:(E3*)e3target;

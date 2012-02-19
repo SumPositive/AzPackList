@@ -359,7 +359,7 @@
 				mTfGoogleID.text = [SFHFKeychainUtils getPasswordForUsername:GS_KC_LoginName
 															  andServiceName:GS_KC_ServiceName error:&error];
 			}
-			mTfGoogleID.frame = CGRectMake(fX-45, 8, 140, 25); // 回転対応
+			mTfGoogleID.frame = CGRectMake(fX-35, 8, 130, 25); // 回転対応
 			// add UITextField2
 			if (mTfGooglePW==nil) {
 				mTfGooglePW = [[UITextField alloc] init];
@@ -380,7 +380,7 @@
 					mTfGooglePW.text = @"xxxxxxxxxx";  //偽装// pwをセットしない
 				}
 			}
-			mTfGooglePW.frame = CGRectMake(fX-45,38, 140, 25); // 回転対応
+			mTfGooglePW.frame = CGRectMake(fX-35,38, 130, 25); // 回転対応
 			//
 			cell.textLabel.text = NSLocalizedString(@"Google Login",nil);
 			cell.detailTextLabel.text = NSLocalizedString(@"Google Login msg",nil);

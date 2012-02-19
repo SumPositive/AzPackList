@@ -12,7 +12,7 @@
 #import "E2viewController.h"
 #import "E3viewController.h"
 #import "E2edit.h"
-#import "GooDocsTVC.h"
+//#import "GooDocsTVC.h"
 #import "SettingTVC.h"
 #import "ExportServerVC.h"
 #import "HTTPServer.h"
@@ -23,7 +23,8 @@
 #import "SpAppendVC.h"
 #import "DropboxVC.h"
 #import "PatternImageView.h"
-#import "GoogleAuth.h"
+//#import "GoogleAuth.h"
+#import "GDocUploadVC.h"
 
 
 #define ACTIONSEET_TAG_DELETEGROUP	901 // 適当な重複しない識別数値を割り当てている
@@ -389,29 +390,18 @@
 	if (appDelegate_.app_is_iPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 	}
-/*	if (![GoogleAuth isAuthorized]) {
-		alertBox(NSLocalizedString(@"Google NoAuthorize", nil), NSLocalizedString(@"Google NoSetting",nil), @"OK");
-		return;
-	}*/
 	
-	GooDocsView *goodocs = [[GooDocsView alloc] initWithStyle:UITableViewStylePlain];
-	goodocs.Rmoc = nil;  // Upでは使用しない
-	goodocs.Re1selected = e1selected_; // E1
-	goodocs.PbUpload = YES;
+	GDocUploadVC *gup = [[GDocUploadVC alloc] init];
+	gup.Re1selected = e1selected_;
 
 	if (appDelegate_.app_is_iPad) {
-		goodocs.title = NSLocalizedString(@"Backup Google",nil);
+	/*	goodocs.title = NSLocalizedString(@"Backup Google",nil);
 		if ([menuPopover_ isPopoverVisible]) { //タテ
 			[self.navigationController pushViewController:goodocs animated:YES];
 		} else {	//ヨコ
-			//[Mpopover release], 
-			popOver_ = nil;
-			//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:goodocs];
 			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:goodocs];
 			popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
-			//[nc release];
 			popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-			//[MindexPathEdit release], 
 			indexPathEdit_ = nil;
 			CGRect rcArrow = [self.tableView rectForRowAtIndexPath:indexPath];
 			rcArrow.origin.x = rcArrow.size.width - 85;		rcArrow.size.width = 1;
@@ -420,12 +410,12 @@
 					permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
 			goodocs.selfPopover = popOver_;
 			goodocs.delegate = nil; //Uploadだから再描画不要
-		}
+		}*/
+		gup.modalPresentationStyle = UIModalPresentationFormSheet;
+		[self presentModalViewController:gup animated:YES];
 	} else {
-		goodocs.title = self.title;
-		[self.navigationController pushViewController:goodocs animated:YES];
+		[self.navigationController pushViewController:gup animated:YES];
 	}
-	//[goodocs release];
 }
 
 - (void)actionBackupYourPC
@@ -901,14 +891,16 @@
 {
 	[super viewWillAppear:animated];
 	
-	// その他、初期化
 	if (appDelegate_.app_is_iPad) {
-		if (sharePlanList_) {	// loadViewやviewDidLoad:では、@property が参照できないので、viewWillAppear:へ移設
+		if (sharePlanList_) {
 			self.navigationItem.hidesBackButton = NO;  // 必要
+			[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
 		} else {
 			self.navigationItem.hidesBackButton = YES;	// E3側に統一したので不要になった。
+			[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
 		}
-		self.navigationController.toolbarHidden = YES;	// ツールバー不要
+	} else {
+		[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
 	}
 	
 	if (sharePlanList_==NO) {	// loadViewやviewDidLoad:では、@property が参照できないので、viewWillAppear:へ移設
@@ -977,12 +969,6 @@
 {
     [super viewDidAppear:animated];
 
-	if (appDelegate_.app_is_iPad) {
-		//loadViewの設定優先　[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
-	} else {
-		[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
-	}
-
 	if (appDelegate_.app_opt_Ad) {
 		// E3で回転してから戻った場合に対応するため ＜＜E3以下全てに回転対応するのが面倒だから
 		//[apd AdViewWillRotate:self.interfaceOrientation];
@@ -1021,22 +1007,11 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	if (appDelegate_.app_is_iPad) {
-		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
-	} else {
-		if (appDelegate_.app_opt_Autorotate==NO) {
-			// 回転禁止にしている場合
-			[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
-			
-			if (interfaceOrientation == UIInterfaceOrientationPortrait)
-			{ // 正面（ホームボタンが画面の下側にある状態）
-				return YES; // この方向だけ常に許可する
-			}
-			return NO; // その他、禁止
-		}
-		[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
-		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
+	//[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
+	if (appDelegate_.app_opt_Autorotate==NO && appDelegate_.app_is_iPad==NO) {	// 回転禁止にしている場合
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
+	return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
 }
 
 // shouldAutorotateToInterfaceOrientation で YES を返すと、回転開始時に呼び出される
@@ -1217,12 +1192,12 @@
 			break;
 		case 2:
 			if (!sharePlanList_ && 0<section0Rows_) {
-				return NSLocalizedString(@"Action menu",nil);
+				return NSLocalizedString(@"menu Action",nil);
 			}
 			break;
 		case 3:
 			if (!sharePlanList_ && 0<section0Rows_) {
-				return NSLocalizedString(@"Old menu",nil);
+				return NSLocalizedString(@"menu Old",nil);
 			}
 			break;
 	}
@@ -1515,7 +1490,7 @@
 					}
 					break;
 				case 4:
-					cell.imageView.image = [UIImage imageNamed:@"Icon32-Google"];
+					cell.imageView.image = [UIImage imageNamed:@"Icon32-GoogleDoc"];
 					cell.textLabel.text = NSLocalizedString(@"Backup Google",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"Backup Google msg",nil);
 					if (appDelegate_.app_is_iPad==NO  OR  [menuPopover_ isPopoverVisible]) {  //iPad-Popover内ならばiPhoneと同じ

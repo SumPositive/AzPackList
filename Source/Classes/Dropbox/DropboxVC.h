@@ -23,6 +23,8 @@
 	IBOutlet UIButton		*ibBuClose;		//iPadで使用
 	IBOutlet UIButton		*ibBuSave;
 	IBOutlet UITextField	*ibTfName;
+	IBOutlet UILabel			*ibLbEncrypt;
+	IBOutlet UISwitch		*ibSwEncrypt;
 
 	IBOutlet UISegmentedControl	*ibSegSort;
 	IBOutlet UITableView	*ibTableView;
@@ -46,6 +48,7 @@
 
 - (IBAction)ibBuClose:(UIButton *)button;
 - (IBAction)ibBuSave:(UIButton *)button;
+- (IBAction)ibSwEncrypt:(UISwitch *)sender;
 - (IBAction)ibSegSort:(UISegmentedControl *)segment;
 
 - (id)initWithE1:(E1*)e1upload;

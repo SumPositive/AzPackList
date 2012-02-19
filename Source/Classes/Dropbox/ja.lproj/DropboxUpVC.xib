@@ -15,6 +15,7 @@
 			<string>IBUIButton</string>
 			<string>IBUIViewController</string>
 			<string>IBUILabel</string>
+			<string>IBUISwitch</string>
 			<string>IBUITextField</string>
 			<string>IBUISegmentedControl</string>
 			<string>IBUITableView</string>
@@ -44,10 +45,10 @@
 						<object class="IBUIButton" id="794958297">
 							<reference key="NSNextResponder" ref="557484746"/>
 							<int key="NSvFlags">289</int>
-							<string key="NSFrame">{{251, 53}, {59, 37}}</string>
+							<string key="NSFrame">{{251, 95}, {59, 37}}</string>
 							<reference key="NSSuperview" ref="557484746"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="758527512"/>
+							<reference key="NSNextKeyView" ref="602105019"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							<int key="IBUIContentHorizontalAlignment">0</int>
@@ -79,7 +80,7 @@
 						<object class="IBUITableView" id="970988190">
 							<reference key="NSNextResponder" ref="557484746"/>
 							<int key="NSvFlags">274</int>
-							<string key="NSFrame">{{10, 164}, {300, 252}}</string>
+							<string key="NSFrame">{{10, 217}, {300, 200}}</string>
 							<reference key="NSSuperview" ref="557484746"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView"/>
@@ -101,7 +102,7 @@
 						<object class="IBUISegmentedControl" id="177254008">
 							<reference key="NSNextResponder" ref="557484746"/>
 							<int key="NSvFlags">290</int>
-							<string key="NSFrame">{{10, 136}, {300, 30}}</string>
+							<string key="NSFrame">{{10, 189}, {300, 30}}</string>
 							<reference key="NSSuperview" ref="557484746"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="428339026"/>
@@ -192,7 +193,7 @@
 						<object class="IBUILabel" id="758527512">
 							<reference key="NSNextResponder" ref="557484746"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{10, 95}, {300, 36}}</string>
+							<string key="NSFrame">{{10, 148}, {300, 36}}</string>
 							<reference key="NSSuperview" ref="557484746"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="177254008"/>
@@ -215,7 +216,7 @@
 						<object class="IBUILabel" id="428339026">
 							<reference key="NSNextResponder" ref="557484746"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{20, 113}, {290, 29}}</string>
+							<string key="NSFrame">{{20, 166}, {290, 29}}</string>
 							<reference key="NSSuperview" ref="557484746"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="970988190"/>
@@ -236,7 +237,7 @@
 						<object class="IBUITextField" id="761345486">
 							<reference key="NSNextResponder" ref="557484746"/>
 							<int key="NSvFlags">290</int>
-							<string key="NSFrame">{{10, 56}, {233, 31}}</string>
+							<string key="NSFrame">{{10, 56}, {300, 31}}</string>
 							<reference key="NSSuperview" ref="557484746"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="794958297"/>
@@ -293,6 +294,47 @@
 							</object>
 							<reference key="IBUIFontDescription" ref="500515687"/>
 							<reference key="IBUIFont" ref="534038648"/>
+						</object>
+						<object class="IBUISwitch" id="602105019">
+							<reference key="NSNextResponder" ref="557484746"/>
+							<int key="NSvFlags">292</int>
+							<string key="NSFrame">{{41, 100}, {94, 27}}</string>
+							<reference key="NSSuperview" ref="557484746"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="500172834"/>
+							<bool key="IBUIOpaque">NO</bool>
+							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+							<bool key="IBUIEnabled">NO</bool>
+							<int key="IBUIContentHorizontalAlignment">0</int>
+							<int key="IBUIContentVerticalAlignment">0</int>
+						</object>
+						<object class="IBUILabel" id="500172834">
+							<reference key="NSNextResponder" ref="557484746"/>
+							<int key="NSvFlags">292</int>
+							<string key="NSFrame">{{137, 103}, {134, 21}}</string>
+							<reference key="NSSuperview" ref="557484746"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="758527512"/>
+							<bool key="IBUIOpaque">NO</bool>
+							<bool key="IBUIClipsSubviews">YES</bool>
+							<int key="IBUIContentMode">7</int>
+							<bool key="IBUIUserInteractionEnabled">NO</bool>
+							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+							<string key="IBUIText">暗号化</string>
+							<reference key="IBUITextColor" ref="981258164"/>
+							<nil key="IBUIHighlightedColor"/>
+							<int key="IBUIBaselineAdjustment">1</int>
+							<float key="IBUIMinimumFontSize">10</float>
+							<bool key="IBUIEnabled">NO</bool>
+							<object class="IBUIFontDescription" key="IBUIFontDescription">
+								<int key="type">1</int>
+								<double key="pointSize">17</double>
+							</object>
+							<object class="NSFont" key="IBUIFont">
+								<string key="NSName">Helvetica</string>
+								<double key="NSSize">17</double>
+								<int key="NSfFlags">16</int>
+							</object>
 						</object>
 					</array>
 					<string key="NSFrame">{{0, 64}, {320, 416}}</string>
@@ -401,6 +443,22 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">ibLbEncrypt</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="500172834"/>
+					</object>
+					<int key="connectionID">49</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">ibSwEncrypt</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="602105019"/>
+					</object>
+					<int key="connectionID">50</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">dataSource</string>
 						<reference key="source" ref="970988190"/>
 						<reference key="destination" ref="841351856"/>
@@ -450,6 +508,15 @@
 					</object>
 					<int key="connectionID">46</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">ibSwEncrypt:</string>
+						<reference key="source" ref="602105019"/>
+						<reference key="destination" ref="841351856"/>
+						<int key="IBEventType">13</int>
+					</object>
+					<int key="connectionID">51</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -491,6 +558,8 @@
 							<reference ref="970988190"/>
 							<reference ref="177254008"/>
 							<reference ref="953242431"/>
+							<reference ref="602105019"/>
+							<reference ref="500172834"/>
 						</array>
 						<reference key="parent" ref="418071200"/>
 					</object>
@@ -540,6 +609,16 @@
 						<reference key="object" ref="953242431"/>
 						<reference key="parent" ref="557484746"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">47</int>
+						<reference key="object" ref="602105019"/>
+						<reference key="parent" ref="557484746"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">48</int>
+						<reference key="object" ref="500172834"/>
+						<reference key="parent" ref="557484746"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -559,12 +638,14 @@
 				<string key="30.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<integer value="1" key="30.IUISegmentedControlInspectorSelectedSegmentMetadataKey"/>
 				<string key="44.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="47.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="48.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">46</int>
+			<int key="maxID">51</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -575,6 +656,7 @@
 						<string key="ibBuClose:">UIButton</string>
 						<string key="ibBuSave:">UIButton</string>
 						<string key="ibSegSort:">UISegmentedControl</string>
+						<string key="ibSwEncrypt:">UISwitch</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="ibBuClose:">
@@ -589,11 +671,17 @@
 							<string key="name">ibSegSort:</string>
 							<string key="candidateClassName">UISegmentedControl</string>
 						</object>
+						<object class="IBActionInfo" key="ibSwEncrypt:">
+							<string key="name">ibSwEncrypt:</string>
+							<string key="candidateClassName">UISwitch</string>
+						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="ibBuClose">UIButton</string>
 						<string key="ibBuSave">UIButton</string>
+						<string key="ibLbEncrypt">UILabel</string>
 						<string key="ibSegSort">UISegmentedControl</string>
+						<string key="ibSwEncrypt">UISwitch</string>
 						<string key="ibTableView">UITableView</string>
 						<string key="ibTfName">UITextField</string>
 					</dictionary>
@@ -606,9 +694,17 @@
 							<string key="name">ibBuSave</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="ibLbEncrypt">
+							<string key="name">ibLbEncrypt</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="ibSegSort">
 							<string key="name">ibSegSort</string>
 							<string key="candidateClassName">UISegmentedControl</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="ibSwEncrypt">
+							<string key="name">ibSwEncrypt</string>
+							<string key="candidateClassName">UISwitch</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="ibTableView">
 							<string key="name">ibTableView</string>

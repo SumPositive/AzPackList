@@ -14,7 +14,6 @@
 #import "E1edit.h"
 #import "E2viewController.h"
 #import "E3viewController.h"
-#import "GooDocsTVC.h"
 #import "SettingTVC.h"
 #import "AZInformationVC.h"
 #import "WebSiteVC.h"
@@ -26,7 +25,9 @@
 #import "DropboxVC.h"
 #import "PatternImageView.h"
 #import "AZStoreVC.h"
-#import "GoogleAuth.h"
+//#import "GoogleAuth.h"
+//#import "GooDocsTVC.h"
+#import "GDocDownloadTVC.h"
 
 
 #define ACTIONSEET_TAG_DELETEPACK	901
@@ -339,28 +340,12 @@
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 	}
 	
-/*	if (![GoogleAuth isAuthorized]) {
-		alertBox(NSLocalizedString(@"Google NoAuthorize", nil), NSLocalizedString(@"Google NoSetting",nil), @"OK");
-		return;
-	}*/
-	
-	GooDocsView *goodocs = [[GooDocsView alloc] init];
-	// 以下は、GooDocsViewの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
-	goodocs.Rmoc = moc_;
-	goodocs.PiSelectedRow = section0Rows_;  // Downloadの結果、新規追加される.row ＝ 現在のPlan行数
-	goodocs.Re1selected = nil; // DownloadのときはE1未選択であるから
-	goodocs.PbUpload = NO;
-	goodocs.title = NSLocalizedString(@"Import Google", nil);
+	GDocDownloadTVC *gdoc = [[GDocDownloadTVC alloc] init];
 
 	if (appDelegate_.app_is_iPad) {
-		//[Mpopover release], 
-		popOver_ = nil;
-		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:goodocs];
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:goodocs];
+	/*	UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:gdoc];
 		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
-		//[nc release];
 		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-		//[MindexPathEdit release], 
 		indexPathEdit_ = nil;
 		NSIndexPath *idx = [NSIndexPath indexPathForRow:2 inSection:1];  //<<<<< Google Docs セル位置をセット
 		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
@@ -368,18 +353,30 @@
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
 		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
 				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
-		goodocs.selfPopover = popOver_;
-		goodocs.delegate = self; //Download後の再描画のため
+		gdoc.selfPopover = popOver_;
+		gdoc.delegate = self; //Download後の再描画のため 
+	 */
+		gdoc.modalPresentationStyle = UIModalPresentationFormSheet;
+		[self presentModalViewController:gdoc animated:YES];
 	} 
 	else {
 		if (appDelegate_.app_opt_Ad) {
 			[appDelegate_ AdRefresh:NO];	//広告禁止
 		}
-		[goodocs setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-		goodocs.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self.navigationController pushViewController:goodocs animated:YES];
+		[gdoc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+		gdoc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+		[self.navigationController pushViewController:gdoc animated:YES];
 	}
-	//[goodocs release];
+/*
+	GDocDownloadTVC *gdoc = [[GDocDownloadTVC alloc] init];
+
+	if (appDelegate_.app_opt_Ad) {
+		[appDelegate_ AdRefresh:NO];	//広告禁止
+	}
+	[gdoc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+	gdoc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+	[self.navigationController pushViewController:gdoc animated:YES];
+	*/
 }
 
 - (void)actionImportYourPC
@@ -485,7 +482,7 @@
 		popOver_ = nil;
 		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
 		popOver_.delegate = nil;	// 不要
-		NSIndexPath *idx = [NSIndexPath indexPathForRow:4 inSection:1];  //<<<<< About this app セル位置をセット
+		NSIndexPath *idx = [NSIndexPath indexPathForRow:1 inSection:2];  //<<<<< Settings セル位置をセット！違えば落ちる！
 		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
 		rcArrow.origin.x = 180;		rcArrow.size.width = 1;
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
@@ -511,10 +508,9 @@
 	SettingTVC *vc = [[SettingTVC alloc] init];
 	
 	if (appDelegate_.app_is_iPad) {
-		popOver_ = nil;
 		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
 		popOver_.delegate = nil;	// 不要
-		NSIndexPath *idx = [NSIndexPath indexPathForRow:3 inSection:1];  //<<<<< Settings セル位置をセット
+		NSIndexPath *idx = [NSIndexPath indexPathForRow:0 inSection:2];  //<<<<< Settings セル位置をセット！違えば落ちる！
 		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
 		rcArrow.origin.x = 150;		rcArrow.size.width = 1;
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
@@ -545,7 +541,7 @@
 		popOver_ = nil;
 		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
 		popOver_.delegate = nil;	// 不要
-		NSIndexPath *idx = [NSIndexPath indexPathForRow:5 inSection:1];  //<<<<< Extension parts shop セル位置をセット
+		NSIndexPath *idx = [NSIndexPath indexPathForRow:2 inSection:2];  //<<<<< Settings セル位置をセット！違えば落ちる！
 		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
 		rcArrow.origin.x = 150;		rcArrow.size.width = 1;
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
@@ -966,30 +962,8 @@
 //				回転後に didRotateFromInterfaceOrientation が呼び出される。
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	if (appDelegate_.app_is_iPad) {
-		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
-	} else {
-		if (appDelegate_.app_opt_Autorotate==NO) {
-			// 回転禁止にしている場合
-			//[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
-			if (interfaceOrientation == UIInterfaceOrientationPortrait)
-			{ // 正面（ホームボタンが画面の下側にある状態）
-				return YES; // この方向だけ常に許可する
-			}
-			return NO; // その他、禁止
-		}
-		
-/*		// 回転許可
-		if (UIInterfaceOrientationIsPortrait(interfaceOrientation))
-		{	// タテ
-			//[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
-		} else {
-			//[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
-			if (informationView_) {
-				[informationView_ hide]; // 正面でなければhide
-				informationView_ = nil;
-			}
-		}*/
+	if (appDelegate_.app_opt_Autorotate==NO && appDelegate_.app_is_iPad==NO) {	// 回転禁止にしている場合
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
 	return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
 }
@@ -1107,8 +1081,10 @@
 		case 0:
 			return section0Rows_ + 1; // +1:Add行
 		case 1:
-			return 6;	//Action menu
+			return 3;	//Download menu
 		case 2:
+			return 3;	//menu
+		case 3:
 			return 2;	//Old menu
 	}
 	return 0;
@@ -1134,11 +1110,15 @@
 			break;
 			
 		case 1:
-			return NSLocalizedString(@"Action menu",nil);
+			return NSLocalizedString(@"menu Action",nil);
 			break;
 
 		case 2:
-			return NSLocalizedString(@"Old menu",nil);
+			return nil;
+			break;
+			
+		case 3:
+			return NSLocalizedString(@"menu Old",nil);
 			break;
 	}
 	return nil;
@@ -1148,7 +1128,7 @@
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section 
 {
 	switch (section) {
-		case 2: {
+		case 3: {
 			NSString *zz = @"";  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
 		/*	if (appDelegate_.app_pid_AdOff) {
 				if (appDelegate_.app_enable_iCloud) {
@@ -1371,27 +1351,30 @@
 					cell.textLabel.text = NSLocalizedString(@"Import Google",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"Import Google msg",nil);
 					break;
-
-				case 3:
+			}
+		}
+		else if (indexPath.section == 2) { //-----------------------------------------------------------Section 2
+			switch (indexPath.row) {
+				case 0:
 					cell.imageView.image = [UIImage imageNamed:@"Icon-Setting-32"];
 					cell.textLabel.text = NSLocalizedString(@"menu Setting",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"menu Setting msg",nil);
 					break;
 					
-				case 4:
+				case 1:
 					cell.imageView.image = [UIImage imageNamed:@"Icon-Info-32"];
 					cell.textLabel.text = NSLocalizedString(@"menu Information",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"menu Information msg",nil);
 					break;
 					
-				case 5:
+				case 2:
 					cell.imageView.image = [UIImage imageNamed:@"Icon-Parts-32"];
 					cell.textLabel.text = NSLocalizedString(@"menu Purchase",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"menu Purchase msg",nil);
 					break;
 			}
 		}
-		else if (indexPath.section == 2) { //-----------------------------------------------------------Section 2
+		else if (indexPath.section == 3) { //-----------------------------------------------------------Section 3
 			switch (indexPath.row) {
 				case 0:
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-NearPcAdd"];
@@ -1469,21 +1452,24 @@
 			case 2: // Restore from Google
 				[self actionImportGoogle];
 				break;
-				
-			case 3: // Setting
+		}
+	}
+	else if (indexPath.section == 2) {
+		switch (indexPath.row) {
+			case 0: // Setting
 				[self actionSetting];
 				break;
 				
-			case 4: // Information
+			case 1: // Information
 				[self actionInformation];
 				break;
 				
-			case 5: // Purchase
+			case 2: // Purchase
 				[self actionIPurchase];
 				break;
 		}
 	}
-	else if (indexPath.section == 2) {
+	else if (indexPath.section == 3) {
 		switch (indexPath.row) {
 			case 0: // Restore from YourPC
 				[self actionImportYourPC];

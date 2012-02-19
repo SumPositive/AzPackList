@@ -1104,7 +1104,7 @@
 		e3new.shopNote = e3clip.shopNote;
 		// Model-V5
 		e3new.photoUrl = e3clip.photoUrl;
-		e3new.photoData = e3clip.photoData;
+		//e3new.photoData = e3clip.photoData;＜＜写真非対応にした。
 	}
 	
 	if (1 < [appDelegate_.clipE3objects count]) { // 最後の1個を残すため。それが次にCutやCopyしたものと置き換わる

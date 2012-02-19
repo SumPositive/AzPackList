@@ -500,7 +500,7 @@
 					}
 					else {
 						// E1 読み込み中であることを表示する
-						cell.textLabel.text = NSLocalizedString(@"SpPOST",nil);
+						cell.textLabel.text = NSLocalizedString(@"Communicating",nil);
 						cell.textLabel.font = [UIFont systemFontOfSize:18];
 						cell.textLabel.textAlignment = UITextAlignmentCenter;
 						cell.textLabel.textColor = [UIColor blueColor];

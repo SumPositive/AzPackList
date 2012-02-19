@@ -59,10 +59,6 @@
 	UILabel		*lbStock_;
 	UILabel		*lbNeed_;
 	UILabel		*lbWeight_;
-	//UILabel		*MlbStockMax;
-	//UILabel		*MlbNeedMax;
-	//UISlider			*MsliderStock;
-	//UISlider			*MsliderNeed;
 	AZDial			*dialStock_;
 	AZDial			*dialNeed_;
 #ifdef WEIGHT_DIAL
@@ -74,8 +70,10 @@
 #endif
 	
 	CalcView				*calcView_;
+
+	UILabel				*mLbPhotoMsg;
+	UIImageView		*mIvPhotoIcon;
 	UIImageView		*mIvPhoto;
-	UIImageView		*mIvPicasa;
 	
 	AppDelegate		*appDelegate_;
 	float						tableViewContentY_;
@@ -197,17 +195,18 @@
 
 - (void)viewDesignPhoto
 {
-	CGRect rect;
 	if (appDelegate_.app_is_iPad) { // iPad
-		rect = CGRectMake(5, 26, 390, 480);
+		mLbPhotoMsg.frame = CGRectMake(5+24+5, 26, 390, 30);
+		mIvPhoto.frame = CGRectMake(5, 26, 390, 480);
 	}
 	else if (self.tableView.frame.size.width < 400) {	// iPhone縦
-		rect = CGRectMake(5, 5, 320-30, 320);
+		mLbPhotoMsg.frame = CGRectMake(5+24+5, 5, 320-30-24-5, 30);
+		mIvPhoto.frame = CGRectMake(5, 5, 320-30, 320);
 	}
 	else {		// iPhone横
-		rect = CGRectMake(5, 5, 480-30, 320);
+		mLbPhotoMsg.frame = CGRectMake(5+24+5, 5, 480-30-24-5, 30);
+		mIvPhoto.frame = CGRectMake(5, 5, 480-30, 320);
 	}
-	mIvPhoto.frame = rect;
 }
 
 - (void)viewDesign
@@ -1106,19 +1105,19 @@
 					}
 					break;
 				case 6: // Photo
-					if (mIvPhoto==nil) {
-					/*	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 100,12)];
-						label.font = [UIFont systemFontOfSize:12];
-						label.text = NSLocalizedString(@"Photo", nil);
-						label.textColor = [UIColor grayColor];
-						label.backgroundColor = [UIColor clearColor];
-						[cell.contentView addSubview:label];*/
-						// Picasa Icon
-						mIvPicasa = [[UIImageView alloc] init];
-						mIvPicasa.contentMode = UIViewContentModeScaleAspectFit;
-						mIvPicasa.frame = CGRectMake(5, 2, 24, 24);
-						[cell.contentView addSubview:mIvPicasa];
-						// Photo 640x480
+					if (mLbPhotoMsg==nil) {
+						mLbPhotoMsg = [[UILabel alloc] initWithFrame:CGRectMake(5+24+5,2, 100,30)];
+						mLbPhotoMsg.font = [UIFont systemFontOfSize:12];
+						mLbPhotoMsg.textColor = [UIColor grayColor];
+						mLbPhotoMsg.numberOfLines = 2;
+						mLbPhotoMsg.backgroundColor = [UIColor clearColor];
+						[cell.contentView addSubview:mLbPhotoMsg];
+						// Icon
+						mIvPhotoIcon = [[UIImageView alloc] init];
+						mIvPhotoIcon.contentMode = UIViewContentModeScaleAspectFit;
+						mIvPhotoIcon.frame = CGRectMake(5, 2, 24, 24);
+						[cell.contentView addSubview:mIvPhotoIcon];
+						// Image 640x480
 						mIvPhoto = [[UIImageView alloc] init];
 						mIvPhoto.contentMode = UIViewContentModeScaleAspectFit;
 						[cell.contentView addSubview:mIvPhoto];
@@ -1134,16 +1133,19 @@
 					if ([e3target_.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// Picasaアップ済みだがURL未取得
 						// 写真あるが未アップの状態でPackListを保存やメール送信した場合、
 						// それを表示すると、.phoneDataが無く、.phoneUrlにUUIDが入っている。
-						mIvPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+						mIvPhotoIcon.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo UploadWait", nil);
 					}
 					else if (e3target_.photoUrl) {	// Picasaアップ済み
-						mIvPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
+						mIvPhotoIcon.image = [UIImage imageNamed:@"Icon32-Picasa"];
+						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo Uploaded", nil);
 					}
 					else if (e3target_.photoData) {		// 写真あるが未アップ
-						mIvPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+						mIvPhotoIcon.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo UploadWait", nil);
 					}
 					else {
-						mIvPicasa.image = [UIImage imageNamed:@"Icon24-Camera"];
+						mIvPhotoIcon.image = [UIImage imageNamed:@"Icon24-Camera"];
 					}
 					
 					if (mIvPhoto.image==nil) {	//特にデバイス横のとき、範囲外になり初期ロードされないため、範囲内になったときここでロードさせる必要あり。
@@ -1154,6 +1156,9 @@
 						else if (10 < [e3target_.photoUrl length]) {
 							// Picasaからダウンロードして、表示かつキャッシュ(e3target_.photoData)に保存する。
 							[GoogleService photoDownloadE3:e3target_ imageView:mIvPhoto];
+							// Picasaにアップされたはずだが、ダウンロードできなかったことを示すアイコンを表示する
+							//mIvPhoto.image = [UIImage imageNamed:@"Icon64-DownloadNG"];
+							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo DownloadNG", nil);
 						}
 						[self viewDesignPhoto];
 					}

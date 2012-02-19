@@ -117,7 +117,7 @@ NSString *passCode()
 													green:81/255.0f 
 													 blue:75/255.0f
 													alpha:1.0f];
-		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;  //   CGSizeMake(320, 416); //iPad-Popover
+		self.contentSizeForViewInPopover = GD_POPOVER_iPhoneSIZE;
     }
     return self;
 }

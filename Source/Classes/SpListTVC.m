@@ -362,7 +362,7 @@
 		}
 		if ([RaSharePlans count] <= 0) {
 			if (MbSearching) {
-				cell.textLabel.text = NSLocalizedString(@"SpPOST",nil);
+				cell.textLabel.text = NSLocalizedString(@"Communicating",nil);
 			} else {
 				cell.textLabel.text = NSLocalizedString(@"No PLAN",nil);
 			}

@@ -232,7 +232,7 @@
 				dispatch_async(dispatch_get_main_queue(), ^{
 					[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
 					if (zErr==nil) {
-						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Compleat!",nil)  //ダウンロード成功
+						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download successful",nil)  //ダウンロード成功
 														   message:NSLocalizedString(@"Added Plan",nil)  //プランを追加しました
 														  delegate:nil 
 												 cancelButtonTitle:nil 
@@ -600,7 +600,7 @@
 
 - (void)AdRefresh:(BOOL)bCanVisible
 {
-	NSLog(@"=== AdRefresh:(%d)", bCanVisible);
+	//NSLog(@"=== AdRefresh:(%d)", bCanVisible);
 	adCanVisible_ = bCanVisible;
 	[self AdRefresh];
 }
@@ -657,21 +657,21 @@
 	}
 	
 	if (app_opt_Ad_) {
-		NSLog(@"=== AdRefresh: Can[%d] iAd[%d⇒%d] AdMob[%d⇒%d]", adCanVisible_, (int)iAdView_.tag, (int)iAdView_.alpha, 
-			  (int)adMobView_.tag, (int)adMobView_.alpha);
+		//NSLog(@"=== AdRefresh: Can[%d] iAd[%d⇒%d] AdMob[%d⇒%d]", adCanVisible_, (int)iAdView_.tag, (int)iAdView_.alpha, 
+		//	  (int)adMobView_.tag, (int)adMobView_.alpha);
 		//if (MbAdCanVisible && MbannerView.alpha==MbannerView.tag && RoAdMobView.alpha==RoAdMobView.tag) {
 		if (adCanVisible_) {
 			if (iAdView_.alpha==iAdView_.tag && adMobView_.alpha==adMobView_.tag) {
-				NSLog(@"   = 変化なし =");
+				//NSLog(@"   = 変化なし =");
 				return; // 変化なし
 			}
 			if (iAdView_.alpha==1 && iAdView_.alpha==iAdView_.tag) {
-				NSLog(@"   = iAd 優先ON = 変化なし =");
+				//NSLog(@"   = iAd 優先ON = 変化なし =");
 				return; // 変化なし
 			}
 		} else {
 			if (iAdView_.alpha==0 && adMobView_.alpha==0) {
-				NSLog(@"   = OFF = 変化なし =");
+				//NSLog(@"   = OFF = 変化なし =");
 				return; // 変化なし
 			}
 		}
@@ -855,28 +855,28 @@
 
 - (void)adViewDidReceiveAd:(GADBannerView *)bannerView 
 {	// AdMob 広告あり
-	NSLog(@"AdMob - adViewDidReceiveAd");
+	//NSLog(@"AdMob - adViewDidReceiveAd");
 	bannerView.tag = 1;	// 広告受信状況  (0)なし (1)あり
 	[self AdRefresh];
 }
 
 - (void)adView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(GADRequestError *)error 
 {	// AdMob 広告なし
-	NSLog(@"AdMob - adView:didFailToReceiveAdWithError:%@", [error localizedDescription]);
+	//NSLog(@"AdMob - adView:didFailToReceiveAdWithError:%@", [error localizedDescription]);
 	bannerView.tag = 0;	// 広告受信状況  (0)なし (1)あり
 	[self AdRefresh];
 }
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner
 {	// iAd取得できたときに呼ばれる　⇒　表示する
-	NSLog(@"iAd - bannerViewDidLoadAd ===");
+	//NSLog(@"iAd - bannerViewDidLoadAd ===");
 	banner.tag = 1;	// 広告受信状況  (0)なし (1)あり
 	[self AdRefresh];
 }
 
 - (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
 {	// iAd取得できなかったときに呼ばれる　⇒　非表示にする
-	NSLog(@"iAd - didFailToReceiveAdWithError");
+	//NSLog(@"iAd - didFailToReceiveAdWithError");
 	banner.tag = 0;	// 広告受信状況  (0)なし (1)あり
 
 	// AdMob 破棄する ＜＜通信途絶してから復帰した場合、再生成するまで受信できないため。再生成する機会を増やす。

@@ -41,7 +41,7 @@
 #define UD_OptPasswordSave					@"UD_OptPasswordSave"
 #define UD_OptCrypt									@"UD_OptCrypt"	// YES=PackList暗号化 ＜＜秘密Keyはデバイス別に保存
 #define UD_CurrentVersion						@"UD_CurrentVersion"
-//#define UD_DeviceID									@"UD_DeviceID"		//2.0// Original UDID
+#define UD_Crypt_Switch							@"UD_Crypt_Switch"
 
 #define GD_DefPassword							@"DefPassword"
 #define GD_DefUsername							@"DefUsername"
@@ -62,6 +62,9 @@
 
 #define GD_POPOVER_SIZE_INIT		CGSizeMake(480-1, 500-1)	//init初期化時に使用　＜＜＜変化ありにするため1廻り小さくする
 #define GD_POPOVER_SIZE				CGSizeMake(480, 500)			//viewDidAppear時に使用
+
+#define GD_POPOVER_iPhoneSIZE_INIT	CGSizeMake(320-1, 480-1)	//init初期化時に使用　＜＜＜変化ありにするため1廻り小さくする
+#define GD_POPOVER_iPhoneSIZE				CGSizeMake(320, 480)			//viewDidAppear時に使用
 
 #define GD_POPOVER_E3detailTVC_SIZE		CGSizeMake(480, 650)	//横1.5倍	//E3detailTVCおよびその配下に使用　＜＜下余白はテンキーエリア
 
