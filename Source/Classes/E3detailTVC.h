@@ -14,7 +14,7 @@
 @class E3;
 @class CalcView;
 
-@interface E3detailTVC : UITableViewController <UITextFieldDelegate, UITextViewDelegate>
+@interface E3detailTVC : UITableViewController <UITextFieldDelegate, UITextViewDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, retain) NSMutableArray		*e2array;
 @property (nonatomic, retain) NSMutableArray		*e3array;

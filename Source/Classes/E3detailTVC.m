@@ -74,6 +74,7 @@
 	UILabel				*mLbPhotoMsg;
 	UIImageView		*mIvPhotoIcon;
 	UIImageView		*mIvPhoto;
+	UIScrollView			*mSvPhoto;
 	
 	AppDelegate		*appDelegate_;
 	float						tableViewContentY_;
@@ -207,6 +208,8 @@
 		mLbPhotoMsg.frame = CGRectMake(5+24+5, 5, 480-30-24-5, 30);
 		mIvPhoto.frame = CGRectMake(5, 5, 480-30, 320);
 	}
+	[mSvPhoto setContentSize:mIvPhoto.bounds.size];
+	[mSvPhoto setFrame:mIvPhoto.frame];
 }
 
 - (void)viewDesign
@@ -1120,7 +1123,14 @@
 						// Image 640x480
 						mIvPhoto = [[UIImageView alloc] init];
 						mIvPhoto.contentMode = UIViewContentModeScaleAspectFit;
-						[cell.contentView addSubview:mIvPhoto];
+						// Scroll
+						mSvPhoto = [[UIScrollView alloc] init];
+						mSvPhoto.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+						[mSvPhoto addSubview:mIvPhoto];
+						mSvPhoto.delegate = self;
+						mSvPhoto.minimumZoomScale = 0.6; // 再撮影ボタンを押しやすくするため
+						mSvPhoto.maximumZoomScale = 3.0;
+						[cell.contentView addSubview:mSvPhoto];
 						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // > 撮影
 						[self viewDesignPhoto]; //回転処理
 					}
@@ -1136,7 +1146,7 @@
 						mIvPhotoIcon.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
 						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo UploadWait", nil);
 					}
-					else if (e3target_.photoUrl) {	// Picasaアップ済み
+					else if (10 < [e3target_.photoUrl length]) {	// Picasaアップ済み
 						mIvPhotoIcon.image = [UIImage imageNamed:@"Icon32-Picasa"];
 						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo Uploaded", nil);
 					}
@@ -1240,6 +1250,17 @@
 	}
     return cell;
 }
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+	for (id subv in scrollView.subviews) {
+		if ([subv isKindOfClass:[UIImageView class]]) {
+			return subv;
+		}
+	}
+	return nil;
+}
+
 
 - (void)actionWebTitle:(NSString*)zTitle  URL:(NSString*)zUrl  Domain:(NSString*)zDomain
 {
