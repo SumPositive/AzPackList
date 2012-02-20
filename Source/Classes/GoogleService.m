@@ -386,6 +386,9 @@ static	NSURL										*sDocUploadUrl = nil;
 				else {
 					// 成功
 					alertBox(NSLocalizedString(@"Download successful",nil), NSLocalizedString(@"Added Plan",nil), @"OK");
+					// 再読み込み 通知発信---> E1viewController
+					[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
+																		object:self userInfo:nil];
 				}
 				[GoogleService alertIndicatorOff];
 			});

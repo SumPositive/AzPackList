@@ -15,10 +15,3 @@ int main(int argc, char *argv[])
 	}
 }
 
-
-#pragma mark - Source - Functions
-#pragma mark - Ad
-#pragma mark - View
-#pragma mark View 回転
-#pragma mark - TableView
-#pragma mark - Unload - dealloc

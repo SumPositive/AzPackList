@@ -41,7 +41,7 @@
 		zSubj = [zSubj stringByAppendingString:@" for iPhone"];
 	}
 	
-	if (appDelegate_.app_pid_AdOff) {
+	if (appDelegate_.app_pid_SwitchAd) {
 		zSubj = [zSubj stringByAppendingString:@"  (AdOff)"];
 	}
 	[picker setSubject:zSubj];  

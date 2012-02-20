@@ -36,18 +36,18 @@
 @implementation AppDelegate
 {
 @private	// 自クラス内からだけ参照できる
-	NSManagedObjectModel				*moModel_;
-	NSPersistentStoreCoordinator		*persistentStoreCoordinator_;
+	NSManagedObjectModel				*mCoreModel;
+	NSPersistentStoreCoordinator		*mCorePsc;
 	
-	ADBannerView				*iAdView_;
-	GADBannerView				*adMobView_;
-	BOOL								adCanVisible_;		//YES:表示可能な状況　 NO:表示してはいけない状況
+	ADBannerView				*miAdView;
+	GADBannerView				*mAdMobView;
+	BOOL								mAdCanVisible;		//YES:表示可能な状況　 NO:表示してはいけない状況
 	
 	// Clip Borad
 	//NSMutableArray				*clipE3objects; //(V0.4.4) [Cut][Copy]されたE3をPUSHスタックする。[Paste]でPOPする
 
-	UIAlertView						*alertProgress_;
-	UIActivityIndicatorView	*alertIndicator_;
+	UIAlertView						*mAlertProgress;
+	UIActivityIndicatorView	*mAlertIndicator;
 }
 @synthesize window = window_;
 @synthesize managedObjectContext = moc_;
@@ -61,7 +61,7 @@
 @synthesize app_opt_Ad = app_opt_Ad_;				//Setting選択フラグ
 @synthesize app_is_iPad = app_is_iPad_;
 @synthesize app_UpdateSave = app_UpdateSave_;
-@synthesize app_pid_AdOff = app_pid_AdOff_;		//Store購入済フラグ
+@synthesize app_pid_SwitchAd = app_pid_SwitchAd_;		//Store購入済フラグ
 @synthesize app_BagSwing = app_BagSwing_;		//YES=PadRootVC:が表示されたとき、バッグを振る。
 @synthesize app_enable_iCloud = app_enable_iCloud_;		// persistentStoreCoordinator:にて設定
 
@@ -88,6 +88,7 @@
 							  @"YES",	UD_OptShouldAutorotate,		// 回転
 							  @"NO",	UD_OptPasswordSave,
 							  @"NO",	UD_OptCrypt,
+							  @"NO",	UD_Crypt_Switch,
 							  nil];
 	[userDefaults registerDefaults:azOptDef];	// 未定義のKeyのみ更新される
 	[userDefaults synchronize]; // plistへ書き出す
@@ -109,7 +110,12 @@
 	if ([kvs objectForKey: SK_PID_AdOff]==nil)							[kvs setBool:NO  forKey: SK_PID_AdOff];
 	[kvs synchronize]; // 最新同期
 	app_opt_Ad_ = [kvs boolForKey:KV_OptAdvertising];
-	app_pid_AdOff_ = [kvs boolForKey:SK_PID_AdOff];
+	app_pid_SwitchAd_ = [kvs boolForKey:SK_PID_AdOff];
+	
+	if (app_pid_SwitchAd_==NO && [userDefaults boolForKey:UD_OptCrypt]) {
+		[userDefaults setBool:NO forKey:UD_OptCrypt];
+		[userDefaults setBool:NO forKey:UD_Crypt_Switch];
+	}
 	
 #ifdef AzMAKE_SPLASHFACE
 	app_opt_Ad_ = NO;
@@ -117,7 +123,7 @@
 	
 	//-------------------------------------------------初期化
 	app_UpdateSave_ = NO;
-	adCanVisible_ = NO;			// 現在状況、(NO)表示禁止  (YES)表示可能
+	mAdCanVisible = NO;			// 現在状況、(NO)表示禁止  (YES)表示可能
 	if (clipE3objects_==nil) {
 		clipE3objects_ = [NSMutableArray array];	//　[Clip Board] クリップボード初期化
 	}
@@ -129,7 +135,7 @@
 		exit(0);
 	}
 	app_is_iPad_ = [[[UIDevice currentDevice] model] hasPrefix:@"iPad"];	// iPad
-	NSLog(@"app_is_iPad_=%d,  app_is_Ad_=%d,  app_pid_AdOff_=%d", app_is_iPad_, app_opt_Ad_, app_pid_AdOff_);
+	NSLog(@"app_is_iPad_=%d,  app_is_Ad_=%d,  app_pid_AdOff_=%d", app_is_iPad_, app_opt_Ad_, app_pid_SwitchAd_);
 	
 /*	// iCloud完全クリアする　＜＜＜同期矛盾が生じたときや構造変更時に使用
 	//[[NSFileManager defaultManager] removeItemAtURL:cloudURL error:nil];
@@ -355,7 +361,7 @@
 
 - (void)dealloc 
 {
-	adCanVisible_ = NO;  // 以後、Ad表示禁止
+	mAdCanVisible = NO;  // 以後、Ad表示禁止
 	[self AdRemove];
 	
 	mainNC_.delegate = nil;		mainNC_ = nil;
@@ -404,20 +410,20 @@
 
 - (NSManagedObjectModel *)managedObjectModel 
 {
-    if (moModel_ != nil) {
-        return moModel_;
+    if (mCoreModel != nil) {
+        return mCoreModel;
     }
 	
-	moModel_ = [NSManagedObjectModel mergedModelFromBundles:nil];
+	mCoreModel = [NSManagedObjectModel mergedModelFromBundles:nil];
 	
-	return moModel_;
+	return mCoreModel;
 }
 
 
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator 
 {
-    if (persistentStoreCoordinator_ != nil) {
-        return persistentStoreCoordinator_;
+    if (mCorePsc != nil) {
+        return mCorePsc;
     }
 	
 	// <Application_Home>/Documents  ＜＜iCloudバックアップ対象
@@ -431,7 +437,7 @@
 	NSString *storePath = [dir stringByAppendingPathComponent:@"AzPackList.sqlite"];	//【重要】リリース後変更禁止
 	NSLog(@"storePath=%@", storePath);
 	
-    persistentStoreCoordinator_ = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
+    mCorePsc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
 	
 	app_enable_iCloud_ = NO;
 	
@@ -483,7 +489,7 @@
 			 NSLog(@"options=%@", options);
 
 			 // prep the store path and bundle stuff here since NSBundle isn't totally thread safe
-			 NSPersistentStoreCoordinator* psc = persistentStoreCoordinator_;
+			 NSPersistentStoreCoordinator* psc = mCorePsc;
 			 NSError *error = nil;
 			 [psc lock];
 			 if (![psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:options error:&error]) 
@@ -513,7 +519,7 @@
 								  nil];
 		 
 		 NSError *error = nil;
-		 if (![persistentStoreCoordinator_ addPersistentStoreWithType:NSSQLiteStoreType 	 configuration:nil 
+		 if (![mCorePsc addPersistentStoreWithType:NSSQLiteStoreType 	 configuration:nil 
 																   URL:storeUrl  options:options  error:&error])
 		 {
 			 NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
@@ -521,7 +527,7 @@
 		 }
 	 }
 
-    return persistentStoreCoordinator_;
+    return mCorePsc;
 }
 
 /**
@@ -601,33 +607,33 @@
 - (void)AdRefresh:(BOOL)bCanVisible
 {
 	//NSLog(@"=== AdRefresh:(%d)", bCanVisible);
-	adCanVisible_ = bCanVisible;
+	mAdCanVisible = bCanVisible;
 	[self AdRefresh];
 }
 
 //- (void)AdShowApple:(BOOL)bApple AdMob:(BOOL)bMob
 - (void)AdRefresh
 {
-	if (app_opt_Ad_==NO && adMobView_==nil && iAdView_==nil) return;
+	if (app_opt_Ad_==NO && mAdMobView==nil && miAdView==nil) return;
 	
 	//----------------------------------------------------- AdMob  ＜＜loadView:に入れると起動時に生成失敗すると、以後非表示が続いてしまう。
-	if (app_opt_Ad_ && adMobView_==nil) {
+	if (app_opt_Ad_ && mAdMobView==nil) {
 		// iPhone タテ下部に表示固定、ヨコ非表示
-		adMobView_ = [[GADBannerView alloc] init];
+		mAdMobView = [[GADBannerView alloc] init];
 		// Adパラメータ初期化
-		adMobView_.alpha = 0;	// 現在状況、(0)非表示  (1)表示中
-		adMobView_.tag = 0;		// 広告受信状況  (0)なし (1)あり
-		adMobView_.delegate = self;
+		mAdMobView.alpha = 0;	// 現在状況、(0)非表示  (1)表示中
+		mAdMobView.tag = 0;		// 広告受信状況  (0)なし (1)あり
+		mAdMobView.delegate = self;
 		if (app_is_iPad_) {
-			adMobView_.adUnitID = AdMobID_PackPAD;	//iPad//
-			adMobView_.frame = CGRectMake( 0, 800,  GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);
-			adMobView_.rootViewController = mainSVC_;
-			[mainSVC_.view addSubview:adMobView_];
+			mAdMobView.adUnitID = AdMobID_PackPAD;	//iPad//
+			mAdMobView.frame = CGRectMake( 0, 800,  GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);
+			mAdMobView.rootViewController = mainSVC_;
+			[mainSVC_.view addSubview:mAdMobView];
 		} else {
-			adMobView_.adUnitID = AdMobID_PackList;	//iPhone//
-			adMobView_.frame = CGRectMake( 0, 500, GAD_SIZE_320x50.width, GAD_SIZE_320x50.height);
-			adMobView_.rootViewController = mainNC_;
-			[mainNC_.view addSubview:adMobView_];
+			mAdMobView.adUnitID = AdMobID_PackList;	//iPhone//
+			mAdMobView.frame = CGRectMake( 0, 500, GAD_SIZE_320x50.width, GAD_SIZE_320x50.height);
+			mAdMobView.rootViewController = mainNC_;
+			[mainNC_.view addSubview:mAdMobView];
 		}
 		//【Tips】初期配置は、常にタテ位置にすること。　ヨコのときだけwillRotateToInterfaceOrientation：などの回転通知が届く。
 		[self AdMobWillRotate:UIInterfaceOrientationPortrait]; 
@@ -635,22 +641,22 @@
 		// リクエスト
 		GADRequest *request = [GADRequest request];
 		//[request setTesting:YES];
-		[adMobView_ loadRequest:request];	
+		[mAdMobView loadRequest:request];	
 	}
 	
 	//----------------------------------------------------- iAd: AdMobの上層になるように後からaddSubviewする
-	if (app_opt_Ad_ && iAdView_==nil
+	if (app_opt_Ad_ && miAdView==nil
 		&& [[[UIDevice currentDevice] systemVersion] compare:@"4.0"]!=NSOrderedAscending) { // !<  (>=) "4.0"
 		assert(NSClassFromString(@"ADBannerView"));
-		iAdView_ = [[ADBannerView alloc] init];		//WithFrame:CGRectZero 
+		miAdView = [[ADBannerView alloc] init];		//WithFrame:CGRectZero 
 		// Adパラメータ初期化
-		iAdView_.alpha = 0;		// 現在状況、(0)非表示  (1)表示中
-		iAdView_.tag = 0;		// 広告受信状況  (0)なし (1)あり
-		iAdView_.delegate = self;
+		miAdView.alpha = 0;		// 現在状況、(0)非表示  (1)表示中
+		miAdView.tag = 0;		// 広告受信状況  (0)なし (1)あり
+		miAdView.delegate = self;
 		if (app_is_iPad_) {
-			[mainSVC_.view addSubview:iAdView_];
+			[mainSVC_.view addSubview:miAdView];
 		} else {
-			[mainNC_.view addSubview:iAdView_];
+			[mainNC_.view addSubview:miAdView];
 		}
 		//【Tips】初期配置は、常にタテ位置にすること。　ヨコのときだけwillRotateToInterfaceOrientation：などの回転通知が届く。
 		[self iAdWillRotate:UIInterfaceOrientationPortrait]; 
@@ -660,24 +666,24 @@
 		//NSLog(@"=== AdRefresh: Can[%d] iAd[%d⇒%d] AdMob[%d⇒%d]", adCanVisible_, (int)iAdView_.tag, (int)iAdView_.alpha, 
 		//	  (int)adMobView_.tag, (int)adMobView_.alpha);
 		//if (MbAdCanVisible && MbannerView.alpha==MbannerView.tag && RoAdMobView.alpha==RoAdMobView.tag) {
-		if (adCanVisible_) {
-			if (iAdView_.alpha==iAdView_.tag && adMobView_.alpha==adMobView_.tag) {
+		if (mAdCanVisible) {
+			if (miAdView.alpha==miAdView.tag && mAdMobView.alpha==mAdMobView.tag) {
 				//NSLog(@"   = 変化なし =");
 				return; // 変化なし
 			}
-			if (iAdView_.alpha==1 && iAdView_.alpha==iAdView_.tag) {
+			if (miAdView.alpha==1 && miAdView.alpha==miAdView.tag) {
 				//NSLog(@"   = iAd 優先ON = 変化なし =");
 				return; // 変化なし
 			}
 		} else {
-			if (iAdView_.alpha==0 && adMobView_.alpha==0) {
+			if (miAdView.alpha==0 && mAdMobView.alpha==0) {
 				//NSLog(@"   = OFF = 変化なし =");
 				return; // 変化なし
 			}
 		}
 	} 
 	else {
-		adCanVisible_ = NO;	// app_opt_Ad_==NO につき、Ad非表示にしてから破棄する。
+		mAdCanVisible = NO;	// app_opt_Ad_==NO につき、Ad非表示にしてから破棄する。
 	}
 	
 	[UIView beginAnimations:nil context:NULL];
@@ -690,73 +696,73 @@
 	}
 
 	if (app_is_iPad_) {
-		if (iAdView_) {
-			CGRect rc = iAdView_.frame;
-			if (adCanVisible_ && iAdView_.tag==1) {
-				if (iAdView_.alpha==0) {
+		if (miAdView) {
+			CGRect rc = miAdView.frame;
+			if (mAdCanVisible && miAdView.tag==1) {
+				if (miAdView.alpha==0) {
 					rc.origin.y += FREE_AD_OFFSET_Y;
-					iAdView_.frame = rc;
-					iAdView_.alpha = 1;
+					miAdView.frame = rc;
+					miAdView.alpha = 1;
 				}
 			} else {
-				if (iAdView_.alpha==1) {
+				if (miAdView.alpha==1) {
 					rc.origin.y -= FREE_AD_OFFSET_Y;	//(-)上に隠す
-					iAdView_.frame = rc;
-					iAdView_.alpha = 0;
+					miAdView.frame = rc;
+					miAdView.alpha = 0;
 				}
 			}
 		}
 		
-		if (adMobView_) {
-			if (adCanVisible_ && adMobView_.tag==1) {
-				if (adMobView_.alpha==0) {
-					adMobView_.alpha = 1;
+		if (mAdMobView) {
+			if (mAdCanVisible && mAdMobView.tag==1) {
+				if (mAdMobView.alpha==0) {
+					mAdMobView.alpha = 1;
 				}
 			} else {
 				if (app_is_iPad_ && app_opt_Ad_) {
-					adMobView_.alpha = 1;		// iPadは常時表示
+					mAdMobView.alpha = 1;		// iPadは常時表示
 				}
-				else if (adMobView_.alpha==1) {
-					adMobView_.alpha = 0;
+				else if (mAdMobView.alpha==1) {
+					mAdMobView.alpha = 0;
 				}
 			}
 		}
 	}
 	else {
-		if (iAdView_) {
-			CGRect rc = iAdView_.frame;
-			if (adCanVisible_ && iAdView_.tag==1) {
-				if (iAdView_.alpha==0) {
+		if (miAdView) {
+			CGRect rc = miAdView.frame;
+			if (mAdCanVisible && miAdView.tag==1) {
+				if (miAdView.alpha==0) {
 					rc.origin.y -= FREE_AD_OFFSET_Y;
-					iAdView_.frame = rc;
-					iAdView_.alpha = 1;
+					miAdView.frame = rc;
+					miAdView.alpha = 1;
 				}
 			} else {
-				if (iAdView_.alpha==1) {
+				if (miAdView.alpha==1) {
 					rc.origin.y += FREE_AD_OFFSET_Y;	//(+)下へ隠す
-					iAdView_.frame = rc;
-					iAdView_.alpha = 0;
+					miAdView.frame = rc;
+					miAdView.alpha = 0;
 				}
 			}
 		}
 		
-		if (adMobView_) {
-			CGRect rc = adMobView_.frame;
-			if (adCanVisible_ && adMobView_.tag==1 && iAdView_.alpha==0) { //iAdが非表示のときだけAdMob表示
-				if (adMobView_.alpha==0) {
+		if (mAdMobView) {
+			CGRect rc = mAdMobView.frame;
+			if (mAdCanVisible && mAdMobView.tag==1 && miAdView.alpha==0) { //iAdが非表示のときだけAdMob表示
+				if (mAdMobView.alpha==0) {
 					rc.origin.y = 480 - 50;		//AdMobはヨコ向き常に非表示 ＜＜これはタテの配置なのでヨコだと何もしなくても範囲外で非表示になる
-					adMobView_.frame = rc;
-					adMobView_.alpha = 1;
+					mAdMobView.frame = rc;
+					mAdMobView.alpha = 1;
 				}
 			} else {
-				if (adMobView_.alpha==1) {
+				if (mAdMobView.alpha==1) {
 					rc.origin.y = 480 + 10; // 下部へ隠す
-					adMobView_.frame = rc;
-					adMobView_.alpha = 0;	//[1.0.1]3GS-4.3.3においてAdで電卓キーが押せない不具合報告あり。未確認だがこれにて対応
+					mAdMobView.frame = rc;
+					mAdMobView.alpha = 0;	//[1.0.1]3GS-4.3.3においてAdで電卓キーが押せない不具合報告あり。未確認だがこれにて対応
 				}
 				// リクエスト
 				GADRequest *request = [GADRequest request];
-				[adMobView_ loadRequest:request];	
+				[mAdMobView loadRequest:request];	
 				/*		// 破棄する ＜＜通信途絶してから復帰した場合、再生成するまで受信できないため。再生成する機会を増やす。
 				 RoAdMobView.delegate = nil;
 				 [RoAdMobView release], RoAdMobView = nil; */
@@ -769,17 +775,17 @@
 
 - (void)AdRemove
 {	// dealloc:からも呼び出される
-	if (adMobView_) {
-		adMobView_.delegate = nil;
-		adMobView_.rootViewController = nil;
-		[adMobView_ removeFromSuperview];
-		adMobView_ = nil;
+	if (mAdMobView) {
+		mAdMobView.delegate = nil;
+		mAdMobView.rootViewController = nil;
+		[mAdMobView removeFromSuperview];
+		mAdMobView = nil;
 	}
-	if (iAdView_) {
-		[iAdView_ cancelBannerViewAction];	// 停止
-		iAdView_.delegate = nil;
-		[iAdView_ removeFromSuperview];
-		iAdView_ = nil;
+	if (miAdView) {
+		[miAdView cancelBannerViewAction];	// 停止
+		miAdView.delegate = nil;
+		[miAdView removeFromSuperview];
+		miAdView = nil;
 	}
 }
 
@@ -798,17 +804,17 @@
 
 - (void)AdMobWillRotate:(UIInterfaceOrientation)toInterfaceOrientation
 {
-	if (adMobView_==nil) return;
+	if (mAdMobView==nil) return;
 
 	if (app_is_iPad_) {
-		if (adMobView_) {
+		if (mAdMobView) {
 			if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) {	// タテ
-				adMobView_.frame = CGRectMake(
+				mAdMobView.frame = CGRectMake(
 											   768-45-GAD_SIZE_300x250.width,
 											   1024-64-GAD_SIZE_300x250.height,
 											   GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);
 			} else {	// ヨコ
-				adMobView_.frame = CGRectMake(
+				mAdMobView.frame = CGRectMake(
 											   10,
 											   768-64-GAD_SIZE_300x250.height,
 											   GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);
@@ -821,33 +827,33 @@
 
 - (void)iAdWillRotate:(UIInterfaceOrientation)toInterfaceOrientation
 {	// 非表示中でも回転対応すること。表示するときの出発位置のため
-	if (iAdView_==nil) return;
+	if (miAdView==nil) return;
 
 	// iOS4.2以降の仕様であるが、以前のOSでは落ちる！！！
 	if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-		iAdView_.currentContentSizeIdentifier = ADBannerContentSizeIdentifierLandscape;
+		miAdView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierLandscape;
 	} else {
-		iAdView_.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
+		miAdView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
 	}
 
 	if (app_is_iPad_) {
-		if (adCanVisible_ && iAdView_.alpha==1) {
-			iAdView_.frame = CGRectMake(0, 40,  0,0);	// 表示
+		if (mAdCanVisible && miAdView.alpha==1) {
+			miAdView.frame = CGRectMake(0, 40,  0,0);	// 表示
 		} else {
-			iAdView_.frame = CGRectMake(0, 40 - FREE_AD_OFFSET_Y,  0,0);  // 上に隠す
+			miAdView.frame = CGRectMake(0, 40 - FREE_AD_OFFSET_Y,  0,0);  // 上に隠す
 		}
 	} else {
-		if (adCanVisible_ && iAdView_.alpha==1) {	// 表示
+		if (mAdCanVisible && miAdView.alpha==1) {	// 表示
 			if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-				iAdView_.frame = CGRectMake(0, 320-32,  0,0);	//ヨコ：下部に表示
+				miAdView.frame = CGRectMake(0, 320-32,  0,0);	//ヨコ：下部に表示
 			} else {
-				iAdView_.frame = CGRectMake(0, 480-50,  0,0);	//タテ：下部に表示
+				miAdView.frame = CGRectMake(0, 480-50,  0,0);	//タテ：下部に表示
 			}
 		} else {
 			if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-				iAdView_.frame = CGRectMake(0, 320-32 + FREE_AD_OFFSET_Y,  0,0);		//ヨコ：下へ隠す
+				miAdView.frame = CGRectMake(0, 320-32 + FREE_AD_OFFSET_Y,  0,0);		//ヨコ：下へ隠す
 			} else {
-				iAdView_.frame = CGRectMake(0, 480-50 + FREE_AD_OFFSET_Y,  0,0);	//タテ：下へ隠す
+				miAdView.frame = CGRectMake(0, 480-50 + FREE_AD_OFFSET_Y,  0,0);	//タテ：下へ隠す
 			}
 		}
 	}
@@ -880,10 +886,10 @@
 	banner.tag = 0;	// 広告受信状況  (0)なし (1)あり
 
 	// AdMob 破棄する ＜＜通信途絶してから復帰した場合、再生成するまで受信できないため。再生成する機会を増やす。
-	if (adMobView_) {
+	if (mAdMobView) {
 		// リクエスト
 		GADRequest *request = [GADRequest request];
-		[adMobView_ loadRequest:request];	
+		[mAdMobView loadRequest:request];	
 /*		//[1.1.0]ネット切断から復帰したとき、このように破棄⇒生成が必要。
 		RoAdMobView.alpha = 0; //これが無いと残骸が表示されたままになる。
 		RoAdMobView.delegate = nil;								//受信STOP  ＜＜これが無いと破棄後に呼び出されて落ちる

@@ -33,7 +33,7 @@
 @property (nonatomic, assign, readonly) BOOL	app_enable_iCloud;		// YES=iCloud同期中
 
 // Product ID
-@property (nonatomic, assign) BOOL	app_pid_AdOff;			// YES=購入済み（スポンサー）
+@property (nonatomic, assign) BOOL	app_pid_SwitchAd;			// YES=購入済み（スポンサー）
 
 
 //- (void)storeReset;

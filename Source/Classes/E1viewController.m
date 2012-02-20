@@ -137,9 +137,9 @@
 	//{
 		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
 		//[kvs synchronize]; <<<変化通知により同期済みであるから不要
-		if (appDelegate_.app_pid_AdOff==NO  &&  [kvs boolForKey:SK_PID_AdOff]) 
+		if (appDelegate_.app_pid_SwitchAd==NO  &&  [kvs boolForKey:SK_PID_AdOff]) 
 		{	// iCloud OFF --> ON
-			appDelegate_.app_pid_AdOff = YES;
+			appDelegate_.app_pid_SwitchAd = YES;
 			//[appDelegate_ managedObjectContextReset]; // iCloud対応の moc再生成する。
 			appDelegate_.app_opt_Ad = NO;
 			[kvs setBool:NO forKey:KV_OptAdvertising];
@@ -343,21 +343,15 @@
 	GDocDownloadTVC *gdoc = [[GDocDownloadTVC alloc] init];
 
 	if (appDelegate_.app_is_iPad) {
-	/*	UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:gdoc];
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:gdoc];
 		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
-		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-		indexPathEdit_ = nil;
 		NSIndexPath *idx = [NSIndexPath indexPathForRow:2 inSection:1];  //<<<<< Google Docs セル位置をセット
 		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
 		rcArrow.origin.x = 150;		rcArrow.size.width = 1;
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
 		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
 				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
-		gdoc.selfPopover = popOver_;
-		gdoc.delegate = self; //Download後の再描画のため 
-	 */
-		gdoc.modalPresentationStyle = UIModalPresentationFormSheet;
-		[self presentModalViewController:gdoc animated:YES];
+		// Download成功後の再描画は、NFM_REFRESH_ALL_VIEWS 通知により処理される
 	} 
 	else {
 		if (appDelegate_.app_opt_Ad) {
@@ -367,16 +361,6 @@
 		gdoc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 		[self.navigationController pushViewController:gdoc animated:YES];
 	}
-/*
-	GDocDownloadTVC *gdoc = [[GDocDownloadTVC alloc] init];
-
-	if (appDelegate_.app_opt_Ad) {
-		[appDelegate_ AdRefresh:NO];	//広告禁止
-	}
-	[gdoc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-	gdoc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-	[self.navigationController pushViewController:gdoc animated:YES];
-	*/
 }
 
 - (void)actionImportYourPC
@@ -534,7 +518,7 @@
 	}
 	//if (appDelegate_.app_pid_UnLock) return;
 
-	AZStoreVC *vc = [[AZStoreVC alloc] initWithUnLock:appDelegate_.app_pid_AdOff];
+	AZStoreVC *vc = [[AZStoreVC alloc] initWithUnLock:appDelegate_.app_pid_SwitchAd];
 	vc.delegate = self; //--> azStorePurchesed:
 	vc.productIDs = [NSSet setWithObjects:SK_PID_AdOff, nil]; // 商品が複数ある場合は列記
 	if (appDelegate_.app_is_iPad) {
@@ -795,7 +779,7 @@
 }
 
 
-#pragma mark - View表示
+#pragma mark - View lifestyle
 
 // UITableViewインスタンス生成時のイニシャライザ　viewDidLoadより先に1度だけ通る
 - (id)initWithStyle:(UITableViewStyle)style 

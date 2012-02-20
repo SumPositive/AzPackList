@@ -13,6 +13,7 @@
 #import "SpPOST.h"
 #import "SpDetailTVC.h"
 #import "E2viewController.h"
+#import "PatternImageView.h"
 
 #import  <YAJLiOS/YAJL.h>
 //#import <DropboxSDK/JSON.h>  SBJSONでは、読み取りエラー発生した。（多分、CSV部）
@@ -147,6 +148,19 @@
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		if (appDelegate_.app_is_iPad) {
 			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
+		}
+
+		// 背景テクスチャ・タイルペイント
+		if (appDelegate_.app_is_iPad) {
+			//self.view.backgroundColor = //iPadでは無効
+			UIView* view = self.tableView.backgroundView;
+			if (view) {
+				PatternImageView *tv = [[PatternImageView alloc] initWithFrame:view.frame
+																  patternImage:[UIImage imageNamed:@"Tx-Back"]]; // タイルパターン生成
+				[view addSubview:tv];
+			}
+		} else {
+			self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 		}
 	}
 	return self;
@@ -385,6 +399,9 @@
 		} else { //ヨコ
 			return 64;
 		}
+	}
+	else if (indexPath.section==1) {
+		return 55;
 	}
 	return 44; // Def.
 }

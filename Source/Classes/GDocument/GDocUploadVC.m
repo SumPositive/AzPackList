@@ -96,7 +96,7 @@
         // Custom initialization
 		mAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		if (mAppDelegate.app_is_iPad) {
-			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
+			self.contentSizeForViewInPopover = CGSizeMake(480, 250); //GD_POPOVER_SIZE;
 		}
 		mDocService = [GoogleService docService];
     }

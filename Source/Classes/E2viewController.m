@@ -257,7 +257,7 @@
 	dispatch_async(queue, ^{
 		// CSV SAVE
 		FileCsv *fcsv = [[FileCsv alloc] init];
-		NSString *zErr = [fcsv zSaveTmpFile:e1selected_ crypt:YES];
+		NSString *zErr = [fcsv zSaveTmpFile:e1selected_ crypt:NO]; // 暗号化しない ＜＜有料：一時パスに対応してから公開
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
@@ -281,7 +281,7 @@
 			if (fcsv.didEncryption) {
 				zBody = [zBody stringByAppendingString:NSLocalizedString(@"Email send Body6 didEncryption",nil)];
 			} else {
-				//不要//zBody = [zBody stringByAppendingString:NSLocalizedString(@"Email send Body6 NoEncryption",nil)];
+				zBody = [zBody stringByAppendingString:NSLocalizedString(@"Email send Body6 NoEncryption",nil)];
 			}
 			[picker setMessageBody:zBody isHTML:YES];
 			
@@ -395,24 +395,19 @@
 	gup.Re1selected = e1selected_;
 
 	if (appDelegate_.app_is_iPad) {
-	/*	goodocs.title = NSLocalizedString(@"Backup Google",nil);
-		if ([menuPopover_ isPopoverVisible]) { //タテ
-			[self.navigationController pushViewController:goodocs animated:YES];
+		if ([menuPopover_ isPopoverVisible]) { //タテ  
+			// E2が唯一サイドメニュー表示されるため、サイドメニューがPopup状態から呼び出された場合、そのままスライド表示させる。
+			[self.navigationController pushViewController:gup animated:YES];
 		} else {	//ヨコ
-			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:goodocs];
+			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:gup];
 			popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
-			popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-			indexPathEdit_ = nil;
 			CGRect rcArrow = [self.tableView rectForRowAtIndexPath:indexPath];
 			rcArrow.origin.x = rcArrow.size.width - 85;		rcArrow.size.width = 1;
 			rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
 			[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
 					permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
-			goodocs.selfPopover = popOver_;
-			goodocs.delegate = nil; //Uploadだから再描画不要
-		}*/
-		gup.modalPresentationStyle = UIModalPresentationFormSheet;
-		[self presentModalViewController:gup animated:YES];
+			// Upload成功後の再描画は不要
+		}
 	} else {
 		[self.navigationController pushViewController:gup animated:YES];
 	}

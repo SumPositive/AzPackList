@@ -56,7 +56,9 @@
 	// メモリ不足時に self.viewが破棄されると同時に破棄されるオブジェクトを初期化する
 	Mpicker = nil;		// ここで生成
 	
-	self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
+	//self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
+	// 背景テクスチャ・タイルペイント
+	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 	
 	// Set up NEXT Left ＜Back] buttons.
 	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
@@ -152,8 +154,11 @@
 - (void)viewDesign
 {
 	CGRect rect = self.view.bounds;
+	//rect.origin.x = (rect.size.width - 320)/2;
+	//rect.size.width = 320;
 	rect.size.height = 216;  // iOS4.1から高さ可変になったようだが3.0互換のため規定値(216)にする
 	Mpicker.frame = rect;
+	
 	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
 	{	// タテ
 		rect.origin.y += (Mpicker.frame.size.height + 20);

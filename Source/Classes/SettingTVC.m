@@ -409,11 +409,11 @@
 				sw.tag = TAG_OptAdvertising;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
 				//sw.hidden = !(appDelegate_.app_pid_AdOff); // AdOff支払により可視化 ＜＜NG 購入後の状態が解るように見せることにする
-				sw.enabled = mAppDelegate.app_pid_AdOff; // AdOff支払により有効化
+				sw.enabled = mAppDelegate.app_pid_SwitchAd; // AdOff支払により有効化
 				[cell.contentView  addSubview:sw]; //[sw release];
 				cell.textLabel.text = NSLocalizedString(@"Advertising",nil);
 			}
-			if (mAppDelegate.app_pid_AdOff) {
+			if (mAppDelegate.app_pid_SwitchAd) {
 				cell.textLabel.enabled = YES;
 				cell.detailTextLabel.text = NSLocalizedString(@"Advertising enable",nil);
 				cell.detailTextLabel.textColor = [UIColor grayColor];
@@ -436,7 +436,7 @@
 				mTfPass1.keyboardType = UIKeyboardTypeASCIICapable;
 				mTfPass1.secureTextEntry = YES;
 				mTfPass1.returnKeyType = UIReturnKeyNext;
-				mTfPass1.enabled = mAppDelegate.app_pid_AdOff; // AdOff支払により有効化
+				mTfPass1.enabled = mAppDelegate.app_pid_SwitchAd; // AdOff支払により有効化
 				mTfPass1.text = @"";
 				mTfPass1.delegate = self;
 				[cell.contentView  addSubview:mTfPass1];
@@ -458,7 +458,7 @@
 			mTfPass2.frame = CGRectMake(fX-45,38, 140, 25); // 回転対応
 			//
 			cell.textLabel.text = NSLocalizedString(@"PackListCrypt",nil);
-			if (mAppDelegate.app_pid_AdOff) {
+			if (mAppDelegate.app_pid_SwitchAd) {
 				NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 				if ([defaults boolForKey:UD_OptCrypt]) {
 					// KeyChainから保存しているパスワードを取得する
@@ -544,6 +544,7 @@
 	if (sender==mTfPass1) {	//-------------------------------------------------------------Crypt Key1
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 		[defaults setBool:NO forKey:UD_OptCrypt];  // 解除
+		[defaults setBool:NO forKey:UD_Crypt_Switch];  // OFF
 		if ([sender.text length] <= 0) {
 			// 秘密キーを破棄する
 			NSError *error; // nilを渡すと異常終了するので注意
