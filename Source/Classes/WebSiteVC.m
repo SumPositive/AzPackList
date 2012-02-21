@@ -123,15 +123,16 @@
     [super viewDidLoad];
 
 	// 上部のバーを無くして、全て下部ツールバーだけにした。
-	self.navigationController.navigationBarHidden = YES;
+	//self.navigationController.navigationBarHidden = YES;
 	
-	UIBarButtonItem *buFlex = [[UIBarButtonItem alloc] 
-								initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-								target:nil action:nil];
+/*	UIBarButtonItem *buFixed = [[UIBarButtonItem alloc] 
+								initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
+								target:nil action:nil];*/
 	
 	UIBarButtonItem *buClose = [[UIBarButtonItem alloc] 
-							   initWithBarButtonSystemItem:UIBarButtonSystemItemStop
-							   target:self action:@selector(close:)];
+								initWithTitle:NSLocalizedString(@"Back", nil)
+								style:UIBarButtonItemStyleBordered
+								target:self action:@selector(close:)];
 
 	MbuBack = [[UIBarButtonItem alloc] 
 				initWithImage:[UIImage imageNamed:@"Icon16-WebBack"]
@@ -146,14 +147,21 @@
 				  target:self action:@selector(toolReload)];
 	
 	MactivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 32.0f, 32.0f)];
-	[MactivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
+	[MactivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
 	[MactivityIndicator startAnimating]; // 通信不能のとき、インジケータだけ動かすため
 	UIBarButtonItem *buActInd = [[UIBarButtonItem alloc] initWithCustomView:MactivityIndicator];
 
-	NSArray *aArray = [NSArray arrayWithObjects:  MbuReload, buFlex, MbuBack, buActInd, MbuForward, buFlex, buClose, nil];
-	self.navigationController.toolbarHidden = NO;
-	self.navigationController.toolbar.barStyle = UIBarStyleBlackOpaque;
-	[self setToolbarItems:aArray animated:YES];
+	// 左側ボタン
+	self.navigationItem.leftBarButtonItems = 
+	[NSArray arrayWithObjects:  buClose, nil];
+	//self.navigationController.toolbarHidden = NO;
+	//self.navigationController.toolbar.barStyle = UIBarStyleBlackOpaque;
+	//[self setToolbarItems:aArray animated:YES];
+	
+	// 右側ボタン(逆順)
+	self.navigationItem.rightBarButtonItems =
+	[NSArray arrayWithObjects:  MbuForward, MbuReload, MbuBack, buActInd, nil];
+
 	
 	// URL表示用のラベル生成
 	MlbMessage = [[UILabel alloc] init];
@@ -214,7 +222,7 @@
 	// URL表示用のラベル生成
 	CGRect rc = self.view.frame;  // この時点では、ToolBar領域が除外されている
 	rc.size.height = 14;
-	rc.origin.y = self.view.frame.size.height - rc.size.height;
+	rc.origin.y = 0;  //self.view.frame.size.height - rc.size.height;
 	MlbMessage.frame = rc;
 	MlbMessage.hidden = NO;
 }
