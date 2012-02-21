@@ -40,7 +40,6 @@
 - (void)addTestData;
 - (void)httpInfoUpdate:(NSNotification *)notification;
 - (void)azAction;
-- (void)azSettingView;
 - (void)e2adde2add;
 - (void)e2editView:(NSIndexPath *)indexPath;
 - (void)fromE2toE3:(NSInteger)iSection;
@@ -97,15 +96,6 @@
 
 
 #pragma mark - Action
-
-- (void)azSettingView
-{
-	SettingTVC *vi = [[SettingTVC alloc] init];
-	[vi setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-	[self.navigationController pushViewController:vi animated:YES];
-	//[vi release];
-}
-
 
  // E2グループ削除
 - (void)actionE2delateCell:(NSIndexPath*)indexPath
@@ -293,7 +283,9 @@
 			// Email オープン
 			if (appDelegate_.app_is_iPad) {
 				picker.modalPresentationStyle = UIModalPresentationFormSheet;
-				[appDelegate_.mainSVC presentModalViewController:picker animated:YES];
+				picker.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+				//[appDelegate_.mainSVC presentModalViewController:picker animated:YES];
+				[self presentModalViewController:picker animated:YES];
 			} else {
 				[appDelegate_.mainNC presentModalViewController:picker animated:YES];
 			}
@@ -303,53 +295,26 @@
 
 - (void)actionSharedPackListUp:(NSIndexPath*)indexPath
 {
-	if (appDelegate_.app_is_iPad) {
-		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-	}
-
-	SpAppendVC *spAppendVC = [[SpAppendVC alloc] init];
-	spAppendVC.Re1selected = e1selected_;
+	SpAppendVC *vc = [[SpAppendVC alloc] init];
+	vc.Re1selected = e1selected_;
 
 	if (appDelegate_.app_is_iPad) {
-		spAppendVC.title = NSLocalizedString(@"SharePlan Append",nil);
-		if ([menuPopover_ isPopoverVisible]) { //タテ
-			//[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-			[self.navigationController pushViewController:spAppendVC animated:YES];
-		} else {	//ヨコ
-			//[Mpopover release], 
-			popOver_ = nil;
-			//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:vc];
-			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:spAppendVC];
-			popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
-			//[nc release];
-			popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-			//[MindexPathEdit release], 
-			indexPathEdit_ = nil;
-			
-			CGRect rcArrow = [self.tableView rectForRowAtIndexPath:indexPath];
-			rcArrow.origin.x = rcArrow.size.width - 85;		rcArrow.size.width = 1;
-			rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
-			[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
-					permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
-			
-			//[Mpopover presentPopoverFromRect:CGRectMake(320/2, 768-60, 1,1)	 //ヨコしか通らない。タテならばPopover内になるから
-			//						  inView:self.navigationController.view
-			//		permittedArrowDirections:UIPopoverArrowDirectionDown  animated:YES];
-			spAppendVC.selfPopover = popOver_;
-			//spAppendVC.delegate = nil; //Uploadだから再描画不要
-		}
+		vc.title = NSLocalizedString(@"SharePlan Append",nil);
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+		nc.modalPresentationStyle = UIModalPresentationFormSheet;
+		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+		[self presentModalViewController:nc animated:YES];
 	} else {
-		[spAppendVC setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-		[self.navigationController pushViewController:spAppendVC animated:YES];
+		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+		[self.navigationController pushViewController:vc animated:YES];
 	}
-	//[spAppendVC release];
 }
 
 - (void)actionBackupDropbox:(NSIndexPath*)indexPath
 {	// BACKUP [SAVE]
-	if (appDelegate_.app_is_iPad) {
+/*	if (appDelegate_.app_is_iPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-	}
+	}*/
 	
 	// 未認証の場合、認証処理後、AppDelegate:handleOpenURL:から呼び出される
 	if ([[DBSession sharedSession] isLinked]) 
@@ -357,17 +322,10 @@
 		DropboxVC *vc = [[DropboxVC alloc] initWithE1:e1selected_];
 		assert(vc);
 		if (appDelegate_.app_is_iPad) {
-			/*popOver_ = nil;
-			popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
-			popOver_.delegate = nil;	// 不要
-			CGRect rcArrow = [self.tableView rectForRowAtIndexPath:indexPath];
-			rcArrow.origin.x = rcArrow.size.width - 85;		rcArrow.size.width = 1;
-			rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
-			[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
-					permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES]; */
-			// Dropboxだけは、認証して戻ったときAppDelegate内で再現させるため座標情報が不要なFormSheetにしている。
-			vc.modalPresentationStyle = UIModalPresentationFormSheet;
-			[self presentModalViewController:vc animated:YES];
+			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+			nc.modalPresentationStyle = UIModalPresentationFormSheet;
+			nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+			[self presentModalViewController:nc animated:YES];
 		} 
 		else {
 			if (appDelegate_.app_opt_Ad) {
@@ -387,29 +345,21 @@
 - (void)actionBackupGoogle:(NSIndexPath*)indexPath
 {
 	if (section0Rows_ <=0) return;
-	if (appDelegate_.app_is_iPad) {
+/*	if (appDelegate_.app_is_iPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-	}
+	}*/
 	
-	GDocUploadVC *gup = [[GDocUploadVC alloc] init];
-	gup.Re1selected = e1selected_;
+	GDocUploadVC *vc = [[GDocUploadVC alloc] init];
+	vc.Re1selected = e1selected_;
 
 	if (appDelegate_.app_is_iPad) {
-		if ([menuPopover_ isPopoverVisible]) { //タテ  
-			// E2が唯一サイドメニュー表示されるため、サイドメニューがPopup状態から呼び出された場合、そのままスライド表示させる。
-			[self.navigationController pushViewController:gup animated:YES];
-		} else {	//ヨコ
-			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:gup];
-			popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
-			CGRect rcArrow = [self.tableView rectForRowAtIndexPath:indexPath];
-			rcArrow.origin.x = rcArrow.size.width - 85;		rcArrow.size.width = 1;
-			rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
-			[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
-					permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
-			// Upload成功後の再描画は不要
-		}
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+		nc.modalPresentationStyle = UIModalPresentationFormSheet;
+		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+		[self presentModalViewController:nc animated:YES];
+		// Upload成功後の再描画は不要
 	} else {
-		[self.navigationController pushViewController:gup animated:YES];
+		[self.navigationController pushViewController:vc animated:YES];
 	}
 }
 
@@ -842,7 +792,9 @@
 																  patternImage:[UIImage imageNamed:@"Tx-Back"]]; // タイルパターン生成
 				[view addSubview:tv];
 			}
-			self.contentSizeForViewInPopover = GD_POPOVER_SIZE; //アクションメニュー配下(Share,Googleなど）においてサイズ統一
+			//self.contentSizeForViewInPopover = GD_POPOVER_SIZE; //アクションメニュー配下(Share,Googleなど）においてサイズ統一
+			self.contentSizeForViewInPopover = CGSizeMake(350, 800); //配下全てFormSheetスタイルにしたことにより自由になったので最大化
+			//最初に表示されるサイズだけは、PadRootVC:init にある設定で決まる。
 		} 
 		else {
 			self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
@@ -1472,23 +1424,23 @@
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-Shared"];
 					cell.textLabel.text = NSLocalizedString(@"SharePlan Append",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"SharePlan Append msg",nil);
-					if (appDelegate_.app_is_iPad==NO  OR  [menuPopover_ isPopoverVisible]) {  //iPad-Popover内ならばiPhoneと同じ
+					if (appDelegate_.app_is_iPad==NO) {
 						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
 					}
 					break;
 				case 3:
-					cell.imageView.image = [UIImage imageNamed:@"Dropbox-130x44"];
-					cell.textLabel.text = NSLocalizedString(@"Backup Dropbox",nil);
-					cell.detailTextLabel.text = NSLocalizedString(@"Backup Dropbox msg",nil);
-					if (appDelegate_.app_is_iPad==NO  OR  [menuPopover_ isPopoverVisible]) {  //iPad-Popover内ならばiPhoneと同じ
+					cell.imageView.image = [UIImage imageNamed:@"Icon32-GoogleDoc"];
+					cell.textLabel.text = NSLocalizedString(@"Backup Google",nil);
+					cell.detailTextLabel.text = NSLocalizedString(@"Backup Google msg",nil);
+					if (appDelegate_.app_is_iPad==NO) {
 						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
 					}
 					break;
 				case 4:
-					cell.imageView.image = [UIImage imageNamed:@"Icon32-GoogleDoc"];
-					cell.textLabel.text = NSLocalizedString(@"Backup Google",nil);
-					cell.detailTextLabel.text = NSLocalizedString(@"Backup Google msg",nil);
-					if (appDelegate_.app_is_iPad==NO  OR  [menuPopover_ isPopoverVisible]) {  //iPad-Popover内ならばiPhoneと同じ
+					cell.imageView.image = [UIImage imageNamed:@"Icon32-Dropbox"];
+					cell.textLabel.text = NSLocalizedString(@"Backup Dropbox",nil);
+					cell.detailTextLabel.text = NSLocalizedString(@"Backup Dropbox msg",nil);
+					if (appDelegate_.app_is_iPad==NO) {
 						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
 					}
 					break;
@@ -1629,7 +1581,7 @@
 					// E3 へドリルダウン
 					E3viewController *e3view = [[E3viewController alloc] initWithStyle:UITableViewStylePlain];
 					// 以下は、E3viewControllerの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
-					e3view.title = e1selected_.name;  //self.title;  // NSLocalizedString(@"Items", nil);
+					//e3view.title = e1selected_.name;  //self.title;  // NSLocalizedString(@"Items", nil);
 					e3view.e1selected = e1selected_; // E1
 					e3view.firstSection = 0;  // Group.ROW ==>> E3で頭出しするセクション
 					e3view.sortType = indexPath.row;
@@ -1648,19 +1600,22 @@
 					
 				case 1: //[1.1]E-mail send
 					[self actionEmailSend];
-					break;
+					break; //Popover閉じる
 					
 				case 2: // Upload Share Plan
 					[self actionSharedPackListUp:indexPath];
-					return; //Popover時に閉じないように
+					//return; //Popover時に閉じないように
+					break; //Popover閉じる　＜＜閉じないと回転しなくなる
 					
-				case 3: // Backup to Dropbox
-					[self actionBackupDropbox:indexPath];
-					return; //Popover時に閉じないように
-					
-				case 4: // Backup to Google
+				case 3: // Google
 					[self actionBackupGoogle:indexPath];
-					return; //Popover時に閉じないように
+					//return; //Popover時に閉じないように
+					break; //Popover閉じる
+					
+				case 4: // Dropbox
+					[self actionBackupDropbox:indexPath];
+					//return; //Popover時に閉じないように
+					break; //Popover閉じる
 			}
 		}	break;
 

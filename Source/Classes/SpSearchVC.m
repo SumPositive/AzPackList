@@ -56,6 +56,8 @@
 	// メモリ不足時に self.viewが破棄されると同時に破棄されるオブジェクトを初期化する
 	Mpicker = nil;		// ここで生成
 	
+	self.title = NSLocalizedString(@"Import SharePlan",nil);
+	
 	//self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
 	// 背景テクスチャ・タイルペイント
 	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
@@ -65,10 +67,14 @@
 											  initWithTitle:NSLocalizedString(@"Search",nil)
 											  style:UIBarButtonItemStylePlain  
 											  target:nil  action:nil];
-/*	self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc]
-											  initWithImage:[UIImage imageNamed:@"Icon16-Return1.png"]
-											  style:UIBarButtonItemStylePlain 
-											  target:nil  action:nil] autorelease];*/
+
+	if (appDelegate_.app_is_iPad) {
+		// CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
+												 initWithTitle:NSLocalizedString(@"Back", nil)
+												 style:UIBarButtonItemStyleBordered
+												 target:self action:@selector(actionBack:)];
+	}
 
 	// とりあえず生成、位置はviewDesignにて決定
 	//------------------------------------------------------
@@ -109,6 +115,11 @@
 	}*/
 }
 
+- (void)actionBack:(id)sender
+{
+	[self dismissModalViewControllerAnimated:YES];
+}
+
 // viewWillAppear はView表示直前に呼ばれる。よって、Viewの変化要素はここに記述する。　 　// viewDidAppear はView表示直後に呼ばれる
 - (void)viewWillAppear:(BOOL)animated 
 {
@@ -116,8 +127,6 @@
 	
 	// 画面表示に関係する Option Setting を取得する
 	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-
-	self.title = NSLocalizedString(@"Import SharePlan",nil);
 
 	[self viewDesign];
 	//ここでキーを呼び出すと画面表示が無いまま待たされてしまうので、viewDidAppearでキー表示するように改良した。

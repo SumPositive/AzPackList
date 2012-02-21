@@ -186,6 +186,19 @@
 	ibLbCopyright.text =	COPYRIGHT		@"\n"
 										@"Author: Sum Positive\n"
 										@"All Rights Reserved.";
+
+	if (appDelegate_.app_is_iPad) {
+		// CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
+												 initWithTitle:NSLocalizedString(@"Back", nil)
+												 style:UIBarButtonItemStyleBordered
+												 target:self action:@selector(actionBack:)];
+	}
+}
+
+- (void)actionBack:(id)sender
+{
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -210,9 +223,13 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
-	return YES;
+	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	if (app.app_is_iPad) {
+		return YES;
+	} else {
+		// 回転禁止でも、正面は常に許可しておくこと。
+		return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+	}
 }
 
 #pragma mark unload

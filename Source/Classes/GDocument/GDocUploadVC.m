@@ -116,14 +116,34 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+	if (mAppDelegate.app_is_iPad) {
+		// CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
+												 initWithTitle:NSLocalizedString(@"Back", nil)
+												 style:UIBarButtonItemStyleBordered
+												 target:self action:@selector(actionBack:)];
+	}
+}
+
+- (void)actionBack:(id)sender
+{
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
 	
-	self.title = Re1selected.name;
-	
+	//self.title = NSLocalizedString(@"Backup Google", nil);
+	if (Re1selected.name) {
+		self.title = Re1selected.name;
+		ibTfName.text = Re1selected.name;
+	} else {
+		self.title = NSLocalizedString(@"(New Pack)", nil);
+		ibTfName.text = NSLocalizedString(@"(New Pack)", nil);
+	}
+
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	if ([defaults boolForKey:UD_OptCrypt]) {
 		ibLbEncrypt.enabled = YES;

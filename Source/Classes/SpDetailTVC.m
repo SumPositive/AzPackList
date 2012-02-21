@@ -171,6 +171,8 @@
 {
 	[super loadView];
 	
+	self.title = NSLocalizedString(@"Sample Display",nil);
+	
 	self.tableView.allowsSelectionDuringEditing = YES;
 
 	// Set up NEXT Left [Back] buttons.
@@ -199,8 +201,6 @@
 	MbOptShowTotalWeight = [kvs boolForKey:KV_OptShowTotalWeight];
 	MbOptShowTotalWeightReq = [kvs boolForKey:KV_OptShowTotalWeightReq];
 	
-	self.title = NSLocalizedString(@"Sample Display",nil);
-
 	if (Re1add) {
 		NSLog(@"Re1add=%@", Re1add);
 		[self.tableView reloadData]; // cell回転(再描画)させるために必要

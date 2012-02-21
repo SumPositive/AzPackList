@@ -109,6 +109,8 @@
 {
 	[super loadView];
 
+	self.title = NSLocalizedString(@"SharePlan",nil);
+	
 	self.tableView.allowsSelectionDuringEditing = YES;
 
 	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
@@ -279,8 +281,6 @@
     [super viewWillAppear:animated];
 	// 画面表示に関係する Option Setting を取得する
 	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	
-	self.title = NSLocalizedString(@"SharePlan",nil);
 	
 	[self.tableView reloadData]; // 次Viewから戻ったときに再描画する　＜＜特に削除後が重要＞＞
 }

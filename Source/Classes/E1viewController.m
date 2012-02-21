@@ -274,7 +274,7 @@
 	SpSearchVC *vc = [[SpSearchVC alloc] init];
 	
 	if (appDelegate_.app_is_iPad) {
-		popOver_ = nil;
+	/*	popOver_ = nil;
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
 		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
@@ -284,7 +284,12 @@
 		rcArrow.origin.x = 150;		rcArrow.size.width = 1;
 		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
 		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
-				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
+				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];*/
+		
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+		nc.modalPresentationStyle = UIModalPresentationFormSheet;
+		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;  //UIModalTransitionStyleCrossDissolve;
+		[self presentModalViewController:nc animated:YES];
 	}
 	else {
 		if (appDelegate_.app_opt_Ad) {
@@ -297,27 +302,16 @@
 
 - (void)actionImportDropbox
 {
-	if (appDelegate_.app_is_iPad) {
-		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-	}
-
 	// 未認証の場合、認証処理後、AppDelegate:handleOpenURL:から呼び出される
 	if ([[DBSession sharedSession] isLinked]) 
 	{	// Dropbox 認証済み
 		DropboxVC *vc = [[DropboxVC alloc] initWithE1:nil];  // nil=Download
 		assert(vc);
 		if (appDelegate_.app_is_iPad) {
-			/*	popOver_ = nil;
-			popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
-			popOver_.delegate = nil;	// 不要
-			CGRect rcArrow = [self.tableView rectForRowAtIndexPath:indexPath];
-			rcArrow.origin.x = 85;		rcArrow.size.width = 1;
-			rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
-			[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
-					permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];*/
-			// Dropboxだけは、認証して戻ったときAppDelegate内で再現させるため座標情報が不要なFormSheetにしている。
-			vc.modalPresentationStyle = UIModalPresentationFormSheet;
-			[self presentModalViewController:vc animated:YES];
+			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+			nc.modalPresentationStyle = UIModalPresentationFormSheet;
+			nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+			[self presentModalViewController:nc animated:YES];
 		} 
 		else {
 			if (appDelegate_.app_opt_Ad) {
@@ -336,30 +330,22 @@
 
 - (void)actionImportGoogle
 {
-	if (appDelegate_.app_is_iPad) {
-		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-	}
-	
-	GDocDownloadTVC *gdoc = [[GDocDownloadTVC alloc] init];
+	GDocDownloadTVC *vc = [[GDocDownloadTVC alloc] init];
 
 	if (appDelegate_.app_is_iPad) {
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:gdoc];
-		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
-		NSIndexPath *idx = [NSIndexPath indexPathForRow:2 inSection:1];  //<<<<< Google Docs セル位置をセット
-		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
-		rcArrow.origin.x = 150;		rcArrow.size.width = 1;
-		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
-		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
-				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+		nc.modalPresentationStyle = UIModalPresentationFormSheet;
+		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+		[self presentModalViewController:nc animated:YES];
 		// Download成功後の再描画は、NFM_REFRESH_ALL_VIEWS 通知により処理される
 	} 
 	else {
 		if (appDelegate_.app_opt_Ad) {
 			[appDelegate_ AdRefresh:NO];	//広告禁止
 		}
-		[gdoc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-		gdoc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self.navigationController pushViewController:gdoc animated:YES];
+		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+		vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+		[self.navigationController pushViewController:vc animated:YES];
 	}
 }
 
@@ -456,22 +442,13 @@
 
 - (void)actionInformation
 {
-	if (appDelegate_.app_is_iPad) {
-		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-	}
-
 	AZInformationVC *vc = [[AZInformationVC alloc] init];
 
 	if (appDelegate_.app_is_iPad) {
-		popOver_ = nil;
-		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
-		popOver_.delegate = nil;	// 不要
-		NSIndexPath *idx = [NSIndexPath indexPathForRow:1 inSection:2];  //<<<<< Settings セル位置をセット！違えば落ちる！
-		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
-		rcArrow.origin.x = 180;		rcArrow.size.width = 1;
-		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
-		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
-				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+		nc.modalPresentationStyle = UIModalPresentationFormSheet;
+		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+		[self presentModalViewController:nc animated:YES];
 	}
 	else {
 		if (appDelegate_.app_opt_Ad) {
@@ -485,21 +462,13 @@
 
 - (void)actionSetting
 {
-	if (appDelegate_.app_is_iPad) {
-		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-	}
-
 	SettingTVC *vc = [[SettingTVC alloc] init];
 	
 	if (appDelegate_.app_is_iPad) {
-		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
-		popOver_.delegate = nil;	// 不要
-		NSIndexPath *idx = [NSIndexPath indexPathForRow:0 inSection:2];  //<<<<< Settings セル位置をセット！違えば落ちる！
-		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
-		rcArrow.origin.x = 150;		rcArrow.size.width = 1;
-		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
-		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
-				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+		nc.modalPresentationStyle = UIModalPresentationFormSheet;
+		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+		[self presentModalViewController:nc animated:YES];
 	}
 	else {
 		if (appDelegate_.app_opt_Ad) {
@@ -513,24 +482,15 @@
 
 - (void)actionIPurchase
 {
-	if (appDelegate_.app_is_iPad) {
-		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-	}
-	//if (appDelegate_.app_pid_UnLock) return;
-
 	AZStoreVC *vc = [[AZStoreVC alloc] initWithUnLock:appDelegate_.app_pid_SwitchAd];
 	vc.delegate = self; //--> azStorePurchesed:
 	vc.productIDs = [NSSet setWithObjects:SK_PID_AdOff, nil]; // 商品が複数ある場合は列記
+
 	if (appDelegate_.app_is_iPad) {
-		popOver_ = nil;
-		popOver_ = [[UIPopoverController alloc] initWithContentViewController:vc];
-		popOver_.delegate = nil;	// 不要
-		NSIndexPath *idx = [NSIndexPath indexPathForRow:2 inSection:2];  //<<<<< Settings セル位置をセット！違えば落ちる！
-		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
-		rcArrow.origin.x = 150;		rcArrow.size.width = 1;
-		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
-		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
-				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+		nc.modalPresentationStyle = UIModalPresentationFormSheet;
+		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+		[self presentModalViewController:nc animated:YES];
 	}
 	else {
 		if (appDelegate_.app_opt_Ad) {
@@ -576,7 +536,7 @@
 		//Split Right
 		E3viewController* e3view = [[E3viewController alloc] init];
 		// 以下は、E3viewControllerの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
-		e3view.title = e1obj.name;  //  self.title;  // NSLocalizedString(@"Items", nil);
+		//e3view.title = e1obj.name;  //  self.title;  // NSLocalizedString(@"Items", nil);
 		e3view.e1selected = e1obj; // E1
 		e3view.firstSection = 0;
 		e3view.sortType = (-1);
@@ -1325,15 +1285,15 @@
 					break;
 					
 				case 1:
-					cell.imageView.image = [UIImage imageNamed:@"Dropbox-130x44"];
-					cell.textLabel.text = NSLocalizedString(@"Import Dropbox",nil);
-					cell.detailTextLabel.text = NSLocalizedString(@"Import Dropbox msg",nil);
-					break;
-					
-				case 2:
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-GoogleAdd"];
 					cell.textLabel.text = NSLocalizedString(@"Import Google",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"Import Google msg",nil);
+					break;
+					
+				case 2:
+					cell.imageView.image = [UIImage imageNamed:@"Icon32-Dropbox"];
+					cell.textLabel.text = NSLocalizedString(@"Import Dropbox",nil);
+					cell.detailTextLabel.text = NSLocalizedString(@"Import Dropbox msg",nil);
 					break;
 			}
 		}
@@ -1429,12 +1389,12 @@
 				[self	actionImportSharedPackList];
 				break;
 				
-			case 1: // Restore from Dropbox
-				[self actionImportDropbox];
-				break;
-				
-			case 2: // Restore from Google
+			case 1: // Google
 				[self actionImportGoogle];
+				break;
+
+			case 2: // Dropbox
+				[self actionImportDropbox];
 				break;
 		}
 	}

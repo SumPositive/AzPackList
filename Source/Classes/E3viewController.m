@@ -143,7 +143,12 @@
 		self.tableView.allowsSelectionDuringEditing = YES;
 	}
 	
-	if (appDelegate_.app_is_iPad) {
+	if (e1selected_.name) {		// self.titleは、TopBarへ挿入する処理のため必要になる。
+		self.title = e1selected_.name;
+	} else {
+		self.title = NSLocalizedString(@"(New Pack)", nil);
+	}
+	if (appDelegate_.app_is_iPad) {  // TopBarにタイトルを挿入する
 		if (e2toolbar_==nil) {
 			e2toolbar_ = [[UIToolbar alloc] init];
 			
@@ -153,7 +158,7 @@
 			UIBarButtonItem* buFixed = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
 			
 			NSString* str;
-			if (30<[self.title length]) {
+			if (30<[self.title length]) {  // 
 				str = [self.title substringToIndex:30];	//loadView以降でしかセットされない
 			} else {
 				str = self.title;
@@ -237,7 +242,8 @@
 - (void)viewWillAppear:(BOOL)animated 
 {
     [super viewWillAppear:animated];
-
+	// self.titleは、loadView:にて設定。　iPadの場合、TopBarへ挿入する処理が必要だから。
+	
 	// 画面表示に関係する Option Setting を取得する
 	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
@@ -246,8 +252,6 @@
 	optShowTotalWeightReq_ = [kvs boolForKey:KV_OptShowTotalWeightReq]; // [0.3]Fix:抜けていた
 	optCheckingAtEditMode_ = [kvs boolForKey:KV_OptCheckingAtEditMode];
 	optSearchItemsNote_ = [kvs boolForKey:KV_OptSearchItemsNote];
-	
-	//self.title = ;　呼び出す側でセット済み。　変化させるならばココで。
 	
 	static int siSortType = (-99); //Pad対応のため必要になった。
 	if (sortType_==(-9)) {	// (-9)E3初期化（リロード＆再描画、セクション0表示）

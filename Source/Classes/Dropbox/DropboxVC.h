@@ -20,7 +20,7 @@
 @interface DropboxVC : UIViewController <UITableViewDelegate, UITableViewDataSource, 
 										UITextFieldDelegate, DBRestClientDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 {
-	IBOutlet UIButton		*ibBuClose;		//iPadで使用
+	//IBOutlet UIButton		*ibBuClose;		//iPadで使用
 	IBOutlet UIButton		*ibBuSave;
 	IBOutlet UITextField	*ibTfName;
 	IBOutlet UILabel			*ibLbEncrypt;
@@ -46,7 +46,7 @@
 //@property (nonatomic, assign) id				delegate;
 //@property (nonatomic, retain) E1				*Re1selected;	//=nil:取込専用（保存関係を非表示にする）
 
-- (IBAction)ibBuClose:(UIButton *)button;
+//- (IBAction)ibBuClose:(UIButton *)button;
 - (IBAction)ibBuSave:(UIButton *)button;
 - (IBAction)ibSwEncrypt:(UISwitch *)sender;
 - (IBAction)ibSegSort:(UISegmentedControl *)segment;

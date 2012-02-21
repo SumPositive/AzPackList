@@ -285,8 +285,12 @@
 			DropboxVC *vc = [[DropboxVC alloc] initWithE1:dropboxSaveE1selected_];
 			if (app_is_iPad_) {
 				// Dropboxだけは、認証して戻ったときAppDelegate内で再現させるため座標情報が不要なFormSheetにしている。
-				vc.modalPresentationStyle = UIModalPresentationFormSheet;
-				[mainSVC_ presentModalViewController:vc animated:YES];
+			//	vc.modalPresentationStyle = UIModalPresentationFormSheet;
+			//	[mainSVC_ presentModalViewController:vc animated:YES];
+				UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+				nc.modalPresentationStyle = UIModalPresentationFormSheet;
+				nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+				[mainSVC_ presentModalViewController:nc animated:YES];
 			} 
 			else {
 				if (app_opt_Ad_) {

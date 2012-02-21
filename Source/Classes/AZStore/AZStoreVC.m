@@ -6,6 +6,7 @@
 //
 
 #import "Global.h"
+#import "AppDelegate.h"
 #import "AZStoreVC.h"
 
 
@@ -143,8 +144,22 @@ NSString *passCode()
 	alertActivityIndicator_ = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
 	alertActivityIndicator_.frame = CGRectMake(0, 0, 50, 50);
 	[alertActivity_ addSubview:alertActivityIndicator_];
+
+	AppDelegate *ad = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	if (ad.app_is_iPad) {
+		// CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
+												 initWithTitle:NSLocalizedString(@"Back", nil)
+												 style:UIBarButtonItemStyleBordered
+												 target:self action:@selector(actionBack:)];
+	}
 }
 
+- (void)actionBack:(id)sender
+{
+	[self dismissModalViewControllerAnimated:YES];
+}
+	
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -184,9 +199,13 @@ NSString *passCode()
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
-	return YES;
+	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	if (app.app_is_iPad) {
+		return YES;
+	} else {
+		// 回転禁止でも、正面は常に許可しておくこと。
+		return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+	}
 }
 
 #pragma mark unload

@@ -7,6 +7,7 @@
 //
 
 #import "Global.h"
+#import "AppDelegate.h"
 #import "DropboxVC.h"
 #import "FileCsv.h"
 
@@ -72,11 +73,11 @@
 
 
 #pragma mark - IBAction
-
+/*
 - (IBAction)ibBuClose:(UIButton *)button
 {
 	[self dismissModalViewControllerAnimated:YES];
-}
+}*/
 
 - (IBAction)ibBuSave:(UIButton *)button
 {
@@ -154,19 +155,6 @@
 {
     [super viewDidLoad];
 
-	// init:では早すぎるようなので、ここで制御する。
-	if ([[[UIDevice currentDevice] model] hasPrefix:@"iPad"]) {	// iPad
-		ibBuClose.hidden = NO;
-	} else {
-		// iPhone
-		ibBuClose.hidden = YES;
-		if (e1upload_) {
-			self.title = e1upload_.name;
-		} else {
-			self.title = @"PackList";
-		}
-	}
-	
 	ibTfName.keyboardType = UIKeyboardTypeDefault;
 	ibTfName.returnKeyType = UIReturnKeyDone;
 	
@@ -185,6 +173,20 @@
 	mActivityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
 	mActivityIndicator.frame = CGRectMake(0, 0, 50, 50);
 	[mAlert addSubview:mActivityIndicator];
+
+	AppDelegate *ad = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	if (ad.app_is_iPad) {
+		// CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
+												 initWithTitle:NSLocalizedString(@"Back", nil)
+												 style:UIBarButtonItemStyleBordered
+												 target:self action:@selector(actionBack:)];
+	}
+}
+
+- (void)actionBack:(id)sender
+{
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -192,10 +194,19 @@
     [super viewWillAppear:animated];
 
 	if (e1upload_) {
-		ibTfName.text = e1upload_.name;
+		//self.title = NSLocalizedString(@"Backup Dropbox", nil);
+		if (e1upload_.name) {
+			self.title = e1upload_.name;
+			ibTfName.text = e1upload_.name;
+		} else {
+			self.title = NSLocalizedString(@"(New Pack)", nil);
+			ibTfName.text = NSLocalizedString(@"(New Pack)", nil);
+		}
 		ibTfName.enabled = YES;
 		ibBuSave.enabled = YES;
-	} 
+	} else {
+		self.title = NSLocalizedString(@"Import Dropbox", nil);
+	}
 }
 
 - (void)viewDidAppear:(BOOL)animated

@@ -51,17 +51,27 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	self.title = NSLocalizedString(@"Import Google", nil);
 
-/*	// Set up NEXT Left [Back] buttons.
-	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
-											 initWithTitle:NSLocalizedString(@"Back", nil)
-											 style:UIBarButtonItemStylePlain
-											 target:nil  action:nil];*/
+	if (mAppDelegate.app_is_iPad) {
+		// CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
+												 initWithTitle:NSLocalizedString(@"Back", nil)
+												 style:UIBarButtonItemStyleBordered
+												 target:self action:@selector(actionBack:)];
+	}
+}
+
+- (void)actionBack:(id)sender
+{
+	//[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)viewDidUnload
@@ -74,8 +84,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-	
-	self.title = NSLocalizedString(@"Import Google", nil);
 	
 	[GoogleService alertIndicatorOn:NSLocalizedString(@"Communicating", nil)];
 

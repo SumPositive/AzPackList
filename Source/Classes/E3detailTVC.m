@@ -196,20 +196,22 @@
 
 - (void)viewDesignPhoto
 {
+	CGRect rc;
 	if (appDelegate_.app_is_iPad) { // iPad
-		mLbPhotoMsg.frame = CGRectMake(5+24+5, 26, 390, 30);
-		mIvPhoto.frame = CGRectMake(5, 26, 390, 480);
+		mLbPhotoMsg.frame = CGRectMake(5+24+5, 5, 390, 30);
+		rc = CGRectMake(5, 5+24, 390-40-5, 480-24);
 	}
 	else if (self.tableView.frame.size.width < 400) {	// iPhone縦
 		mLbPhotoMsg.frame = CGRectMake(5+24+5, 5, 320-30-24-5, 30);
-		mIvPhoto.frame = CGRectMake(5, 5, 320-30, 320);
+		rc = CGRectMake(5, 5+24, 320-20-40-5, 320-24);
 	}
 	else {		// iPhone横
 		mLbPhotoMsg.frame = CGRectMake(5+24+5, 5, 480-30-24-5, 30);
-		mIvPhoto.frame = CGRectMake(5, 5, 480-30, 320);
+		rc = CGRectMake(5, 5+24, 480-20-40-5, 320-24);
 	}
-	[mSvPhoto setContentSize:mIvPhoto.bounds.size];
-	[mSvPhoto setFrame:mIvPhoto.frame];
+	//mSvPhoto.frame = rc;
+	//mIvPhoto.frame = rc;
+	//mSvPhoto.contentSize = mIvPhoto.bounds.size;
 }
 
 - (void)viewDesign
@@ -603,6 +605,15 @@
 	}
 }
 
+- (void)actionCamera
+{	// CameraVC へ
+	CameraVC *cam = [[CameraVC alloc] init];
+	cam.imageView = mIvPhoto;
+	cam.e3target = e3target_;
+	[self.navigationController pushViewController:cam animated:YES];
+}
+
+
 #pragma mark - CalcRoll
 
 - (void)showCalc:(UILabel *)pLabel 
@@ -863,10 +874,12 @@
 			case 5:
 				return 58;
 			case 6:
-				if (appDelegate_.app_is_iPad) {
-					return 26+480+5;
-				} else {
-					return 5+320+5;
+				if (e3target_.photoData) {
+					if (appDelegate_.app_is_iPad) {
+						return 5+24+480+5;
+					} else {
+						return 5+24+320+5;
+					}
 				}
 		}
 	}
@@ -1109,13 +1122,22 @@
 					break;
 				case 6: // Photo
 					if (mLbPhotoMsg==nil) {
+						// Camera ボタン
+						UIButton *bu = [UIButton buttonWithType:UIButtonTypeCustom];
+						bu.frame = CGRectMake(0,0, 32,32);
+						[bu setImage:[UIImage imageNamed:@"Icon24-Camera"] forState:UIControlStateNormal];
+						[bu addTarget:self action:@selector(actionCamera) forControlEvents:UIControlEventTouchUpInside];
+						cell.accessoryType = UITableViewCellAccessoryNone;
+						cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
+						cell.accessoryView = bu;
+						// Status Label
 						mLbPhotoMsg = [[UILabel alloc] initWithFrame:CGRectMake(5+24+5,2, 100,30)];
 						mLbPhotoMsg.font = [UIFont systemFontOfSize:12];
 						mLbPhotoMsg.textColor = [UIColor grayColor];
 						mLbPhotoMsg.numberOfLines = 2;
 						mLbPhotoMsg.backgroundColor = [UIColor clearColor];
 						[cell.contentView addSubview:mLbPhotoMsg];
-						// Icon
+						// Status Icon 
 						mIvPhotoIcon = [[UIImageView alloc] init];
 						mIvPhotoIcon.contentMode = UIViewContentModeScaleAspectFit;
 						mIvPhotoIcon.frame = CGRectMake(5, 2, 24, 24);
@@ -1123,55 +1145,67 @@
 						// Image 640x480
 						mIvPhoto = [[UIImageView alloc] init];
 						mIvPhoto.contentMode = UIViewContentModeScaleAspectFit;
+						//[mIvPhoto addGestureRecognizer:
+						mIvPhoto.userInteractionEnabled = NO;
 						// Scroll
 						mSvPhoto = [[UIScrollView alloc] init];
 						mSvPhoto.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 						[mSvPhoto addSubview:mIvPhoto];
 						mSvPhoto.delegate = self;
-						mSvPhoto.minimumZoomScale = 0.6; // 再撮影ボタンを押しやすくするため
+						mSvPhoto.minimumZoomScale = 1.0;
 						mSvPhoto.maximumZoomScale = 3.0;
+						//mSvPhoto.delaysContentTouches = YES;
 						[cell.contentView addSubview:mSvPhoto];
 						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // > 撮影
 						[self viewDesignPhoto]; //回転処理
 					}
-#ifdef DEBUG
+#ifdef DEBUGxxx
 					mIvPhoto.alpha = 0.3;
 					cell.textLabel.text = e3target_.photoUrl;
 					cell.textLabel.numberOfLines = 6;
 					cell.textLabel.backgroundColor = [UIColor clearColor];
 #endif
-					if ([e3target_.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// Picasaアップ済みだがURL未取得
-						// 写真あるが未アップの状態でPackListを保存やメール送信した場合、
-						// それを表示すると、.phoneDataが無く、.phoneUrlにUUIDが入っている。
-						mIvPhotoIcon.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo UploadWait", nil);
-					}
-					else if (10 < [e3target_.photoUrl length]) {	// Picasaアップ済み
-						mIvPhotoIcon.image = [UIImage imageNamed:@"Icon32-Picasa"];
-						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo Uploaded", nil);
-					}
-					else if (e3target_.photoData) {		// 写真あるが未アップ
-						mIvPhotoIcon.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo UploadWait", nil);
-					}
-					else {
-						mIvPhotoIcon.image = [UIImage imageNamed:@"Icon24-Camera"];
-					}
-					
-					if (mIvPhoto.image==nil) {	//特にデバイス横のとき、範囲外になり初期ロードされないため、範囲内になったときここでロードさせる必要あり。
-						// Loading
-						if (e3target_.photoData) {
-							mIvPhoto.image = [UIImage imageWithData: e3target_.photoData];
+					if (e3target_.photoData) {		// 写真データあり
+						mIvPhoto.image = [UIImage imageWithData: e3target_.photoData];
+						cell.imageView.image = nil;
+						cell.textLabel.text = nil;
+						if ([e3target_.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み
+							mIvPhotoIcon.image = [UIImage imageNamed:@"Icon32-Picasa"];
+							mLbPhotoMsg.text = nil;  //NSLocalizedString(@"Google Photo Uploaded", nil);
+						} else {		// アップ待ち　リトライ
+							mIvPhotoIcon.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo UploadWait", nil);
 						}
-						else if (10 < [e3target_.photoUrl length]) {
-							// Picasaからダウンロードして、表示かつキャッシュ(e3target_.photoData)に保存する。
-							[GoogleService photoDownloadE3:e3target_ imageView:mIvPhoto];
-							// Picasaにアップされたはずだが、ダウンロードできなかったことを示すアイコンを表示する
-							//mIvPhoto.image = [UIImage imageNamed:@"Icon64-DownloadNG"];
-							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo DownloadNG", nil);
+					} else {		// 写真データなし
+						mIvPhotoIcon.image = nil;
+						mLbPhotoMsg.text = nil;
+						if ([e3target_.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み  ダウンロード待ち
+							cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+							cell.textLabel.text = NSLocalizedString(@"Google Downloading", nil);
+							cell.textLabel.textAlignment = UITextAlignmentLeft;
+							cell.textLabel.textColor = [UIColor blueColor];
+							cell.textLabel.font = [UIFont systemFontOfSize:12];
 						}
-						[self viewDesignPhoto];
+						else if ([e3target_.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
+							cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+							cell.textLabel.text = NSLocalizedString(@"Google Photo NoUpload", nil);
+							cell.textLabel.textAlignment = UITextAlignmentLeft;
+							cell.textLabel.textColor = [UIColor grayColor];
+							cell.textLabel.font = [UIFont systemFontOfSize:12];
+						}
+						else {	// Picasaアップなし　撮影してください
+							cell.imageView.image = [UIImage imageNamed:@"Icon32-Picasa"];
+							cell.textLabel.text = NSLocalizedString(@"Google Photo", nil);
+							cell.textLabel.textAlignment = UITextAlignmentRight;
+							cell.textLabel.textColor = [UIColor grayColor];
+							cell.textLabel.font = [UIFont systemFontOfSize:12];
+						} 
 					}
+					cell.contentView.backgroundColor = [UIColor lightGrayColor];
+					mSvPhoto.frame = cell.contentView.bounds;
+					mIvPhoto.frame = cell.contentView.bounds;
+					mSvPhoto.contentSize = mIvPhoto.bounds.size;
+					[self viewDesignPhoto];
 					break;
 			}
 			break;
@@ -1295,7 +1329,7 @@
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:web];
 		nc.modalPresentationStyle = UIModalPresentationPageSheet;  // 背景Viewが保持される
 		// FullScreenにするとPopoverが閉じられる。さらに、背後が破棄されてE3viewController:viewWillAppear が呼び出されるようになる。
-		nc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;//	UIModalTransitionStyleFlipHorizontal
+		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;//	UIModalTransitionStyleFlipHorizontal
 		//[self　 presentModalViewController:nc animated:YES];  NG//回転しない
 		//[self.navigationController presentModalViewController:nc animated:YES];  NG//回転しない
 		[appDelegate_.mainSVC presentModalViewController:nc animated:YES];  //回転する
@@ -1337,12 +1371,7 @@
 				}
 					break;
 				case 6: // Photo
-				{	// CameraVC へ
-					CameraVC *cam = [[CameraVC alloc] init];
-					cam.imageView = mIvPhoto;
-					cam.e3target = e3target_;
-					[self.navigationController pushViewController:cam animated:YES];
-				}
+					//右ボタンにした//[self actionCamera];
 					break;
 			}
 			break;

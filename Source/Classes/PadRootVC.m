@@ -69,7 +69,8 @@
 													alpha:1.0f];
 		
 		//iPad// これが、最初の Index Popover のサイズになる。
-		self.contentSizeForViewInPopover = GD_POPOVER_SIZE; //アクションメニュー配下(Share,Googleなど）においてサイズ統一
+		//self.contentSizeForViewInPopover = GD_POPOVER_SIZE; //アクションメニュー配下(Share,Googleなど）においてサイズ統一
+		self.contentSizeForViewInPopover = CGSizeMake(350, 800); //配下全てFormSheetスタイルにしたことにより自由になったので最大化
    }
     return self;
 }

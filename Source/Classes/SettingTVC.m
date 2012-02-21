@@ -56,25 +56,33 @@
 	if ((self = [super initWithStyle:UITableViewStyleGrouped])) {  // セクションありテーブル
 
 		mAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		if (mAppDelegate.app_is_iPad) {
+	/*	if (mAppDelegate.app_is_iPad) {
 			self.contentSizeForViewInPopover = CGSizeMake(480, 580);
 			self.navigationItem.hidesBackButton = YES;
-		}
+		}*/
 	}
 	return self;
 }
 
-/***随時同期はしない。閉じてから同期で十分
-- (void)viewDidLoad 
+- (void)viewDidLoad
 {
-	[super viewDidLoad];
+    [super viewDidLoad];
 	
-	// iCloud-KVS 変更通知を受ける
-    [[NSNotificationCenter defaultCenter] addObserver:self			// viewDidUnload:にて removeObserver:必須
-											 selector:@selector(kvsValueChange:) 
-												 name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification	// KVSの値が変化したとき
-											   object:nil];  //=nil: 全てのオブジェクトからの通知を受ける
-}*/
+	self.title = NSLocalizedString(@"menu Setting", nil);
+
+	if (mAppDelegate.app_is_iPad) {
+		// CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
+												 initWithTitle:NSLocalizedString(@"Back", nil)
+												 style:UIBarButtonItemStyleBordered
+												 target:self action:@selector(actionBack:)];
+	}
+}
+
+- (void)actionBack:(id)sender
+{
+	[self dismissModalViewControllerAnimated:YES];
+}
 
 // 他のViewやキーボードが隠れて、現れる都度、呼び出される
 - (void)viewWillAppear:(BOOL)animated 
@@ -111,11 +119,11 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
 	if (mAppDelegate.app_is_iPad) {
-		return (interfaceOrientation == UIInterfaceOrientationPortrait);	// Popover内につき回転不要 <正面は常に許可>
+		//return (interfaceOrientation == UIInterfaceOrientationPortrait);	// Popover内につき回転不要 <正面は常に許可>
+		return YES;
 	} else {
 		// 回転禁止でも、正面は常に許可しておくこと。
-		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+		return mAppDelegate.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
 	}
 }
 
