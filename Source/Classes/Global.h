@@ -82,6 +82,7 @@ NSString *GstringFromNumber( NSNumber *num );
 NSString *getMacAddress();
 NSDate *dateFromUTC( NSString *zUTC );
 NSString *utcFromDate( NSDate *dTZ );
+void debugLogRect( CGRect rc,  NSString *title);
 
 
 
@@ -90,15 +91,18 @@ NSString *utcFromDate( NSDate *dTZ );
 #define OR  ||
 
 #ifdef DEBUG	//--------------------------------------------- DEBUG
-#define AzLOG(...) NSLog(__VA_ARGS__)
+#define DEBUG_LOG_RECT(...)		debugLogRect(__VA_ARGS__)
+#define AzLOG(...)							NSLog(__VA_ARGS__)
 #define AzRETAIN_CHECK(zName,pObj,iAns)  { if ([pObj retainCount] > iAns) NSLog(@"AzRETAIN_CHECK> %@ %d > %d", zName, [pObj retainCount], iAns); }
 
 #else	//----------------------------------------------------- RELEASE
-		// その他のフラグ：-DNS_BLOCK_ASSERTIONS=1　（NSAssertが除去される）
+			// その他のフラグ：-DNS_BLOCK_ASSERTIONS=1　（NSAssertが除去される）
+#define DEBUG_LOG_RECT(...) 
 #define AzLOG(...) 
 #define NSLog(...) 
 #define AzRETAIN_CHECK(...) 
 #endif
+
 
 // iOS VERSION		http://goddess-gate.com/dc2/index.php/post/452
 #define IOS_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
@@ -106,5 +110,6 @@ NSString *utcFromDate( NSDate *dTZ );
 #define IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 #define IOS_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 #define IOS_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
+
 
 

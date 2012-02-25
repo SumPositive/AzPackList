@@ -181,6 +181,14 @@ NSString *utcFromDate( NSDate *dTZ )
 	return zUTC; // autorelease
 }
 
+//******************************************************************************
+#ifdef DEBUG
+#pragma mark - DEBUG Functions
+void debugLogRect( CGRect rc,  NSString *title)
+{
+	NSLog(@"**RECT*** %@=(%.1f, %.1f)-(%.1f, %.1f)", title, rc.origin.x, rc.origin.y, rc.size.width, rc.size.height);
+}
+#endif
 
 //END
 

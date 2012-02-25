@@ -72,7 +72,8 @@
 	CalcView				*calcView_;
 
 	UILabel				*mLbPhotoMsg;
-	UIImageView		*mIvPhotoIcon;
+	UIImageView		*mIvIconPicasa;
+	UIButton				*mBuCamera;
 	UIImageView		*mIvPhoto;
 	UIScrollView			*mSvPhoto;
 	
@@ -194,24 +195,43 @@
     [self.tableView reloadData];
 }
 
+- (IBAction)handlePinchGesture:(UIGestureRecognizer *)sender 
+{
+	CGFloat factor = [(UIPinchGestureRecognizer *)sender scale];
+	mSvPhoto.zoomScale = factor;
+}
+
 - (void)viewDesignPhoto
 {
-	CGRect rc;
+	if (!mIvPhoto)  {
+		return; // Cell生成前に呼ばれたとき
+	}
+	
+	CGRect rcPhoto;
 	if (appDelegate_.app_is_iPad) { // iPad
-		mLbPhotoMsg.frame = CGRectMake(5+24+5, 5, 390, 30);
-		rc = CGRectMake(5, 5+24, 390-40-5, 480-24);
+		rcPhoto = CGRectMake(4, 44, 390-8-20, 480);
 	}
 	else if (self.tableView.frame.size.width < 400) {	// iPhone縦
-		mLbPhotoMsg.frame = CGRectMake(5+24+5, 5, 320-30-24-5, 30);
-		rc = CGRectMake(5, 5+24, 320-20-40-5, 320-24);
+		rcPhoto = CGRectMake(4, 44, 320-8-20, 320);
 	}
 	else {		// iPhone横
-		mLbPhotoMsg.frame = CGRectMake(5+24+5, 5, 480-30-24-5, 30);
-		rc = CGRectMake(5, 5+24, 480-20-40-5, 320-24);
+		rcPhoto = CGRectMake(4, 44, 480-8-20, 320);
 	}
-	//mSvPhoto.frame = rc;
-	//mIvPhoto.frame = rc;
-	//mSvPhoto.contentSize = mIvPhoto.bounds.size;
+	
+	mSvPhoto.zoomScale = 1.0;
+	mSvPhoto.frame = rcPhoto;
+	mSvPhoto.clipsToBounds = YES;
+
+	mSvPhoto.bounds = CGRectMake(0, 0, rcPhoto.size.width, rcPhoto.size.height);
+	mIvPhoto.frame = mSvPhoto.bounds;
+	//DEBUG_LOG_RECT(mIvPhoto.frame, @"mIvPhoto.frame");	
+	mSvPhoto.contentSize = mIvPhoto.frame.size;
+	
+	// Icons
+	mIvIconPicasa.frame = CGRectMake(4, 10, 24, 24);
+	mLbPhotoMsg.frame = CGRectMake(34, 4, rcPhoto.size.width-34-44, 36);
+	//mLbPhotoMsg.backgroundColor = [UIColor brownColor];
+	mBuCamera.frame = CGRectMake(rcPhoto.origin.x+rcPhoto.size.width-44, 0, 44, 44);
 }
 
 - (void)viewDesign
@@ -273,6 +293,8 @@
 		//[GoogleAuth downloadPhotoE3:e3target_  imageView:mIvPhoto]; //非同期処理
 		
 	}
+	
+	[self viewDesignPhoto]; //これが無いと mScViewの高さが設定されず乱れる
 }
 
 // ビューが非表示にされる前や解放される前ににこの処理が呼ばれる
@@ -876,9 +898,9 @@
 			case 6:
 				if (e3target_.photoData) {
 					if (appDelegate_.app_is_iPad) {
-						return 5+24+480+5;
+						return 44+480+4;
 					} else {
-						return 5+24+320+5;
+						return 44+320+4;
 					}
 				}
 		}
@@ -1122,14 +1144,6 @@
 					break;
 				case 6: // Photo
 					if (mLbPhotoMsg==nil) {
-						// Camera ボタン
-						UIButton *bu = [UIButton buttonWithType:UIButtonTypeCustom];
-						bu.frame = CGRectMake(0,0, 32,32);
-						[bu setImage:[UIImage imageNamed:@"Icon24-Camera"] forState:UIControlStateNormal];
-						[bu addTarget:self action:@selector(actionCamera) forControlEvents:UIControlEventTouchUpInside];
-						cell.accessoryType = UITableViewCellAccessoryNone;
-						cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
-						cell.accessoryView = bu;
 						// Status Label
 						mLbPhotoMsg = [[UILabel alloc] initWithFrame:CGRectMake(5+24+5,2, 100,30)];
 						mLbPhotoMsg.font = [UIFont systemFontOfSize:12];
@@ -1137,27 +1151,37 @@
 						mLbPhotoMsg.numberOfLines = 2;
 						mLbPhotoMsg.backgroundColor = [UIColor clearColor];
 						[cell.contentView addSubview:mLbPhotoMsg];
-						// Status Icon 
-						mIvPhotoIcon = [[UIImageView alloc] init];
-						mIvPhotoIcon.contentMode = UIViewContentModeScaleAspectFit;
-						mIvPhotoIcon.frame = CGRectMake(5, 2, 24, 24);
-						[cell.contentView addSubview:mIvPhotoIcon];
+						// IconPicasa 
+						mIvIconPicasa = [[UIImageView alloc] init];
+						mIvIconPicasa.contentMode = UIViewContentModeScaleAspectFit;
+						mIvIconPicasa.frame = CGRectMake(4, 10, 24, 24);
+						[cell.contentView addSubview:mIvIconPicasa];
+						// Camera ボタン
+						mBuCamera = [UIButton buttonWithType:UIButtonTypeCustom];
+						mBuCamera.frame = CGRectMake(0,0, 44,44);
+						[mBuCamera setImage:[UIImage imageNamed:@"Icon24-Camera"] forState:UIControlStateNormal];
+						[mBuCamera addTarget:self action:@selector(actionCamera) forControlEvents:UIControlEventTouchUpInside];
+						cell.accessoryType = UITableViewCellAccessoryNone;
+						cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
+						[cell.contentView addSubview:mBuCamera];  //cell.accessoryView = bu;
 						// Image 640x480
 						mIvPhoto = [[UIImageView alloc] init];
 						mIvPhoto.contentMode = UIViewContentModeScaleAspectFit;
-						//[mIvPhoto addGestureRecognizer:
-						mIvPhoto.userInteractionEnabled = NO;
+						//mIvPhoto.clipsToBounds = YES;
 						// Scroll
 						mSvPhoto = [[UIScrollView alloc] init];
 						mSvPhoto.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 						[mSvPhoto addSubview:mIvPhoto];
 						mSvPhoto.delegate = self;
+						mSvPhoto.zoomScale = 1.0;
 						mSvPhoto.minimumZoomScale = 1.0;
-						mSvPhoto.maximumZoomScale = 3.0;
-						//mSvPhoto.delaysContentTouches = YES;
+						mSvPhoto.maximumZoomScale = 4.0;
 						[cell.contentView addSubview:mSvPhoto];
-						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // > 撮影
-						[self viewDesignPhoto]; //回転処理
+						// 写真ズーム：　ピンチアウト操作
+						UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]
+																  initWithTarget:self action:@selector(handlePinchGesture:)];
+						[cell.contentView addGestureRecognizer:pinchGesture];
+						
 					}
 #ifdef DEBUGxxx
 					mIvPhoto.alpha = 0.3;
@@ -1165,19 +1189,20 @@
 					cell.textLabel.numberOfLines = 6;
 					cell.textLabel.backgroundColor = [UIColor clearColor];
 #endif
+
 					if (e3target_.photoData) {		// 写真データあり
 						mIvPhoto.image = [UIImage imageWithData: e3target_.photoData];
 						cell.imageView.image = nil;
 						cell.textLabel.text = nil;
 						if ([e3target_.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み
-							mIvPhotoIcon.image = [UIImage imageNamed:@"Icon32-Picasa"];
-							mLbPhotoMsg.text = nil;  //NSLocalizedString(@"Google Photo Uploaded", nil);
+							mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
+							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo Zoom", nil);
 						} else {		// アップ待ち　リトライ
-							mIvPhotoIcon.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+							mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
 							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo UploadWait", nil);
 						}
 					} else {		// 写真データなし
-						mIvPhotoIcon.image = nil;
+						mIvIconPicasa.image = nil;
 						mLbPhotoMsg.text = nil;
 						if ([e3target_.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み  ダウンロード待ち
 							cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
@@ -1201,10 +1226,7 @@
 							cell.textLabel.font = [UIFont systemFontOfSize:12];
 						} 
 					}
-					cell.contentView.backgroundColor = [UIColor lightGrayColor];
-					mSvPhoto.frame = cell.contentView.bounds;
-					mIvPhoto.frame = cell.contentView.bounds;
-					mSvPhoto.contentSize = mIvPhoto.bounds.size;
+					// 写真データにより変化するため
 					[self viewDesignPhoto];
 					break;
 			}
