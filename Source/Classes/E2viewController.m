@@ -1726,15 +1726,9 @@
 								 destructiveButtonTitle:NSLocalizedString(@"DELETE Group", nil)
 								 otherButtonTitles:nil];
 		action.tag = ACTIONSEET_TAG_DELETEGROUP;
-		if (self.interfaceOrientation == UIInterfaceOrientationPortrait 
-			OR self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-			// タテ：ToolBar表示
-			[action showFromToolbar:self.navigationController.toolbar]; // ToolBarがある場合
-		} else {
-			// ヨコ：ToolBar非表示（TabBarも無い）　＜＜ToolBar無しでshowFromToolbarするとFreeze＞＞
-			[action showInView:self.view]; //windowから出すと回転対応しない
-		}
-		//[action release];
+		//[2.0]ToolBarを無くした。
+		//[2.0]ToolBar非表示（TabBarも無い）　＜＜ToolBar無しでshowFromToolbarするとFreeze＞＞
+		[action showInView:self.view]; //windowから出すと回転対応しない
     }
 }
 

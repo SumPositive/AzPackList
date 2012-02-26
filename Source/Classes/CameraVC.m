@@ -14,14 +14,6 @@
 #import "GoogleService.h"
 
 
-NSString *uuidString()
-{
-	CFUUIDRef uuidObj = CFUUIDCreate(nil);	//create a new UUID
-	NSString *uuid = (__bridge_transfer NSString *)CFUUIDCreateString(nil, uuidObj);
-	CFRelease(uuidObj);
-	return uuid;
-}
-
 
 @interface CameraVC (PrivateMethods)
 - (void)cameraReset;
@@ -45,6 +37,7 @@ NSString *uuidString()
 	NSData						*captureData_;
 	//UIPopoverController	*popRecordView;
 	//AZPicasa						*picasa_;
+	//float					mVolume;
 }
 @synthesize e3target = e3target_;
 @synthesize imageView = imageView_;
@@ -57,9 +50,7 @@ NSString *uuidString()
 	if (!captureDevice_) {
 		return; // カメラなし
 	}
-	/*if (captureSession) {
-		[captureSession release];
-	}*/
+
 	captureSession_ = [[AVCaptureSession alloc] init];
 	if (!captureSession_) {
 		NSLog(@"ERROR: !captureSession -- No Camera");
@@ -76,9 +67,6 @@ NSString *uuidString()
 	[captureSession_ addInput: camInput]; //[camInput release];
 	
 	// OUTPUT
-	/*if (captureOutput) {
-		[captureOutput release];
-	}*/
 	captureOutput_ = [[AVCaptureStillImageOutput alloc] init];
 	[captureSession_ addOutput: captureOutput_]; 	//[camOutput release];
 	
@@ -132,7 +120,7 @@ NSString *uuidString()
 	}
 	[self rotateToOrientation:interOri];
 
-	//[self.view.layer insertSublayer: previewLayer atIndex: 0];
+	//[self.view.layer insertSublayer: previewLayer_ atIndex: 0];
 	[self.view.layer  addSublayer: previewLayer_];
 	
 	[self cameraReset];
@@ -194,6 +182,10 @@ NSString *uuidString()
 
 - (void)actionCamera:(UIButton *)button
 {
+	// 音量を保持して0にする
+	AVAudioPlayer *audio = [[AVAudioPlayer alloc] initWithContentsOfURL:nil error:nil];
+	[audio setVolume:0.1];
+	
 	if (buCamera_.enabled) {
 		buCamera_.enabled = NO;
 		[buTorch_ setEnabled:NO]; //buTorch_=nil の場合があるため
@@ -314,11 +306,29 @@ NSString *uuidString()
 	}
 	self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects: buDone_, buCamera_, buRedo_, buTorch_, nil];	
 	
+	ibImageView.contentMode = UIViewContentModeScaleAspectFit;
+
 	// 1指タップ
 	UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actionCamera:)];
 	tap.numberOfTouchesRequired =1; // 指数
 	tap.numberOfTapsRequired = 1; // タップ数
 	[self.view addGestureRecognizer:tap];
+	
+	// 音量を保持して0にする
+	/*AVAudioPlayer *audio = [[AVAudioPlayer alloc] initWithContentsOfURL:nil error:nil];
+	mVolume = audio.volume;
+	[audio setVolume:0.1];*/
+	
+/*	// these 4 lines of code tell the system that "this app needs to play sound/music"
+	AVAudioPlayer* p = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"photo-shutter.wav"]] error:NULL];
+	[p prepareToPlay];
+	[p stop];
+	
+	// 音量ボタンでシャッターを切る
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(actionCamera:)
+												 name: @"AVSystemController_SystemVolumeDidChangeNotification" object:nil]; 
+ */
 }
 
 //Viewが表示された直後に実行される
@@ -350,8 +360,8 @@ NSString *uuidString()
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	// Return YES for supported orientations
-    return YES;
 	//return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return YES;
 }
 
 - (void)rotateToOrientation:(UIInterfaceOrientation)orientation
@@ -375,52 +385,79 @@ NSString *uuidString()
 		}
 	}
 
+	CGFloat fh;
+	CGFloat fw;
 	CGRect rect;
 	// ファインダーをカメラの縦横に合わせる
 	switch (orientation) {
 		case UIInterfaceOrientationPortrait:
 			previewLayer_.orientation = AVCaptureVideoOrientationPortrait;
-			rect = CGRectMake(40, 40, 240, 320);
+			fh = 390;
+			fw = fh * 480/640;
+			rect = CGRectMake((320-fw)/2, 5, fw, fh);
+			ibLbCamera.hidden = NO;
 			break;
 		case UIInterfaceOrientationPortraitUpsideDown:
 			previewLayer_.orientation = AVCaptureVideoOrientationPortraitUpsideDown;
-			rect = CGRectMake(40, 40, 240, 320);
+			fh = 390;
+			fw = fh * 480/640;
+			rect = CGRectMake((320-fw)/2, 5, fw, fh);
+			ibLbCamera.hidden = NO;
 			break;
 		case UIInterfaceOrientationLandscapeLeft:
 			previewLayer_.orientation = AVCaptureVideoOrientationLandscapeLeft;
-			rect = CGRectMake(80, 5, 320, 240);
+			fh = 260;
+			fw = fh * 640/480;
+			rect = CGRectMake((480-fw)/2, 3, fw, fh);
+			ibLbCamera.hidden = YES;
 			break;
 		case UIInterfaceOrientationLandscapeRight:
 			previewLayer_.orientation = AVCaptureVideoOrientationLandscapeRight;
-			rect = CGRectMake(80, 5, 320, 240);
+			fh = 260;
+			fw = fh * 640/480;
+			rect = CGRectMake((480-fw)/2, 3, fw, fh);
+			ibLbCamera.hidden = YES;
 			break;
 	}
 	if (appDelegate_.app_is_iPad) {
 		rect.size.width *= 1.5;
 		rect.size.height *= 1.5;
 	}
+	DEBUG_LOG_RECT(rect, @"previewLayer_.frame");
 	previewLayer_.frame = rect;
 
-	// 撮影イメージを写真の縦横に合わせる
+/*	// 撮影イメージを写真の縦横に合わせる
 	if (UIInterfaceOrientationIsPortrait(orientation)) {	// デバイス縦
 		if (ibImageView.image.size.width < 600) {	// 写真タテ
-			rect = CGRectMake(40, 40, 240, 320);
+			fh = 390;
+			fw = fh * 480/640;
+			rect = CGRectMake((320-fw)/2, 5, fw, fh);
 		} else {		// 写真ヨコ
-			rect = CGRectMake(16, 40, 288, 216);
+			fw = 310;
+			fh = fw * 480/640;
+			rect = CGRectMake(5, (390-fh)/2, fw, fh);
 		}
 	}
 	else {		// デバイス横
 		if (ibImageView.image.size.width < 600) {	// 写真タテ
-			rect = CGRectMake(150, 5, 180, 240);
+			fh = 255;
+			fw = fh * 480/640;
+			rect = CGRectMake((480-fw)/2, 3, fw, fh);
 		} else {		// 写真ヨコ
-			rect = CGRectMake(80, 5, 320, 240);
+			fh = 255;
+			fw = fh * 640/480;
+			rect = CGRectMake((480-fw)/2, 3, fw, fh);
 		}
 	}
 	if (appDelegate_.app_is_iPad) {
 		rect.size.width *= 1.5;
 		rect.size.height *= 1.5;
 	}
-	ibImageView.frame = rect;
+	DEBUG_LOG_RECT(rect, @"ibImageView.frame");
+	ibImageView.frame = rect;		//UIViewContentModeScaleAspectFit である。
+	//[ibImageView setFrame:rect]; 
+ */
+	ibImageView.backgroundColor = [UIColor grayColor];
 }
 
 // ユーザインタフェースの回転を始める前にこの処理が呼ばれる。 ＜＜OS 3.0以降の推奨メソッド＞＞
@@ -431,10 +468,13 @@ NSString *uuidString()
 
 - (void)viewDidUnload
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 	
+/*	// 音量を復元する
+	AVAudioPlayer *audio = [[AVAudioPlayer alloc] initWithContentsOfURL:nil error:nil];
+	[audio setVolume:mVolume];*/
+
 	[captureSession_ stopRunning];
 	captureSession_ = nil;
 	captureOutput_ = nil;

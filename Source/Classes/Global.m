@@ -181,6 +181,16 @@ NSString *utcFromDate( NSDate *dTZ )
 	return zUTC; // autorelease
 }
 
+
+NSString *uuidString()
+{
+	CFUUIDRef uuidObj = CFUUIDCreate(nil);	//create a new UUID
+	NSString *uuid = (__bridge_transfer NSString *)CFUUIDCreateString(nil, uuidObj);
+	CFRelease(uuidObj);
+	return uuid;
+}
+
+
 //******************************************************************************
 #ifdef DEBUG
 #pragma mark - DEBUG Functions

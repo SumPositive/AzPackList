@@ -647,7 +647,7 @@ static	NSURL										*sPhotoUploadUrl = nil;
 }
 
 
-+ (void)photoDownloadE3:(E3*)e3target  imageView:(UIImageView*)imageView
++ (void)photoDownloadE3:(E3*)e3target  errorLabel:(UILabel*)errorLabel
 {
 	NSLog(@"GoogleService: photoDownloadE3 :-----------------------");
 	assert(e3target);
@@ -660,11 +660,19 @@ static	NSURL										*sPhotoUploadUrl = nil;
 		return;
 	}
 
+	static BOOL staticActive = NO;  // セルへの読み込み時にスクロールして再呼び出しされるのを回避するため。
+	if (staticActive) {
+		NSLog(@"G> Alredy downloading"); // 処理中につき拒否
+		return;
+	}
+	staticActive = YES;
+
 	GDataServiceGooglePhotos *service = [self photoService];
 	NSMutableURLRequest *request;
 	if ([e3target.photoUrl  hasPrefix:GS_PHOTO_UUID_PREFIX]) {
 		// Description を検索する
 		// "/feed/subtitle"
+		staticActive = NO;
 		return;  // 検索方法が解らないので実装保留
 	} else {
 		request = [service requestForURL:[NSURL URLWithString: e3target.photoUrl]  ETag:nil   httpMethod:nil];
@@ -676,18 +684,15 @@ static	NSURL										*sPhotoUploadUrl = nil;
 	// http logs are easier to read when fetchers have comments
 	[fetcher setCommentWithFormat:@"downloading %@", e3target.name];
 	
-	UIActivityIndicatorView *actInd = nil;
-	if (imageView) {
-		actInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-		actInd.frame = imageView.bounds;
-		[imageView addSubview:actInd];
-		[actInd startAnimating];
-	}
-	
 	[fetcher beginFetchWithCompletionHandler:^(NSData *data, NSError *error) {
 		if (error) {
 			NSLog(@"G> Failed '%@'\n", error.localizedDescription);
-			// error.code=404 data:No photo found.
+			if (error.code==404) {	// error.code=404 data:No photo found.
+				NSLog(@"G> error.code==404: File Not Found");
+				[errorLabel setText:NSLocalizedString(@"Google Photo 404", nil)];
+			} else {
+				[errorLabel setText:error.localizedDescription];
+			}
 		}
 		else {
 			NSLog(@"G> OK");
@@ -700,18 +705,12 @@ static	NSURL										*sPhotoUploadUrl = nil;
 				NSLog(@"G> MOC save error %@, %@", error, [error userInfo]);
 				assert(NO); //DEBUGでは落とす
 			} 
-			AppDelegate *ad = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-			ad.app_UpdateSave = NO; //保存済み
-			if (imageView) {
-				imageView.image = [UIImage imageWithData:data];
-			}
+			// 再読み込み 通知発信---> E3detailTVC
+			[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
+																object:self userInfo:nil];
 		}
-		// END
-		if (imageView) {
-			imageView.backgroundColor = [UIColor clearColor];
-			[actInd stopAnimating];
-			[actInd removeFromSuperview];
-		}
+		// 解放
+		staticActive = NO;
 	}];
 }
 

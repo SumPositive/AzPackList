@@ -44,7 +44,7 @@
 
 // Photo <Picasa>
 + (void)photoUploadE3:(E3*)e3target;
-+ (void)photoDownloadE3:(E3*)e3target  imageView:(UIImageView*)imageView;
++ (void)photoDownloadE3:(E3*)e3target  errorLabel:(UILabel*)errorLabel;
 
 @end
 

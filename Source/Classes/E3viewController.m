@@ -1576,29 +1576,7 @@
 															forRowAtIndexPath:(NSIndexPath *)indexPath 
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-		/*[1.1.0]削除を[Cut]動作同等にした。
-		// 削除コマンド警告　==>> (void)actionSheet にて処理
-		//Bug//MindexPathActionDelete = indexPath;
-		[MindexPathActionDelete release], MindexPathActionDelete = [indexPath copy];
-		// 削除コマンド警告
-		UIActionSheet *action = [[UIActionSheet alloc] 
-								 initWithTitle:NSLocalizedString(@"CAUTION", nil)
-								 delegate:self 
-								 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-								 destructiveButtonTitle:NSLocalizedString(@"DELETE Item", nil)
-								 otherButtonTitles:nil];
-		action.tag = ACTIONSEET_TAG_DELETEITEM;
-		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
-			// タテ：ToolBar表示
-			[action showFromToolbar:self.navigationController.toolbar]; // ToolBarがある場合
-		} else {
-			// ヨコ：ToolBar非表示（TabBarも無い）　＜＜ToolBar無しでshowFromToolbarするとFreeze＞＞
-			[action showInView:self.view]; //windowから出すと回転対応しない
-		}
-		[action release];
-		 */
-		// [1.1.0]削除を[Cut]動作同等にした。
-		//[MpathClip release],
+		//[1.1.0]削除を[Cut]動作同等にした。
 		indexPathClip_ = [indexPath copy];
 		[self cut:nil];
     }

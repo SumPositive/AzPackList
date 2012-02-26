@@ -82,6 +82,8 @@ NSString *GstringFromNumber( NSNumber *num );
 NSString *getMacAddress();
 NSDate *dateFromUTC( NSString *zUTC );
 NSString *utcFromDate( NSDate *dTZ );
+NSString *uuidString(void);
+
 void debugLogRect( CGRect rc,  NSString *title);
 
 
