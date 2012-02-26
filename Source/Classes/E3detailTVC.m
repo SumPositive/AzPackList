@@ -209,29 +209,30 @@
 	
 	CGRect rcPhoto;
 	if (appDelegate_.app_is_iPad) { // iPad
-		rcPhoto = CGRectMake(4, 44, 390-8-20, 480);
+		rcPhoto = CGRectMake(8, 44-4, 390-16-20, 480);
 	}
 	else if (self.tableView.frame.size.width < 400) {	// iPhone縦
-		rcPhoto = CGRectMake(4, 44, 320-8-20, 320);
+		rcPhoto = CGRectMake(8, 44-4, 320-16-20, 320);
 	}
 	else {		// iPhone横
-		rcPhoto = CGRectMake(4, 44, 480-8-20, 320);
+		rcPhoto = CGRectMake(8, 44-4, 480-16-20, 320);
 	}
 	
 	mSvPhoto.zoomScale = 1.0;
 	mSvPhoto.frame = rcPhoto;
 	mSvPhoto.clipsToBounds = YES;
+	DEBUG_LOG_RECT(mSvPhoto.frame, @"mSvPhoto.frame");	
 
 	mSvPhoto.bounds = CGRectMake(0, 0, rcPhoto.size.width, rcPhoto.size.height);
 	mIvPhoto.frame = mSvPhoto.bounds;
-	//DEBUG_LOG_RECT(mIvPhoto.frame, @"mIvPhoto.frame");	
+	DEBUG_LOG_RECT(mIvPhoto.frame, @"mIvPhoto.frame");	
 	mSvPhoto.contentSize = mIvPhoto.frame.size;
 	
 	// Icons
 	mIvIconPicasa.frame = CGRectMake(4, 10, 24, 24);
 	mLbPhotoMsg.frame = CGRectMake(34, 4, rcPhoto.size.width-34-44, 36);
 	//mLbPhotoMsg.backgroundColor = [UIColor brownColor];
-	mBuCamera.frame = CGRectMake(rcPhoto.origin.x+rcPhoto.size.width-44, 0, 44, 44);
+	mBuCamera.frame = CGRectMake(rcPhoto.origin.x+rcPhoto.size.width-38, 0, 44, 44);
 }
 
 - (void)viewDesign
@@ -293,8 +294,6 @@
 		//[GoogleAuth downloadPhotoE3:e3target_  imageView:mIvPhoto]; //非同期処理
 		
 	}
-	
-	[self viewDesignPhoto]; //これが無いと mScViewの高さが設定されず乱れる
 }
 
 // ビューが非表示にされる前や解放される前ににこの処理が呼ばれる
@@ -911,9 +910,10 @@
 	return 44; // デフォルト：44ピクセル
 }
 
-// Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
-{
+{	// セル生成。 この時点では、cell.contentView.frameが無効である。willDisplayCell:にて有効になっている。　
+	// contentView内容は、willDisplayCell:に実装する。
+	
     NSString *zCellIndex = [NSString stringWithFormat:@"E3detail%d:%d", (int)indexPath.section, (int)indexPath.row];
 
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:zCellIndex];
@@ -927,11 +927,6 @@
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
 		}
 		cell.showsReorderControl = NO; // Move禁止
-	}
-	
-	CGFloat fDialWidth = self.tableView.frame.size.width-80;
-	if (appDelegate_.app_is_iPad) {
-		fDialWidth -= 40;  // 両端の余白が増えるため
 	}
 	
 	switch (indexPath.section) {
@@ -1076,7 +1071,7 @@
 							// 3桁コンマ付加
 							lbStock_.text = GstringFromNumber(e3target_.stock);
 						}
-						dialStock_ = [[AZDial alloc] initWithFrame:CGRectMake(10,16, fDialWidth,44)
+						dialStock_ = [[AZDial alloc] initWithFrame:CGRectZero 
 														  delegate:self  dial:lVal  min:0  max:9999  step:1  stepper:YES];
 						dialStock_.backgroundColor = [UIColor clearColor];
 						[cell.contentView addSubview:dialStock_];
@@ -1104,7 +1099,7 @@
 							// 3桁コンマ付加
 							lbNeed_.text = GstringFromNumber(e3target_.need);
 						}
-						dialNeed_ = [[AZDial alloc] initWithFrame:CGRectMake(10,16, fDialWidth,44)
+						dialNeed_ = [[AZDial alloc] initWithFrame:CGRectZero
 														 delegate:self  dial:lVal  min:0  max:9999  step:1  stepper:YES];
 						dialNeed_.backgroundColor = [UIColor clearColor];
 						[cell.contentView addSubview:dialNeed_];
@@ -1135,7 +1130,7 @@
 							// 3桁コンマ付加
 							lbWeight_.text = GstringFromNumber(e3target_.weight);
 						}
-						dialWeight_ = [[AZDial alloc] initWithFrame:CGRectMake(10,16, fDialWidth,44)
+						dialWeight_ = [[AZDial alloc] initWithFrame:CGRectZero
 														   delegate:self  dial:lVal  min:0  max:WEIGHT_MAX  step:10  stepper:YES];
 						dialWeight_.backgroundColor = [UIColor clearColor];
 						//[mDialWeight setStepperMagnification:10.0];
@@ -1181,54 +1176,9 @@
 						UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]
 																  initWithTarget:self action:@selector(handlePinchGesture:)];
 						[cell.contentView addGestureRecognizer:pinchGesture];
-						
 					}
-#ifdef DEBUGxxx
-					mIvPhoto.alpha = 0.3;
-					cell.textLabel.text = e3target_.photoUrl;
-					cell.textLabel.numberOfLines = 6;
-					cell.textLabel.backgroundColor = [UIColor clearColor];
-#endif
-
-					if (e3target_.photoData) {		// 写真データあり
-						mIvPhoto.image = [UIImage imageWithData: e3target_.photoData];
-						cell.imageView.image = nil;
-						cell.textLabel.text = nil;
-						if ([e3target_.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み
-							mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
-							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo Zoom", nil);
-						} else {		// アップ待ち　リトライ
-							mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo UploadWait", nil);
-						}
-					} else {		// 写真データなし
-						mIvIconPicasa.image = nil;
-						mLbPhotoMsg.text = nil;
-						if ([e3target_.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み  ダウンロード待ち
-							cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-							cell.textLabel.text = NSLocalizedString(@"Google Downloading", nil);
-							cell.textLabel.textAlignment = UITextAlignmentLeft;
-							cell.textLabel.textColor = [UIColor blueColor];
-							cell.textLabel.font = [UIFont systemFontOfSize:12];
-						}
-						else if ([e3target_.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
-							cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-							cell.textLabel.text = NSLocalizedString(@"Google Photo NoUpload", nil);
-							cell.textLabel.textAlignment = UITextAlignmentLeft;
-							cell.textLabel.textColor = [UIColor grayColor];
-							cell.textLabel.font = [UIFont systemFontOfSize:12];
-						}
-						else {	// Picasaアップなし　撮影してください
-							cell.imageView.image = [UIImage imageNamed:@"Icon32-Picasa"];
-							cell.textLabel.text = NSLocalizedString(@"Google Photo", nil);
-							cell.textLabel.textAlignment = UITextAlignmentRight;
-							cell.textLabel.textColor = [UIColor grayColor];
-							cell.textLabel.font = [UIFont systemFontOfSize:12];
-						} 
-					}
-					// 写真データにより変化するため
-					[self viewDesignPhoto];
-					break;
+					// この時点では、cell.contentView.frameが無効である。willDisplayCell:にて有効になっている。
+					// 写真表示など動的な実装は、willDisplayCell:へ
 			}
 			break;
 			
@@ -1305,6 +1255,81 @@
 			}
 	}
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{	// セルが表示される直前に呼び出される。　この時点で、cell.contentView.frameが有効になっている。
+	switch (indexPath.section) {
+		case 0: // 
+			if (3 <= indexPath.row && indexPath.row <= 5) {  // stock, need, weight
+				CGFloat fDialWidth = self.tableView.frame.size.width-80;
+				if (appDelegate_.app_is_iPad) {
+					fDialWidth -= 40;  // 両端の余白が増えるため
+				}
+				CGRect rc = CGRectMake(10,16, fDialWidth,44);
+				switch (indexPath.row) {
+					case 3: // Stock Qty.
+						dialStock_.frame = rc;
+						break;
+					case 4: // Need
+						dialNeed_.frame = rc;
+						break;
+					case 5: // Weight
+						dialWeight_.frame = rc;
+						break;
+				}
+			}
+			else if (indexPath.row==6) {	// Photo
+#ifdef DEBUGxxx
+					mIvPhoto.alpha = 0.3;
+					cell.textLabel.text = e3target_.photoUrl;
+					cell.textLabel.numberOfLines = 6;
+					cell.textLabel.backgroundColor = [UIColor clearColor];
+#endif
+					DEBUG_LOG_RECT(cell.contentView.frame, @"willDisplayCell: cell.contentView.frame");
+					
+					if (e3target_.photoData) {		// 写真データあり
+						mIvPhoto.image = [UIImage imageWithData: e3target_.photoData];
+						cell.imageView.image = nil;
+						cell.textLabel.text = nil;
+						if ([e3target_.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み
+							mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
+							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo Uploaded", nil);
+						} else {		// アップ待ち　リトライ
+							mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo UploadWait", nil);
+						}
+						// 写真サイズにより変化するため
+						[self viewDesignPhoto];
+					}
+					else {		// 写真データなし
+						mIvIconPicasa.image = nil;
+						mLbPhotoMsg.text = nil;
+						if ([e3target_.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み  ダウンロード待ち
+							cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+							cell.textLabel.text = NSLocalizedString(@"Google Downloading", nil);
+							cell.textLabel.textAlignment = UITextAlignmentLeft;
+							cell.textLabel.textColor = [UIColor blueColor];
+							cell.textLabel.font = [UIFont systemFontOfSize:12];
+						}
+						else if ([e3target_.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
+							cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+							cell.textLabel.text = NSLocalizedString(@"Google Photo NoUpload", nil);
+							cell.textLabel.textAlignment = UITextAlignmentLeft;
+							cell.textLabel.textColor = [UIColor grayColor];
+							cell.textLabel.font = [UIFont systemFontOfSize:12];
+						}
+						else {	// Picasaアップなし　撮影してください
+							cell.imageView.image = [UIImage imageNamed:@"Icon32-Picasa"];
+							cell.textLabel.text = NSLocalizedString(@"Google Photo", nil);
+							cell.textLabel.textAlignment = UITextAlignmentRight;
+							cell.textLabel.textColor = [UIColor grayColor];
+							cell.textLabel.font = [UIFont systemFontOfSize:12];
+						} 
+					}
+			}
+			break;	// case 0: section
+	}
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
