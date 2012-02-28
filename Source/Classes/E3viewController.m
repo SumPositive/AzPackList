@@ -315,10 +315,9 @@
 	// Photo 未アップがあればアップする
 	for (NSArray *e3section in e3array_) {
 		for (E3 *e3row in e3section) {
-			if (e3row.photoData && [e3row.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {
-				// 写真キャッシュあるがＵＲＬ:UUIDにつき、Picasaアップする
-				//[appDelegate_.picasaBox uploadE3:e3row];
-				//[GoogleAuth uploadPhoto:e3row];
+			E4photo *e4 = e3row.e4photo;
+			if (e4  &&  e4.photoData  &&  [e3row.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {
+				// 写真DATAあるがＵＲＬ:UUIDにつき、Picasaアップする
 				[GoogleService photoUploadE3:e3row];
 				// 写真キャッシュに無くてダウンロードするのは、E3detailTVCを開けたとき。
 			}

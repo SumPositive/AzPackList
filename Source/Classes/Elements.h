@@ -10,6 +10,13 @@
 
 #define AzDataModelVersion	3
 
+//---------------------------------------------------------------------------------------E4photo	//5//
+// E1,2,3が重くならないように分離した。　これは、CSV保存しない。参照時にphotoUrlよりダウンロード生成する。
+@interface E4photo : NSManagedObject
+	@property (nonatomic, retain) NSData			*photoData;		//5//
+@end
+#define PHOTO_URL_UUID_PRIFIX			@"PackList:"
+
 //---------------------------------------------------------------------------------------E1
 @interface E1 : NSManagedObject
 	@property (nonatomic, retain) NSNumber	*row;
@@ -20,8 +27,8 @@
 	@property (nonatomic, retain) NSNumber	*sumWeightStk;
 	@property (nonatomic, retain) NSNumber	*sumWeightNed;
 	@property (nonatomic, retain) NSString		*photoUrl;			//5//
-	@property (nonatomic, retain) NSData			*photoData;		//5//
 	@property (nonatomic, retain) NSSet			*childs;				// E1-->> E2
+	@property (nonatomic, retain) E4photo		*e4photo;			//5// E1----> E4photo <Delete Cascade>
 @end
 
 // coalesce these into one @interface E1 (CoreDataGeneratedAccessors) section
@@ -42,9 +49,9 @@
 	@property (nonatomic, retain) NSNumber	*sumWeightStk;
 	@property (nonatomic, retain) NSNumber	*sumWeightNed;
 	@property (nonatomic, retain) NSString		*photoUrl;			//5//
-	@property (nonatomic, retain) NSData			*photoData;		//5//
 	@property (nonatomic, retain) E1					*parent;				// E2----> E1
 	@property (nonatomic, retain) NSSet			*childs;				// E2-->> E3
+	@property (nonatomic, retain) E4photo		*e4photo;			//5// E2----> E4photo <Delete Cascade>
 @end
 
 // coalesce these into one @interface E2 (CoreDataGeneratedAccessors) section
@@ -73,9 +80,8 @@
 	@property (nonatomic, retain) NSString		*shopKeyword;	//4//[1.1]Shopping
 	@property (nonatomic, retain) NSString		*shopNote;			//4//未使用
 	@property (nonatomic, retain) NSString		*photoUrl;			//5//
-	@property (nonatomic, retain) NSData			*photoData;		//5//
 	@property (nonatomic, retain) E2					*parent;				// E3---> E2
+	@property (nonatomic, retain) E4photo		*e4photo;			//5// E3----> E4photo <Delete Cascade>
 @end
-#define PHOTO_URL_UUID_PRIFIX			@"PackList:"
 
 // END

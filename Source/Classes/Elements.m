@@ -8,6 +8,11 @@
 
 #import "Elements.h"
 
+//---------------------------------------------------------------------------------------E4photo		//5//
+@implementation E4photo
+	@dynamic photoData;		//5//
+@end
+
 //---------------------------------------------------------------------------------------E1 Title
 @implementation E1
 	@dynamic row;
@@ -17,9 +22,9 @@
 	@dynamic sumNoCheck;	// Data Model Version.2
 	@dynamic sumWeightStk;
 	@dynamic sumWeightNed;
-	@dynamic photoUrl;			// Data Model Version.5
-	@dynamic photoData;		// Data Model Version.5
+	@dynamic photoUrl;			//5//
 	@dynamic childs;
+	@dynamic e4photo;			//5//
 @end
 
 //---------------------------------------------------------------------------------------E2 Section
@@ -31,10 +36,10 @@
 	@dynamic sumNoCheck;	// Data Model Version.2
 	@dynamic sumWeightStk;
 	@dynamic sumWeightNed;
-	@dynamic photoUrl;			// Data Model Version.5
-	@dynamic photoData;		// Data Model Version.5
+	@dynamic photoUrl;			//5//
 	@dynamic parent;
 	@dynamic childs;
+	@dynamic e4photo;			//5//
 @end
 
 //---------------------------------------------------------------------------------------E3 Item
@@ -53,9 +58,9 @@
 	@dynamic weightLack;
 	@dynamic shopKeyword;	// Data Model Version.4
 	@dynamic shopNote;			// Data Model Version.4
-	@dynamic photoUrl;			// Data Model Version.5
-	@dynamic photoData;		// Data Model Version.5
+	@dynamic photoUrl;			//5//
 	@dynamic parent;
+	@dynamic e4photo;			//5//
 @end
 
 // END

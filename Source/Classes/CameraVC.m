@@ -232,7 +232,13 @@
 	if (e3target_) {
 		appDelegate_.app_UpdateSave = YES; // 変更あり
 		// Mocへキャッシュ保存
-		e3target_.photoData = [NSData dataWithData:captureData_];
+		E4photo *e4 = e3target_.e4photo;
+		if (!e4) {
+			e4 = (E4photo *)[NSEntityDescription insertNewObjectForEntityForName:@"E4photo"
+														  inManagedObjectContext:e3target_.managedObjectContext];
+			e3target_.e4photo = e4; //LINK
+		}
+		e4.photoData = [NSData dataWithData:captureData_];
 		e3target_.photoUrl = [NSString stringWithFormat:GS_PHOTO_UUID_PREFIX @"%@", uuidString()];
 		//Moc[保存]時にする// [picasa_ uploadData:e3target_.photoData photoTitle:e3target_.name];
 		//E3detailTVC:にてアップ状況をアイコン表示。 未アップならば自動的にアップリトライする ＜＜失敗やオフラインに対応するため
@@ -336,26 +342,7 @@
 {
 	[super viewDidAppear:animated];
 
-#ifdef DEBUG
-	NSString *modelname = [ [ UIDevice currentDevice] model];
-	if([modelname isEqualToString:@"iPhone Simulator"])
-	{	//iPhone and iPad Simulator
-		if (imageView_) {
-			imageView_.image = [UIImage imageNamed:@"Icon32-Amazon"];
-		}
-		
-		if (e3target_) {
-			appDelegate_.app_UpdateSave = YES; // 変更あり
-			// Mocへキャッシュ保存
-			e3target_.photoData = [NSData dataWithData:UIImagePNGRepresentation(imageView_.image)];
-			e3target_.photoUrl = [NSString stringWithFormat:PHOTO_URL_UUID_PRIFIX @"%@", uuidString()];
-		}
-	} else {
-		[self cameraPreview];
-	}
-#else
 	[self cameraPreview];
-#endif
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

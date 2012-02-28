@@ -623,42 +623,67 @@
 
 - (void)actionCamera
 {	
-/*	// CameraVC へ
+/*	// CameraVC へ 　　＜＜＜ UIImagePickerController:を使わないカメラ。　将来の機能アップ時に利用するかも
 	CameraVC *cam = [[CameraVC alloc] init];
 	cam.imageView = mIvPhoto;
 	cam.e3target = e3target_;
 	[self.navigationController pushViewController:cam animated:YES];　*/
 	
-	// 簡易カメラ
+	// 標準カメラにした。
 	UIImagePickerControllerSourceType stype = UIImagePickerControllerSourceTypeCamera;
 	if ([UIImagePickerController isSourceTypeAvailable:stype]) {
 		UIImagePickerController *ipc = [[UIImagePickerController alloc] init];
 		ipc.delegate = self;		// <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 		ipc.sourceType = stype;
-		ipc.videoQuality = UIImagePickerControllerQualityType640x480;
-		[self.navigationController presentModalViewController:ipc animated:YES];
+		ipc.videoQuality = UIImagePickerControllerQualityTypeHigh;
+		ipc.allowsEditing = YES;  // NO=最大解像度になってしまう　　YES=640x640になる
+		[self presentModalViewController:ipc animated:YES];
+		//[self.navigationController presentModalViewController:ipc animated:YES];
+	} else {
+		// 使用できない
+		alertBox(NSLocalizedString(@"Camera Non",nil), nil, @"OK");
+		mBuCamera.hidden = YES;
 	}
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-	[self.navigationController dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES];
+	//[self.navigationController dismissModalViewControllerAnimated:YES];
+	
+	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+	dispatch_async(queue, ^{		// 非同期マルチスレッド処理
 
-	UIImage *img = [info objectForKey:UIImagePickerControllerEditedImage];
-	if (!img) {
-		img = [info objectForKey:UIImagePickerControllerOriginalImage];
-	}
+		UIImage *img = [info objectForKey:UIImagePickerControllerEditedImage];  // 640x640
+		if (img) {
+			mIvPhoto.image = img;
+			NSLog(@"***** mIvPhoto.image.size=(%.0f, %.0f)", mIvPhoto.image.size.width, mIvPhoto.image.size.height);
+			E4photo *e4 = e3target_.e4photo;
+			if (!e4) {
+				e4 = (E4photo *)[NSEntityDescription insertNewObjectForEntityForName:@"E4photo"
+															  inManagedObjectContext:e3target_.managedObjectContext];
+				e3target_.e4photo = e4; //LINK
+			}
+			e4.photoData = UIImageJPEGRepresentation(img, 0.9);  //NG//UIImagePNGRepresentation(img);
+			NSLog(@"***** [e4.photoData length]= %u Bytes", [e4.photoData length]);
+			e3target_.photoUrl = [NSString stringWithFormat:GS_PHOTO_UUID_PREFIX @"%@", uuidString()];
+			appDelegate_.app_UpdateSave = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = YES;
+		}
 
-	if (img) {
-		mIvPhoto.image = img;
-		e3target_.photoData = UIImagePNGRepresentation(img);
-		e3target_.photoUrl = [NSString stringWithFormat:GS_PHOTO_UUID_PREFIX @"%@", uuidString()];
-	}
+		dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理
+			[self.tableView reloadData];
+			//[self viewDesignPhoto];
+		});
+	});
+
+
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-	[self.navigationController dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES];
+	//[self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
 
@@ -922,7 +947,8 @@
 			case 5:
 				return 58;
 			case 6:
-				if (e3target_.photoData) {
+				//NG//if (e3target_.e4photo) { ＜＜E4photo ロードで待たされる！
+				if (e3target_.photoUrl) {
 					if (appDelegate_.app_is_iPad) {
 						return 44+480+4;
 					} else {
@@ -1186,6 +1212,7 @@
 						mBuCamera = [UIButton buttonWithType:UIButtonTypeCustom];
 						mBuCamera.frame = CGRectMake(0,0, 44,44);
 						[mBuCamera setImage:[UIImage imageNamed:@"Icon24-Camera"] forState:UIControlStateNormal];
+						[mBuCamera setImage:[UIImage imageNamed:@"Icon32-Picasa"] forState:UIControlStateHighlighted];
 						[mBuCamera addTarget:self action:@selector(actionCamera) forControlEvents:UIControlEventTouchUpInside];
 						cell.accessoryType = UITableViewCellAccessoryNone;
 						cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
@@ -1321,9 +1348,12 @@
 				cell.textLabel.backgroundColor = [UIColor clearColor];
 #endif
 				DEBUG_LOG_RECT(cell.contentView.frame, @"willDisplayCell: cell.contentView.frame");
+
 				[mActivityIndicator_on_IconPicasa stopAnimating];
-				if (e3target_.photoData) {		// 写真データあり
-					mIvPhoto.image = [UIImage imageWithData: e3target_.photoData];
+					
+				E4photo *e4 = e3target_.e4photo;
+				if (e4.photoData) {		// 写真データあり
+					mIvPhoto.image = [UIImage imageWithData: e4.photoData];
 					if ([e3target_.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み
 						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
 						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo Uploaded", nil);
@@ -1337,7 +1367,7 @@
 						}
 					}
 				}
-				else {		// 写真データなし
+				else {	// e3target_.photoUrl==nil; 写真データなし
 					mIvPhoto.image = nil;
 					if ([e3target_.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み  ダウンロード待ち
 						//cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
@@ -1345,7 +1375,7 @@
 						[mActivityIndicator_on_IconPicasa startAnimating];
 						mLbPhotoMsg.text = NSLocalizedString(@"Google Downloading", nil);
 						// 写真キャッシュに無いのでダウンロードする
-						[GoogleService photoDownloadE3:e3target_  errorLabel:mLbPhotoMsg]; //非同期処理
+						[GoogleService photoDownloadE3:e3target_ errorLabel:mLbPhotoMsg]; //非同期処理
 						// スクロールして繰り返して呼び出された場合、処理中ならば拒否するようになっている。
 					}
 					else if ([e3target_.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
@@ -1363,6 +1393,7 @@
 			break;	// case 0: section
 	}
 }
+
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {

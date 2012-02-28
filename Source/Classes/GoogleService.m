@@ -578,13 +578,14 @@ static	NSURL										*sPhotoUploadUrl = nil;
 + (void)photoUploadE3:(E3*)e3target
 {
 	NSLog(@"GoogleService: photoUploadE3 :-----------------------");
-	assert(e3target);
-	if (e3target==nil && e3target.photoData==nil) {
+	if (e3target==nil  OR  e3target.e4photo==nil) {
 		NSLog(@"G> No photoData");
+		assert(NO);
 		return;
 	}
-	if ([e3target.photoUrl hasPrefix:@"http"]) {
+	if (e3target && [e3target.photoUrl hasPrefix:@"http"]) {
 		NSLog(@"G> Exist photoUrl=%@", e3target.photoUrl);
+		assert(NO);
 		return;
 	}
 
@@ -607,10 +608,11 @@ static	NSURL										*sPhotoUploadUrl = nil;
 	[newPhoto setPhotoDescriptionWithString:e3target.photoUrl]; // "PackList:" & UUID
 	
 	// attach the photo data
-	assert(e3target.photoData);
+	E4photo *e4photo = e3target.e4photo;
+	assert(e4photo);
 	// 暗号化 実験
 	//NG//Not an image. [newPhoto setPhotoData: [e3target.photoData AES256EncryptWithKey:@"test"]];
-	[newPhoto setPhotoData: e3target.photoData];
+	[newPhoto setPhotoData: e4photo.photoData];
 	[newPhoto setPhotoMIMEType:@"image/jpeg"];
 	
 	// the slug is just the upload file's filename
@@ -650,13 +652,15 @@ static	NSURL										*sPhotoUploadUrl = nil;
 + (void)photoDownloadE3:(E3*)e3target  errorLabel:(UILabel*)errorLabel
 {
 	NSLog(@"GoogleService: photoDownloadE3 :-----------------------");
-	assert(e3target);
 	if (e3target==nil && e3target.photoUrl==nil) {
 		NSLog(@"G> No photoUrl");
+		assert(NO);
 		return;
 	}
-	if (e3target.photoData) {
+	E4photo *e4photo = e3target.e4photo;
+	if (e4photo && e4photo.photoData) {
 		NSLog(@"G> Exist photoData");
+		assert(NO);
 		return;
 	}
 
@@ -699,7 +703,13 @@ static	NSURL										*sPhotoUploadUrl = nil;
 			// e3target を更新する　＜＜他の変更が無く、これだけ更新するので、即保存する
 			// 暗号化 実験
 			//NG// e3target.photoData = [data AES256DecryptWithKey:@"test"];
-			e3target.photoData = [NSData dataWithData:data];
+			E4photo *e4photo = e3target.e4photo;
+			if (e4photo==nil) {
+				e4photo = [NSEntityDescription insertNewObjectForEntityForName:@"E4photo"
+															  inManagedObjectContext:e3target.managedObjectContext];
+				e3target.e4photo = e4photo; //LINK
+			}
+			e4photo.photoData = [NSData dataWithData:data];
 			NSError *error;
 			if (![e3target.managedObjectContext save:&error]) {
 				NSLog(@"G> MOC save error %@, %@", error, [error userInfo]);

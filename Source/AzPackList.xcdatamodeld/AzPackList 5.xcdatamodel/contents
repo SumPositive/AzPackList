@@ -3,8 +3,6 @@
     <entity name="E1" representedClassName="NSManagedObject" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="note" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="photoData" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="photoUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="row" optional="YES" attributeType="Integer 32" maxValueString="99999" defaultValueString="0" syncable="YES"/>
         <attribute name="sumNoCheck" optional="YES" attributeType="Integer 16" maxValueString="999" defaultValueString="0" syncable="YES"/>
         <attribute name="sumNoGray" optional="YES" attributeType="Integer 16" maxValueString="999" defaultValueString="0" syncable="YES"/>
@@ -15,8 +13,6 @@
     <entity name="E2" representedClassName="NSManagedObject" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="note" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="photoData" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="photoUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="row" optional="YES" attributeType="Integer 32" maxValueString="99999" defaultValueString="0" syncable="YES"/>
         <attribute name="sumNoCheck" optional="YES" attributeType="Integer 16" maxValueString="999" defaultValueString="0" syncable="YES"/>
         <attribute name="sumNoGray" optional="YES" attributeType="Integer 16" maxValueString="999" defaultValueString="0" syncable="YES"/>
@@ -32,7 +28,6 @@
         <attribute name="noCheck" optional="YES" attributeType="Integer 16" maxValueString="1" defaultValueString="0" syncable="YES"/>
         <attribute name="noGray" optional="YES" attributeType="Integer 16" maxValueString="1" defaultValueString="0" syncable="YES"/>
         <attribute name="note" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="photoData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="photoUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="row" optional="YES" attributeType="Integer 32" maxValueString="99999" defaultValueString="0" syncable="YES"/>
         <attribute name="shopKeyword" optional="YES" attributeType="String" syncable="YES"/>
@@ -42,11 +37,16 @@
         <attribute name="weightLack" optional="YES" attributeType="Integer 32" maxValueString="999999" defaultValueString="0" syncable="YES"/>
         <attribute name="weightNed" optional="YES" attributeType="Integer 32" maxValueString="999999" defaultValueString="0" syncable="YES"/>
         <attribute name="weightStk" optional="YES" attributeType="Integer 32" maxValueString="999999" defaultValueString="0" syncable="YES"/>
+        <relationship name="e4photo" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="E4photo" syncable="YES"/>
         <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="E2" inverseName="childs" inverseEntity="E2" indexed="YES" syncable="YES"/>
+    </entity>
+    <entity name="E4photo" representedClassName="NSManagedObject" syncable="YES">
+        <attribute name="photoData" optional="YES" attributeType="Binary" syncable="YES"/>
     </entity>
     <elements>
         <element name="E1" positionX="88" positionY="27" width="128" height="195"/>
         <element name="E2" positionX="288" positionY="27" width="128" height="210"/>
         <element name="E3" positionX="511" positionY="27" width="128" height="300"/>
+        <element name="E4photo" positionX="171" positionY="312" width="128" height="60"/>
     </elements>
 </model>
