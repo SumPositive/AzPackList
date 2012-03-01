@@ -100,7 +100,7 @@
 
 - (id)initWithFrame:(CGRect)rect
 {
-	NSLog(@"CalcView: rect=(%f,%f)-(%f,%f)", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
+	NSLog(@"CalcView: rect=(%.0f,%.0f)-(%.0f,%.0f)", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
 
 	MrectInit = rect;		// 表示位置を記録　showにて復元に使う
 
@@ -478,7 +478,8 @@ replacementString:(NSString *)text
 		fy = 0;
 		MtextField.frame = CGRectMake(5,fy, rect.size.width-10,30);	// 1行
 		fy += MtextField.frame.size.height;
-		MscrollView.frame = CGRectMake(5,fy, rect.size.width-10, 178);
+		//MscrollView.frame = CGRectMake(5,fy, rect.size.width-10, 178);
+		MscrollView.frame = CGRectMake(5,fy, rect.size.width-10, rect.size.height);
 		fW = (rect.size.width-10 - fxGap) / 6 - fxGap; //Pad//6列まで全部表示
 		MscrollView.contentSize = MscrollView.frame.size; //同じ＝1ページのみ固定
 		// 以下、MscrollView座標
@@ -528,6 +529,7 @@ replacementString:(NSString *)text
 	NSInteger iIndex = 0;
 	for (int iCol=0; iCol<6; iCol++)
 	{
+		NSLog(@"Calc: iCol=%d  fx=%.0f", iCol, fx);
 		fy = fyTop;
 		for (int iRow=0; iRow<4; iRow++)
 		{

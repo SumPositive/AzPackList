@@ -211,8 +211,7 @@
 	else {
 		float fKeyHeight;
 		float fHeightOfsset;
-		if (self.interfaceOrientation == UIInterfaceOrientationPortrait 
-			OR self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
 			fKeyHeight = GD_KeyboardHeightPortrait;	 // タテ
 			fHeightOfsset = 15; // タテ： MtfNameの高さを少しでも高くして操作しやすくする
 		} else {

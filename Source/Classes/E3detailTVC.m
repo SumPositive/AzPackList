@@ -61,13 +61,7 @@
 	UILabel		*lbWeight_;
 	AZDial			*dialStock_;
 	AZDial			*dialNeed_;
-#ifdef WEIGHT_DIAL
 	AZDial			*dialWeight_;
-#else
-	UISlider			*MsliderWeight;
-	UILabel		*MlbWeightMax;
-	UILabel		*MlbWeightMin;
-#endif
 	
 	CalcView				*calcView_;
 
@@ -205,20 +199,21 @@
 - (void)viewDesignPhoto
 {
 	CGRect rcPhoto;
-	if (appDelegate_.app_is_iPad) { // iPad
-		rcPhoto = CGRectMake(8, 44-4, self.tableView.frame.size.width-30-16-40, 480);
+	if (appDelegate_.app_is_iPad) { // iPad  TableView(Grouped)両端の余白:-20
+		//rcPhoto = CGRectMake(8, 44-4, self.tableView.bounds.size.width-16-60, 480);
+		rcPhoto = CGRectMake(8, 44-4, self.contentSizeForViewInPopover.width-16-60, 400);
 	}
 	else if (self.tableView.frame.size.width < 400) {	// iPhone縦
-		rcPhoto = CGRectMake(8, 44-4, 320-16-20, 320);
+		rcPhoto = CGRectMake(8, 40, 320-16-20, 320);
 	}
 	else {		// iPhone横
-		rcPhoto = CGRectMake(8, 44-4, 480-16-20, 320);
+		rcPhoto = CGRectMake(8, 40, 480-16-20, 320);
 	}
 	
 	// Icons
 	mIvIconPicasa.frame = CGRectMake(4, 4, 32, 32);
 	mActivityIndicator_on_IconPicasa.frame = mIvIconPicasa.bounds;
-	mBuCamera.frame = CGRectMake(rcPhoto.origin.x+rcPhoto.size.width-38, 0, 44, 44);
+	mBuCamera.frame = CGRectMake(rcPhoto.origin.x+rcPhoto.size.width-40, 0, 44, 44);
 	mLbPhotoMsg.frame = CGRectMake(4+32+4, 4, mBuCamera.frame.origin.x-4-32-4, 36);
 	//mLbPhotoMsg.backgroundColor = [UIColor brownColor];
 
@@ -226,15 +221,40 @@
 		return; //　Cell生成前に呼ばれたとき
 	}
 	
-	mSvPhoto.zoomScale = 1.0;
+	/*	  UIScrollView/Zoomを使用するときの注意
+	 ** 以下、生成初期化
+	 // UIImageView
+	 mIvPhoto = [[UIImageView alloc] init];
+	 mIvPhoto.contentMode = UIViewContentModeScaleAspectFit;
+	 mIvPhoto.frame = CGRectMake(0, 0, 640, 640); // 固定。以降変更禁止 ＜＜Zoom機能に任せるため
+	 mIvPhoto.clipsToBounds = YES;
+	 // UIScrollView
+	 mSvPhoto = [[UIScrollView alloc] init];
+	 mSvPhoto.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	 [mSvPhoto addSubview:mIvPhoto];
+	 mSvPhoto.delegate = self;
+	 mSvPhoto.contentSize = mIvPhoto.frame.size; // 固定。以降変更禁止 ＜＜Zoom機能に任せるため
+	 **
+	 ** 画面回転など再描画では、下記のプロパティのみ可変
+	 */
+	// 表示位置調整
 	mSvPhoto.frame = rcPhoto;
-	mSvPhoto.clipsToBounds = YES;
 	DEBUG_LOG_RECT(mSvPhoto.frame, @"mSvPhoto.frame");	
+	// 全体表示するためにスケール調整
+	CGFloat fw = mSvPhoto.frame.size.width / 640;
+	CGFloat fh = mSvPhoto.frame.size.height / 640;
+	if (fw < fh) {
+		mSvPhoto.minimumZoomScale = fw;
+		mSvPhoto.zoomScale = fw;
+	} else {
+		mSvPhoto.minimumZoomScale = fh;
+		mSvPhoto.zoomScale = fh;
+	}
+}
 
-	mSvPhoto.bounds = CGRectMake(0, 0, rcPhoto.size.width, rcPhoto.size.height);
-	mIvPhoto.frame = mSvPhoto.bounds;
-	DEBUG_LOG_RECT(mIvPhoto.frame, @"mIvPhoto.frame");	
-	mSvPhoto.contentSize = mIvPhoto.frame.size;
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{	// Zoom対象になるUIImageViewを返す
+	return mIvPhoto;
 }
 
 - (void)viewDesign
@@ -582,6 +602,15 @@
 			//abort();
 		}
 	}
+
+	// Photo
+	if ([e3target_.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
+		E4photo *e4 = e3target_.e4photo;
+		if (e4.photoData) {
+			// 写真DATAあるがＵＲＬ:UUIDにつき、Picasaアップする
+			[GoogleService photoUploadE3:e3target_];
+		}
+	}
 	
 	if (appDelegate_.app_is_iPad) {
 		//[(PadNaviCon*)self.navigationController dismissPopoverSaved];  // SAVE: PadNaviCon拡張メソッド
@@ -623,13 +652,13 @@
 
 - (void)actionCamera
 {	
-/*	// CameraVC へ 　　＜＜＜ UIImagePickerController:を使わないカメラ。　将来の機能アップ時に利用するかも
+	// CameraVC へ 　　＜＜＜ UIImagePickerController:を使わないカメラ。　将来の機能アップ時に利用するかも
 	CameraVC *cam = [[CameraVC alloc] init];
 	cam.imageView = mIvPhoto;
 	cam.e3target = e3target_;
-	[self.navigationController pushViewController:cam animated:YES];　*/
+	[self.navigationController pushViewController:cam animated:YES];
 	
-	// 標準カメラにした。
+/*	// 標準カメラにした。
 	UIImagePickerControllerSourceType stype = UIImagePickerControllerSourceTypeCamera;
 	if ([UIImagePickerController isSourceTypeAvailable:stype]) {
 		UIImagePickerController *ipc = [[UIImagePickerController alloc] init];
@@ -637,19 +666,27 @@
 		ipc.sourceType = stype;
 		ipc.videoQuality = UIImagePickerControllerQualityTypeHigh;
 		ipc.allowsEditing = YES;  // NO=最大解像度になってしまう　　YES=640x640になる
-		[self presentModalViewController:ipc animated:YES];
-		//[self.navigationController presentModalViewController:ipc animated:YES];
+		if (appDelegate_.app_is_iPad) {
+			[selfPopover_ presentPopoverFromRect:mIvPhoto.frame
+									  inView:self.navigationController.view
+										permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+		} else {
+			[self presentModalViewController:ipc animated:YES];
+		}
 	} else {
 		// 使用できない
 		alertBox(NSLocalizedString(@"Camera Non",nil), nil, @"OK");
 		mBuCamera.hidden = YES;
-	}
+	}*/
 }
-
+/*
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-	[self dismissModalViewControllerAnimated:YES];
-	//[self.navigationController dismissModalViewControllerAnimated:YES];
+	if (appDelegate_.app_is_iPad) {
+		[selfPopover_ dismissPopoverAnimated:YES];
+	} else {
+		[self dismissModalViewControllerAnimated:YES];
+	}
 	
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	dispatch_async(queue, ^{		// 非同期マルチスレッド処理
@@ -682,10 +719,13 @@
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-	[self dismissModalViewControllerAnimated:YES];
-	//[self.navigationController dismissModalViewControllerAnimated:YES];
+	if (appDelegate_.app_is_iPad) {
+		[picker.parentViewController dismissModalViewControllerAnimated:YES];
+	} else {
+		[self dismissModalViewControllerAnimated:YES];
+	}
 }
-
+*/
 
 #pragma mark - CalcRoll
 
@@ -705,31 +745,36 @@
 	[tvNote_ resignFirstResponder]; // ファーストレスポンダでなくす ⇒ キーボード非表示
 	[tfKeyword_ resignFirstResponder]; // ファーストレスポンダでなくす ⇒ キーボード非表示
 	
-	CGRect rect = self.view.bounds;
-
+	CGRect rect = self.tableView.bounds;
+	CGFloat fTableTopY = 0;
+	//テンキー表示位置 ＜＜とりあえず力ずくで位置合わせした。
+	tableViewContentY_ = self.tableView.contentOffset.y; // Hide時に元の表示に戻すため
 	if (appDelegate_.app_is_iPad) {
-		//テンキー表示位置
-		rect.origin.y = 400;  //全体が見えるようにした + (iRow-3)*60;  
+		//rect.origin.y = 400;  //全体が見えるようにした + (iRow-3)*60;  
+		fTableTopY = -45 + (iRow-3)*60;
+		rect.origin.y = self.tableView.bounds.size.height - 210;
 	} else {
-		tableViewContentY_ = self.tableView.contentOffset.y; // Hide時に元の表示に戻すため
 		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) {
 			// 横
-			rect.origin.y = 170 + (iRow-3)*60;
+			fTableTopY = 154 + (iRow-3)*60;
+			rect.origin.y = 57;
 		}
 		else {
 			// 縦
-			rect.origin.y = 78 + (iRow-3)*60;
+			fTableTopY = 65 + (iRow-3)*60;
+			rect.origin.y = 65;
 		}
-		// アニメ準備
-		CGContextRef context = UIGraphicsGetCurrentContext();
-		[UIView beginAnimations:nil context:context];
-		[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-		[UIView setAnimationDuration:0.3]; // 出は早く
-		// アニメ終了位置
-		self.tableView.contentOffset = CGPointMake(0, rect.origin.y);
-		// アニメ実行
-		[UIView commitAnimations];
 	}
+	// テーブルを少し上げてテンキーで隠れないようにする
+	// アニメ準備
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	[UIView beginAnimations:nil context:context];
+	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+	[UIView setAnimationDuration:0.3]; // 出は早く
+	// アニメ終了位置
+	self.tableView.contentOffset = CGPointMake(0, fTableTopY);
+	// アニメ実行
+	[UIView commitAnimations];
 	
 	calcView_ = [[CalcView alloc] initWithFrame:rect];
 	calcView_.Rlabel = pLabel;  // MlbAmount.tag にはCalc入力された数値(long)が記録される
@@ -737,8 +782,8 @@
 	calcView_.RzKey = zKey;
 	calcView_.delegate = self;
 	calcView_.maxValue = iMax;
-	[self.view addSubview:calcView_];
-	//[McalcView release]; // addSubviewにてretain(+1)されるため、こちらはrelease(-1)して解放
+	//[self.view addSubview:calcView_];
+	[self.navigationController.view addSubview:calcView_];
 	[calcView_ show];
 }
 
@@ -792,89 +837,6 @@
 			break;
 	}
 }
-
-/*****
-- (void)slidStock:(UISlider *)slider
-{
-	long lVal = (long)(slider.value + 0.5f);
-	if (9999 < lVal) lVal = 9999;
-	if ([e3target_.stock longValue] != lVal) { // 変更あり
-		MlbStock.text = GstringFromNumber([NSNumber numberWithInteger:lVal]);  //[NSString stringWithFormat:@"%5ld", lVal];
-		e3target_.stock = [NSNumber numberWithInteger:lVal];
-		appDelegate.AppUpdateSave = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = appDelegate.AppUpdateSave;
-	}
-}
-
-- (void)slidStockUp:(UISlider *)slider
-{
-	long lVal = (long)(slider.value + 0.5f);
-	slider.minimumValue = 0;
-	slider.value = lVal;
-	lVal = 10 + (lVal / 10) * 10;
-	if (9999 < lVal) lVal = 9999;
-	slider.maximumValue = lVal;
-	MlbStockMax.text = [NSString stringWithFormat:@"%4ld", lVal];
-}
-
-- (void)slidNeed:(UISlider *)slider
-{
-	long lVal = (long)(slider.value + 0.5f);
-	if (9999 < lVal) lVal = 9999;
-	if ([e3target_.need longValue] != lVal) { // 変更あり
-		MlbNeed.text = GstringFromNumber([NSNumber numberWithInteger:lVal]);  //[NSString stringWithFormat:@"%5ld", lVal];
-		e3target_.need = [NSNumber numberWithInteger:lVal];
-		appDelegate.AppUpdateSave = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = appDelegate.AppUpdateSave;
-	}
-}
-
-- (void)slidNeedUp:(UISlider *)slider
-{
-	long lVal = (long)(slider.value + 0.5f);
-	slider.minimumValue = 0;
-	slider.value = lVal;
-	lVal = 10 + (lVal / 10) * 10;
-	if (9999 < lVal) lVal = 9999;
-	slider.maximumValue = lVal;
-	MlbNeedMax.text = [NSString stringWithFormat:@"%4ld", lVal];
-}
- *****/
-
-#ifdef WEIGHT_DIAL
-#else
-- (void)slidWeight:(UISlider *)slider
-{
-	long lVal = (long)(slider.value + 0.5f);
-	lVal = (lVal / WEIGHT_SLIDER_STEP) * WEIGHT_SLIDER_STEP;
-	if (WEIGHT_MAX < lVal) lVal = WEIGHT_MAX;
-	if ([e3target_.weight longValue] != lVal) { // 変更あり
-		MlbWeight.text = GstringFromNumber([NSNumber numberWithInteger:lVal]);  //[NSString stringWithFormat:@"%5ld", lVal];
-		e3target_.weight = [NSNumber numberWithInteger:lVal];
-		appDelegate.AppUpdateSave = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = appDelegate.AppUpdateSave;
-	}	
-}
-
-- (void)slidWeightUp:(UISlider *)slider
-{
-	long lVal = (long)(slider.value + 0.5f);
-	lVal = (lVal / WEIGHT_SLIDER_STEP) * WEIGHT_SLIDER_STEP;
-	
-	if (lVal <= WEIGHT_CENTER_OFFSET)
-		slider.minimumValue = 0.0f;
-	else
-		slider.minimumValue = (float)(lVal - WEIGHT_CENTER_OFFSET);
-	
-	if (lVal < WEIGHT_MAX - WEIGHT_CENTER_OFFSET)
-		slider.maximumValue = (float)(lVal + WEIGHT_CENTER_OFFSET);
-	else
-		slider.maximumValue = WEIGHT_MAX;
-	// Minは、↓左寄せにつき数字不要
-	MlbWeightMin.text = [NSString stringWithFormat:@"%ld", (long)slider.minimumValue];
-	MlbWeightMax.text = [NSString stringWithFormat:@"%5ld", (long)slider.maximumValue];
-}
-#endif
 
 - (void)alertWeightOver
 {
@@ -947,12 +909,12 @@
 			case 5:
 				return 58;
 			case 6:
-				//NG//if (e3target_.e4photo) { ＜＜E4photo ロードで待たされる！
-				if (e3target_.photoUrl) {
+				if (e3target_.e4photo) { //＜＜E4photo ロードで待たされる！
+				//if (e3target_.photoUrl) {
 					if (appDelegate_.app_is_iPad) {
-						return 44+480+4;
+						return 40+400+8;
 					} else {
-						return 44+320+4;
+						return 40+320+8;
 					}
 				}
 		}
@@ -1062,7 +1024,6 @@
 						tfName_.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
 						tfName_.delegate = self; // textFieldShouldReturn:を呼び出すため
 						[cell.contentView addSubview:tfName_]; //[MtfName release];
-						tfName_.text = e3target_.name; // (未定)表示しない。Editへ持って行かれるため
 						cell.accessoryType = UITableViewCellAccessoryNone; // なし
 					}
 					break;
@@ -1091,11 +1052,6 @@
 						//MtvNote.backgroundColor = [UIColor grayColor]; //範囲チェック用
 						tvNote_.delegate = self;
 						[cell.contentView addSubview:tvNote_]; //[MtvNote release];
-						if (e3target_.note == nil) {
-							tvNote_.text = @"";  // TextViewは、(nil) と表示されるので、それを消すため。
-						} else {
-							tvNote_.text = e3target_.note;
-						}
 						cell.accessoryType = UITableViewCellAccessoryNone; // なし
 					}
 					break;
@@ -1104,87 +1060,72 @@
 #ifdef DEBUG
 						//cell.backgroundColor = [UIColor grayColor]; //範囲チェック用
 #endif
-						{
-							UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(120,2, 90,20)];
-							label.text = NSLocalizedString(@"StockQty", nil);
-							label.textAlignment = UITextAlignmentLeft;
-							label.textColor = [UIColor grayColor];
-							label.backgroundColor = [UIColor clearColor];
-							label.font = [UIFont systemFontOfSize:14];
-							[cell.contentView addSubview:label]; //[label release];
-						}
-						long lVal = (long)[e3target_.stock integerValue];
-						{
-							lbStock_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
-							//CGRectMake(self.tableView.frame.size.width-30-90,1, 90,20)];
-							lbStock_.backgroundColor = [UIColor clearColor];
-							lbStock_.textAlignment = UITextAlignmentCenter;
-							lbStock_.font = [UIFont systemFontOfSize:24];
-							[cell.contentView addSubview:lbStock_];
-							// 3桁コンマ付加
-							lbStock_.text = GstringFromNumber(e3target_.stock);
-						}
+						UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(120,2, 90,20)];
+						label.text = NSLocalizedString(@"StockQty", nil);
+						label.textAlignment = UITextAlignmentLeft;
+						label.textColor = [UIColor grayColor];
+						label.backgroundColor = [UIColor clearColor];
+						label.font = [UIFont systemFontOfSize:14];
+						[cell.contentView addSubview:label]; //[label release];
+						
+						lbStock_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
+						//CGRectMake(self.tableView.frame.size.width-30-90,1, 90,20)];
+						lbStock_.backgroundColor = [UIColor clearColor];
+						lbStock_.textAlignment = UITextAlignmentCenter;
+						lbStock_.font = [UIFont systemFontOfSize:24];
+						[cell.contentView addSubview:lbStock_];
+
 						dialStock_ = [[AZDial alloc] initWithFrame:CGRectZero 
-														  delegate:self  dial:lVal  min:0  max:9999  step:1  stepper:YES];
+														  delegate:self  dial:0  min:0  max:9999  step:1  stepper:YES];
 						dialStock_.backgroundColor = [UIColor clearColor];
 						[cell.contentView addSubview:dialStock_];
 					}
 					break;
 				case 4: // Need
 					if (lbNeed_==nil) {
-						{
-							UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(120,2, 90,20)];
-							label.text = NSLocalizedString(@"Need Qty", nil);
-							label.textAlignment = UITextAlignmentLeft;
-							label.textColor = [UIColor grayColor];
-							label.backgroundColor = [UIColor clearColor];
-							label.font = [UIFont systemFontOfSize:14];
-							[cell.contentView addSubview:label]; //[label release];
-						}
-						long lVal = (long)[e3target_.need integerValue];
-						{
-							lbNeed_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
-							//CGRectMake(self.tableView.frame.size.width/2-OFSX2,1, 90,20)];
-							lbNeed_.backgroundColor = [UIColor clearColor];
-							lbNeed_.textAlignment = UITextAlignmentCenter;
-							lbNeed_.font = [UIFont systemFontOfSize:24];
-							[cell.contentView addSubview:lbNeed_];
-							// 3桁コンマ付加
-							lbNeed_.text = GstringFromNumber(e3target_.need);
-						}
+						UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(120,2, 90,20)];
+						label.text = NSLocalizedString(@"Need Qty", nil);
+						label.textAlignment = UITextAlignmentLeft;
+						label.textColor = [UIColor grayColor];
+						label.backgroundColor = [UIColor clearColor];
+						label.font = [UIFont systemFontOfSize:14];
+						[cell.contentView addSubview:label]; //[label release];
+						
+						lbNeed_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
+						//CGRectMake(self.tableView.frame.size.width/2-OFSX2,1, 90,20)];
+						lbNeed_.backgroundColor = [UIColor clearColor];
+						lbNeed_.textAlignment = UITextAlignmentCenter;
+						lbNeed_.font = [UIFont systemFontOfSize:24];
+						[cell.contentView addSubview:lbNeed_];
+
 						dialNeed_ = [[AZDial alloc] initWithFrame:CGRectZero
-														 delegate:self  dial:lVal  min:0  max:9999  step:1  stepper:YES];
+														 delegate:self  dial:0  min:0  max:9999  step:1  stepper:YES];
 						dialNeed_.backgroundColor = [UIColor clearColor];
 						[cell.contentView addSubview:dialNeed_];
 					}
 					break;
 				case 5: // Weight
 					if (lbWeight_==nil) {
-						{
-							UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(120,2, 90,20)];
-							label.text = NSLocalizedString(@"One Weight", nil);
-							label.textAlignment = UITextAlignmentLeft;
-							label.textColor = [UIColor grayColor];
-							label.backgroundColor = [UIColor clearColor];
-							label.font = [UIFont systemFontOfSize:14];
-							label.adjustsFontSizeToFitWidth = YES;
-							label.minimumFontSize = 8;
-							label.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-							[cell.contentView addSubview:label];
-						}
-						long lVal = (long)[e3target_.weight integerValue];
-						{
-							lbWeight_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
-							//CGRectMake(self.tableView.frame.size.width/2-OFSX2,1, 90,20)];
-							lbWeight_.backgroundColor = [UIColor clearColor];
-							lbWeight_.textAlignment = UITextAlignmentCenter;
-							lbWeight_.font = [UIFont systemFontOfSize:24];
-							[cell.contentView addSubview:lbWeight_];
-							// 3桁コンマ付加
-							lbWeight_.text = GstringFromNumber(e3target_.weight);
-						}
+						UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(120,2, 90,20)];
+						label.text = NSLocalizedString(@"One Weight", nil);
+						label.textAlignment = UITextAlignmentLeft;
+						label.textColor = [UIColor grayColor];
+						label.backgroundColor = [UIColor clearColor];
+						label.font = [UIFont systemFontOfSize:14];
+						label.adjustsFontSizeToFitWidth = YES;
+						label.minimumFontSize = 8;
+						label.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
+						[cell.contentView addSubview:label];
+						
+						lbWeight_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
+						//CGRectMake(self.tableView.frame.size.width/2-OFSX2,1, 90,20)];
+						lbWeight_.backgroundColor = [UIColor clearColor];
+						lbWeight_.textAlignment = UITextAlignmentCenter;
+						lbWeight_.font = [UIFont systemFontOfSize:24];
+						[cell.contentView addSubview:lbWeight_];
+
 						dialWeight_ = [[AZDial alloc] initWithFrame:CGRectZero
-														   delegate:self  dial:lVal  min:0  max:WEIGHT_MAX  step:10  stepper:YES];
+														   delegate:self  dial:0  min:0  max:WEIGHT_MAX  step:10  stepper:YES];
 						dialWeight_.backgroundColor = [UIColor clearColor];
 						//[mDialWeight setStepperMagnification:10.0];
 						[cell.contentView addSubview:dialWeight_];
@@ -1220,12 +1161,14 @@
 						// Image 640x480
 						mIvPhoto = [[UIImageView alloc] init];
 						mIvPhoto.contentMode = UIViewContentModeScaleAspectFit;
-						//mIvPhoto.clipsToBounds = YES;
+						mIvPhoto.frame = CGRectMake(0, 0, 640, 640); // 固定
+						mIvPhoto.clipsToBounds = YES;
 						// Scroll
 						mSvPhoto = [[UIScrollView alloc] init];
 						mSvPhoto.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 						[mSvPhoto addSubview:mIvPhoto];
 						mSvPhoto.delegate = self;
+						mSvPhoto.contentSize = mIvPhoto.frame.size; // 固定
 						mSvPhoto.zoomScale = 1.0;
 						mSvPhoto.minimumZoomScale = 1.0;
 						mSvPhoto.maximumZoomScale = 4.0;
@@ -1322,7 +1265,17 @@
 {	// セルが表示される直前に呼び出される。　この時点で、cell.contentView.frameが有効になっている。
 	switch (indexPath.section) {
 		case 0: // 
-			if (3 <= indexPath.row && indexPath.row <= 5) {  // stock, need, weight
+			if (indexPath.row==1) {
+				tfName_.text = e3target_.name; // (未定)表示しない。Editへ持って行かれるため
+			}
+			else if (indexPath.row==2) {
+				if (e3target_.note == nil) {
+					tvNote_.text = @"";  // TextViewは、(nil) と表示されるので、それを消すため。
+				} else {
+					tvNote_.text = e3target_.note;
+				}
+			}
+			else if (3 <= indexPath.row && indexPath.row <= 5) {  // stock, need, weight
 				CGFloat fDialWidth = self.tableView.frame.size.width-80;
 				if (appDelegate_.app_is_iPad) {
 					fDialWidth -= 40;  // 両端の余白が増えるため
@@ -1331,12 +1284,18 @@
 				switch (indexPath.row) {
 					case 3: // Stock Qty.
 						dialStock_.frame = rc;
+						[dialStock_ setDial:[e3target_.stock integerValue] animated:YES];
+						lbStock_.text = GstringFromNumber(e3target_.stock); // 3桁コンマ付加
 						break;
 					case 4: // Need
 						dialNeed_.frame = rc;
+						[dialNeed_ setDial:[e3target_.need integerValue] animated:YES];
+						lbNeed_.text = GstringFromNumber(e3target_.need);	// 3桁コンマ付加
 						break;
 					case 5: // Weight
 						dialWeight_.frame = rc;
+						[dialWeight_ setDial:[e3target_.weight integerValue] animated:YES];
+						lbWeight_.text = GstringFromNumber(e3target_.weight);		// 3桁コンマ付加
 						break;
 				}
 			}
@@ -1392,17 +1351,6 @@
 			}
 			break;	// case 0: section
 	}
-}
-
-
-- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
-{
-	for (id subv in scrollView.subviews) {
-		if ([subv isKindOfClass:[UIImageView class]]) {
-			return subv;
-		}
-	}
-	return nil;
 }
 
 
@@ -1701,11 +1649,9 @@
 	else if (sender==dialNeed_) {
 		lbNeed_.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
 	}
-#ifdef WEIGHT_DIAL
 	else if (sender==dialWeight_) {
 		lbWeight_.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
 	}
-#endif
 }
 
 - (void)dialDone:(id)sender  dial:(NSInteger)dial
@@ -1726,7 +1672,6 @@
 			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 		}
 	}
-#ifdef WEIGHT_DIAL
 	else if (sender==dialWeight_) {
 		if ([e3target_.weight longValue] != dial) { // 変更あり
 			lbWeight_.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
@@ -1735,7 +1680,6 @@
 			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 		}
 	}
-#endif
 }
 
 

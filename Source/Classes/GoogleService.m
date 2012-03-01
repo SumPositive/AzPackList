@@ -122,14 +122,22 @@ static	NSURL										*sDocUploadUrl = nil;
 	if (sDocService) {
 		return sDocService;
 	}
-	// NEW
-	sDocService = [[GDataServiceGoogleDocs alloc] init];
 	// Login
 	NSError *error;
 	NSString *username = [SFHFKeychainUtils getPasswordForUsername:GS_KC_LoginName
 													andServiceName:GS_KC_ServiceName error:&error];
+	if (username==nil) {
+		NSLog(@"GDataServiceGoogleDocs: No Username");
+		return nil;
+	}
 	NSString *password = [SFHFKeychainUtils getPasswordForUsername:GS_KC_LoginPassword
 													andServiceName:GS_KC_ServiceName error:&error];
+	if (password==nil) {
+		NSLog(@"GDataServiceGoogleDocs: No Password");
+		return nil;
+	}
+	// NEW
+	sDocService = [[GDataServiceGoogleDocs alloc] init];
 	[sDocService setUserCredentialsWithUsername:username password:password];
 	NSLog(@"GDataServiceGoogleDocs: NEW sDocService=%@", [sDocService description]);
 	return sDocService;
@@ -222,6 +230,7 @@ static	NSURL										*sDocUploadUrl = nil;
 			   }];
 }
 
+static BOOL staticDocUploading = NO;
 //+ (void)docUploadFile:(NSString*)pathLocal  withName:(NSString*)name
 + (void)docUploadE1:(E1 *)e1node  title:(NSString*)title  crypt:(BOOL)crypt
 {
@@ -235,14 +244,19 @@ static	NSURL										*sDocUploadUrl = nil;
 	[GoogleService alertIndicatorOn:NSLocalizedString(@"Google Uploading", nil)];
 	[staticAlertProgress setHidden:NO];
 	
-	// フォルダを追加する
-	@synchronized(self)	// 連続したとき、フォルダが重複作成されないようにするため。
-	{
-		if (sDocUploadUrl==nil) {	// フォルダの所在不明のとき
-			[self docFolderUploadE1:e1node  title:title  crypt:crypt]; // 専用フォルダを追加してから、ここに戻って写真を追加する
-			return;
-		}
+	if (staticDocUploading) {	// 連続したとき、フォルダが重複作成されないようにするため。
+		NSLog(@"G> staticDocUploading==YES");
+		return;
 	}
+	staticDocUploading = YES;
+	// フォルダを追加する
+	if (sDocUploadUrl==nil) {	// フォルダの所在不明のとき
+		[self docFolderUploadE1:e1node  title:title  crypt:crypt]; // 専用フォルダを追加してから、ここに戻って写真を追加する
+		staticDocUploading = NO;
+		return;
+	}
+	staticDocUploading = NO;
+
 	// [+0.1]Folder make  (+0.1)CSV生成  [+0.7]Upload  (+0.1)Folder move
 	[staticAlertProgress setProgress: 0.1];
 	
@@ -478,14 +492,22 @@ static	NSURL										*sPhotoUploadUrl = nil;
 	if (sPhotoService) {
 		return sPhotoService;
 	}
-	// NEW
-	sPhotoService = [[GDataServiceGooglePhotos alloc] init];
 	// Login
 	NSError *error;
 	NSString *username = [SFHFKeychainUtils getPasswordForUsername:GS_KC_LoginName
 													andServiceName:GS_KC_ServiceName error:&error];
+	if (username==nil) {
+		NSLog(@"GDataServiceGooglePhotos: No Username");
+		return nil;
+	}
 	NSString *password = [SFHFKeychainUtils getPasswordForUsername:GS_KC_LoginPassword
 													andServiceName:GS_KC_ServiceName error:&error];
+	if (password==nil) {
+		NSLog(@"GDataServiceGooglePhotos: No Password");
+		return nil;
+	}
+	// NEW
+	sPhotoService = [[GDataServiceGooglePhotos alloc] init];
 	[sPhotoService setUserCredentialsWithUsername:username password:password];
 	NSLog(@"GDataServiceGooglePhotos: NEW sPhotoService=%@", [sPhotoService description]);
 	return sPhotoService;
@@ -499,7 +521,7 @@ static	NSURL										*sPhotoUploadUrl = nil;
 	
 	// get the URL for the user
 	if ([photoService username]==nil) {
-		NSLog(@"\t username=nil  NoLogin");
+		NSLog(@"photoAlbumUploadE3: NoLogin");
 		return;
 	}
 	//NSURL *photosUrl = [GDataServiceGooglePhotos photoContactsFeedURLForUserID: [photoService username]];
@@ -575,6 +597,7 @@ static	NSURL										*sPhotoUploadUrl = nil;
 				 }];
 }
 
+static BOOL staticPhotoUploading = NO;
 + (void)photoUploadE3:(E3*)e3target
 {
 	NSLog(@"GoogleService: photoUploadE3 :-----------------------");
@@ -589,14 +612,18 @@ static	NSURL										*sPhotoUploadUrl = nil;
 		return;
 	}
 
-	// 写真を追加する
-	@synchronized(self)	// 連続したとき、アルバムが重複作成されないようにするため。
-	{
-		if (sPhotoUploadUrl==nil) {
-			[self photoAlbumUploadE3:e3target]; // アルバムを追加してから、ここに戻って写真を追加する
-			return;
-		}
+	if (staticPhotoUploading) {  // 連続禁止する
+		NSLog(@"G> staticPhotoUploading==YES");
+		return;
 	}
+	staticPhotoUploading = YES;
+	// アルバム
+	if (sPhotoUploadUrl==nil) {
+		[self photoAlbumUploadE3:e3target]; // アルバムを追加してから、ここに戻って写真を追加する
+		staticPhotoUploading = NO;
+		return;
+	}
+	staticPhotoUploading = NO;
 
 	GDataEntryPhoto *newPhoto = [GDataEntryPhoto photoEntry];
 	if (0 < [e3target.name length]) {

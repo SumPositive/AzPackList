@@ -407,6 +407,20 @@
 
 #pragma mark - <UIScrollViewDelegate>
 
+- (void)scrollDone:(UIScrollView *)scrollView
+{	// Original
+	//NG//ここで、改めて位置から求めると、指を離した瞬間に動いて変化する場合がある。
+	//OK//そのため、scrollViewDidScroll:にて表示されている mValue に決定することにした。
+	if (mIsSetting==NO) {
+		if ([mDelegate respondsToSelector:@selector(dialDone:dial:)]) {
+			[mDelegate dialDone:self  dial:mDial];	// 決定
+		}
+	}
+	
+	NSInteger iStep = mDialStep * mStepperMag;
+	[self setDial:((mDial / iStep) * iStep)  animated:NO];	// ステッパーのステップに補正する
+}
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {	// スクロール中
 	static CGFloat sBase = (-1);
@@ -425,10 +439,15 @@
 	// valueChange
 	mDial = mDialMin + floor( (mScrollMax - scrollView.contentOffset.x) / PITCH ) * mDialStep;
 
-	if (mDial < mDialMin) mDial = mDialMin;	// Fix:2012-01-19
-	else if (mDialMax < mDial) mDial = mDialMax;
-	
-	if (mIsSetting==NO) {
+	if (mDial < mDialMin) {
+		mDial = mDialMin;	// Fix:2012-01-19
+		[self scrollDone:scrollView];	//Fix:2012-03-01
+	}
+	else if (mDialMax < mDial) {
+		mDial = mDialMax;
+		[self scrollDone:scrollView];
+	}
+	else if (mIsSetting==NO) {
 		if ([mDelegate respondsToSelector:@selector(dialChanged:dial:)]) {
 			[mDelegate dialChanged:self  dial:mDial];	// 変化、決定ではない
 		}
@@ -462,20 +481,6 @@
 			mIvRight.frame = frame;
 		}
 	}
-}
-
-- (void)scrollDone:(UIScrollView *)scrollView
-{	// Original
-	//NG//ここで、改めて位置から求めると、指を離した瞬間に動いて変化する場合がある。
-	//OK//そのため、scrollViewDidScroll:にて表示されている mValue に決定することにした。
-	if (mIsSetting==NO) {
-		if ([mDelegate respondsToSelector:@selector(dialDone:dial:)]) {
-			[mDelegate dialDone:self  dial:mDial];	// 決定
-		}
-	}
-	
-	NSInteger iStep = mDialStep * mStepperMag;
-	[self setDial:((mDial / iStep) * iStep)  animated:NO];	// ステッパーのステップに補正する
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate

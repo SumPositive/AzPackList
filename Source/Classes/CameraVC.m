@@ -72,7 +72,7 @@
 	
 	// セッション初期化
 	[captureSession_ beginConfiguration];
-	captureSession_.sessionPreset = AVCaptureSessionPresetLow; //Low: (4)640x480  (3G)400x304
+	captureSession_.sessionPreset = AVCaptureSessionPreset640x480;
 	[captureSession_ commitConfiguration];
 	
 	// カメラ設定
@@ -113,7 +113,7 @@
 	// 回転対応
 	UIInterfaceOrientation interOri;
 	if (appDelegate_.app_is_iPad) {
-		interOri = appDelegate_.mainSVC.parentViewController.interfaceOrientation;
+		interOri = appDelegate_.mainSVC.interfaceOrientation;    //parentViewController.interfaceOrientation;
 	} else {
 		//interOri = appDelegate_.mainNC.visibleViewController.interfaceOrientation;
 		interOri = self.interfaceOrientation;
@@ -171,8 +171,11 @@
 													ibImageView.hidden = NO;
 													buRedo_.enabled = YES;
 													buDone_.enabled = YES;
-													
 													ibLbCamera.text = NSLocalizedString(@"Camera msg2",nil);
+													
+													if (appDelegate_.app_is_iPad) {	//Popover外タッチで閉じないようにするため。
+														appDelegate_.app_UpdateSave = YES; // 変更あり
+													}
 											   } 
 	 ];
 }
@@ -182,9 +185,9 @@
 
 - (void)actionCamera:(UIButton *)button
 {
-	// 音量を保持して0にする
+	/*// 音量を保持して0にする
 	AVAudioPlayer *audio = [[AVAudioPlayer alloc] initWithContentsOfURL:nil error:nil];
-	[audio setVolume:0.1];
+	[audio setVolume:0.1];*/
 	
 	if (buCamera_.enabled) {
 		buCamera_.enabled = NO;
@@ -258,6 +261,11 @@
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
 		if (appDelegate_.app_is_iPad) {
+			/*if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+				self.contentSizeForViewInPopover = CGSizeMake(480, 640);  //GD_POPOVER_SIZE;
+			} else {
+				self.contentSizeForViewInPopover = CGSizeMake(640, 480);
+			}*/
 			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
 		}
     }
@@ -335,6 +343,18 @@
 											 selector:@selector(actionCamera:)
 												 name: @"AVSystemController_SystemVolumeDidChangeNotification" object:nil]; 
  */
+	if (appDelegate_.app_is_iPad) {
+		[[NSNotificationCenter defaultCenter] addObserver:self 
+												 selector:@selector(notification_ToInterfaceOrientation:)
+													 name: NFM_ToInterfaceOrientation object:nil]; 
+	}
+}
+
+- (void)notification_ToInterfaceOrientation:(NSNotification*)note 
+{
+	NSDictionary *info = [note userInfo];
+	UIInterfaceOrientation ori = [[info valueForKey:NFM_ToInterfaceOrientation] integerValue];
+	[self rotateToOrientation:ori];
 }
 
 //Viewが表示された直後に実行される
@@ -347,8 +367,11 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	// Return YES for supported orientations
-	//return (interfaceOrientation == UIInterfaceOrientationPortrait);
-    return YES;
+	if (appDelegate_.app_is_iPad) {
+		return (interfaceOrientation == UIInterfaceOrientationPortrait);
+	} else {
+		return YES;
+	}
 }
 
 - (void)rotateToOrientation:(UIInterfaceOrientation)orientation
@@ -372,90 +395,90 @@
 		}
 	}
 
-	CGFloat fh;
-	CGFloat fw;
+	// VGA: 640x480
+	CGFloat fL = 640 / 2;		// Land 長辺
+	CGFloat fS = 480 / 2;		// Short 短辺
 	CGRect rect;
+	if (appDelegate_.app_is_iPad) {
+		fL = self.view.bounds.size.width - 10;
+		fS = fL * 480/640;
+	}
 	// ファインダーをカメラの縦横に合わせる
+	ibLbCamera.hidden = NO;
 	switch (orientation) {
 		case UIInterfaceOrientationPortrait:
 			previewLayer_.orientation = AVCaptureVideoOrientationPortrait;
-			fh = 390;
-			fw = fh * 480/640;
-			rect = CGRectMake((320-fw)/2, 5, fw, fh);
-			ibLbCamera.hidden = NO;
+			rect = CGRectMake((self.view.bounds.size.width-fS)/2, (self.view.bounds.size.height-fL)/2, fS, fL);	// Portrait
 			break;
 		case UIInterfaceOrientationPortraitUpsideDown:
 			previewLayer_.orientation = AVCaptureVideoOrientationPortraitUpsideDown;
-			fh = 390;
-			fw = fh * 480/640;
-			rect = CGRectMake((320-fw)/2, 5, fw, fh);
-			ibLbCamera.hidden = NO;
+			rect = CGRectMake((self.view.bounds.size.width-fS)/2, (self.view.bounds.size.height-fL)/2, fS, fL);	// Portrait
 			break;
 		case UIInterfaceOrientationLandscapeLeft:
 			previewLayer_.orientation = AVCaptureVideoOrientationLandscapeLeft;
-			fh = 260;
-			fw = fh * 640/480;
-			rect = CGRectMake((480-fw)/2, 3, fw, fh);
-			ibLbCamera.hidden = YES;
+			rect = CGRectMake((self.view.bounds.size.width-fL)/2, (self.view.bounds.size.height-fS)/2, fL, fS);	// Landscape
+			if (appDelegate_.app_is_iPad==NO) {
+				ibLbCamera.hidden = YES;
+			}
 			break;
 		case UIInterfaceOrientationLandscapeRight:
 			previewLayer_.orientation = AVCaptureVideoOrientationLandscapeRight;
-			fh = 260;
-			fw = fh * 640/480;
-			rect = CGRectMake((480-fw)/2, 3, fw, fh);
-			ibLbCamera.hidden = YES;
+			rect = CGRectMake((self.view.bounds.size.width-fL)/2, (self.view.bounds.size.height-fS)/2, fL, fS);	// Landscape
+			if (appDelegate_.app_is_iPad==NO) {
+				ibLbCamera.hidden = YES;
+			}
 			break;
-	}
-	if (appDelegate_.app_is_iPad) {
-		rect.size.width *= 1.5;
-		rect.size.height *= 1.5;
+		default:
+			return;
 	}
 	DEBUG_LOG_RECT(rect, @"previewLayer_.frame");
 	previewLayer_.frame = rect;
 
-/*	// 撮影イメージを写真の縦横に合わせる
+	// 撮影イメージを写真の縦横に合わせる
 	if (UIInterfaceOrientationIsPortrait(orientation)) {	// デバイス縦
 		if (ibImageView.image.size.width < 600) {	// 写真タテ
-			fh = 390;
-			fw = fh * 480/640;
-			rect = CGRectMake((320-fw)/2, 5, fw, fh);
+			rect = CGRectMake((self.view.bounds.size.width-fS)/2, (self.view.bounds.size.height-fL)/2, fS, fL);	// Portrait
 		} else {		// 写真ヨコ
-			fw = 310;
-			fh = fw * 480/640;
-			rect = CGRectMake(5, (390-fh)/2, fw, fh);
+			if (self.view.bounds.size.width <= fL) {
+				fL = self.view.bounds.size.width - 10;
+				fS = fL * 480/640;
+			}
+			rect = CGRectMake((self.view.bounds.size.width-fL)/2, (self.view.bounds.size.height-fS)/2, fL, fS);	// Landscape
 		}
 	}
 	else {		// デバイス横
 		if (ibImageView.image.size.width < 600) {	// 写真タテ
-			fh = 255;
-			fw = fh * 480/640;
-			rect = CGRectMake((480-fw)/2, 3, fw, fh);
+			if (self.view.bounds.size.height <= fL) {
+				fL = self.view.bounds.size.height - 4;
+				fS = fL * 480/640;
+			}
+			rect = CGRectMake((self.view.bounds.size.width-fS)/2, (self.view.bounds.size.height-fL)/2, fS, fL);	// Portrait
 		} else {		// 写真ヨコ
-			fh = 255;
-			fw = fh * 640/480;
-			rect = CGRectMake((480-fw)/2, 3, fw, fh);
+			rect = CGRectMake((self.view.bounds.size.width-fL)/2, (self.view.bounds.size.height-fS)/2, fL, fS);	// Landscape
 		}
-	}
-	if (appDelegate_.app_is_iPad) {
-		rect.size.width *= 1.5;
-		rect.size.height *= 1.5;
 	}
 	DEBUG_LOG_RECT(rect, @"ibImageView.frame");
 	ibImageView.frame = rect;		//UIViewContentModeScaleAspectFit である。
-	//[ibImageView setFrame:rect]; 
- */
-	ibImageView.backgroundColor = [UIColor grayColor];
+	//ibImageView.backgroundColor = [UIColor grayColor];
+	DEBUG_LOG_RECT(rect, @"ibImageView.frame");
+	DEBUG_LOG_RECT(self.view.bounds, @"self.view.bounds");
 }
 
-// ユーザインタフェースの回転を始める前にこの処理が呼ばれる。 ＜＜OS 3.0以降の推奨メソッド＞＞
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration
-{	// この時点で self.view.frame はまだ回転していない。
-	[self rotateToOrientation:orientation];
+/*
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{	// 回転を始める前にこの処理が呼ばれる。 ＜＜OS 3.0以降の推奨メソッド＞＞
+	// この時点で self.view.frame はまだ回転していない。
+	//NG//[self rotateToOrientation:toInterfaceOrientation];
+}*/
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration 
+{	// 回転を始める前にこの処理が呼ばれる。 ＜＜OS 3.0以降の推奨メソッド＞＞
+	[self rotateToOrientation:toInterfaceOrientation];
 }
 
 - (void)viewDidUnload
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super viewDidUnload];
 	
 /*	// 音量を復元する

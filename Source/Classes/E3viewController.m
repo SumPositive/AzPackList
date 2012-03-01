@@ -38,7 +38,6 @@
 - (void)alertWeightOver;
 - (void)requreyMe3array; //:(NSString *)searchText;
 - (void)viewDesign;
-
 - (void)padE2refresh:(NSInteger)iRow;
 @end
 
@@ -72,36 +71,77 @@
 
 
 
-#pragma mark - Delegate
+#pragma mark - Action
 
-- (void)refreshE3view
+- (void)azReflesh
 {
-	if (indexPathEdit_)
-	{
-		[self requreyMe3array];//Add行を読む込む為に必要
-		
-		//NSArray* ar = [NSArray arrayWithObject:MindexPathEdit];
-		//[self.tableView reloadRowsAtIndexPaths:ar withRowAnimation:NO];	//【Tips】1行だけリロードする
-		//[1.0.6]上の1行再表示では、セクションヘッダにある重量が更新されない不具合あり。
-		
-		//[1.0.6]【Tips】「reloadData＆復元」方式
-		//CGPoint po = self.tableView.contentOffset;	//現在のスクロール位置を記録
-		//[self.tableView reloadData];
-		//self.tableView.contentOffset = po;		//スクロール位置を復元
-		
-		//[1.0.6]【Tips】セクション単位でリロード
-		//NSIndexSet* iset = [NSIndexSet indexSetWithIndex:MindexPathEdit.section];
-		//[self.tableView reloadSections:iset withRowAnimation:NO]; //【Tips】セクション単位でリロードする
-		
-		//[1.0.6]【Tips】結局、これが一番良い。 ＜＜行位置変わらず、表示の乱れも無い
-		[self.tableView reloadData];
-		// 左側 E2 再描画
-		[self padE2refresh:indexPathEdit_.section];
+	// 再表示: データ再取得（ソート）して表示する
+	[self viewWillAppear:YES];
+}
+
+- (void)azItemsGrayHide: (UIBarButtonItem *)sender 
+{
+	optItemsGrayShow_ = !(optItemsGrayShow_); // 反転
+	
+	if (optItemsGrayShow_) {
+		sender.image = [UIImage imageNamed:@"Icon16-ItemGrayShow.png"]; // Gray Show
+	} else {
+		sender.image = [UIImage imageNamed:@"Icon16-ItemGrayHide.png"]; // Gray Hide
 	}
-	else {
-		[self.tableView reloadData];
-		// 左側 E2 再描画
-		[self padE2refresh:(-1)];
+	
+	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+	[kvs setBool:optItemsGrayShow_ forKey:KV_OptItemsGrayShow];
+	
+	// 再表示 -------------------------------------------------------------------
+	// 表示行数が変化するための処理　　 表示最上行を取得する
+	NSArray *arCells = [self.tableView indexPathsForVisibleRows]; // 現在見えているセル群
+	NSIndexPath *topPath = nil;
+	for (NSInteger i=0 ; i<[arCells count] ; i++) {
+		topPath = [arCells objectAtIndex:i]; 
+		if (topPath.row < [[e3array_ objectAtIndex:topPath.section] count]) {
+			E3 *e3obj = [[e3array_ objectAtIndex:topPath.section] objectAtIndex:topPath.row];
+			if ([e3obj.need intValue] != 0) {  // +Add行は、.need=(-1)にしている。
+				// 必要数が0でない「Grayでない」セル発見
+				break;
+			}
+		}
+	}
+	
+	// 再表示
+	//[self viewWillAppear:NO];
+	[self.tableView reloadData];
+	
+	// 元の最上行を再現する
+	if (topPath) [self.tableView scrollToRowAtIndexPath:topPath 
+									   atScrollPosition:UITableViewScrollPositionTop animated:YES];  
+}
+
+
+- (void)azSearchBar
+{
+	// Serch Bar にフォーカスを当てる　（このときスクロールはしないので下記のスクロール処理が必要）
+	[self.tableView.tableHeaderView becomeFirstResponder];
+	// Search Bar が見えるように最上行を表示する
+	if (e3array_ && 0 < [e3array_ count] && 0 < [[e3array_ objectAtIndex:0] count]) { // ERROR対策
+		NSIndexPath* indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+		[self.tableView scrollToRowAtIndexPath:indexPath 
+							  atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+	}
+}
+
+
+- (void)photoUploadBatch
+{	// Photo E3detail保存時にアップできなかった場合など、未アップがあれば順次アップする
+	for (NSArray *e3section in e3array_) {
+		for (E3 *e3row in e3section) {
+			E4photo *e4 = e3row.e4photo;
+			if (e4  &&  e4.photoData  &&  [e3row.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {
+				// 写真DATAあるがＵＲＬ:UUIDにつき、Picasaアップする
+				[GoogleService photoUploadE3:e3row];
+				return;	// 1つづつアップさせるため。 通常は、保存直後にアップされる。
+			}
+		}
 	}
 }
 
@@ -312,17 +352,8 @@
 		[appDelegate_ AdRefresh:NO];	//広告禁止
 	}
 	
-	// Photo 未アップがあればアップする
-	for (NSArray *e3section in e3array_) {
-		for (E3 *e3row in e3section) {
-			E4photo *e4 = e3row.e4photo;
-			if (e4  &&  e4.photoData  &&  [e3row.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {
-				// 写真DATAあるがＵＲＬ:UUIDにつき、Picasaアップする
-				[GoogleService photoUploadE3:e3row];
-				// 写真キャッシュに無くてダウンロードするのは、E3detailTVCを開けたとき。
-			}
-		}
-	}
+	// Photo E3detail保存時にアップできなかった場合など、未アップがあれば順次アップする
+	[self photoUploadBatch];
 }
 
 - (void)padE2refresh:(NSInteger)iRow
@@ -598,6 +629,14 @@
 {
 	// 広告非表示でも回転時に位置調整しておく必要あり ＜＜現れるときの開始位置のため＞＞
 	[appDelegate_ AdViewWillRotate:toInterfaceOrientation];
+	
+	if (appDelegate_.app_is_iPad) {	// CameraVC:で受信している
+		NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:
+							  [NSNumber numberWithInteger:toInterfaceOrientation], NFM_ToInterfaceOrientation, 
+							  nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NFM_ToInterfaceOrientation
+															object:self userInfo:info];
+	}
 }
 
 // 回転した後に呼び出される
@@ -678,14 +717,9 @@
 	e3detail.sharePlanList = sharePlanList_;
 	
 	if (appDelegate_.app_is_iPad) {
-		//[Mpopover release], Mpopover = nil;
-		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:e3detail];
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:e3detail];
 		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
-		//[nc release];
 		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-		//MindexPathEdit = indexPath; Bug!危険　　　下記FIX
-		//[MindexPathEdit release], 
 		indexPathEdit_ = [indexPath copy];
 		CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
 		rc.origin.x += 140;  //(rc.size.width/2 - 100);	//(-100)ヨコのとき幅が縮小されてテンキーが欠けるため
@@ -698,7 +732,6 @@
 		[e3detail setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 		[self.navigationController pushViewController:e3detail animated:YES];
 	}
-	//[e3detail release];
 }
 
 
@@ -751,74 +784,52 @@
 }
 
 
-#pragma mark - iCloud
+#pragma mark - <Delegate>
+
+- (void)refreshE3view
+{
+	if (indexPathEdit_)
+	{
+		[self requreyMe3array];//Add行を読む込む為に必要
+		
+		//NSArray* ar = [NSArray arrayWithObject:MindexPathEdit];
+		//[self.tableView reloadRowsAtIndexPaths:ar withRowAnimation:NO];	//【Tips】1行だけリロードする
+		//[1.0.6]上の1行再表示では、セクションヘッダにある重量が更新されない不具合あり。
+		
+		//[1.0.6]【Tips】「reloadData＆復元」方式
+		//CGPoint po = self.tableView.contentOffset;	//現在のスクロール位置を記録
+		//[self.tableView reloadData];
+		//self.tableView.contentOffset = po;		//スクロール位置を復元
+		
+		//[1.0.6]【Tips】セクション単位でリロード
+		//NSIndexSet* iset = [NSIndexSet indexSetWithIndex:MindexPathEdit.section];
+		//[self.tableView reloadSections:iset withRowAnimation:NO]; //【Tips】セクション単位でリロードする
+		
+		//[1.0.6]【Tips】結局、これが一番良い。 ＜＜行位置変わらず、表示の乱れも無い
+		[self.tableView reloadData];
+		// 左側 E2 再描画
+		[self padE2refresh:indexPathEdit_.section];
+	}
+	else {
+		[self.tableView reloadData];
+		// 左側 E2 再描画
+		[self padE2refresh:(-1)];
+	}
+
+	// Photo E3detail保存時にアップできなかった場合など、未アップがあれば順次アップする
+	[self photoUploadBatch];
+		// iPadのとき、E3detailから戻ったとき、viewDidAppear:を通らないため、ここで処理。
+		// iPhoneのとき、E3detailから戻ったとき、viewDidAppear:にて同様に処理している。
+}
+
 - (void)refreshAllViews:(NSNotification*)note 
 {	// iCloud-CoreData に変更があれば呼び出される
 	//@synchronized(note)
 	//{
-		[self viewWillAppear:YES];
+	[self viewWillAppear:YES];
 	//}
 }
 
-
-#pragma mark - Action
-
-- (void)azReflesh
-{
-	// 再表示: データ再取得（ソート）して表示する
-	[self viewWillAppear:YES];
-}
-
-- (void)azItemsGrayHide: (UIBarButtonItem *)sender 
-{
-	optItemsGrayShow_ = !(optItemsGrayShow_); // 反転
-	
-	if (optItemsGrayShow_) {
-		sender.image = [UIImage imageNamed:@"Icon16-ItemGrayShow.png"]; // Gray Show
-	} else {
-		sender.image = [UIImage imageNamed:@"Icon16-ItemGrayHide.png"]; // Gray Hide
-	}
-	
-	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
-	[kvs setBool:optItemsGrayShow_ forKey:KV_OptItemsGrayShow];
-	
-	// 再表示 -------------------------------------------------------------------
-	// 表示行数が変化するための処理　　 表示最上行を取得する
-	NSArray *arCells = [self.tableView indexPathsForVisibleRows]; // 現在見えているセル群
-	NSIndexPath *topPath = nil;
-	for (NSInteger i=0 ; i<[arCells count] ; i++) {
-		topPath = [arCells objectAtIndex:i]; 
-		if (topPath.row < [[e3array_ objectAtIndex:topPath.section] count]) {
-			E3 *e3obj = [[e3array_ objectAtIndex:topPath.section] objectAtIndex:topPath.row];
-			if ([e3obj.need intValue] != 0) {  // +Add行は、.need=(-1)にしている。
-				// 必要数が0でない「Grayでない」セル発見
-				break;
-			}
-		}
-	}
-
-	// 再表示
-	//[self viewWillAppear:NO];
-	[self.tableView reloadData];
-	
-	// 元の最上行を再現する
-	if (topPath) [self.tableView scrollToRowAtIndexPath:topPath 
-									   atScrollPosition:UITableViewScrollPositionTop animated:YES];  
-}
-
-
-- (void)azSearchBar
-{
-	// Serch Bar にフォーカスを当てる　（このときスクロールはしないので下記のスクロール処理が必要）
-	[self.tableView.tableHeaderView becomeFirstResponder];
-	// Search Bar が見えるように最上行を表示する
-	if (e3array_ && 0 < [e3array_ count] && 0 < [[e3array_ objectAtIndex:0] count]) { // ERROR対策
-		NSIndexPath* indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-		[self.tableView scrollToRowAtIndexPath:indexPath 
-							  atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
-	}
-}
 
 #pragma mark - <UISearchBarDelegate>
 
@@ -1755,52 +1766,23 @@
 	// 内部(SAVE)から、dismissPopoverAnimated:で閉じた場合は呼び出されない。
 	//[1.0.6]Cancel: 今更ながら、insert後、saveしていない限り、rollbackだけで十分であることが解った。
 
-	UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
+/*	UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
 	if ( [[nc visibleViewController] isMemberOfClass:[E3detailTVC class]] ) {	// E3detailTVC のときだけ、
 		if (appDelegate_.app_UpdateSave) { // E3detailTVCにて、変更あるので閉じさせない
 			alertBox(NSLocalizedString(@"Cancel or Save",nil), 
 					 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
 			return NO; 
 		}
+	}*/
+	
+	if (appDelegate_.app_UpdateSave) { // 変更あるので閉じさせない
+		alertBox(NSLocalizedString(@"Cancel or Save",nil), 
+				 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
+		return NO; 
 	}
 	[e1selected_.managedObjectContext rollback]; // 前回のSAVE以降を取り消す
 	return YES; // 閉じることを許可
 }
-/*
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
-{	// Popoverの外部をタップして閉じた後に通知
-	// E3 再描画
-	if (MindexPathEdit) {
-		[self requreyMe3array];//Add行を読む込む為に必要
-		
-		//NSArray* ar = [NSArray arrayWithObject:MindexPathEdit];
-		//[self.tableView reloadRowsAtIndexPaths:ar withRowAnimation:NO];	//【Tips】1行だけリロードする
-		//[1.0.6]上の1行再表示では、セクションヘッダにある重量が更新されない不具合あり。
-		
-		//[1.0.6]【Tips】「reloadData＆復元」方式
-		//CGPoint po = self.tableView.contentOffset;	//現在のスクロール位置を記録
-		//[self.tableView reloadData];
-		//self.tableView.contentOffset = po;		//スクロール位置を復元
-		
-		//[1.0.6]【Tips】セクション単位でリロード
-		//NSIndexSet* iset = [NSIndexSet indexSetWithIndex:MindexPathEdit.section];
-		//[self.tableView reloadSections:iset withRowAnimation:NO]; //【Tips】セクション単位でリロードする
-		
-		//[1.0.6]【Tips】結局、これが一番良い。 ＜＜行位置変わらず、表示の乱れも無い
-		[self.tableView reloadData];
-		
-		// 左側 E2 再描画
-		[self padE2refresh:MindexPathEdit.section];
-	}
-	else {
-		[self.tableView reloadData];
-		// 左側 E2 再描画
-		[self padE2refresh:(-1)];
-	}
-	// [Cancel][Save][枠外タッチ]何れでも閉じるときここを通るので解放する。さもなくば回転後に現れることになる
-	[Mpopover release], Mpopover = nil;
-	return;
-}*/
 
 
 @end

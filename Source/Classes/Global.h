@@ -66,11 +66,13 @@
 #define GD_POPOVER_iPhoneSIZE_INIT	CGSizeMake(320-1, 480-1)	//init初期化時に使用　＜＜＜変化ありにするため1廻り小さくする
 #define GD_POPOVER_iPhoneSIZE				CGSizeMake(320, 480)			//viewDidAppear時に使用
 
-#define GD_POPOVER_E3detailTVC_SIZE		CGSizeMake(480, 650)	//横1.5倍	//E3detailTVCおよびその配下に使用　＜＜下余白はテンキーエリア
+#define GD_POPOVER_E3detailTVC_SIZE		CGSizeMake(480, 600)	//横1.5倍	//E3detailTVCおよびその配下に使用　＜＜下余白はテンキーエリア
 
 // iCloud NSNotification messages
 #define NFM_REFRESH_ALL_VIEWS			@"RefreshAllViews"					// 再描画（MOC変更）
 //#define NFM_REFETCH_ALL_DATA			@"RefetchAllDatabaseData"		<<< NFM_REFRESH_ALL_VIEWS に一元化
+
+#define NFM_ToInterfaceOrientation		@"ToInterfaceOrientation"			// 回転したことを通知する
 
 //
 // Global.m Functions
