@@ -170,8 +170,8 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	// Return YES for supported orientations
-	if (mAppDelegate.app_opt_Autorotate==NO && mAppDelegate.app_is_iPad==NO) {	// 回転禁止にしている場合
-		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
+	if (mAppDelegate.app_is_iPad OR mAppDelegate.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
 	}
     return YES;
 }

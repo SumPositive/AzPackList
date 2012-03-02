@@ -229,10 +229,12 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
-	return YES;
+{	// Return YES for supported orientations
+	AppDelegate *ad = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	if (ad.app_is_iPad OR ad.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
+	}
+    return YES;
 }
 
 #pragma mark unload

@@ -121,8 +121,8 @@ static NSString *csvToStr( NSString *inCsv ) {
 		if ([Pe1.name length] <= 0) {
 			Pe1.name = NSLocalizedString(@"(New Pack)", nil);
 		}
-		str = [NSString stringWithFormat:@",\"%@\",\"%@\",\"%@\",\n", 
-			   strToCsv(Pe1.name), strToCsv(Pe1.note), strToCsv(Pe1.photoUrl)];
+		str = [NSString stringWithFormat:@",\"%@\",\"%@\",\n", 
+			   strToCsv(Pe1.name), strToCsv(Pe1.note)];
 		AzLOG(@"E1> %@", str);
 		[PzCsv appendString:str];
 		
@@ -136,8 +136,8 @@ static NSString *csvToStr( NSString *inCsv ) {
 			if ([e2node.name length] <= 0) {
 				e2node.name = NSLocalizedString(@"(New Index)", nil);
 			}
-			str = [NSString stringWithFormat:@",,\"%@\",\"%@\",\"%@\",\n", 
-				   strToCsv(e2node.name), strToCsv(e2node.note), strToCsv(e2node.photoUrl)];
+			str = [NSString stringWithFormat:@",,\"%@\",\"%@\",\n", 
+				   strToCsv(e2node.name), strToCsv(e2node.note)];
 			AzLOG(@"E2> %@", str);
 			[PzCsv appendString:str];
 			
@@ -176,7 +176,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 		return errorMsg_; //=nil
 	}
 	@catch(id error) {
-		[self errorMsg:@"Save NG catch"];
+		[self errorMsg:@"Save NG: Logic error"];  // Entity定義を疑え！
 	}
 	@catch (NSException *errEx) {
 		NSString *msg = [NSString stringWithFormat:@"Save Exception: %@: %@", [errEx name], [errEx reason]];
@@ -436,8 +436,6 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		
 		//----------------------------------------------------------------------[Plan]
 		//[1.0][  ,"name","note",]
-		//[2.0][  ,"name","note","photoUrl",]  ＜＜photoDataは添付しない。
-		//[2.0][0,          1,   　 　　　　2,       　　　　　　  3,]
 		while (1) { 
 			iErrLine++;
 			if (csvLineSplit(PzCsv, aSplit) < 0 OR 10 < iErrLine) { // 10行以内に無ければ中断
@@ -447,7 +445,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 				break; // OK                                                             ↑notです！
 			} 
 		}
-		if ([aSplit count]<3) {
+		if ([aSplit count]<2) {
 			@throw @"Load error (40)";
 		}
 		//-----------------------------------------------E1.row の最大値を求める
@@ -459,11 +457,6 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		e1node.row  = [NSNumber numberWithInteger:1 + maxRow];
 		e1node.name = [aSplit objectAtIndex:1];  //csvToStr([aSplit objectAtIndex:1]);
 		e1node.note = [aSplit objectAtIndex:2];
-		//-----------------------------------------------[2.0]
-		if (3 < [aSplit count]) {
-			e1node.photoUrl = [aSplit objectAtIndex:3];
-			//e1node.photoData = [NSData dataWithBase64String:[aSplit objectAtIndex:4]];  写真はCSV保存しない。Picasaを利用することにした。
-		}
 		//-----------------------------------------------
 		e2row = 0;
 		e2node = nil;
@@ -486,8 +479,6 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 			}
 			//----------------------------------------------------------------------[Group] E2
 			//[1.0][  ,  ,"name","note",]
-			//[2.0][  ,  ,"name","note","photoUrl",]
-			//[2.0][0,1,   　　　　　　　2, 　　　　　　  3,　　　　　　　　　　　　　　　　4,]
 			else if (3 < [aSplit count] 
 					 && [[aSplit objectAtIndex:0] isEqualToString:@""] 
 					 && [[aSplit objectAtIndex:1] isEqualToString:@""] 
@@ -502,10 +493,6 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 					e2node.row		= [NSNumber numberWithInteger:e2row++];
 					e2node.name		= zName; // csvToStr()後にトリム済み
 					e2node.note		= [aSplit objectAtIndex:3];
-					//-----------------------------------------------[2.0]
-					if (4 < [aSplit count]) {
-						e2node.photoUrl = [aSplit objectAtIndex:4];
-					}
 					//-----------------------------------------------Linking
 					[e1node addChildsObject:e2node];
 					e3row = 0;

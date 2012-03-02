@@ -22,9 +22,7 @@
 	@dynamic sumNoCheck;	// Data Model Version.2
 	@dynamic sumWeightStk;
 	@dynamic sumWeightNed;
-	@dynamic photoUrl;			//5//
 	@dynamic childs;
-	@dynamic e4photo;			//5//
 @end
 
 //---------------------------------------------------------------------------------------E2 Section
@@ -36,10 +34,8 @@
 	@dynamic sumNoCheck;	// Data Model Version.2
 	@dynamic sumWeightStk;
 	@dynamic sumWeightNed;
-	@dynamic photoUrl;			//5//
 	@dynamic parent;
 	@dynamic childs;
-	@dynamic e4photo;			//5//
 @end
 
 //---------------------------------------------------------------------------------------E3 Item

@@ -169,7 +169,9 @@
 													 blue:75/255.0f
 													alpha:1.0f];
 
-		self.contentSizeForViewInPopover = CGSizeMake(320, 416); //iPad-Popover
+		//if (appDelegate_.app_is_iPad) {
+			//self.contentSizeForViewInPopover = CGSizeMake(320, 416); //iPad-Popover
+		//}
     }
     return self;
 }
@@ -225,7 +227,7 @@
 {
 	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 	if (app.app_is_iPad) {
-		return YES;
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
 	} else {
 		// 回転禁止でも、正面は常に許可しておくこと。
 		return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);

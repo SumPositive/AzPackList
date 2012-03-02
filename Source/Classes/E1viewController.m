@@ -480,7 +480,7 @@
 	}
 }
 
-- (void)actionIPurchase
+- (void)actionIAZStore
 {
 	AZStoreVC *vc = [[AZStoreVC alloc] initWithUnLock:appDelegate_.app_pid_SwitchAd];
 	vc.delegate = self; //--> azStorePurchesed:
@@ -1409,7 +1409,7 @@
 				break;
 				
 			case 2: // Purchase
-				[self actionIPurchase];
+				[self actionIAZStore];
 				break;
 		}
 	}

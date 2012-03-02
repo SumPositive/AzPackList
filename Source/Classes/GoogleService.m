@@ -333,8 +333,7 @@ static BOOL staticDocUploading = NO;
 																		}
 																	} else {
 																		// 成功
-																		GDataEntryContent *ec = [entry content];
-																		NSLog(@"G> OK [ec sourceURI]=[%@]", [ec sourceURI]);	//NSString
+																		NSLog(@"G> OK [ec sourceURI]=[%@]", [[entry content] sourceURI]);	//NSString
 																		[GoogleService alertIndicatorOff];
 																		alertBox(NSLocalizedString(@"Google DocUpload OK", nil), nil, @"OK");
 																	}

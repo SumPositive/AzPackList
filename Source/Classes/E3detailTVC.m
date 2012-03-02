@@ -334,7 +334,8 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
 	if (appDelegate_.app_is_iPad) {
-		return YES;	// Popover内につき回転不要だが、NO にすると Shopping(Web)から戻ると強制的にタテ向きになってしまう。
+		//return YES;	// Popover内につき回転不要だが、NO にすると Shopping(Web)から戻ると強制的にタテ向きになってしまう。
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
 	} else {
 		// 回転禁止の場合、万一ヨコからはじまった場合、タテにはなるようにしてある。
 		return appDelegate_.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);

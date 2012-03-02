@@ -201,7 +201,7 @@ NSString *passCode()
 {
 	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 	if (app.app_is_iPad) {
-		return YES;
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
 	} else {
 		// 回転禁止でも、正面は常に許可しておくこと。
 		return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -364,7 +364,7 @@ replacementString:(NSString *)string
 			{
 				cell.imageView.image = [UIImage imageNamed:@"Icon-Space-44"]; // 44x44
 				UIActivityIndicatorView *ai = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-				ai.frame = CGRectMake(0, 0, 50, 66);
+				ai.frame = CGRectMake(0, (cell.frame.size.height-32)/2, 32, 32);
 				[cell.contentView addSubview:ai];
 				[ai startAnimating];
 				ai.tag = TAG_ActivityIndicator;

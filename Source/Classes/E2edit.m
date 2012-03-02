@@ -173,7 +173,8 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
 	if (appDelegate_.app_is_iPad) {
-		return NO;	//[MENU]Popover内のとき回転禁止にするため
+		//return NO;	//[MENU]Popover内のとき回転禁止にするため
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
 	} else {
 		// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
 		return appDelegate_.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);

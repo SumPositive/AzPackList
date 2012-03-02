@@ -85,29 +85,35 @@
 {
     [super viewWillAppear:animated];
 	
-	[GoogleService alertIndicatorOn:NSLocalizedString(@"Communicating", nil)];
-
-	// ドキュメントリストを抽出する
-	mDocFeed = nil;
-	NSURL *docsUrl = [GDataServiceGoogleDocs docsFeedURL];
-	// PackListファイル一覧を取得する　＜＜フォルダに関係無く全体から抽出する
-	GDataQueryDocs *query = [GDataQueryDocs documentQueryWithFeedURL:docsUrl];
-	[query setMaxResults:100];				// 一度に取得する件数
-	[query setShouldShowFolders:NO];	// フォルダを表示するか
-	[query setFullTextQueryString:@".packlist|.azpack|.azp"];	 // この文字列が含まれるものを抽出する//[2.0]GD_EXTENSION にも対応
-	[mDocService fetchFeedWithQuery:query
-				  completionHandler:^(GDataServiceTicket *ticket, GDataFeedBase *feed, NSError *error) {
-					  if (error) {
-						  // 失敗
-						  [GoogleService docDownloadErrorNo:100 description:error.localizedDescription];
-						  return;
-					  } else {
-						  // 成功
-						  mDocFeed = feed;
-					  }
-					  [self.tableView reloadData];
-					  [GoogleService alertIndicatorOff];
-				  }];
+	if (mDocService) {
+		[GoogleService alertIndicatorOn:NSLocalizedString(@"Communicating", nil)];
+		
+		// ドキュメントリストを抽出する
+		mDocFeed = nil;
+		NSURL *docsUrl = [GDataServiceGoogleDocs docsFeedURL];
+		// PackListファイル一覧を取得する　＜＜フォルダに関係無く全体から抽出する
+		GDataQueryDocs *query = [GDataQueryDocs documentQueryWithFeedURL:docsUrl];
+		[query setMaxResults:100];				// 一度に取得する件数
+		[query setShouldShowFolders:NO];	// フォルダを表示するか
+		[query setFullTextQueryString:@".packlist|.azpack|.azp"];	 // この文字列が含まれるものを抽出する//[2.0]GD_EXTENSION にも対応
+		[mDocService fetchFeedWithQuery:query
+					  completionHandler:^(GDataServiceTicket *ticket, GDataFeedBase *feed, NSError *error) {
+						  if (error) {
+							  // 失敗
+							  [GoogleService docDownloadErrorNo:100 description:error.localizedDescription];
+							  return;
+						  } else {
+							  // 成功
+							  mDocFeed = feed;
+						  }
+						  [self.tableView reloadData];
+						  [GoogleService alertIndicatorOff];
+					  }];
+	}
+	else {
+		alertBox(NSLocalizedString(@"Google Login NG", nil), nil, @"OK");
+		//[GoogleService docDownloadErrorNo:110 description:NSLocalizedString(@"Google Login NG", nil)];
+	}
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -154,15 +160,22 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+{	// セル生成
     static NSString *CellIdentifier = @"Cell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
 		//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // > revision
+		//cell.textLabel.textAlignment = UITextAlignmentLeft;
+		//cell.detailTextLabel.font = [UIFont systemFontOfSize:10];
+		cell.detailTextLabel.textAlignment = UITextAlignmentRight;
     }
-    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath;
+{	// セル描画
 	GDataEntryDocBase *doc = [mDocFeed entryAtIndex:indexPath.row];
 	cell.textLabel.text = [[[doc title] stringValue] stringByDeletingPathExtension]; // 拡張子を除く
 	
@@ -177,10 +190,7 @@
 		[fmt setDateFormat:@"EE, MMM d, yyyy  HH:mm"];
 	}
 	cell.detailTextLabel.text = [NSString stringWithFormat:@"Uploaded: %@", 
-														[fmt stringFromDate:[[doc updatedDate] date]]];
-	cell.detailTextLabel.textAlignment = UITextAlignmentRight;
-	
-    return cell;
+								 [fmt stringFromDate:[[doc updatedDate] date]]];
 }
 
 /*

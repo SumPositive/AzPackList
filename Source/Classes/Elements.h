@@ -26,9 +26,7 @@
 	@property (nonatomic, retain) NSNumber	*sumNoCheck;	// Data Model Version.2
 	@property (nonatomic, retain) NSNumber	*sumWeightStk;
 	@property (nonatomic, retain) NSNumber	*sumWeightNed;
-	@property (nonatomic, retain) NSString		*photoUrl;			//5//
 	@property (nonatomic, retain) NSSet			*childs;				// E1-->> E2
-	@property (nonatomic, retain) E4photo		*e4photo;			//5// E1----> E4photo <Delete Cascade>
 @end
 
 // coalesce these into one @interface E1 (CoreDataGeneratedAccessors) section
@@ -48,10 +46,8 @@
 	@property (nonatomic, retain) NSNumber	*sumNoCheck;		// Data Model Version.2
 	@property (nonatomic, retain) NSNumber	*sumWeightStk;
 	@property (nonatomic, retain) NSNumber	*sumWeightNed;
-	@property (nonatomic, retain) NSString		*photoUrl;			//5//
 	@property (nonatomic, retain) E1					*parent;				// E2----> E1
 	@property (nonatomic, retain) NSSet			*childs;				// E2-->> E3
-	@property (nonatomic, retain) E4photo		*e4photo;			//5// E2----> E4photo <Delete Cascade>
 @end
 
 // coalesce these into one @interface E2 (CoreDataGeneratedAccessors) section

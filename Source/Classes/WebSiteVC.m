@@ -207,7 +207,7 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
 	//return MbOptShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
-	return YES;
+	return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
 }
 
 // ユーザインタフェースの回転を始める前にこの処理が呼ばれる。 ＜＜OS 3.0以降の推奨メソッド＞＞
