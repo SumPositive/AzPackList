@@ -158,10 +158,12 @@
 	// language
 	//[2.0]//postCmd = postCmdAddLanguage( postCmd );
 	NSString *zLc = [[NSLocale preferredLanguages] objectAtIndex:0];	// "ja", "en", "zh-Hans", など ＜＜先頭(:0)がデフォルト
-	if (2<[zLc length]) {
-		zLc = [zLc substringToIndex:2]; // 先頭2文字に制限 ＜＜＜GAE側が2文字しか対応していないため。
+	if ([zLc length]<2) {
+		zLc = @"xx";
 	}
-	assert([zLc length]==2);
+	else if (10<[zLc length]) {
+		zLc = [zLc substringToIndex:10]; // 先頭10文字に制限 ＜＜＜GAE V2より10文字まで可能
+	}
 	postCmd = [postCmd stringByAppendingFormat:@"&language=%@", zLc];
 	
 	// planCsv
@@ -385,7 +387,7 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
 	if (appDelegate_.app_is_iPad) {
-		return NO;	//[MENU]Popover内のとき回転禁止にするため
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
 	} else {
 		// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
 		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -450,31 +452,24 @@
 		case ALERT_TAG_PUBLISH: 
 			if (buttonIndex==1) {
 				// Append - Upload - Publish
-				dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-				dispatch_async(queue, ^{		// 非同期マルチスレッド処理
-					
-					NSString *err = [self vSharePlanAppend];
-					
-					dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理
-						if (err) {
-							UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append Err",nil)
-																			message:err
-																		   delegate:self 
-																  cancelButtonTitle:NSLocalizedString(@"Roger",nil)
-																  otherButtonTitles:nil];
-							alert.tag = ALERT_TAG_PREVIEW; // 前のViewへ戻る
-							[alert show];
-						} else {
-							UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append OK",nil)
-																			message:NSLocalizedString(@"Append OK Msg",nil)
-																		   delegate:self 
-																  cancelButtonTitle:@"OK"
-																  otherButtonTitles:nil];
-							alert.tag = ALERT_TAG_PREVIEW; // 前のViewへ戻る
-							[alert show];
-						}
-					});
-				});
+				NSString *err = [self vSharePlanAppend]; // HTTP非同期
+				if (err) {
+					UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append Err",nil)
+																	message:err
+																   delegate:self 
+														  cancelButtonTitle:NSLocalizedString(@"Roger",nil)
+														  otherButtonTitles:nil];
+					alert.tag = ALERT_TAG_PREVIEW; // 前のViewへ戻る
+					[alert show];
+				} else {
+					UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append OK",nil)
+																	message:NSLocalizedString(@"Append OK Msg",nil)
+																   delegate:self 
+														  cancelButtonTitle:@"OK"
+														  otherButtonTitles:nil];
+					alert.tag = ALERT_TAG_PREVIEW; // 前のViewへ戻る
+					[alert show];
+				}
 			}
 			break;
 	}
@@ -548,14 +543,13 @@
 		switch (MiConnectTag) {
 			case 2: { // Append
 				NSString *str = [[NSString alloc] initWithData:RdaResponse encoding:NSUTF8StringEncoding];
-				AzLOG(@"str: %@", str);
+				AzLOG(@"connectionDidFinishLoading: str: %@", str);
 				NSRange rg = [str rangeOfString:@"Append:OK"];
 				if (rg.length <= 0) {
 					alertMsgBox( NSLocalizedString(@"Append Err",nil), 
 								str,
 								NSLocalizedString(@"Roger",nil) );
 				}
-				//[str release];
 			}	break;
 			default:
 				break;

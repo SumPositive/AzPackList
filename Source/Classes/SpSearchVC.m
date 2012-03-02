@@ -56,7 +56,8 @@
 	// メモリ不足時に self.viewが破棄されると同時に破棄されるオブジェクトを初期化する
 	Mpicker = nil;		// ここで生成
 	
-	self.title = NSLocalizedString(@"Import SharePlan",nil);
+	//self.title = NSLocalizedString(@"Import SharePlan",nil);
+	self.title = NSLocalizedString(@"SharePlan",nil);
 	
 	//self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
 	// 背景テクスチャ・タイルペイント
@@ -145,7 +146,7 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
 	if (appDelegate_.app_is_iPad) {
-		return NO;
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
 	} else {
 		// 回転禁止でも万一ヨコrPickerSourceからはじまった場合、タテにはなるようにしてある。
 		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];

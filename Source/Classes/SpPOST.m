@@ -25,13 +25,15 @@ void alertMsgBox( NSString *title, NSString *msg, NSString *buttonTitle )
 
 NSMutableURLRequest *requestSpPOST( NSString *PzBody )
 {
-	//Local Server
-	//NSString *url = @"http://localhost:8081/SharePlan";
-	
+#ifdef DEBUGxxx
+	//Local Server　　＜＜GoogleAppEngineLuncherを起動する
+	NSString *url = @"http://localhost:8081/SharePlan";
+#else
 	//Google Server
 	NSString *url = @"http://" GAE_Version ".latest." GAE_Name ".appspot.com/SharePlan";
 	//NSString *url = [NSString stringWithString:@"http://" GAE_Version ".latest." GAE_Name ".appspot.com/SharePlan"];
-
+#endif
+	
 	NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
 													   cachePolicy:NSURLRequestUseProtocolCachePolicy 
 												   timeoutInterval:60.0];

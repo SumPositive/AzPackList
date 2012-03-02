@@ -11,7 +11,7 @@
 #ifdef DEBUG
 #define GAE_Version		@"2"
 #else
-#define GAE_Version		@"1"
+#define GAE_Version		@"2"	//[2.0]
 #endif
 
 #define DEBUG_userPass  @"DebugXX3486181m"

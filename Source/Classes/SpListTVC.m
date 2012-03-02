@@ -138,11 +138,9 @@
 	
 	// LANGUAGE
 	//2.0//postCmd = postCmdAddLanguage( postCmd );
-	if (1 < [zLanguage_P_ length]) {
-		if (2 < [zLanguage_P_ length]) {
-			zLanguage_P_ = [zLanguage_P_ substringToIndex:2]; // 先頭2文字にする
-		}
-		postCmd = [postCmd stringByAppendingFormat:@"&language=%@", zLanguage_P_]; // 先頭2文字だけ対応しているため
+	if (2<=[zLanguage_P_ length] && [zLanguage_P_ length]<=10)
+	{	// 先頭10文字に制限 ＜＜＜GAE V2より10文字まで可能
+		postCmd = [postCmd stringByAppendingFormat:@"&language=%@", zLanguage_P_];
 	}
 	
 	// SORT
@@ -261,7 +259,7 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
 	if (appDelegate_.app_is_iPad) {
-		return NO;
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
 	} else {
 		// 回転禁止でも万一ヨコからはじまった場合、タテ（ボタン下部）にはなるようにしてある。
 		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
