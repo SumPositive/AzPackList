@@ -173,12 +173,12 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
 	if (appDelegate_.app_is_iPad) {
-		//return NO;	//[MENU]Popover内のとき回転禁止にするため
-		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
-	} else {
-		// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
-		return appDelegate_.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+		return YES;	// FormSheet窓対応
 	}
+	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
+	}
+    return YES;
 }
 
 // ユーザインタフェースの回転の最後の半分が始まる前にこの処理が呼ばれる　＜＜このタイミングで配置転換すると見栄え良い＞＞

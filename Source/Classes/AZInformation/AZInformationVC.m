@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "AZInformationVC.h"
 #import "UIDevice-Hardware.h"
+#import "WebSiteVC.h"
 
 #define ALERT_TAG_GoSupportBlog			46
 #define ALERT_TAG_PostToAuthor			37
@@ -121,13 +122,28 @@
 
 - (IBAction)ibBuGoSupportBlog:(UIButton *)button
 {
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"GoSupportSite",nil)
+/*	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"GoSupportSite",nil)
 													message:NSLocalizedString(@"GoSupportSite msg",nil)
 												   delegate:self		// clickedButtonAtIndexが呼び出される
 										  cancelButtonTitle:@"Cancel"
 										  otherButtonTitles:@"OK", nil];
 	alert.tag = ALERT_TAG_GoSupportBlog;
 	[alert show];
+ */
+	WebSiteVC *web = [[WebSiteVC alloc] init];
+	web.title = @"AzukiSoft"; //NSLocalizedString(@"Product Title",nil);
+	web.Rurl = @"http://packlist.azukid.com/";
+	web.RzDomain = @".azukid.com";
+	
+	if (appDelegate_.app_is_iPad) {
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:web];
+		nc.modalPresentationStyle = UIModalPresentationPageSheet;  // 背景Viewが保持される
+		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;//	UIModalTransitionStyleFlipHorizontal
+		//[appDelegate_.mainSVC presentModalViewController:nc animated:YES];  //回転する
+		[self presentModalViewController:nc animated:YES];
+	} else {
+		[self.navigationController pushViewController:web animated:YES];
+	}
 }
 
 - (IBAction)ibBuPostToAuthor:(UIButton *)button
@@ -158,20 +174,20 @@
 
 - (id)init
 {
-	self = [super initWithNibName:@"AZInformation" bundle:nil];
+	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	if (appDelegate_.app_is_iPad) {
+		self = [super initWithNibName:@"AZInformation-iPad" bundle:nil];
+	} else {
+		self = [super initWithNibName:@"AZInformation" bundle:nil];
+	}
     if (self) {
         // Custom initialization
-		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
 		// 背景色　小豆色 RGB(152,81,75) #98514B
 		self.view.backgroundColor = [UIColor colorWithRed:152/255.0f 
 													green:81/255.0f 
 													 blue:75/255.0f
 													alpha:1.0f];
-
-		//if (appDelegate_.app_is_iPad) {
-			//self.contentSizeForViewInPopover = CGSizeMake(320, 416); //iPad-Popover
-		//}
     }
     return self;
 }
@@ -227,7 +243,7 @@
 {
 	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 	if (app.app_is_iPad) {
-		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
+		return YES;	// FormSheet窓対応
 	} else {
 		// 回転禁止でも、正面は常に許可しておくこと。
 		return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);

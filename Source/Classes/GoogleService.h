@@ -36,6 +36,7 @@
 + (void)loginID:(NSString*)googleID  withPW:(NSString*)googlePW  isSetting:(BOOL)isSetting;
 
 // Document
++ (void)docServiceClear;	//Login IDを変更したときにクリアするため
 + (GDataServiceGoogleDocs *)docService;
 + (void)docUploadErrorNo:(NSInteger)errNo  description:(NSString*)description;
 + (void)docUploadE1:(E1 *)e1node  title:(NSString*)title  crypt:(BOOL)crypt;
@@ -43,6 +44,7 @@
 + (void)docDownloadEntry:(GDataEntryDocBase *)docEntry;
 
 // Photo <Picasa>
++ (void)photoServiceClear;	//Login IDを変更したときにクリアするため
 + (void)photoUploadE3:(E3*)e3target;
 + (void)photoDownloadE3:(E3*)e3target  errorLabel:(UILabel*)errorLabel;
 

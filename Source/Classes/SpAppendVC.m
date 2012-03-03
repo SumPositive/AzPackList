@@ -58,7 +58,7 @@
 	[MtfNickname resignFirstResponder]; //キーボードを隠す
 	self.navigationItem.rightBarButtonItem = nil; // Hide
 	
-	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
+	if (appDelegate_.app_is_iPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
 		CGRect rc = MtvNote.frame;
 		rc.size.height = 60;
 		MtvNote.frame = rc;
@@ -200,21 +200,25 @@
 
 #pragma mark - View lifestyle
 
+- (id)init 
+{
+	self = [super init];
+	if (self) {
+		// 初期化処理：インスタンス生成時に1回だけ通る
+		// loadView:では遅い。shouldAutorotateToInterfaceOrientation:が先に呼ばれるため
+		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		// 背景テクスチャ・タイルペイント
+		self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+	}
+	return self;
+}
+
 // IBを使わずにviewオブジェクトをプログラム上でcreateするときに使う（viewDidLoadは、nibファイルでロードされたオブジェクトを初期化するために使う）
 - (void)loadView
 {
     [super loadView];
 
 	self.title = NSLocalizedString(@"SharePlan Append",nil);
-	
-	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	if (appDelegate_.app_is_iPad) {
-		self.contentSizeForViewInPopover = CGSizeMake(480, 350); //GD_POPOVER_SIZE;
-	}
-
-	//self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
-	// 背景テクスチャ・タイルペイント
-	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 	
 	// とりあえず生成、位置はviewDesignにて決定
 /*	//------------------------------------------------------
@@ -334,7 +338,7 @@
 	rect.size.height = 216;
 	mPicker.frame = rect;*/
 	
-	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
+	if (appDelegate_.app_is_iPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
 	{	// タテ
 		rect.origin.y =  5;		rect.size.height = 30;
 		rect.origin.x = 10;		rect.size.width -= 20;
@@ -387,12 +391,12 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
 	if (appDelegate_.app_is_iPad) {
-		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
-	} else {
-		// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
-		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+		return YES;	// FormSheet窓対応
 	}
+	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
+	}
+    return YES;
 }
 
 // ユーザインタフェースの回転の最後の半分が始まる前にこの処理が呼ばれる　＜＜このタイミングで配置転換すると見栄え良い＞＞
@@ -462,13 +466,14 @@
 					alert.tag = ALERT_TAG_PREVIEW; // 前のViewへ戻る
 					[alert show];
 				} else {
+					/* connectionDidFinishLoading:通信終了時に表示するようにした。
 					UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append OK",nil)
 																	message:NSLocalizedString(@"Append OK Msg",nil)
 																   delegate:self 
 														  cancelButtonTitle:@"OK"
 														  otherButtonTitles:nil];
 					alert.tag = ALERT_TAG_PREVIEW; // 前のViewへ戻る
-					[alert show];
+					[alert show];*/
 				}
 			}
 			break;
@@ -482,7 +487,7 @@
 {
 	self.navigationItem.rightBarButtonItem = RbarButtonItemDone;
 	
-	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
+	if (appDelegate_.app_is_iPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
 		CGRect rc = MtvNote.frame;
 		rc.size.height = 60;
 		MtvNote.frame = rc;
@@ -507,7 +512,7 @@
 {
 	self.navigationItem.rightBarButtonItem = RbarButtonItemDone;
 	
-	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
+	if (appDelegate_.app_is_iPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
 		CGRect rc = MtvNote.frame;
 		rc.size.height = 160;
 		MtvNote.frame = rc;
@@ -549,6 +554,14 @@
 					alertMsgBox( NSLocalizedString(@"Append Err",nil), 
 								str,
 								NSLocalizedString(@"Roger",nil) );
+				} else {
+					UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append OK",nil)
+																	message:NSLocalizedString(@"Append OK Msg",nil)
+																   delegate:self 
+														  cancelButtonTitle:@"OK"
+														  otherButtonTitles:nil];
+					alert.tag = ALERT_TAG_PREVIEW; // 前のViewへ戻る
+					[alert show];
 				}
 			}	break;
 			default:

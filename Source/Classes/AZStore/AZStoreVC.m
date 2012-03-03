@@ -10,13 +10,14 @@
 #import "AZStoreVC.h"
 
 
-@interface AZStoreVC (PrivateMethods)
-@end
+//@interface AZStoreVC (PrivateMethods)
+//@end
 
 @implementation AZStoreVC
 {
 	UIAlertView						*alertActivity_;
 	UIActivityIndicatorView	*alertActivityIndicator_;
+	SKProductsRequest		*mProductRequest;
 	
 	BOOL							unLock_;
 	NSMutableArray			*products_;
@@ -103,11 +104,6 @@ NSString *passCode()
 
 - (id)initWithUnLock:(BOOL)unlock
 {
-/*	if ([[[UIDevice currentDevice] model] hasPrefix:@"iPad"]) {	// iPad
-		self = [super initWithNibName:@"AZStoreVC-iPad" bundle:nil];
-	} else {
-		self = [super initWithNibName:@"AZStoreVC" bundle:nil];
-	}*/
 	self = [super initWithNibName:@"AZStoreVC" bundle:nil];
     if (self) {
         // Custom initialization
@@ -177,9 +173,9 @@ NSString *passCode()
 	if ([SKPaymentQueue canMakePayments]) { // 課金可能であるか確認する
 		// 課金可能
 		// 商品情報リクエスト 
-		SKProductsRequest *req = [[SKProductsRequest alloc] initWithProductIdentifiers: productIDs_];
-		req.delegate = self;
-		[req start];  //---> productsRequest:didReceiveResponse:が呼び出される
+		mProductRequest = [[SKProductsRequest alloc] initWithProductIdentifiers: productIDs_];
+		mProductRequest.delegate = self;		//viewDidUnloadにて、cancel, nil している。さもなくば落ちる
+		[mProductRequest start];  //---> productsRequest:didReceiveResponse:が呼び出される
 	} else {
 		// 購入が禁止されています。
 		[products_ replaceObjectAtIndex:0 withObject:SK_BAN];
@@ -201,7 +197,7 @@ NSString *passCode()
 {
 	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 	if (app.app_is_iPad) {
-		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
+		return YES;	// FormSheet窓対応
 	} else {
 		// 回転禁止でも、正面は常に許可しておくこと。
 		return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -210,24 +206,23 @@ NSString *passCode()
 
 #pragma mark unload
 
-- (void)didReceiveMemoryWarning
+- (void)didReceiveMemoryWarning	//＜＜実験では、呼ばれなかった！
 {
-    // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
 }
 
-- (void)viewDidUnload
+- (void)viewDidUnload		//＜＜実験では、呼ばれなかった！
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
-- (void)dealloc 
-{
+- (void)dealloc
+{	// 必ず最後に呼ばれる
     [[SKPaymentQueue defaultQueue] removeTransactionObserver:self]; // これが無いと、しばらくすると落ちる
+	if (mProductRequest) {
+		[mProductRequest cancel];			// 中断
+		mProductRequest.delegate = nil;  // これないと、通信中に閉じると落ちる
+	}
 }
 
 
@@ -237,7 +232,8 @@ NSString *passCode()
 {
 	assert(textField==ibTfInvitePass);
 	[textField resignFirstResponder]; // キーボードを隠す
-
+	//iPad//disablesAutomaticKeyboardDismissalカテゴリ定義が必要＞Global定義
+	
 	// 招待パス生成
 	NSString *pass = passCode(); //16進文字列（英数大文字のみ）
 	// 英大文字にしてチェック
@@ -440,8 +436,8 @@ replacementString:(NSString *)string
 				SKProduct *prod = [products_ objectAtIndex: indexPath.row];
 				if (prod) {
 					[self alertActivityOn:NSLocalizedString(@"SK Progress",nil)];
-					// アドオン購入処理開始　　　　　　　<SKPaymentTransactionObserver>は、AzBodyNoteAppDelegateに実装
-					[[SKPaymentQueue defaultQueue] addTransactionObserver: self];
+					// アドオン購入処理開始
+					[[SKPaymentQueue defaultQueue] addTransactionObserver: self]; //<SKPaymentTransactionObserver>
 					SKPayment *payment = [SKPayment paymentWithProduct: prod];
 					[[SKPaymentQueue defaultQueue] addPayment:payment];
 				}

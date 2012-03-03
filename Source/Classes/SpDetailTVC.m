@@ -144,11 +144,7 @@
 		Re1add = nil;
 		RdaResponse = nil;
 		MiConnectTag = 0;
-
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		if (appDelegate_.app_is_iPad) {
-			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
-		}
 
 		// 背景テクスチャ・タイルペイント
 		if (appDelegate_.app_is_iPad) {
@@ -182,12 +178,6 @@
 											  target:nil  action:nil];
 
 }
-
-/*
-- (void)viewDidLoad {
-    [super viewDidLoad];
-}
-*/
 
 // 表示前
 - (void)viewWillAppear:(BOOL)animated 
@@ -223,12 +213,12 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
 	if (appDelegate_.app_is_iPad) {
-		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
-	} else {
-		// 回転禁止でも万一ヨコからはじまった場合、タテ（ボタン下部）にはなるようにしてある。
-		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+		return YES;	// FormSheet窓対応
 	}
+	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
+	}
+    return YES;
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation 
@@ -236,25 +226,6 @@
 {
 	[self.tableView reloadData]; // cell回転(再描画)させるために必要
 }
-
-/*
- - (void)viewWillDisappear:(BOOL)animated {
- [super viewWillDisappear:animated];
- }
- */
-/*
- - (void)viewDidDisappear:(BOOL)animated {
- [super viewDidDisappear:animated];
- }
- */
-
-/*
- // Override to allow orientations other than the default portrait orientation.
- - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
- // Return YES for supported orientations
- return (interfaceOrientation == UIInterfaceOrientationPortrait);
- }
- */
 
 
 
@@ -394,7 +365,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
 	if (indexPath.section==0 && indexPath.row==1) { // E1.note
-		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { // タテ
+		if (appDelegate_.app_is_iPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
 			return 100;
 		} else { //ヨコ
 			return 64;
@@ -544,7 +515,7 @@
 						[cell.contentView addSubview:lb]; //[lb release];
 					}
 					UILabel *lb = (UILabel *)[cell.contentView viewWithTag:CELL_TAG_NOTE];
-					if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { // タテ
+					if (appDelegate_.app_is_iPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
 						lb.frame = CGRectMake(5, 5, 320-30, 100-10);
 					} else { //ヨコ
 						lb.frame = CGRectMake(5, 3, 480-30, 64-6);

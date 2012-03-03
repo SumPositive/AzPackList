@@ -35,9 +35,6 @@
     if (self) {
         // Custom initialization
 		mAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		if (mAppDelegate.app_is_iPad) {
-			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
-		}
 		mDocService = [GoogleService docService];
     }
     return self;
@@ -47,7 +44,6 @@
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
     // Release any cached data, images, etc that aren't in use.
 }
 
@@ -133,7 +129,10 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	// Return YES for supported orientations
-	if (mAppDelegate.app_opt_Autorotate==NO && mAppDelegate.app_is_iPad==NO) {	// 回転禁止にしている場合
+	if (mAppDelegate.app_is_iPad) {
+		return YES;	// FormSheet窓対応
+	}
+	else if (mAppDelegate.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
     return YES;

@@ -22,6 +22,7 @@
 #define TAG_OptAdvertising							991
 
 
+
 @interface SettingTVC (PrivateMethods)
 - (void)switchAction:(UISwitch *)sender;
 @end
@@ -119,11 +120,12 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
 	if (mAppDelegate.app_is_iPad) {
-		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
-	} else {
-		// 回転禁止でも、正面は常に許可しておくこと。
-		return mAppDelegate.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+		return YES;	// FormSheet窓対応
 	}
+	else if (mAppDelegate.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
+	}
+    return YES;
 }
 
 // ユーザインタフェースの回転の最後の半分が始まる前にこの処理が呼ばれる　＜＜このタイミングで配置転換すると見栄え良い＞＞
@@ -545,6 +547,7 @@
 
 
 #pragma make - <UITextFieldDelegate>
+
 // キーボードのリターンキーを押したときに呼ばれる
 - (BOOL)textFieldShouldReturn:(UITextField *)sender 
 {
@@ -575,8 +578,8 @@
 		[mTfPass2 becomeFirstResponder];
 	}
 	else if (sender==mTfPass2) {	//-------------------------------------------------------------Crypt Key2
+		[mTfPass2 resignFirstResponder];	//iPad//disablesAutomaticKeyboardDismissalカテゴリ定義が必要＞Global定義
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-		[mTfPass2 resignFirstResponder];
 		if ([mTfPass1.text isEqualToString:mTfPass2.text]) {
 			// 一致、パス変更
 			// 秘密キーをKeyChainに保存する
@@ -609,6 +612,9 @@
 	}
 	else if (sender==mTfGoogleID) {	//-------------------------------------------------------------Google+ ID
 		if ([sender.text length] <= 0 OR 80 < [sender.text length]) {
+			// GoogleServiceログイン状態をクリアする
+			[GoogleService docServiceClear];
+			[GoogleService photoServiceClear];
 			// IDを破棄する
 			NSError *error; // nilを渡すと異常終了するので注意
 			[SFHFKeychainUtils deleteItemForUsername:GS_KC_LoginName
@@ -631,7 +637,7 @@
 		[mTfGooglePW becomeFirstResponder];
 	}
 	else if (sender==mTfGooglePW) {	//-------------------------------------------------------------Google+ PW
-		[mTfGooglePW resignFirstResponder];
+		[mTfGooglePW resignFirstResponder];	//iPad//disablesAutomaticKeyboardDismissalカテゴリ定義が必要＞Global定義
 		mTfGooglePW.hidden = YES;
 		if ([sender.text length] <= 0 OR 80 < [sender.text length]) {
 			// PWを破棄する

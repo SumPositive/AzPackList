@@ -117,6 +117,11 @@ static	NSURL										*sDocUploadUrl = nil;
 	alertBox(NSLocalizedString(@"Google DocUpload NG", nil), msg, @"OK");
 }
 
++ (void)docServiceClear
+{
+	sDocService = nil;
+}
+
 + (GDataServiceGoogleDocs *)docService
 {
 	if (sDocService) {
@@ -485,6 +490,11 @@ static BOOL staticDocUploading = NO;
 // Google Photo <Picasa>
 static	GDataServiceGooglePhotos	*sPhotoService = nil;
 static	NSURL										*sPhotoUploadUrl = nil;
+
++ (void)photoServiceClear
+{
+	sPhotoService = nil;
+}
 
 + (GDataServiceGooglePhotos *)photoService
 {

@@ -158,7 +158,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
 {
-    return YES;
+	return YES;	//iPad// FormSheet窓対応
 }
 
 //[Index]Popoverが開いたときに呼び出される

@@ -38,7 +38,7 @@
 @interface E2viewController (PrivateMethods)
 - (void)allZero;
 - (void)addTestData;
-- (void)httpInfoUpdate:(NSNotification *)notification;
+//- (void)httpInfoUpdate:(NSNotification *)notification;
 - (void)azAction;
 - (void)e2adde2add;
 - (void)e2editView:(NSIndexPath *)indexPath;
@@ -363,6 +363,7 @@
 	}
 }
 
+/*[2.0]廃止
 - (void)actionBackupYourPC
 {
 	if (appDelegate_.app_is_iPad) {
@@ -386,7 +387,7 @@
 		// CSV SAVE
 		FileCsv *fcsv = [[FileCsv alloc] init];
 		fcsv.isShardMode = YES; // 写真を除外する
-		NSString *zErr = [fcsv zSaveTmpFile:e1selected_ crypt:YES];
+		NSString *zErr = [fcsv zSaveTmpFile:e1selected_ crypt:NO];
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
 			if (zErr) {
@@ -406,7 +407,8 @@
 			[httpServer_ setType:@"_http._tcp."];
 			[httpServer_ setConnectionClass:[MyHTTPConnection class]];
 			[httpServer_ setDocumentRoot:[NSURL fileURLWithPath:root]];
-			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(httpInfoUpdate:) name:@"LocalhostAdressesResolved" object:nil];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(httpInfoUpdate:) 
+														 name:@"LocalhostAdressesResolved" object:nil];
 			[localhostAddresses performSelectorInBackground:@selector(list) withObject:nil];
 			[httpServer_ setPort:8080];
 			[httpServer_ setBackup:YES]; // BACKUP Mode
@@ -438,7 +440,7 @@
 	dispatch_async(queue, ^{		// 非同期マルチスレッド処理
 		FileCsv *fcsv = [[FileCsv alloc] init];
 		fcsv.isShardMode = YES; // 写真を除外する
-		NSString *zErr = [fcsv zSavePasteboard:e1selected_ crypt:YES];
+		NSString *zErr = [fcsv zSavePasteboard:e1selected_ crypt:NO];
 		
 		dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理
 			[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
@@ -462,7 +464,7 @@
 		});
 	});
 }
-
+*/
 
 
 #pragma mark - delegate <MFMailComposeViewControllerDelegate>
@@ -954,11 +956,13 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	//[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
-	if (appDelegate_.app_opt_Autorotate==NO && appDelegate_.app_is_iPad==NO) {	// 回転禁止にしている場合
+	if (appDelegate_.app_is_iPad) {
+		return YES;	// FormSheet窓対応
+	}
+	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
-	return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
+    return YES;
 }
 
 // shouldAutorotateToInterfaceOrientation で YES を返すと、回転開始時に呼び出される
@@ -1015,7 +1019,6 @@
 - (void)viewDidUnload 
 {	// メモリ不足時、裏側にある場合に呼び出されるので、viewDidLoadで生成したObjを解放する。
 	//NSLog(@"--- viewDidUnload ---"); 
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super viewDidUnload];  // TableCell破棄される
 	[self unloadRelease];		// その後、AdMob破棄する
 	// この後に loadView ⇒ viewDidLoad ⇒ viewWillAppear がコールされる
@@ -1023,20 +1026,14 @@
 
 - (void)dealloc     // 生成とは逆順に解放するのが好ましい
 {
-	//[menuPopover]は、setPopover:にて親から渡されたものなので解放しない。
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 	delegateE3viewController_ = nil;
 	[popOver_ setDelegate:nil];	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
-	//[Mpopover release], 
 	popOver_ = nil;
-	//[MindexPathEdit release], 
 	indexPathEdit_ = nil;
 
 	[self unloadRelease];
-	//[MindexPathActionDelete release], 
 	indexPathActionDelete_ = nil;
-	//--------------------------------@property (retain)
-	//[Re1selected release];
-	//[super dealloc];
 }
 
 
@@ -1054,7 +1051,7 @@
 
 // TableView セクション数を応答
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 4;  // (0)Group (1)Sort list　　(2)Action menu  (3)Old menu
+    return 3;  // (0)Group (1)Sort list　　(2)Action menu  　(3廃止)Old menu
 }
 
 // TableView セクションの行数を応答
@@ -1079,12 +1076,12 @@
 			}
 			else rows = 0;
 			break;
-		case 3: // Old menu
+	/*	case 3: // Old menu
 			if (!sharePlanList_ && 0 < section0Rows_) {
 				rows = 2;
 			}
 			else rows = 0;
-			break;
+			break;*/
 	}
     return rows;
 }
@@ -1142,11 +1139,11 @@
 				return NSLocalizedString(@"menu Action",nil);
 			}
 			break;
-		case 3:
+	/*	case 3:
 			if (!sharePlanList_ && 0<section0Rows_) {
 				return NSLocalizedString(@"menu Old",nil);
 			}
-			break;
+			break;*/
 	}
 	return nil;
 }
@@ -1154,7 +1151,7 @@
 // TableView セクションフッタを応答
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
 	switch (section) {
-		case 3:
+		case 2:
 			if (sharePlanList_) {
 				return NSLocalizedString(@"SharePLAN PreView",nil);
 			}
@@ -1447,7 +1444,7 @@
 			}
 			break;
 			
-		case 3:	//------------------------------------------------------------------ section: Old menu
+	/*	case 3:	//------------------------------------------------------------------ section: Old menu
 			cell = [tableView dequeueReusableCellWithIdentifier:zCellSubtitle];
 			if (cell == nil) {
 				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle		// サブタイトル型(3.0)
@@ -1483,21 +1480,10 @@
 					cell.detailTextLabel.text = NSLocalizedString(@"Copied to PasteBoard msg",nil);
 					break;
 			}
-			break;
+			break;*/
 	}
 	return cell;
 }
-
-/*
-// UISwitch Action
-- (void)switchAction: (UISwitch *)sender
-{
-	if (sender.tag != 999) return;
- 
-	BOOL bQuickSort = [sender isOn];
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setBool:bQuickSort forKey:GD_OptItemsQuickSort];
-}*/
 
 // TableView Editボタンスタイル
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1509,34 +1495,6 @@
 	}
     return UITableViewCellEditingStyleNone;
 }
-
-/*
-- (BOOL)canBecomeFirstResponder {
-	return YES;
-}
-- (void)copy:(id)sender
-{
-	AzLOG(@"--COPY--");
-}
-- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
-{
-	if (@selector(copy:) == action) return YES;
-	return [super canPerformAction:action withSender:sender];
-}
-//- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-	UITouch *touch = [touches anyObject];
-	if ([self becomeFirstResponder])  {
-		UIMenuController *menu = [UIMenuController sharedMenuController];
-		CGPoint touchPoint = [touch locationInView:self.tableView];
-		CGRect minRect;
-		minRect.origin = touchPoint;
-		[menu setTargetRect:minRect inView:self.tableView];
-		[menu setMenuVisible:YES animated:YES];
-	}
-}
-*/
 
 // TableView 行選択時の動作
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
@@ -1619,7 +1577,7 @@
 			}
 		}	break;
 
-		case 3: { // Old Menu
+	/*	case 3: { // Old Menu
 			switch (indexPath.row) {
 				case 0: // Backup to YourPC
 					[self actionBackupYourPC];
@@ -1629,7 +1587,7 @@
 					[self actionCopiedPasteBoard];
 					break;
 			}
-		}	break;
+		}	break;*/
 	}
 
 	if (appDelegate_.app_is_iPad) {
@@ -1639,6 +1597,7 @@
 	}
 }
 
+/*
 // HTTP Server Address Display
 - (void)httpInfoUpdate:(NSNotification *) notification
 {
@@ -1673,18 +1632,13 @@
 		info = [NSString stringWithFormat:@"%@\n\nhttp://%@:%d", 
 				NSLocalizedString(@"HttpSv Addr", nil), localIP, port];
 	
-/*	NSString *wwwIP = [addresses objectForKey:@"www"];
-	if (wwwIP)
-		info = [info stringByAppendingFormat:@"Web: %@:%d\n", wwwIP, port];
-	else
-		info = [info stringByAppendingString:@"Web: Unable to determine external IP\n"]; */
-	
 	//displayInfo.text = info;
 	if (alertHttpServer_) {
 		alertHttpServer_.message = info;
 		[alertHttpServer_ show];
 	}
 }
+*/
 
 
 // ディスクロージャボタンが押されたときの処理

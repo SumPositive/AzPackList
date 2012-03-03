@@ -104,6 +104,7 @@
 
 	MrectInit = rect;		// 表示位置を記録　showにて復元に使う
 
+	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 	if (appDelegate_.app_is_iPad) {
 		// 位置はそのままで、透明から現れるようにする
 	} else {
@@ -114,8 +115,6 @@
 	// UIView
 	self = [super initWithFrame:rect ];
 	if (self==nil) return self;
-	
-	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
 	self.backgroundColor = [UIColor clearColor];	// 透明でもTouchイベントが受け取れるようだ。
 	self.userInteractionEnabled = YES; // このViewがタッチを受けるか

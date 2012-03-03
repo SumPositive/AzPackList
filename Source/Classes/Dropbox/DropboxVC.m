@@ -17,13 +17,7 @@
 #define TAG_ALERT_Delete			127
 
 
-//#define USER_FILENAME			@"My PackList"
-//#define USER_FILENAME_KEY	@"MyPackList"
-
 @implementation DropboxVC
-//@synthesize delegate;
-//@synthesize Re1selected;
-
 
 #pragma mark - Alert
 
@@ -40,14 +34,6 @@
 	[mActivityIndicator stopAnimating];
 	[mAlert dismissWithClickedButtonIndex:mAlert.cancelButtonIndex animated:YES];
 }
-
-/*
-- (NSMutableArray*)errorMsgs {
-	if (errorMsgs_==nil) {
-		errorMsgs_ = [NSMutableArray new];
-	}
-	return errorMsgs_;
-}*/
 
 - (void)alertMsg:(NSString*)msg  detail:(NSString*)detail
 {
@@ -231,7 +217,10 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	// Return YES for supported orientations
 	AppDelegate *ad = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	if (ad.app_is_iPad OR ad.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+	if (ad.app_is_iPad) {
+		return YES;	// FormSheet窓対応
+	}
+	else if (ad.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
 	}
     return YES;
@@ -256,15 +245,11 @@
 
 - (void)dealloc 
 {
-	//[Re1selected release];
-	
-	//[mDidSelectRowAtIndexPath release], 
+	if (restClient) {
+		restClient.delegate = nil;
+	}
 	mDidSelectRowAtIndexPath = nil;
-	//[mActivityIndicator release];
-	//[mAlert release];
-	//[mMetadatas release], 
 	mMetadatas = nil;
-    //[super dealloc];
 }
 
 

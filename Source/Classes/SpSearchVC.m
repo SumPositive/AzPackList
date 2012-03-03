@@ -12,56 +12,80 @@
 
 
 @interface SpSearchVC (PrivateMethods)
-- (void)viewDesign;
-- (void)done:(id)sender;
+//- (void)viewDesign;
+//- (void)done:(id)sender;
 @end
 
 @implementation SpSearchVC
 
 
-- (void)unloadRelease	// dealloc, viewDidUnload から呼び出される
+#pragma mark - Action
+
+- (void)actionBack:(id)sender
 {
-	NSLog(@"--- unloadRelease --- SpSearchVC");
-	//[RaSegSortSource release],	
-	RaSegSortSource = nil;
-	//[RaPickerSource release],	
-	//RaPickerSource = nil;
+	[self dismissModalViewControllerAnimated:YES];
 }
 
-- (void)dealloc    // 生成とは逆順に解放するのが好ましい
+- (void)vBuSearch:(id)sender
 {
-	[self unloadRelease];
-	//--------------------------------@property (retain)
-	//[super dealloc];
+	/*	// Tag条件
+	 NSMutableArray *ma = [NSMutableArray new];
+	 for (int comp=0; comp<3; comp++) {
+	 NSInteger iRow = [Mpicker selectedRowInComponent:comp];
+	 if (0 < iRow) {
+	 [ma addObject:[[RaPickerSource objectAtIndex:comp] objectAtIndex:iRow]];
+	 }
+	 }*/
+	
+	// Search
+	SpListTVC *vc = [[SpListTVC alloc] init];
+	
+	// Language
+	NSInteger iRow = [Mpicker selectedRowInComponent:0];
+	if (0 < iRow) {
+		vc.RzLanguage = [[NSLocale preferredLanguages] objectAtIndex:iRow-1];
+	} else {
+		vc.RzLanguage = nil; // * ALL
+	}
+	
+	// Sort条件
+	NSInteger iSort = MsegSort.selectedSegmentIndex;
+	if (iSort <= 0)	vc.RzSort = @"N"; //N 新着順
+	else					vc.RzSort = @"P"; //P 人気順
+	
+	[self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)viewDidUnload 
-{	// メモリ不足時、裏側にある場合に呼び出されるので、viewDidLoadで生成したObjを解放する。
-	//NSLog(@"--- viewDidUnload ---"); 
-	// メモリ不足時、裏側にある場合に呼び出される。addSubviewされたOBJは、self.viewと同時に解放される
-	[self unloadRelease];
-	[super viewDidUnload];
-	// この後に loadView ⇒ viewDidLoad ⇒ viewWillAppear がコールされる
+
+#pragma mark - View lifestyle
+
+- (id)init 
+{
+	self = [super init];
+	if (self) {
+		// 初期化処理：インスタンス生成時に1回だけ通る
+		// loadView:では遅い。shouldAutorotateToInterfaceOrientation:が先に呼ばれるため
+		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		// 背景テクスチャ・タイルペイント
+		self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+	}
+	return self;
 }
 
 
 // IBを使わずにviewオブジェクトをプログラム上でcreateするときに使う（viewDidLoadは、nibファイルでロードされたオブジェクトを初期化するために使う）
 - (void)loadView
 {
-	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	if (appDelegate_.app_is_iPad) {
+	//NG//遅い//appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	/*if (appDelegate_.app_is_iPad) {
 		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
-	}
+	}*/
     [super loadView];
 	// メモリ不足時に self.viewが破棄されると同時に破棄されるオブジェクトを初期化する
 	Mpicker = nil;		// ここで生成
 	
 	//self.title = NSLocalizedString(@"Import SharePlan",nil);
 	self.title = NSLocalizedString(@"SharePlan",nil);
-	
-	//self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
-	// 背景テクスチャ・タイルペイント
-	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 	
 	// Set up NEXT Left ＜Back] buttons.
 	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
@@ -116,51 +140,6 @@
 	}*/
 }
 
-- (void)actionBack:(id)sender
-{
-	[self dismissModalViewControllerAnimated:YES];
-}
-
-// viewWillAppear はView表示直前に呼ばれる。よって、Viewの変化要素はここに記述する。　 　// viewDidAppear はView表示直後に呼ばれる
-- (void)viewWillAppear:(BOOL)animated 
-{
-	[super viewWillAppear:animated];
-	
-	// 画面表示に関係する Option Setting を取得する
-	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-
-	[self viewDesign];
-	//ここでキーを呼び出すと画面表示が無いまま待たされてしまうので、viewDidAppearでキー表示するように改良した。
-}
-
-// 画面表示された直後に呼び出される
-- (void)viewDidAppear:(BOOL)animated 
-{
-	[super viewDidAppear:animated];
-	
-	//viewWillAppearでキーを表示すると画面表示が無いまま待たされてしまうので、viewDidAppearでキー表示するように改良した。
-//	[MtfAmount becomeFirstResponder];  // キーボード表示
-}
-
-// 回転サポート
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{	
-	if (appDelegate_.app_is_iPad) {
-		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
-	} else {
-		// 回転禁止でも万一ヨコrPickerSourceからはじまった場合、タテにはなるようにしてある。
-		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
-	}
-}
-
-// ユーザインタフェースの回転の最後の半分が始まる前にこの処理が呼ばれる　＜＜このタイミングで配置転換すると見栄え良い＞＞
-- (void)willAnimateSecondHalfOfRotationFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation   duration:(NSTimeInterval)duration
-{
-	//[self viewWillAppear:NO];没：これを呼ぶと、回転の都度、編集がキャンセルされてしまう。
-	[self viewDesign]; // これで回転しても編集が継続されるようになった。
-}
-
 - (void)viewDesign
 {
 	CGRect rect = self.view.bounds;
@@ -169,7 +148,7 @@
 	rect.size.height = 216;  // iOS4.1から高さ可変になったようだが3.0互換のため規定値(216)にする
 	Mpicker.frame = rect;
 	
-	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
+	if (appDelegate_.app_is_iPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
 	{	// タテ
 		rect.origin.y += (Mpicker.frame.size.height + 20);
 		rect.size.width = 250;
@@ -197,7 +176,73 @@
 	}
 }	
 
+// viewWillAppear はView表示直前に呼ばれる。よって、Viewの変化要素はここに記述する。　 　// viewDidAppear はView表示直後に呼ばれる
+- (void)viewWillAppear:(BOOL)animated 
+{
+	[super viewWillAppear:animated];
+	
+	// 画面表示に関係する Option Setting を取得する
+	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
+	[self viewDesign];
+	//ここでキーを呼び出すと画面表示が無いまま待たされてしまうので、viewDidAppearでキー表示するように改良した。
+}
+
+// 画面表示された直後に呼び出される
+- (void)viewDidAppear:(BOOL)animated 
+{
+	[super viewDidAppear:animated];
+	
+	//viewWillAppearでキーを表示すると画面表示が無いまま待たされてしまうので、viewDidAppearでキー表示するように改良した。
+//	[MtfAmount becomeFirstResponder];  // キーボード表示
+}
+
+// 回転サポート
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{	
+	if (appDelegate_.app_is_iPad) {
+		return YES;	// FormSheet窓対応
+	}
+	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
+	}
+    return YES;
+}
+
+// ユーザインタフェースの回転の最後の半分が始まる前にこの処理が呼ばれる　＜＜このタイミングで配置転換すると見栄え良い＞＞
+- (void)willAnimateSecondHalfOfRotationFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation   duration:(NSTimeInterval)duration
+{
+	//[self viewDesign]; // これで回転しても編集が継続されるようになった。
+}
+
+- (void)unloadRelease	// dealloc, viewDidUnload から呼び出される
+{
+	NSLog(@"--- unloadRelease --- SpSearchVC");
+	//[RaSegSortSource release],	
+	RaSegSortSource = nil;
+	//[RaPickerSource release],	
+	//RaPickerSource = nil;
+}
+
+- (void)viewDidUnload 
+{	// メモリ不足時、裏側にある場合に呼び出されるので、viewDidLoadで生成したObjを解放する。
+	//NSLog(@"--- viewDidUnload ---"); 
+	// メモリ不足時、裏側にある場合に呼び出される。addSubviewされたOBJは、self.viewと同時に解放される
+	[self unloadRelease];
+	[super viewDidUnload];
+	// この後に loadView ⇒ viewDidLoad ⇒ viewWillAppear がコールされる
+}
+
+- (void)dealloc    // 生成とは逆順に解放するのが好ましい
+{
+	[self unloadRelease];
+	//--------------------------------@property (retain)
+	//[super dealloc];
+}
+
+
+
+#pragma mark - <UIPickerViewDelegate>
 //-----------------------------------------------------------Picker
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
@@ -237,38 +282,5 @@
 //- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 
 
-
-- (void)vBuSearch:(id)sender
-{
-/*	// Tag条件
-	NSMutableArray *ma = [NSMutableArray new];
-	for (int comp=0; comp<3; comp++) {
-		NSInteger iRow = [Mpicker selectedRowInComponent:comp];
-		if (0 < iRow) {
-			[ma addObject:[[RaPickerSource objectAtIndex:comp] objectAtIndex:iRow]];
-		}
-	}*/
-
-	// Search
-	SpListTVC *vc = [[SpListTVC alloc] init];
-	//vc.RaTags = ma;	//BUG//[ma retain];
-	//[ma release];
-	
-	// Language
-	NSInteger iRow = [Mpicker selectedRowInComponent:0];
-	if (0 < iRow) {
-		vc.RzLanguage = [[NSLocale preferredLanguages] objectAtIndex:iRow-1];
-	} else {
-		vc.RzLanguage = nil; // * ALL
-	}
-	
-	// Sort条件
-	NSInteger iSort = MsegSort.selectedSegmentIndex;
-	if (iSort <= 0)	vc.RzSort = @"N"; //N 新着順
-	else					vc.RzSort = @"P"; //P 人気順
-
-	[self.navigationController pushViewController:vc animated:YES];
-	//[vc release];
-}
 
 @end

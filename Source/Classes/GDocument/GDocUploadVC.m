@@ -170,7 +170,10 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	// Return YES for supported orientations
-	if (mAppDelegate.app_is_iPad OR mAppDelegate.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+	if (mAppDelegate.app_is_iPad) {
+		return YES;	// FormSheet窓対応
+	}
+	else if (mAppDelegate.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
 	}
     return YES;

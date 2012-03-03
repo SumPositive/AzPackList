@@ -85,17 +85,6 @@
 @synthesize selfPopover = selfPopover_;
 
 
-#pragma mark - dealloc
-
-- (void)dealloc    // 生成とは逆順に解放するのが好ましい
-{
-	//[selfPopover release], 
-	selfPopover_ = nil;
-	//[e3target_ release];
-	//[RaE3array release];
-	//[RaE2array release];
-	//[super dealloc];
-}
 
 
 #pragma mark - View lifecicle
@@ -334,12 +323,12 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
 	if (appDelegate_.app_is_iPad) {
-		//return YES;	// Popover内につき回転不要だが、NO にすると Shopping(Web)から戻ると強制的にタテ向きになってしまう。
-		return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
-	} else {
-		// 回転禁止の場合、万一ヨコからはじまった場合、タテにはなるようにしてある。
-		return appDelegate_.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+		return YES;	// FormSheet窓対応
 	}
+	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
+	}
+    return YES;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration
@@ -356,6 +345,16 @@
 {	// ユーザインタフェースの回転後に呼ばれる
 	//[self.tableView reloadData];
 	[self viewDesign]; // cell生成の後
+}
+
+- (void)dealloc    // 生成とは逆順に解放するのが好ましい
+{
+	//[selfPopover release], 
+	selfPopover_ = nil;
+	//[e3target_ release];
+	//[RaE3array release];
+	//[RaE2array release];
+	//[super dealloc];
 }
 
 
@@ -649,6 +648,51 @@
 		}
 		[selfPopover_ dismissPopoverAnimated:YES];
 	}
+}
+
+
+- (void)actionWebTitle:(NSString*)zTitle  URL:(NSString*)zUrl  Domain:(NSString*)zDomain
+{
+	if ([tfKeyword_.text length]<=0) {
+		tfKeyword_.text = tfName_.text;
+		appDelegate_.app_UpdateSave = YES; // 変更あり
+		self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
+	}
+	// 日本語を含むURLをUTF8でエンコーディングする
+	// 第3引数のCFSTR(";,/?:@&=+$#")で指定した文字列はエンコードされずにそのまま残る
+	//NSString *zKeyword = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+	//																		 (CFStringRef)MtfKeyword.text,
+	//																		 CFSTR(";,/?:@&=+$#"),
+	//																		 NULL,
+	//																		 kCFStringEncodingUTF8);	// release必要
+	
+	// __bridge_transfer : CオブジェクトをARC管理オブジェクトにする
+	NSString *zKeyword = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+																							   (__bridge CFStringRef)tfKeyword_.text,
+																							   CFSTR(";,/?:@&=+$#"),
+																							   NULL,
+																							   kCFStringEncodingUTF8);	// release必要
+	
+	WebSiteVC *web = [[WebSiteVC alloc] init];
+	web.title = zTitle;
+	web.Rurl = [zUrl stringByAppendingString:zKeyword];
+	web.RzDomain = zDomain;
+	//[zKeyword release], 
+	zKeyword = nil;
+	
+	if (appDelegate_.app_is_iPad) {
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:web];
+		nc.modalPresentationStyle = UIModalPresentationPageSheet;  // 背景Viewが保持される
+		// FullScreenにするとPopoverが閉じられる。さらに、背後が破棄されてE3viewController:viewWillAppear が呼び出されるようになる。
+		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;//	UIModalTransitionStyleFlipHorizontal
+		//[self　 presentModalViewController:nc animated:YES];  NG//回転しない
+		//[self.navigationController presentModalViewController:nc animated:YES];  NG//回転しない
+		[appDelegate_.mainSVC presentModalViewController:nc animated:YES];  //回転する
+		//[nc release];
+	} else {
+		[self.navigationController pushViewController:web animated:YES];
+	}
+	//[web release];
 }
 
 - (void)actionCamera
@@ -1352,51 +1396,6 @@
 			}
 			break;	// case 0: section
 	}
-}
-
-
-- (void)actionWebTitle:(NSString*)zTitle  URL:(NSString*)zUrl  Domain:(NSString*)zDomain
-{
-	if ([tfKeyword_.text length]<=0) {
-		tfKeyword_.text = tfName_.text;
-		appDelegate_.app_UpdateSave = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
-	}
-	// 日本語を含むURLをUTF8でエンコーディングする
-	// 第3引数のCFSTR(";,/?:@&=+$#")で指定した文字列はエンコードされずにそのまま残る
-	//NSString *zKeyword = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-	//																		 (CFStringRef)MtfKeyword.text,
-	//																		 CFSTR(";,/?:@&=+$#"),
-	//																		 NULL,
-	//																		 kCFStringEncodingUTF8);	// release必要
-
-	// __bridge_transfer : CオブジェクトをARC管理オブジェクトにする
-	NSString *zKeyword = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-																			 (__bridge CFStringRef)tfKeyword_.text,
-																			 CFSTR(";,/?:@&=+$#"),
-																			 NULL,
-																			 kCFStringEncodingUTF8);	// release必要
-
-	WebSiteVC *web = [[WebSiteVC alloc] init];
-	web.title = zTitle;
-	web.Rurl = [zUrl stringByAppendingString:zKeyword];
-	web.RzDomain = zDomain;
-	//[zKeyword release], 
-	zKeyword = nil;
-
-	if (appDelegate_.app_is_iPad) {
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:web];
-		nc.modalPresentationStyle = UIModalPresentationPageSheet;  // 背景Viewが保持される
-		// FullScreenにするとPopoverが閉じられる。さらに、背後が破棄されてE3viewController:viewWillAppear が呼び出されるようになる。
-		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;//	UIModalTransitionStyleFlipHorizontal
-		//[self　 presentModalViewController:nc animated:YES];  NG//回転しない
-		//[self.navigationController presentModalViewController:nc animated:YES];  NG//回転しない
-		[appDelegate_.mainSVC presentModalViewController:nc animated:YES];  //回転する
-		//[nc release];
-	} else {
-		[self.navigationController pushViewController:web animated:YES];
-	}
-	//[web release];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 

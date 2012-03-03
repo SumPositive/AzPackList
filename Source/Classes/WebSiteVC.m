@@ -20,6 +20,22 @@
 @end
 
 @implementation WebSiteVC
+{
+	NSString		*Rurl;
+	NSString		*RzDomain;
+	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
+	NSURL			*urlOutside;		//ポインタ代入につきcopyしている
+	//----------------------------------------------Owner移管につきdealloc時のrelese不要
+	UIWebView *MwebView;
+	UIBarButtonItem *MbuBack;
+	UIBarButtonItem *MbuReload;
+	UIBarButtonItem *MbuForward;
+	UIActivityIndicatorView *MactivityIndicator;
+	UILabel				*MlbMessage;
+	//----------------------------------------------assign
+	AppDelegate		*appDelegate_;
+	BOOL MbOptShouldAutorotate;
+}
 @synthesize Rurl, RzDomain;
 
 
@@ -100,9 +116,21 @@
 
 #pragma mark - View lifecicle
 
+- (id)init 
+{
+	self = [super init];
+	if (self) {
+		// 初期化処理：インスタンス生成時に1回だけ通る
+		// loadView:では遅い。shouldAutorotateToInterfaceOrientation:が先に呼ばれるため
+		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		// 背景テクスチャ・タイルペイント
+		//self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+	}
+	return self;
+}
+
 - (void)loadView {
     [super loadView];
-	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
 	//NSLog(@"frameWeb=(%f,%f)-(%f,%f)", frameWeb.origin.x,frameWeb.origin.y, frameWeb.size.width,frameWeb.size.height);
 	//MwebView = [[UIWebView alloc] initWithFrame:frameWeb];
@@ -206,8 +234,13 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	//return MbOptShouldAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
-	return (interfaceOrientation == UIInterfaceOrientationPortrait); //タテのみ
+	if (appDelegate_.app_is_iPad) {
+		return YES;	// FormSheet窓対応
+	}
+	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
+	}
+    return YES;
 }
 
 // ユーザインタフェースの回転を始める前にこの処理が呼ばれる。 ＜＜OS 3.0以降の推奨メソッド＞＞
@@ -289,9 +322,10 @@
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error 
 {	// ウェブビューがコンテンツの読み込みに失敗した場合
 	[self updateToolBar];
+	[MactivityIndicator stopAnimating];
 	//[MactivityIndicator stopAnimating]; 動かし続ける
-	[self messageShow:NSLocalizedString(@"Connection Error", nil) holdSec:0.0f];
-	MlbMessage.backgroundColor = [UIColor redColor]; //ERROR message
+	//[self messageShow:NSLocalizedString(@"Connection Error", nil) holdSec:0.6f];
+	//MlbMessage.backgroundColor = [UIColor redColor]; //ERROR message
 }
 
 // URL制限する：無制限ならばレーティング"17+"になってしまう！
@@ -310,6 +344,9 @@
 		// 主ドメインからのリンク先で許可するドメイン
 		if ([zHost hasSuffix:@".rakuten.ne.jp"]) return YES; // 許可ドメイン
 		if ([zHost hasSuffix:@".javari.jp"]) return YES; // 許可ドメイン
+		if ([zHost hasSuffix:@".tumblr.com"]) return YES; // 許可ドメイン
+		if ([zHost hasSuffix:@".seesaa.net"]) return YES; // 許可ドメイン
+		if ([zHost hasSuffix:@".apple.com"]) return YES; // 許可ドメイン
 
 		NSLog(@"zHost[%@] != RzDomain[%@]", zHost, RzDomain);
 

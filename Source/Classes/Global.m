@@ -8,6 +8,12 @@
 
 #import "Global.h"
 
+@implementation UINavigationController(KeyboardDismiss)
+- (BOOL)disablesAutomaticKeyboardDismissal {
+	return NO;
+}
+@end
+
 void alertBox( NSString *zTitle, NSString *zMsg, NSString *zButton )
 {
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:zTitle

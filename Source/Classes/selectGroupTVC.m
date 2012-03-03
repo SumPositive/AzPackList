@@ -89,9 +89,13 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	// 回転禁止でも万一ヨコからはじまった場合、タテにはなるようにしてある。
-	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	return app.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+	if (appDelegate_.app_is_iPad) {
+		return YES;	// FormSheet窓対応
+	}
+	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
+	}
+    return YES;
 }
 
 

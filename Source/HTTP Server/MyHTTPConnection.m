@@ -67,7 +67,8 @@
 			//else 
 			if ([fname isEqualToString:GD_CSVFILENAME4]) {
 				NSError *error = nil;
-				NSDictionary *fileDict = [[NSFileManager defaultManager] attributesOfItemAtPath:[path stringByAppendingPathComponent:fname] error:&error];
+				NSDictionary *fileDict = [[NSFileManager defaultManager] 
+										  attributesOfItemAtPath:[path stringByAppendingPathComponent:fname] error:&error];
 				[outdata appendFormat:NSLocalizedString(@"HTML Backup3",nil), 
 						fname, server.planName, fname, [[fileDict objectForKey:NSFileSize] floatValue] / 1024];
 			}

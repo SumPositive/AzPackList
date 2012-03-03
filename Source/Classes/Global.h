@@ -77,6 +77,9 @@
 //
 // Global.m Functions
 //
+@interface UINavigationController(KeyboardDismiss)
+- (BOOL)disablesAutomaticKeyboardDismissal; //iPadでresignFirstResponderを有効にするための呪い
+@end
 void alertBox( NSString *zTitle, NSString *zMsg, NSString *zButton );
 UIColor *GcolorBlue(float percent);
 UIImage *GimageFromString(float Pfx, float Pfy, float PfSize, NSString* str);
@@ -115,5 +118,5 @@ void debugLogRect( CGRect rc,  NSString *title);
 #define IOS_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 #define IOS_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
-
+//END
 

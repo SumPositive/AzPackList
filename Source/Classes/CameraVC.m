@@ -368,9 +368,10 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	// Return YES for supported orientations
 	if (appDelegate_.app_is_iPad) {
-		return (interfaceOrientation == UIInterfaceOrientationPortrait);
+		return YES;	// Popover窓内対応
 	} else {
-		return YES;
+		// 回転禁止の場合、万一ヨコからはじまった場合、タテにはなるようにしてある。
+		return appDelegate_.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
 	}
 }
 

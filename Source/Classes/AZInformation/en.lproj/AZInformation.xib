@@ -513,6 +513,25 @@ dCBlbnRlciBjb25maWRlbnRpYWwgaW5mb3JtYXRpb24uIA</string>
 				<object class="IBPartialClassDescription">
 					<string key="className">AZInformationVC</string>
 					<string key="superclassName">UIViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="ibBuClose:">UIButton</string>
+						<string key="ibBuGoSupportBlog:">UIButton</string>
+						<string key="ibBuPostToAuthor:">UIButton</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="ibBuClose:">
+							<string key="name">ibBuClose:</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBActionInfo" key="ibBuGoSupportBlog:">
+							<string key="name">ibBuGoSupportBlog:</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBActionInfo" key="ibBuPostToAuthor:">
+							<string key="name">ibBuPostToAuthor:</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="ibLbCopyright">UILabel</string>
 						<string key="ibLbVersion">UILabel</string>

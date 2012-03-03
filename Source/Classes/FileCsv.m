@@ -13,7 +13,7 @@
 #import "Elements.h"
 #import "EntityRelation.h"
 #import "FileCsv.h"
-
+#import "GoogleService.h"
 
 
 @implementation FileCsv
@@ -94,6 +94,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 	NSArray *sortRow = [[NSArray alloc] initWithObjects:key1, nil];  
 	NSString *str;
 	//NSString *strBase64;  写真はCSV保存しない。Picasaを利用することにした。
+	NSInteger iPhotoNoUpCount = 0;
 	
 	@try {
 		//----------------------------------------------------------------------------Header
@@ -162,6 +163,12 @@ static NSString *csvToStr( NSString *inCsv ) {
 						   strToCsv(e3node.photoUrl)];
 					AzLOG(@"E3> %@", str);
 					[PzCsv appendString:str];
+					//
+					if (e3node.photoUrl  &&  [e3node.photoUrl  hasPrefix:GS_PHOTO_UUID_PREFIX]) {
+						// 写真あるが未アップのため警告する
+						//止めない//@throw NSLocalizedString(@"(New Index)", nil);
+						iPhotoNoUpCount++;
+					}
 				}
 			}
 			e3list = nil;
@@ -172,8 +179,14 @@ static NSString *csvToStr( NSString *inCsv ) {
 		str = @"End,,,,,,,,\n";
 		AzLOG(@"End> %@", str);
 		[PzCsv appendString:str];
+		if (0 < iPhotoNoUpCount) {
+			alertBox(NSLocalizedString(@"Picasa CSV NoUpload", nil), NSLocalizedString(@"Picasa CSV NoUpload msg", nil), @"OK");
+		}
 		// Compleat!
 		return errorMsg_; //=nil
+	}
+	@catch (NSString *errMsg) {
+		[self errorMsg:errMsg];
 	}
 	@catch(id error) {
 		[self errorMsg:@"Save NG: Logic error"];  // Entity定義を疑え！

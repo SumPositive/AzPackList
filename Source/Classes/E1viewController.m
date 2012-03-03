@@ -349,6 +349,7 @@
 	}
 }
 
+/*[2.0]廃止
 - (void)actionImportYourPC
 {
 	if (appDelegate_.app_is_iPad) {
@@ -439,6 +440,7 @@
 		});
 	});
 }
+*/
 
 - (void)actionInformation
 {
@@ -906,10 +908,13 @@
 //				回転後に didRotateFromInterfaceOrientation が呼び出される。
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	if (appDelegate_.app_opt_Autorotate==NO && appDelegate_.app_is_iPad==NO) {	// 回転禁止にしている場合
+	if (appDelegate_.app_is_iPad) {
+		return YES;	// FormSheet窓対応
+	}
+	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
-	return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
+    return YES;
 }
 
 // shouldAutorotateToInterfaceOrientation で YES を返すと、回転開始時に呼び出される
@@ -1015,7 +1020,7 @@
 #ifdef AzMAKE_SPLASHFACE
     return 0;
 #else
-	return 4; // (0)PackList　　(1)Import menu　　(2)Basic menu
+	return 3; // (0)PackList　　(1)Import menu　　(2)Basic menu
 #endif
 }
 
@@ -1028,8 +1033,8 @@
 			return 3;	//Download menu
 		case 2:
 			return 3;	//menu
-		case 3:
-			return 2;	//Old menu
+		//case 3:
+		//	return 2;	//Old menu
 	}
 	return 0;
 }
@@ -1061,9 +1066,9 @@
 			return nil;
 			break;
 			
-		case 3:
+	/*	case 3:
 			return NSLocalizedString(@"menu Old",nil);
-			break;
+			break;*/
 	}
 	return nil;
 }
@@ -1072,7 +1077,7 @@
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section 
 {
 	switch (section) {
-		case 3: {
+		case 2: {
 			NSString *zz = @"";  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
 		/*	if (appDelegate_.app_pid_AdOff) {
 				if (appDelegate_.app_enable_iCloud) {
@@ -1318,7 +1323,7 @@
 					break;
 			}
 		}
-		else if (indexPath.section == 3) { //-----------------------------------------------------------Section 3
+	/*	else if (indexPath.section == 3) { //-----------------------------------------------------------Section 3
 			switch (indexPath.row) {
 				case 0:
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-NearPcAdd"];
@@ -1334,7 +1339,7 @@
 					cell.accessoryType = UITableViewCellAccessoryNone;
 					break;
 			}
-		} 
+		}*/ 
 	}
 	return cell;
 }
@@ -1413,7 +1418,7 @@
 				break;
 		}
 	}
-	else if (indexPath.section == 3) {
+	/*else if (indexPath.section == 3) {
 		switch (indexPath.row) {
 			case 0: // Restore from YourPC
 				[self actionImportYourPC];
@@ -1423,7 +1428,7 @@
 				[self actionImportPasteBoard];
 				break;
 		}
-	}
+	}*/
 }
 
 #pragma mark  TableView - Edit Move

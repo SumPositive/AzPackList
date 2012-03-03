@@ -599,28 +599,19 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
 	if (appDelegate_.app_is_iPad) {
-		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
-	} else {
-		//[0.8.2]viewWillAppearより先に通るためAppDelegate広域参照にした。
-		if (appDelegate_.app_opt_Autorotate==NO) {
-			// 回転禁止にしている場合
-			[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
-			if (interfaceOrientation == UIInterfaceOrientationPortrait)
-			{ // 正面（ホームボタンが画面の下側にある状態）
-				return YES; // この方向だけ常に許可する
-			}
-			return NO; // その他、禁止
-		}
-		
-		// 回転許可
-		if (UIInterfaceOrientationIsPortrait(interfaceOrientation))
-		{	// タテ
-			[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
-		} else {
-			[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
-		}
-		return YES;  // 現在の向きは、self.interfaceOrientation で取得できる
+		return YES;	// FormSheet窓対応
 	}
+	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+		[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
+		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
+	}
+	// 回転許可
+	if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {	// タテ
+		[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
+	} else {
+		[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
+	}
+    return YES;
 }
 
 // shouldAutorotateToInterfaceOrientation で YES を返すと、回転開始時に呼び出される
