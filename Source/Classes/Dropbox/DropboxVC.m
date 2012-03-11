@@ -369,7 +369,11 @@
 {	// ファイル書き込み失敗
     NSLog(@"File upload failed with error - %@", [error description]);
 	[self alertIndicatorOff];
-	[self alertMsg:NSLocalizedString(@"Dropbox UP error", nil) detail:[error localizedDescription]];
+	if (error.code==400) {
+		[self alertMsg:NSLocalizedString(@"Dropbox UP error", nil) detail:NSLocalizedString(@"Dropbox UP error400", nil)];
+	} else {
+		[self alertMsg:NSLocalizedString(@"Dropbox UP error", nil) detail:[error localizedDescription]];
+	}
 }
 
 - (void)restClient:(DBRestClient*)client deletedPath:(NSString *)path
