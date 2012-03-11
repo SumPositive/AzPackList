@@ -655,6 +655,24 @@
 {
 	if ([tfKeyword_.text length]<=0) {
 		tfKeyword_.text = tfName_.text;
+		
+/*NG	// 絵文字を除去する
+		int iLen = [tfName_.text length];
+		if (0 < iLen) {
+			NSMutableString *str = [NSMutableString string];
+			NSString *z1 = nil; // 1文字
+			NSString *zEmojiS = [NSString stringWithFormat:@"%C", 0xE001];	//絵文字
+			NSString *zEmojiE = [NSString stringWithFormat:@"%C", 0xE537];	//絵文字
+			NSLog(@"Emoji %@ - %@", zEmojiS, zEmojiE);
+			for (int i=0; i<iLen; i++) {
+				z1 = [tfName_.text substringWithRange:NSMakeRange(i, 1)];
+				if ([z1 compare:zEmojiS]==NSOrderedAscending || [zEmojiE compare:z1]==NSOrderedAscending) { // <
+					[str appendString:z1];
+				}
+			}
+			tfKeyword_.text = str;
+		}*/
+		
 		appDelegate_.app_UpdateSave = YES; // 変更あり
 		self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 	}

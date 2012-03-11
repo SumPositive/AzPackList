@@ -525,7 +525,7 @@ replacementString:(NSString *)string
 				} else {
 					alertBox(	NSLocalizedString(@"SK Failed",nil), nil, @"OK" );
 				}
-#ifdef DEBUG
+#ifdef DEBUGxxx
 				// 購入成功と見なしてテストする
 				NSLog(@"DEBUG: SKPaymentTransactionStatePurchased: tran=%@", tran);
 				[self paymentCompleate:tran];

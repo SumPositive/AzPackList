@@ -37,6 +37,9 @@
 		<string>Icon57.png</string>
 		<string>Icon57@2x.png</string>
 		<string>Icon72.png</string>
+		<string>Default.png</string>
+		<string>Default@2x.png</string>
+		<string>Default-Landscape~ipad.png</string>
 	</array>
 	<key>CFBundleIcons</key>
 	<dict>
@@ -47,9 +50,10 @@
 				<string>Icon57.png</string>
 				<string>Icon57@2x.png</string>
 				<string>Icon72.png</string>
+				<string>Default.png</string>
+				<string>Default@2x.png</string>
+				<string>Default-Landscape~ipad.png</string>
 			</array>
-			<key>UIPrerenderedIcon</key>
-			<false/>
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
@@ -83,8 +87,6 @@
 	<string>2.0.0.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>UIPrerenderedIcon</key>
-	<false/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">800</int>
-		<string key="IBDocument.SystemVersion">10K549</string>
-		<string key="IBDocument.InterfaceBuilderVersion">1938</string>
-		<string key="IBDocument.AppKitVersion">1038.36</string>
-		<string key="IBDocument.HIToolboxVersion">461.00</string>
+		<string key="IBDocument.SystemVersion">11D50</string>
+		<string key="IBDocument.InterfaceBuilderVersion">2182</string>
+		<string key="IBDocument.AppKitVersion">1138.32</string>
+		<string key="IBDocument.HIToolboxVersion">568.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">933</string>
+			<string key="NS.object.0">1179</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBProxyObject</string>
@@ -127,7 +127,7 @@
 							<int key="IBUIContentMode">7</int>
 							<bool key="IBUIUserInteractionEnabled">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							<string key="IBUIText">App Storeで購入</string>
+							<string key="IBUIText">App Store から購入</string>
 							<reference key="IBUITextColor" ref="193881541"/>
 							<nil key="IBUIHighlightedColor"/>
 							<int key="IBUIBaselineAdjustment">1</int>
@@ -136,11 +136,11 @@
 								<string key="name">HiraMinProN-W6</string>
 								<string key="family">Hiragino Mincho ProN</string>
 								<int key="traits">2</int>
-								<double key="pointSize">24</double>
+								<double key="pointSize">16</double>
 							</object>
 							<object class="NSFont" key="IBUIFont">
 								<string key="NSName">HiraMinProN-W6</string>
-								<double key="NSSize">24</double>
+								<double key="NSSize">16</double>
 								<int key="NSfFlags">16</int>
 							</object>
 						</object>
@@ -212,6 +212,7 @@
 							<string key="NSFrame">{{10, 377}, {300, 37}}</string>
 							<reference key="NSSuperview" ref="557484746"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
 							<int key="IBUIContentMode">7</int>
@@ -246,7 +247,7 @@
 								<integer value="1"/>
 								<integer value="3"/>
 							</array>
-							<array class="NSMutableArray" key="dict.values">
+							<array key="dict.values">
 								<string>{540, 620}</string>
 								<string>{540, 620}</string>
 							</array>
@@ -272,7 +273,7 @@
 							<integer value="1"/>
 							<integer value="3"/>
 						</array>
-						<array class="NSMutableArray" key="dict.values">
+						<array key="dict.values">
 							<string>{320, 480}</string>
 							<string>{480, 320}</string>
 						</array>
@@ -477,6 +478,10 @@
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
 			<real value="800" key="NS.object.0"/>
 		</object>
+		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
+			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
+			<real value="1296" key="NS.object.0"/>
+		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.InterfaceBuilder3</string>
 			<real value="4200" key="NS.object.0"/>
@@ -487,6 +492,6 @@
 			<string key="NS.key.0">Icon-Store-32.png</string>
 			<string key="NS.object.0">{29, 32}</string>
 		</object>
-		<string key="IBCocoaTouchPluginVersion">933</string>
+		<string key="IBCocoaTouchPluginVersion">1179</string>
 	</data>
 </archive>
