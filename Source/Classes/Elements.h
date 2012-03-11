@@ -75,6 +75,7 @@
 	@property (nonatomic, retain) NSNumber	*weightLack;
 	@property (nonatomic, retain) NSString		*shopKeyword;	//4//[1.1]Shopping
 	@property (nonatomic, retain) NSString		*shopNote;			//4//未使用
+	@property (nonatomic, retain) NSString		*shopUrl;				//5//
 	@property (nonatomic, retain) NSString		*photoUrl;			//5//
 	@property (nonatomic, retain) E2					*parent;				// E3---> E2
 	@property (nonatomic, retain) E4photo		*e4photo;			//5// E3----> E4photo <Delete Cascade>

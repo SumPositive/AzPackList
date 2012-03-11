@@ -130,7 +130,7 @@
 	alert.tag = ALERT_TAG_GoSupportBlog;
 	[alert show];
  */
-	WebSiteVC *web = [[WebSiteVC alloc] init];
+	WebSiteVC *web = [[WebSiteVC alloc] initWithBookmarkDelegate:nil];
 	web.title = @"AzukiSoft"; //NSLocalizedString(@"Product Title",nil);
 	web.Rurl = @"http://packlist.azukid.com/";
 	web.RzDomain = @".azukid.com";

@@ -12,7 +12,7 @@
 #define ANSWER_MAX				99999999.991	// double近似値で比較するため+0.001してある
 
 
-@interface NSObject (CalcViewDelegate)	// 非形式プロトコル（カテゴリ）方式によるデリゲート
+@interface NSObject (CalcViewDelegate)	// @protocolでない非形式プロトコル（カテゴリ）方式によるデリゲート
 - (void)calcViewWillAppear;
 - (void)calcViewWillDisappear;
 @end

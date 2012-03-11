@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AZDial.h"
+#import "WebSiteVC.h"
 
 #define WEIGHT_DIAL	1
 
@@ -15,7 +16,7 @@
 @class CalcView;
 
 @interface E3detailTVC : UITableViewController <UITextFieldDelegate, UITextViewDelegate, UIPopoverControllerDelegate, 
-										UIScrollViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+										UIScrollViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIWebViewDelegate>
 
 @property (nonatomic, retain) NSMutableArray		*e2array;
 @property (nonatomic, retain) NSMutableArray		*e3array;

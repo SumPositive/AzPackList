@@ -23,10 +23,12 @@
 {
 	NSString		*Rurl;
 	NSString		*RzDomain;
+	id					mBookmarkDelegate;
 	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
 	NSURL			*urlOutside;		//ポインタ代入につきcopyしている
 	//----------------------------------------------Owner移管につきdealloc時のrelese不要
 	UIWebView *MwebView;
+	UIBarButtonItem *mBuCopyUrl;
 	UIBarButtonItem *MbuBack;
 	UIBarButtonItem *MbuReload;
 	UIBarButtonItem *MbuForward;
@@ -99,10 +101,27 @@
 - (void)close:(id)sender 
 {
 	if (appDelegate_.app_is_iPad) {
-		//[self.navigationController dismissModalViewControllerAnimated:YES];
 		[self dismissModalViewControllerAnimated:YES];
 	} else {
 		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
+	}
+}
+
+- (void)closeCopyUrl:(id)sender 
+{	// 現在のURLを送信する
+	NSString* url = [MwebView stringByEvaluatingJavaScriptFromString:@"document.URL"];
+	if (10<[url length]) {
+		/*** Web画面イメージを記録する  ＜＜将来案
+		UIGraphicsBeginImageContext(self.view.bounds.size);
+		[MwebView.layer  renderInContext:UIGraphicsGetCurrentContext()];  
+		UIImage *img = UIGraphicsGetImageFromCurrentImageContext();  
+		UIGraphicsEndImageContext();  
+		 */
+
+		if ([mBookmarkDelegate respondsToSelector:@selector(webSiteBookmarkUrl:)]) {
+			[mBookmarkDelegate webSiteBookmarkUrl:url];
+		}
+		[self close:sender];
 	}
 }
 
@@ -116,11 +135,12 @@
 
 #pragma mark - View lifecicle
 
-- (id)init 
+- (id)initWithBookmarkDelegate:(id)delegate
 {
 	self = [super init];
 	if (self) {
 		// 初期化処理：インスタンス生成時に1回だけ通る
+		mBookmarkDelegate = delegate;
 		// loadView:では遅い。shouldAutorotateToInterfaceOrientation:が先に呼ばれるため
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		// 背景テクスチャ・タイルペイント
@@ -143,13 +163,15 @@
 	//MwebView.autoresizingMask = UIViewAutoresizingNone;
 	//MwebView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	MwebView.clipsToBounds = YES;
+	MwebView.contentMode = UIViewContentModeCenter;
 	[self.view addSubview:MwebView];  //dealloc//[MwebView release]
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+	self.title = nil;
+	
 	// 上部のバーを無くして、全て下部ツールバーだけにした。
 	//self.navigationController.navigationBarHidden = YES;
 	
@@ -162,6 +184,15 @@
 								style:UIBarButtonItemStyleBordered
 								target:self action:@selector(close:)];
 
+	if (mBookmarkDelegate) {
+		mBuCopyUrl = [[UIBarButtonItem alloc] 
+					  initWithTitle:NSLocalizedString(@"Bookmark", nil)
+					  style:UIBarButtonItemStyleBordered
+					  target:self action:@selector(closeCopyUrl:)];
+	} else {
+		mBuCopyUrl = nil;
+	}
+	
 	MbuBack = [[UIBarButtonItem alloc] 
 				initWithImage:[UIImage imageNamed:@"Icon16-WebBack"]
 				style:UIBarButtonItemStylePlain
@@ -188,7 +219,7 @@
 	
 	// 右側ボタン(逆順)
 	self.navigationItem.rightBarButtonItems =
-	[NSArray arrayWithObjects:  MbuForward, MbuReload, MbuBack, buActInd, nil];
+	[NSArray arrayWithObjects:  MbuForward, MbuReload, MbuBack, buActInd, mBuCopyUrl, nil];
 
 	
 	// URL表示用のラベル生成
@@ -209,7 +240,6 @@
 	MbOptShouldAutorotate = [defaults boolForKey:UD_OptShouldAutorotate];
 	
 	MwebView.frame = self.view.bounds;
-	MwebView.contentMode = UIViewContentModeCenter;
 
 	[self messageShow:self.Rurl holdSec:5.0f];
 
@@ -220,7 +250,6 @@
 	[self didRotateFromInterfaceOrientation:self.interfaceOrientation]; // 回転に合わせて.frame調整している
 }
 
-/*
 - (void)viewDidAppear:(BOOL)animated 
 {
     [super viewDidAppear:animated];
@@ -229,7 +258,6 @@
 	[MwebView loadRequest:request];
 	[self updateToolBar];
 }
-*/
 
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -335,15 +363,21 @@
 	if (navigationType == UIWebViewNavigationTypeLinkClicked) // リンクをクリックしたとき、だけチェックする 
 	{
 		[self messageShow:[[request URL] absoluteString] holdSec:5.0f];
+		NSLog(@"Web: URL[%@]", [[request URL] absoluteString]);
 		
 		NSString *zHost = [[request URL] host];
 		// 主ドメイン
-		if ([zHost hasSuffix:RzDomain]) { //末尾比較  　item.rakuten.co.jp == rakuten.co.jp  を通すため。
+		if (RzDomain && [zHost hasSuffix:RzDomain]) { //末尾比較  　item.rakuten.co.jp == rakuten.co.jp  を通すため。
 			return YES; // 許可
 		}
 		// 主ドメインからのリンク先で許可するドメイン
-		if ([zHost hasSuffix:@".rakuten.ne.jp"]) return YES; // 許可ドメイン
+		// Amazon
+		if ([zHost hasSuffix:@".amazon.co.jp"]) return YES; // 許可ドメイン
+		if ([zHost hasSuffix:@".amazon.com"]) return YES; // 許可ドメイン
 		if ([zHost hasSuffix:@".javari.jp"]) return YES; // 許可ドメイン
+		// 楽天
+		if ([zHost hasSuffix:@".rakuten.ne.jp"]) return YES; // 許可ドメイン
+		// Azukid support
 		if ([zHost hasSuffix:@".tumblr.com"]) return YES; // 許可ドメイン
 		if ([zHost hasSuffix:@".seesaa.net"]) return YES; // 許可ドメイン
 		if ([zHost hasSuffix:@".apple.com"]) return YES; // 許可ドメイン

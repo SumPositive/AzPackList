@@ -9,11 +9,14 @@
 #import <UIKit/UIKit.h>
 
 
-@interface WebSiteVC : UIViewController <UIWebViewDelegate>
+@interface NSObject (WebSiteDelegate)	// @protocolでない非形式プロトコル（カテゴリ）方式によるデリゲート
+- (void)webSiteBookmarkUrl:(NSString *)url;
+@end
 
+@interface WebSiteVC : UIViewController <UIWebViewDelegate>
 @property (nonatomic, retain) NSString		*Rurl;
 @property (nonatomic, retain) NSString		*RzDomain;
 
-//- (id)initWithFrame:(CGRect)frame;
-
+- (id)initWithBookmarkDelegate:(id)delegate;
 @end
+
