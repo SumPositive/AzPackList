@@ -852,9 +852,7 @@
 	
 	// CoreData 読み込み
 	[self refetcheAllData];	//この中で処理済み [self.tableView reloadData];
-
-	// refetcheAllDataの後、E3に有効レコードが無ければ削除する。E2,E1も遡って配下が無ければ削除する。
-	[self deleteBlankData];
+	// この後、viewDidAppear:にて[self deleteBlankData];によりE3クリーン処理している。
 	
 	if (0 < contentOffsetDidSelect_.y) {
 		// app.Me3dateUse=nil のときや、メモリ不足発生時に元の位置に戻すための処理。
@@ -886,6 +884,9 @@
 		bInformationOpen_ = NO;	// 以後、自動初期表示しない。
 		[self actionInformation];  //[1.0.2]最初に表示する。バックグランド復帰時には通らない
 	}
+	
+	// viewWillAppear:だと「リフレッシュ通知」で呼び出されるため、E1が表示されている、ここでE3クリーン処理する。
+	[self deleteBlankData];	// refetcheAllDataの後、E3に有効レコードが無ければ削除する。E2,E1も遡って配下が無ければ削除する。
 }
 
 // この画面が非表示になる直前に呼ばれる

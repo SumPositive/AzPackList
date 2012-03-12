@@ -673,6 +673,7 @@ static BOOL staticPhotoUploading = NO;
 										  NSLog(@"G> OK [ec sourceURI]=[%@]", [ec sourceURI]);	//NSString
 										  // e3target を更新する
 										  e3target.photoUrl = [NSString stringWithString:[ec sourceURI]];
+										  // バック処理されているので無条件に保存する
 										  NSError *error;
 										  if (![e3target.managedObjectContext save:&error]) {
 											  NSLog(@"G> MOC save error %@, %@", error, [error userInfo]);
@@ -746,11 +747,14 @@ static BOOL staticPhotoUploading = NO;
 				e3target.e4photo = e4photo; //LINK
 			}
 			e4photo.photoData = [NSData dataWithData:data];
+			/*ここで保存しない。 保存フラグＯＮにする。
 			NSError *error;
 			if (![e3target.managedObjectContext save:&error]) {
 				NSLog(@"G> MOC save error %@, %@", error, [error userInfo]);
 				assert(NO); //DEBUGでは落とす
-			} 
+			}*/ 
+			AppDelegate *ad = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+			ad.app_UpdateSave = YES; //変更あり
 			// 再読み込み 通知発信---> E3detailTVC
 			[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
 																object:self userInfo:nil];

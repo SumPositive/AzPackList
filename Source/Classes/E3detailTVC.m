@@ -198,13 +198,13 @@
 	CGRect rcPhoto;
 	if (appDelegate_.app_is_iPad) { // iPad  TableView(Grouped)両端の余白:-20
 		//rcPhoto = CGRectMake(8, 44-4, self.tableView.bounds.size.width-16-60, 480);
-		rcPhoto = CGRectMake(8, 44-4, self.contentSizeForViewInPopover.width-16-60, 400);
+		rcPhoto = CGRectMake(4, 44-4, self.contentSizeForViewInPopover.width-8-60, 400);
 	}
 	else if (self.tableView.frame.size.width < 400) {	// iPhone縦
-		rcPhoto = CGRectMake(8, 40, 320-16-20, 320);
+		rcPhoto = CGRectMake(4, 40, 320-8-20, 320);
 	}
 	else {		// iPhone横
-		rcPhoto = CGRectMake(8, 40, 480-16-20, 320);
+		rcPhoto = CGRectMake(4, 40, 480-8-20, 320);
 	}
 	
 	// Icons
@@ -930,7 +930,7 @@
 #pragma mark  <UITableViewDelegate>
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 2;
 }
 
 
@@ -938,29 +938,34 @@
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
 {
-	assert(section==0);
-	return 7 + 5;
+	switch (section) {
+		case 0:
+			return 7;
+		case 1:	
+			return 5;
+	}
+	return 0;
 }
-/*
+
 // TableView セクションタイトルを応答
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section 
 {
-	if (section==1) {
-		return NSLocalizedString(@"Shopping", nil);
+	switch (section) {
+		case 1:	
+			return NSLocalizedString(@"Product Bookmark", nil);
 	}
 	return nil;
 }
- */
-
 
 // TableView セクションフッタを応答
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section 
 {
-	if (section==0) {
-		return	@"\n\n\n\n\n"
-		@"AzukiSoft Project\n"
-		COPYRIGHT
-		@"\n\n\n\n\n";
+	switch (section) {
+		case 1:	
+			return	@"\n\n\n\n\n"
+						@"AzukiSoft Project\n"
+						COPYRIGHT
+						@"\n\n\n\n\n";
 	}
 	return nil;
 }
@@ -968,39 +973,44 @@
 // セルの高さを指示する
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-	assert(indexPath.section==0);
-	
-	switch (indexPath.row) {
-		case 2:
-			if (appDelegate_.app_is_iPad) {
-				return 150; // Note
-			}
-			return 110; // Note
-			
-		case 3:
-		case 4:
-		case 5:
-			return 58;
-		case 6:	// Picasa
-			if (e3target_.e4photo) { //＜＜E4photo ロードで待たされる！
-				//if (e3target_.photoUrl) {
+	if (indexPath.section==0) {
+		switch (indexPath.row) {
+			case 2:
 				if (appDelegate_.app_is_iPad) {
-					return 40+400+8;
-				} else {
-					return 40+320+8;
+					return 150; // Note
 				}
-			}
-			break;
-		case 7:	// Shop
-			if (e3target_.shopUrl) {
-				if (appDelegate_.app_is_iPad) {
-					return 4+400+4;
-				} else {
-					return 4+320+4;
+				return 110; // Note
+				
+			case 3:
+			case 4:
+			case 5:
+				return 58;
+			case 6:	// Picasa
+				if (e3target_.e4photo) { //＜＜E4photo ロードで待たされる！
+					//if (e3target_.photoUrl) {
+					if (appDelegate_.app_is_iPad) {
+						return 40+400+8;
+					} else {
+						return 40+320+8;
+					}
 				}
-			}
-			break;
+				break;
+		}
+	} 
+	else if (indexPath.section==1) {
+		switch (indexPath.row) {
+			case 0:	// Shop Bookmark
+				if (e3target_.shopUrl) {
+					if (appDelegate_.app_is_iPad) {
+						return 4+400+4;
+					} else {
+						return 4+320+4;
+					}
+				}
+				break;
+		}
 	}
+	
 	if (appDelegate_.app_is_iPad) {
 		return 50;
 	}
@@ -1010,7 +1020,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
 {	// セル生成。 この時点では、cell.contentView.frameが無効である。willDisplayCell:にて有効になっている。　
 	// contentView内容は、willDisplayCell:に実装する。
-	assert(indexPath.section==0);
 	
     NSString *zCellIndex = [NSString stringWithFormat:@"E3detail%d:%d", (int)indexPath.section, (int)indexPath.row];
 
@@ -1027,566 +1036,593 @@
 		cell.showsReorderControl = NO; // Move禁止
 	}
 	
-	if (3 <= indexPath.row && indexPath.row <= 5) {  // stock, need, weight
-		if (cell.accessoryView==nil) {
-			// Calcボタン ------------------------------------------------------------------
-			UIButton *bu = [UIButton buttonWithType:UIButtonTypeCustom]; // autorelease
-			bu.frame = CGRectMake(0,16, 44,44);
-			[bu setImage:[UIImage imageNamed:@"Icon44-Calc.png"] forState:UIControlStateNormal];
-			//[bu setImage:[UIImage imageNamed:@"Icon-ClipOn.png"] forState:UIControlStateHighlighted];
-			//buClip.showsTouchWhenHighlighted = YES;
-			bu.tag = indexPath.section * GD_SECTION_TIMES + indexPath.row;
-			[bu addTarget:self action:@selector(cellButtonCalc:) forControlEvents:UIControlEventTouchUpInside];
-			//[buCopy release]; buttonWithTypeにてautoreleseされるため不要。UIButtonにinitは無い。
-			cell.accessoryType = UITableViewCellAccessoryNone;
-			cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
-			cell.accessoryView = bu;
-		}
-	}
-	switch (indexPath.row) {
-		case 0: // Group
-			if (lbGroup_==nil) {
-				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 100,12)];
-				label.text = NSLocalizedString(@"Group", nil);
-				label.textColor = [UIColor grayColor];
-				label.backgroundColor = [UIColor clearColor];
-				label.font = [UIFont systemFontOfSize:12];
-				[cell.contentView addSubview:label]; //[label release];
-				
-				if (appDelegate_.app_is_iPad) {
-					lbGroup_ = [[UILabel alloc] initWithFrame:
-								CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
-					lbGroup_.font = [UIFont systemFontOfSize:20];
-				} else {
-					lbGroup_ = [[UILabel alloc] initWithFrame:
-								CGRectMake(20,18, self.tableView.frame.size.width-60,16)];
-					lbGroup_.font = [UIFont systemFontOfSize:14];
-				}
-				// cell.frame.size.width ではダメ。初期幅が常に縦になっているため
-				// selectGroupTVC が MlbGroup を参照、変更する
-				if (addE2section_< 0) {
-					// Edit Mode
-					lbGroup_.tag = [e3target_.parent.row integerValue]; // E2.row
-					lbGroup_.text = e3target_.parent.name;
-				} else {
-					// Add Mode
-					lbGroup_.tag = addE2section_; // E2.row
-					lbGroup_.text = [[e2array_ objectAtIndex:addE2section_] valueForKey:@"name"];
-				}
-				if ([lbGroup_.text length] <= 0) { // (未定)
-					lbGroup_.text = NSLocalizedString(@"(New Index)", nil);
-				}
-				lbGroup_.backgroundColor = [UIColor clearColor]; // [UIColor grayColor]; //範囲チェック用
-				[cell.contentView addSubview:lbGroup_]; //[MlbGroup release];
-			}
-			break;
-		case 1: // Name
-			if (tfName_==nil) {
-				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 100,12)];
-				label.font = [UIFont systemFontOfSize:12];
-				label.text = NSLocalizedString(@"Item name", nil);
-				label.textColor = [UIColor grayColor];
-				label.backgroundColor = [UIColor clearColor];
-				[cell.contentView addSubview:label]; //[label release];
-				
-				if (appDelegate_.app_is_iPad) {
-					tfName_ = [[UITextField alloc] initWithFrame:
-							   CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
-					tfName_.font = [UIFont systemFontOfSize:20];
-				} else {
-					tfName_ = [[UITextField alloc] initWithFrame:
-							   CGRectMake(20,18, self.tableView.frame.size.width-60,20)];
-					tfName_.font = [UIFont systemFontOfSize:16];
-				}
-				tfName_.placeholder = NSLocalizedString(@"(New Goods)", nil);
-				tfName_.keyboardType = UIKeyboardTypeDefault;
-				tfName_.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-				tfName_.returnKeyType = UIReturnKeyDone; // ReturnキーをDoneに変える
-				tfName_.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
-				tfName_.delegate = self; // textFieldShouldReturn:を呼び出すため
-				[cell.contentView addSubview:tfName_]; //[MtfName release];
-				cell.accessoryType = UITableViewCellAccessoryNone; // なし
-			}
-			break;
-		case 2: // Note
-			if (tvNote_==nil) {
-				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 100,12)];
-				label.text = NSLocalizedString(@"Note", nil);
-				label.textColor = [UIColor grayColor];
-				label.backgroundColor = [UIColor clearColor];
-				label.font = [UIFont systemFontOfSize:12];
-				[cell.contentView addSubview:label]; //[label release];
-				
-				if (appDelegate_.app_is_iPad) {
-					tvNote_ = [[UITextView alloc] initWithFrame:
-							   CGRectMake(20,15, self.tableView.frame.size.width-60,130)];
-					tvNote_.font = [UIFont systemFontOfSize:20];
-				} else {
-					tvNote_ = [[UITextView alloc] initWithFrame:
-							   CGRectMake(20,15, self.tableView.frame.size.width-60,95)];
-					tvNote_.font = [UIFont systemFontOfSize:16];
-				}
-				tvNote_.textAlignment = UITextAlignmentLeft;
-				tvNote_.keyboardType = UIKeyboardTypeDefault;
-				tvNote_.returnKeyType = UIReturnKeyDefault;  //改行有効にする
-				tvNote_.backgroundColor = [UIColor clearColor];
-				//MtvNote.backgroundColor = [UIColor grayColor]; //範囲チェック用
-				tvNote_.delegate = self;
-				[cell.contentView addSubview:tvNote_]; //[MtvNote release];
-				cell.accessoryType = UITableViewCellAccessoryNone; // なし
-			}
-			break;
-		case 3: // Stock Qty.
-			if (lbStock_==nil) {
-#ifdef DEBUG
-				//cell.backgroundColor = [UIColor grayColor]; //範囲チェック用
-#endif
-				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(120,2, 90,20)];
-				label.text = NSLocalizedString(@"StockQty", nil);
-				label.textAlignment = UITextAlignmentLeft;
-				label.textColor = [UIColor grayColor];
-				label.backgroundColor = [UIColor clearColor];
-				label.font = [UIFont systemFontOfSize:14];
-				[cell.contentView addSubview:label]; //[label release];
-				
-				lbStock_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
-				//CGRectMake(self.tableView.frame.size.width-30-90,1, 90,20)];
-				lbStock_.backgroundColor = [UIColor clearColor];
-				lbStock_.textAlignment = UITextAlignmentCenter;
-				lbStock_.font = [UIFont systemFontOfSize:24];
-				[cell.contentView addSubview:lbStock_];
-				
-				dialStock_ = [[AZDial alloc] initWithFrame:CGRectZero 
-												  delegate:self  dial:0  min:0  max:9999  step:1  stepper:YES];
-				dialStock_.backgroundColor = [UIColor clearColor];
-				[cell.contentView addSubview:dialStock_];
-			}
-			break;
-		case 4: // Need
-			if (lbNeed_==nil) {
-				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(120,2, 90,20)];
-				label.text = NSLocalizedString(@"Need Qty", nil);
-				label.textAlignment = UITextAlignmentLeft;
-				label.textColor = [UIColor grayColor];
-				label.backgroundColor = [UIColor clearColor];
-				label.font = [UIFont systemFontOfSize:14];
-				[cell.contentView addSubview:label]; //[label release];
-				
-				lbNeed_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
-				//CGRectMake(self.tableView.frame.size.width/2-OFSX2,1, 90,20)];
-				lbNeed_.backgroundColor = [UIColor clearColor];
-				lbNeed_.textAlignment = UITextAlignmentCenter;
-				lbNeed_.font = [UIFont systemFontOfSize:24];
-				[cell.contentView addSubview:lbNeed_];
-				
-				dialNeed_ = [[AZDial alloc] initWithFrame:CGRectZero
-												 delegate:self  dial:0  min:0  max:9999  step:1  stepper:YES];
-				dialNeed_.backgroundColor = [UIColor clearColor];
-				[cell.contentView addSubview:dialNeed_];
-			}
-			break;
-		case 5: // Weight
-			if (lbWeight_==nil) {
-				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(120,2, 90,20)];
-				label.text = NSLocalizedString(@"One Weight", nil);
-				label.textAlignment = UITextAlignmentLeft;
-				label.textColor = [UIColor grayColor];
-				label.backgroundColor = [UIColor clearColor];
-				label.font = [UIFont systemFontOfSize:14];
-				label.adjustsFontSizeToFitWidth = YES;
-				label.minimumFontSize = 8;
-				label.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-				[cell.contentView addSubview:label];
-				
-				lbWeight_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
-				//CGRectMake(self.tableView.frame.size.width/2-OFSX2,1, 90,20)];
-				lbWeight_.backgroundColor = [UIColor clearColor];
-				lbWeight_.textAlignment = UITextAlignmentCenter;
-				lbWeight_.font = [UIFont systemFontOfSize:24];
-				[cell.contentView addSubview:lbWeight_];
-				
-				dialWeight_ = [[AZDial alloc] initWithFrame:CGRectZero
-												   delegate:self  dial:0  min:0  max:WEIGHT_MAX  step:10  stepper:YES];
-				dialWeight_.backgroundColor = [UIColor clearColor];
-				//[mDialWeight setStepperMagnification:10.0];
-				[cell.contentView addSubview:dialWeight_];
-			}
-			break;
-		case 6: // Picasa Photo
-			if (mLbPhotoMsg==nil) {
-				// Status Label
-				mLbPhotoMsg = [[UILabel alloc] initWithFrame:CGRectMake(5+24+5,2, 100,30)];
-				mLbPhotoMsg.font = [UIFont systemFontOfSize:12];
-				mLbPhotoMsg.textColor = [UIColor grayColor];
-				mLbPhotoMsg.numberOfLines = 2;
-				mLbPhotoMsg.backgroundColor = [UIColor clearColor];
-				[cell.contentView addSubview:mLbPhotoMsg];
-				// IconPicasa 
-				mIvIconPicasa = [[UIImageView alloc] init];
-				mIvIconPicasa.contentMode = UIViewContentModeScaleAspectFit;
-				mIvIconPicasa.frame = CGRectMake(4, 6, 32, 32);
-				[cell.contentView addSubview:mIvIconPicasa];
-				mActivityIndicator_on_IconPicasa = [[UIActivityIndicatorView alloc]
-													initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-				mActivityIndicator_on_IconPicasa.frame = mIvIconPicasa.bounds;
-				[mIvIconPicasa addSubview:mActivityIndicator_on_IconPicasa];
-				// Camera ボタン
-				mBuCamera = [UIButton buttonWithType:UIButtonTypeCustom];
-				mBuCamera.frame = CGRectMake(0,0, 44,44);
-				[mBuCamera setImage:[UIImage imageNamed:@"Icon24-Camera"] forState:UIControlStateNormal];
-				[mBuCamera setImage:[UIImage imageNamed:@"Icon32-Picasa"] forState:UIControlStateHighlighted];
-				[mBuCamera addTarget:self action:@selector(actionCamera) forControlEvents:UIControlEventTouchUpInside];
+	if (indexPath.section==0) {
+		if (3 <= indexPath.row && indexPath.row <= 5) {  // stock, need, weight
+			if (cell.accessoryView==nil) {
+				// Calcボタン ------------------------------------------------------------------
+				UIButton *bu = [UIButton buttonWithType:UIButtonTypeCustom]; // autorelease
+				bu.frame = CGRectMake(0,16, 44,44);
+				[bu setImage:[UIImage imageNamed:@"Icon44-Calc.png"] forState:UIControlStateNormal];
+				//[bu setImage:[UIImage imageNamed:@"Icon-ClipOn.png"] forState:UIControlStateHighlighted];
+				//buClip.showsTouchWhenHighlighted = YES;
+				bu.tag = indexPath.section * GD_SECTION_TIMES + indexPath.row;
+				[bu addTarget:self action:@selector(cellButtonCalc:) forControlEvents:UIControlEventTouchUpInside];
+				//[buCopy release]; buttonWithTypeにてautoreleseされるため不要。UIButtonにinitは無い。
 				cell.accessoryType = UITableViewCellAccessoryNone;
 				cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
-				[cell.contentView addSubview:mBuCamera];  //cell.accessoryView = bu;
-				// Image 640x480
-				mIvPhoto = [[UIImageView alloc] init];
-				mIvPhoto.contentMode = UIViewContentModeScaleAspectFit;
-				mIvPhoto.frame = CGRectMake(0, 0, 640, 640); // 固定
-				mIvPhoto.clipsToBounds = YES;
-				// Scroll
-				mSvPhoto = [[UIScrollView alloc] init];
-				mSvPhoto.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-				[mSvPhoto addSubview:mIvPhoto];
-				mSvPhoto.delegate = self;
-				mSvPhoto.contentSize = mIvPhoto.frame.size; // 固定
-				mSvPhoto.zoomScale = 1.0;
-				mSvPhoto.minimumZoomScale = 1.0;
-				mSvPhoto.maximumZoomScale = 4.0;
-				[cell.contentView addSubview:mSvPhoto];
-				// 写真ズーム：　ピンチアウト操作
-				UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]
-														  initWithTarget:self action:@selector(handlePinchGesture:)];
-				[cell.contentView addGestureRecognizer:pinchGesture];
-				
-				cell.imageView.image = nil;
-				cell.textLabel.text = nil;
+				cell.accessoryView = bu;
 			}
-			// この時点では、cell.contentView.frameが無効である。willDisplayCell:にて有効になっている。
-			// 写真表示など動的な実装は、willDisplayCell:へ
-			break;
-			
-			//------------------------------------------------------- Shopping
-		case 7: // Shop Photo
-			break;
-			
-		case 8: // Shop Search keyword
-			if (tfKeyword_==nil) {
-				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 100,12)];
-				label.font = [UIFont systemFontOfSize:12];
-				label.text = NSLocalizedString(@"Shop Keyword", nil);
-				label.textColor = [UIColor grayColor];
-				label.backgroundColor = [UIColor clearColor];
-				[cell.contentView addSubview:label]; //[label release];
-				
-				if (appDelegate_.app_is_iPad) {
-					tfKeyword_ = [[UITextField alloc] initWithFrame:
-								  CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
-					tfKeyword_.font = [UIFont systemFontOfSize:20];
-				} else {
-					tfKeyword_ = [[UITextField alloc] initWithFrame:
-								  CGRectMake(20,18, self.tableView.frame.size.width-60,20)];
-					tfKeyword_.font = [UIFont systemFontOfSize:16];
-				}
-				tfKeyword_.placeholder = NSLocalizedString(@"Shop Keyword placeholder", nil);
-				tfKeyword_.keyboardType = UIKeyboardTypeDefault;
-				tfKeyword_.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-				tfKeyword_.returnKeyType = UIReturnKeyDone; // ReturnキーをDoneに変える
-				tfKeyword_.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
-				tfKeyword_.delegate = self; // textFieldShouldReturn:を呼び出すため
-				[cell.contentView addSubview:tfKeyword_]; //[MtfKeyword release];
-				tfKeyword_.text = e3target_.shopKeyword; // (未定)表示しない。Editへ持って行かれるため
-				cell.accessoryType = UITableViewCellAccessoryNone; // なし
-				cell.tag = 00;
-			}
-			break;
-			
-		case 9:
-		case 10:
-		case 11:
-			if (cell.imageView.image==nil) {
-				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-				cell.selectionStyle = UITableViewCellSelectionStyleBlue; // 選択時ハイライト
-				int iShop = indexPath.row - 9;
-				if ([NSLocalizedString(@"CountryCode", nil) isEqualToString:@"jp"]) {
-					switch (iShop) {
-						case 0: 
-							cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
-							cell.textLabel.text = NSLocalizedString(@"Shop Amazon.co.jp", nil);	
-							cell.tag = 01;		break;
-						case 1: 
-							cell.imageView.image = [UIImage imageNamed:@"Icon32-Rakuten"];
-							cell.textLabel.text = NSLocalizedString(@"Shop Rakuten", nil);				
-							cell.tag = 11;		break;
-						case 2: 
-							cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
-							cell.textLabel.text = NSLocalizedString(@"Shop Amazon.com", nil);	
-							cell.tag = 02;		break;
+		}
+		switch (indexPath.row) {
+			case 0: // Group
+				if (lbGroup_==nil) {
+					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 100,12)];
+					label.text = NSLocalizedString(@"Group", nil);
+					label.textColor = [UIColor grayColor];
+					label.backgroundColor = [UIColor clearColor];
+					label.font = [UIFont systemFontOfSize:12];
+					[cell.contentView addSubview:label]; //[label release];
+					
+					if (appDelegate_.app_is_iPad) {
+						lbGroup_ = [[UILabel alloc] initWithFrame:
+									CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
+						lbGroup_.font = [UIFont systemFontOfSize:20];
+					} else {
+						lbGroup_ = [[UILabel alloc] initWithFrame:
+									CGRectMake(20,18, self.tableView.frame.size.width-60,16)];
+						lbGroup_.font = [UIFont systemFontOfSize:14];
 					}
-				} else {
-					switch (iShop) {
-						case 0: 
-							cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
-							cell.textLabel.text = NSLocalizedString(@"Shop Amazon.com", nil);	
-							cell.tag = 02;		break;
-						case 1: 
-							cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
-							cell.textLabel.text = NSLocalizedString(@"Shop Amazon.co.jp", nil);	
-							cell.tag = 01;		break;
-						case 2: 
-							cell.imageView.image = [UIImage imageNamed:@"Icon32-Rakuten"];
-							cell.textLabel.text = NSLocalizedString(@"Shop Rakuten", nil);				
-							cell.tag = 11;		break;
+					// cell.frame.size.width ではダメ。初期幅が常に縦になっているため
+					// selectGroupTVC が MlbGroup を参照、変更する
+					if (addE2section_< 0) {
+						// Edit Mode
+						lbGroup_.tag = [e3target_.parent.row integerValue]; // E2.row
+						lbGroup_.text = e3target_.parent.name;
+					} else {
+						// Add Mode
+						lbGroup_.tag = addE2section_; // E2.row
+						lbGroup_.text = [[e2array_ objectAtIndex:addE2section_] valueForKey:@"name"];
+					}
+					if ([lbGroup_.text length] <= 0) { // (未定)
+						lbGroup_.text = NSLocalizedString(@"(New Index)", nil);
+					}
+					lbGroup_.backgroundColor = [UIColor clearColor]; // [UIColor grayColor]; //範囲チェック用
+					[cell.contentView addSubview:lbGroup_]; //[MlbGroup release];
+				}
+				break;
+			case 1: // Name
+				if (tfName_==nil) {
+					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 100,12)];
+					label.font = [UIFont systemFontOfSize:12];
+					label.text = NSLocalizedString(@"Item name", nil);
+					label.textColor = [UIColor grayColor];
+					label.backgroundColor = [UIColor clearColor];
+					[cell.contentView addSubview:label]; //[label release];
+					
+					if (appDelegate_.app_is_iPad) {
+						tfName_ = [[UITextField alloc] initWithFrame:
+								   CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
+						tfName_.font = [UIFont systemFontOfSize:20];
+					} else {
+						tfName_ = [[UITextField alloc] initWithFrame:
+								   CGRectMake(20,18, self.tableView.frame.size.width-60,20)];
+						tfName_.font = [UIFont systemFontOfSize:16];
+					}
+					tfName_.placeholder = NSLocalizedString(@"(New Goods)", nil);
+					tfName_.keyboardType = UIKeyboardTypeDefault;
+					tfName_.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+					tfName_.returnKeyType = UIReturnKeyDone; // ReturnキーをDoneに変える
+					tfName_.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
+					tfName_.delegate = self; // textFieldShouldReturn:を呼び出すため
+					[cell.contentView addSubview:tfName_]; //[MtfName release];
+					cell.accessoryType = UITableViewCellAccessoryNone; // なし
+				}
+				break;
+			case 2: // Note
+				if (tvNote_==nil) {
+					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 100,12)];
+					label.text = NSLocalizedString(@"Note", nil);
+					label.textColor = [UIColor grayColor];
+					label.backgroundColor = [UIColor clearColor];
+					label.font = [UIFont systemFontOfSize:12];
+					[cell.contentView addSubview:label]; //[label release];
+					
+					if (appDelegate_.app_is_iPad) {
+						tvNote_ = [[UITextView alloc] initWithFrame:
+								   CGRectMake(20,15, self.tableView.frame.size.width-60,130)];
+						tvNote_.font = [UIFont systemFontOfSize:20];
+					} else {
+						tvNote_ = [[UITextView alloc] initWithFrame:
+								   CGRectMake(20,15, self.tableView.frame.size.width-60,95)];
+						tvNote_.font = [UIFont systemFontOfSize:16];
+					}
+					tvNote_.textAlignment = UITextAlignmentLeft;
+					tvNote_.keyboardType = UIKeyboardTypeDefault;
+					tvNote_.returnKeyType = UIReturnKeyDefault;  //改行有効にする
+					tvNote_.backgroundColor = [UIColor clearColor];
+					//MtvNote.backgroundColor = [UIColor grayColor]; //範囲チェック用
+					tvNote_.delegate = self;
+					[cell.contentView addSubview:tvNote_]; //[MtvNote release];
+					cell.accessoryType = UITableViewCellAccessoryNone; // なし
+				}
+				break;
+			case 3: // Stock Qty.
+				if (lbStock_==nil) {
+#ifdef DEBUG
+					//cell.backgroundColor = [UIColor grayColor]; //範囲チェック用
+#endif
+					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(120,2, 90,20)];
+					label.text = NSLocalizedString(@"StockQty", nil);
+					label.textAlignment = UITextAlignmentLeft;
+					label.textColor = [UIColor grayColor];
+					label.backgroundColor = [UIColor clearColor];
+					label.font = [UIFont systemFontOfSize:14];
+					[cell.contentView addSubview:label]; //[label release];
+					
+					lbStock_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
+					//CGRectMake(self.tableView.frame.size.width-30-90,1, 90,20)];
+					lbStock_.backgroundColor = [UIColor clearColor];
+					lbStock_.textAlignment = UITextAlignmentCenter;
+					lbStock_.font = [UIFont systemFontOfSize:24];
+					[cell.contentView addSubview:lbStock_];
+					
+					dialStock_ = [[AZDial alloc] initWithFrame:CGRectZero 
+													  delegate:self  dial:0  min:0  max:9999  step:1  stepper:YES];
+					dialStock_.backgroundColor = [UIColor clearColor];
+					[cell.contentView addSubview:dialStock_];
+				}
+				break;
+			case 4: // Need
+				if (lbNeed_==nil) {
+					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(120,2, 90,20)];
+					label.text = NSLocalizedString(@"Need Qty", nil);
+					label.textAlignment = UITextAlignmentLeft;
+					label.textColor = [UIColor grayColor];
+					label.backgroundColor = [UIColor clearColor];
+					label.font = [UIFont systemFontOfSize:14];
+					[cell.contentView addSubview:label]; //[label release];
+					
+					lbNeed_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
+					//CGRectMake(self.tableView.frame.size.width/2-OFSX2,1, 90,20)];
+					lbNeed_.backgroundColor = [UIColor clearColor];
+					lbNeed_.textAlignment = UITextAlignmentCenter;
+					lbNeed_.font = [UIFont systemFontOfSize:24];
+					[cell.contentView addSubview:lbNeed_];
+					
+					dialNeed_ = [[AZDial alloc] initWithFrame:CGRectZero
+													 delegate:self  dial:0  min:0  max:9999  step:1  stepper:YES];
+					dialNeed_.backgroundColor = [UIColor clearColor];
+					[cell.contentView addSubview:dialNeed_];
+				}
+				break;
+			case 5: // Weight
+				if (lbWeight_==nil) {
+					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(120,2, 90,20)];
+					label.text = NSLocalizedString(@"One Weight", nil);
+					label.textAlignment = UITextAlignmentLeft;
+					label.textColor = [UIColor grayColor];
+					label.backgroundColor = [UIColor clearColor];
+					label.font = [UIFont systemFontOfSize:14];
+					label.adjustsFontSizeToFitWidth = YES;
+					label.minimumFontSize = 8;
+					label.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
+					[cell.contentView addSubview:label];
+					
+					lbWeight_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
+					//CGRectMake(self.tableView.frame.size.width/2-OFSX2,1, 90,20)];
+					lbWeight_.backgroundColor = [UIColor clearColor];
+					lbWeight_.textAlignment = UITextAlignmentCenter;
+					lbWeight_.font = [UIFont systemFontOfSize:24];
+					[cell.contentView addSubview:lbWeight_];
+					
+					dialWeight_ = [[AZDial alloc] initWithFrame:CGRectZero
+													   delegate:self  dial:0  min:0  max:WEIGHT_MAX  step:10  stepper:YES];
+					dialWeight_.backgroundColor = [UIColor clearColor];
+					//[mDialWeight setStepperMagnification:10.0];
+					[cell.contentView addSubview:dialWeight_];
+				}
+				break;
+			case 6: // Picasa Photo
+				if (mLbPhotoMsg==nil) {
+					// Status Label
+					mLbPhotoMsg = [[UILabel alloc] initWithFrame:CGRectMake(5+24+5,2, 100,30)];
+					mLbPhotoMsg.font = [UIFont systemFontOfSize:12];
+					mLbPhotoMsg.textColor = [UIColor grayColor];
+					mLbPhotoMsg.numberOfLines = 2;
+					mLbPhotoMsg.backgroundColor = [UIColor clearColor];
+					[cell.contentView addSubview:mLbPhotoMsg];
+					// IconPicasa 
+					mIvIconPicasa = [[UIImageView alloc] init];
+					mIvIconPicasa.contentMode = UIViewContentModeScaleAspectFit;
+					mIvIconPicasa.frame = CGRectMake(4, 6, 32, 32);
+					[cell.contentView addSubview:mIvIconPicasa];
+					mActivityIndicator_on_IconPicasa = [[UIActivityIndicatorView alloc]
+														initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+					mActivityIndicator_on_IconPicasa.frame = mIvIconPicasa.bounds;
+					[mIvIconPicasa addSubview:mActivityIndicator_on_IconPicasa];
+					// Camera ボタン
+					mBuCamera = [UIButton buttonWithType:UIButtonTypeCustom];
+					mBuCamera.frame = CGRectMake(0,0, 44,44);
+					[mBuCamera setImage:[UIImage imageNamed:@"Icon24-Camera"] forState:UIControlStateNormal];
+					[mBuCamera setImage:[UIImage imageNamed:@"Icon32-Picasa"] forState:UIControlStateHighlighted];
+					[mBuCamera addTarget:self action:@selector(actionCamera) forControlEvents:UIControlEventTouchUpInside];
+					cell.accessoryType = UITableViewCellAccessoryNone;
+					cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
+					[cell.contentView addSubview:mBuCamera];  //cell.accessoryView = bu;
+					// Image 640x480
+					mIvPhoto = [[UIImageView alloc] init];
+					mIvPhoto.contentMode = UIViewContentModeScaleAspectFit;
+					mIvPhoto.frame = CGRectMake(0, 0, 640, 640); // 固定
+					mIvPhoto.clipsToBounds = YES;
+					// Scroll
+					mSvPhoto = [[UIScrollView alloc] init];
+					mSvPhoto.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+					[mSvPhoto addSubview:mIvPhoto];
+					mSvPhoto.delegate = self;
+					mSvPhoto.contentSize = mIvPhoto.frame.size; // 固定
+					mSvPhoto.zoomScale = 1.0;
+					mSvPhoto.minimumZoomScale = 1.0;
+					mSvPhoto.maximumZoomScale = 4.0;
+					[cell.contentView addSubview:mSvPhoto];
+					// 写真ズーム：　ピンチアウト操作
+					UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]
+															  initWithTarget:self action:@selector(handlePinchGesture:)];
+					[cell.contentView addGestureRecognizer:pinchGesture];
+					
+					//cell.imageView.image = nil;
+					//cell.textLabel.text = nil;
+				}
+				// この時点では、cell.contentView.frameが無効である。willDisplayCell:にて有効になっている。
+				// 写真表示など動的な実装は、willDisplayCell:へ
+				break;
+		}
+	}
+	else if (indexPath.section==1) {		//------------------------------------------------------- Product information
+		switch (indexPath.row) {
+			case 0: // Shop Photo
+				if (mActivityIndicator_on_IconShop==nil) {
+					// Icon Shop 
+					/*mIvIconShop = [[UIImageView alloc] init];
+					mIvIconShop.contentMode = UIViewContentModeScaleAspectFit;
+					mIvIconShop.frame = CGRectMake(4, 6, 32, 32);
+					mIvIconShop.image = [UIImage imageNamed:@"Icon-Store-32"];
+					[cell.contentView addSubview:mIvIconShop];*/
+					cell.imageView.image = [UIImage imageNamed:@"Icon-Store-32"];
+					mActivityIndicator_on_IconShop = [[UIActivityIndicatorView alloc]
+														initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+					//mActivityIndicator_on_IconShop.frame = cell.imageView.frame;
+					[cell.imageView  addSubview:mActivityIndicator_on_IconShop];
+				}
+				break;
+				
+			case 1: // Shop Search keyword
+				if (tfKeyword_==nil) {
+					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 300,12)];
+					label.font = [UIFont systemFontOfSize:12];
+					label.text = NSLocalizedString(@"Shop Keyword", nil);
+					label.textColor = [UIColor grayColor];
+					label.backgroundColor = [UIColor clearColor];
+					[cell.contentView addSubview:label];
+					
+					if (appDelegate_.app_is_iPad) {
+						tfKeyword_ = [[UITextField alloc] initWithFrame:
+									  CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
+						tfKeyword_.font = [UIFont systemFontOfSize:20];
+					} else {
+						tfKeyword_ = [[UITextField alloc] initWithFrame:
+									  CGRectMake(20,18, self.tableView.frame.size.width-60,20)];
+						tfKeyword_.font = [UIFont systemFontOfSize:16];
+					}
+					tfKeyword_.placeholder = NSLocalizedString(@"Shop Keyword placeholder", nil);
+					tfKeyword_.keyboardType = UIKeyboardTypeDefault;
+					tfKeyword_.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+					tfKeyword_.returnKeyType = UIReturnKeyDone; // ReturnキーをDoneに変える
+					tfKeyword_.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
+					tfKeyword_.delegate = self; // textFieldShouldReturn:を呼び出すため
+					[cell.contentView addSubview:tfKeyword_]; //[MtfKeyword release];
+					tfKeyword_.text = e3target_.shopKeyword; // (未定)表示しない。Editへ持って行かれるため
+					cell.accessoryType = UITableViewCellAccessoryNone; // なし
+					cell.tag = 00;
+				}
+				break;
+				
+			case 2:
+			case 3:
+			case 4:
+				if (cell.imageView.image==nil) {
+					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+					cell.selectionStyle = UITableViewCellSelectionStyleBlue; // 選択時ハイライト
+					int iShop = indexPath.row - 2;
+					if ([NSLocalizedString(@"CountryCode", nil) isEqualToString:@"jp"]) {
+						switch (iShop) {
+							case 0: 
+								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.co.jp", nil);	
+								cell.tag = 01;		break;
+							case 1: 
+								cell.imageView.image = [UIImage imageNamed:@"Icon32-Rakuten"];
+								cell.textLabel.text = NSLocalizedString(@"Shop Rakuten", nil);				
+								cell.tag = 11;		break;
+							case 2: 
+								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.com", nil);	
+								cell.tag = 02;		break;
+						}
+					} else {
+						switch (iShop) {
+							case 0: 
+								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.com", nil);	
+								cell.tag = 02;		break;
+							case 1: 
+								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.co.jp", nil);	
+								cell.tag = 01;		break;
+							case 2: 
+								cell.imageView.image = [UIImage imageNamed:@"Icon32-Rakuten"];
+								cell.textLabel.text = NSLocalizedString(@"Shop Rakuten", nil);				
+								cell.tag = 11;		break;
+						}
 					}
 				}
-			}
-			break;
+				break;
+		}
 	}
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {	// セルが表示される直前に呼び出される。　この時点で、cell.contentView.frameが有効になっている。
-	assert(indexPath.section==0);
-	switch (indexPath.row) {
-		case 0:
-			break;
-			
-		case 1:
-			tfName_.text = e3target_.name; // (未定)表示しない。Editへ持って行かれるため
-			break;
-			
-		case 2:
-			if (e3target_.note == nil) {
-				tvNote_.text = @"";  // TextViewは、(nil) と表示されるので、それを消すため。
-			} else {
-				tvNote_.text = e3target_.note;
-			}
-			break;
-			
-		case 3:
-		case 4:
-		case 5: {
-			CGFloat fDialWidth = self.tableView.frame.size.width-80;
-			if (appDelegate_.app_is_iPad) {
-				fDialWidth -= 40;  // 両端の余白が増えるため
-			}
-			CGRect rc = CGRectMake(10,16, fDialWidth,44);
-			switch (indexPath.row) {
-				case 3: // Stock Qty.
-					dialStock_.frame = rc;
-					[dialStock_ setDial:[e3target_.stock integerValue] animated:YES];
-					lbStock_.text = GstringFromNumber(e3target_.stock); // 3桁コンマ付加
-					break;
-				case 4: // Need
-					dialNeed_.frame = rc;
-					[dialNeed_ setDial:[e3target_.need integerValue] animated:YES];
-					lbNeed_.text = GstringFromNumber(e3target_.need);	// 3桁コンマ付加
-					break;
-				case 5: // Weight
-					dialWeight_.frame = rc;
-					[dialWeight_ setDial:[e3target_.weight integerValue] animated:YES];
-					lbWeight_.text = GstringFromNumber(e3target_.weight);		// 3桁コンマ付加
-					break;
-			}
-		} break;
-			
-		case 6: {
-			DEBUG_LOG_RECT(cell.contentView.frame, @"willDisplayCell: cell.contentView.frame");
-			[mActivityIndicator_on_IconPicasa stopAnimating];
-			E4photo *e4 = e3target_.e4photo;
-			if (e4.photoData) {		// 写真データあり
-				mIvPhoto.image = [UIImage imageWithData: e4.photoData];
-				if ([e3target_.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み
-					mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
-					mLbPhotoMsg.text = NSLocalizedString(@"Google Photo Uploaded", nil);
-				} else {		// アップ待ち　リトライ
-					mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-					if (appDelegate_.app_UpdateSave) {
-						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo UploadWait", nil);
-					} else {
-						[mActivityIndicator_on_IconPicasa startAnimating];
-						mLbPhotoMsg.text = NSLocalizedString(@"Google Uploading", nil);
+	if (indexPath.section==0) {
+		switch (indexPath.row) {
+			case 0:
+				break;
+				
+			case 1:
+				tfName_.text = e3target_.name; // (未定)表示しない。Editへ持って行かれるため
+				break;
+				
+			case 2:
+				if (e3target_.note == nil) {
+					tvNote_.text = @"";  // TextViewは、(nil) と表示されるので、それを消すため。
+				} else {
+					tvNote_.text = e3target_.note;
+				}
+				break;
+				
+			case 3:
+			case 4:
+			case 5: {
+				CGFloat fDialWidth = self.tableView.frame.size.width-80;
+				if (appDelegate_.app_is_iPad) {
+					fDialWidth -= 40;  // 両端の余白が増えるため
+				}
+				CGRect rc = CGRectMake(10,16, fDialWidth,44);
+				switch (indexPath.row) {
+					case 3: // Stock Qty.
+						dialStock_.frame = rc;
+						[dialStock_ setDial:[e3target_.stock integerValue] animated:YES];
+						lbStock_.text = GstringFromNumber(e3target_.stock); // 3桁コンマ付加
+						break;
+					case 4: // Need
+						dialNeed_.frame = rc;
+						[dialNeed_ setDial:[e3target_.need integerValue] animated:YES];
+						lbNeed_.text = GstringFromNumber(e3target_.need);	// 3桁コンマ付加
+						break;
+					case 5: // Weight
+						dialWeight_.frame = rc;
+						[dialWeight_ setDial:[e3target_.weight integerValue] animated:YES];
+						lbWeight_.text = GstringFromNumber(e3target_.weight);		// 3桁コンマ付加
+						break;
+				}
+			} break;
+				
+			case 6: {
+				//DEBUG_LOG_RECT(cell.contentView.frame, @"willDisplayCell: cell.contentView.frame");
+				[mActivityIndicator_on_IconPicasa stopAnimating];
+				E4photo *e4 = e3target_.e4photo;
+				if (e4.photoData) {		// 写真データあり
+					mIvPhoto.image = [UIImage imageWithData: e4.photoData];
+					if ([e3target_.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み
+						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
+						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo Uploaded", nil);
+					} else {		// アップ待ち　リトライ
+						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+						if (appDelegate_.app_UpdateSave) {
+							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo UploadWait", nil);
+						} else {
+							[mActivityIndicator_on_IconPicasa startAnimating];
+							mLbPhotoMsg.text = NSLocalizedString(@"Google Uploading", nil);
+						}
 					}
 				}
-			}
-			else {	// e3target_.photoUrl==nil; 写真データなし
-				mIvPhoto.image = nil;
-				if ([e3target_.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み  ダウンロード待ち
-					//cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-					mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-					[mActivityIndicator_on_IconPicasa startAnimating];
-					mLbPhotoMsg.text = NSLocalizedString(@"Google Downloading", nil);
-					// 写真キャッシュに無いのでダウンロードする
-					[GoogleService photoDownloadE3:e3target_ errorLabel:mLbPhotoMsg]; //非同期処理
-					// スクロールして繰り返して呼び出された場合、処理中ならば拒否するようになっている。
+				else {	// e3target_.photoUrl==nil; 写真データなし
+					mIvPhoto.image = nil;
+					if ([e3target_.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み  ダウンロード待ち
+						//cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+						[mActivityIndicator_on_IconPicasa startAnimating];
+						mLbPhotoMsg.text = NSLocalizedString(@"Google Downloading", nil);
+						// 写真キャッシュに無いのでダウンロードする
+						[GoogleService photoDownloadE3:e3target_ errorLabel:mLbPhotoMsg]; //非同期処理
+						// スクロールして繰り返して呼び出された場合、処理中ならば拒否するようになっている。
+					}
+					else if ([e3target_.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
+						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo NoUpload", nil);
+					}
+					else {	// Picasaアップなし　撮影してください
+						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
+						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo", nil);
+					} 
 				}
-				else if ([e3target_.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
-					mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-					mLbPhotoMsg.text = NSLocalizedString(@"Google Photo NoUpload", nil);
-				}
-				else {	// Picasaアップなし　撮影してください
-					mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
-					mLbPhotoMsg.text = NSLocalizedString(@"Google Photo", nil);
-				} 
-			}
-			// Icon位置なども変化するため
-			[self viewDesignPhoto];
-		} break;
-			
-		case 7: {
+				// Icon位置なども変化するため
+				[self viewDesignPhoto];
+			} break;
+		}
+	}
+	else if (indexPath.section==1) {
+		switch (indexPath.row) {
+			case 0: {
 #ifdef DEBUGxxx
-			e3target_.shopUrl = @"http://www.amazon.co.jp/gp/aw/d/B0033A080G?qid=1331460608&sr=8-1";
+				e3target_.shopUrl = @"http://www.amazon.co.jp/gp/aw/d/B0033A080G?qid=1331460608&sr=8-1";
 #endif
-			if (e3target_.shopUrl) {
-				if (mWebViewShop) {
-					// URLから読み込む
-					NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:e3target_.shopUrl]];
-					[mWebViewShop loadRequest:request];
+				if (e3target_.shopUrl) {
+					//[mActivityIndicator_on_IconShop stopAnimating]; webViewDidStartLoad:にて開始
+					cell.textLabel.font = [UIFont systemFontOfSize:12];
+					cell.textLabel.numberOfLines = 10;
+					cell.textLabel.lineBreakMode = UILineBreakModeCharacterWrap; //単語の途中でも改行する
+					cell.textLabel.text = [NSString stringWithFormat:@"%@\nURL{%@}", 
+										   NSLocalizedString(@"Product Bookmark URL", nil), e3target_.shopUrl];
+					//cell.textLabel.text = nil;
+					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+					if (mWebViewShop) {
+						// 「URLから読み込む」
+						NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:e3target_.shopUrl]];
+						[mWebViewShop loadRequest:request];
+					} else {
+						// WebView生成
+						mWebViewShop = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 640)]; // 固定
+						mWebViewShop.scalesPageToFit = YES;  //.frameに収める ＜＜iPhoneサイトには効果なしだが、PCサイトは縮小される
+						mWebViewShop.delegate = self;	// 読み込み終了にて[mActivityIndicator_on_IconShop stopAnimating];するため
+						mWebViewShop.userInteractionEnabled = NO;		// 操作禁止
+						mWebViewShop.hidden = YES; //非表示にしてURLを見せる、読み込み成功時に表示する
+						[cell.contentView addSubview:mWebViewShop];
+						//[cell.textLabel.window bringSubviewToFront:mWebViewShop];
+						// 再読み込み 通知発信---> mWebViewShop != nil --> 「URLから読み込む」
+						[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
+																			object:self userInfo:nil];	//この後、再度ここが呼び出されて「URLから読み込む」の方を通る。
+					}
 				} else {
-					// WebView生成
-					mWebViewShop = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 640)]; // 固定
-					mWebViewShop.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-					mWebViewShop.scalesPageToFit = YES;  //.frameに収める
-					mWebViewShop.clipsToBounds = YES;
-					//mWebViewShop.contentMode = UIViewContentModeCenter;
-					//mWebViewShop.delegate = self;
-					mWebViewShop.userInteractionEnabled = NO;		// 操作禁止
-					[cell.contentView addSubview:mWebViewShop];
-					// URLから読み込む
-					//NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:e3target_.shopUrl]];
-					//[mWebViewShop loadRequest:request];
-					// 再読み込み 通知発信---> mWebViewShop != nil --> URLから読み込む
-					[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
-																		object:self userInfo:nil];
+					cell.textLabel.font = [UIFont systemFontOfSize:12];
+					cell.textLabel.numberOfLines = 2;
+					cell.textLabel.text = NSLocalizedString(@"Product Bookmark msg", nil);
+					cell.accessoryType = UITableViewCellAccessoryNone;
+					cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
 				}
-			} else {
-				cell.textLabel.text = NSLocalizedString(@"Product Bookmark", nil);
-				cell.textLabel.font = [UIFont systemFontOfSize:12];
-				cell.textLabel.numberOfLines = 2;
-			}
-		} break;
+			} break;
+		}
 	}
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-	assert(indexPath.section==0);
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];	// 選択状態を解除する
 
 	[tfName_ resignFirstResponder]; // キーボード非表示
 	[tvNote_ resignFirstResponder]; // キーボード非表示
 	[tfKeyword_ resignFirstResponder]; // キーボード非表示
 	
-	switch (indexPath.row) {
-		case 0: { // Group
-			// selectGroupTVC へ
-			selectGroupTVC *selectGroup = [[selectGroupTVC alloc] init];
-			selectGroup.RaE2array = e2array_;
-			selectGroup.RlbGroup = lbGroup_; // .tag=E2.row  .text=E2.name
-			[self.navigationController pushViewController:selectGroup animated:YES];
-		}	break;
-			
-		case 1: { // Name
-			[tfName_ becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
-		} break;
-			
-		case 2: { // Note
-			[tvNote_ becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
-		} break;
-
-		case 6: // Picasa Photo
-			//右ボタンにした//[self actionCamera];
-			break;
-			
-		case 7: // Shop Photo
-			// WebViewを開ける
-			[self actionWebUrl: e3target_.shopUrl];
-			break;
-		case 8: // Shop Search keyword
-			break;
-		case 9: // Shop
-		case 10: // Shop
-		case 11: { // Shop
-			UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-			switch (cell.tag) {
-				case 00: // Name
-				{
-					[tfKeyword_ becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
-				}
-					break;
-				case 01: // Amazon.co.jp
-				{
-					NSString *zUrl;
-					if (appDelegate_.app_is_iPad) {
-						// PCサイト　　　　URL表示するようになったので長くする＜＜TAGが見えないように
-						// アソシエイトリンク作成方法⇒ https://affiliate.amazon.co.jp/gp/associates/help/t121/a1
-						//www.amazon.co.jp/gp/search?ie=UTF8&keywords=[SEARCH_PARAMETERS]&tag=[ASSOCIATE_TAG]&index=blended&linkCode=ure&creative=6339
-						zUrl = @"http://www.amazon.co.jp/s/?ie=UTF8&index=blended&linkCode=ure&creative=6339&tag=art063-22&keywords=";
-					} else {
-						// モバイルサイト　　　　　"ie=UTF8" が無いと日本語キーワードが化ける
-						//www.amazon.co.jp/gp/aw/s/ref=is_s_?__mk_ja_JP=%83J%83%5E%83J%83i&k=[SEARCH_PARAMETERS]&url=search-alias%3Daps
-						zUrl = @"http://www.amazon.co.jp/gp/aw/s/ref=is_s_?ie=UTF8&__mk_ja_JP=%83J%83%5E%83J%83i&url=search-alias%3Daps&at=art063-22&k=";
-					}
-					[self actionWebTitle:NSLocalizedString(@"Shop Amazon.co.jp", nil)
-									 URL:zUrl
-								  Domain:@".amazon.co.jp"];
-				}
-					break;
-				case 02: // Amazon.com
-				{
-					NSString *zUrl;
-					if (appDelegate_.app_is_iPad) {
-						// PCサイト
-						//www.amazon.com/s/?tag=azuk-20&creative=392009&campaign=212361&link_code=wsw&_encoding=UTF-8&search-alias=aps&field-keywords=LEGO&Submit.x=16&Submit.y=14&Submit=Go
-						//NSString *zUrl = @"http://www.amazon.com/s/?tag=azuk-20&_encoding=UTF-8&k="; URL表示するようになったので長くする＜＜TAGが見えないように
-						zUrl = @"http://www.amazon.com/s/?_encoding=UTF-8&search-alias=aps&creative=392009&campaign=212361&tag=azuk-20&field-keywords=";
-					} else {
-						// モバイルサイト
-						//www.amazon.com/gp/aw/s/ref=is_box_?k=LEGO
-						zUrl = @"http://www.amazon.com/gp/aw/s/ref=is_box_?_encoding=UTF-8&link_code=wsw&search-alias=aps&tag=azuk-20&k=";
-					}
-					[self actionWebTitle:NSLocalizedString(@"Shop Amazon.com", nil)
-									 URL:zUrl
-								  Domain:@".amazon.com"];
-				}
-					break;
-				case 11: // 楽天 Search
-				{			// アフィリエイトID(β版): &afid=0e4c9297.0f29bc13.0e4c9298.6adf8529
-					NSString *zUrl;
-					if (appDelegate_.app_is_iPad) {
-						// PCサイト
-						zUrl = @"http://search.rakuten.co.jp/search/mall/?sv=2&p=0&afid=0e4c9297.0f29bc13.0e4c9298.6adf8529&sitem=";
-					} else {
-						// モバイルサイト
-						//http://search.rakuten.co.jp/search/spmall?sv=2&p=0&sitem=SG7&submit=商品検索&scid=af_ich_link_search&scid=af_ich_link_search
-						zUrl = @"http://search.rakuten.co.jp/search/spmall/?sv=2&p=0&afid=0e4c9297.0f29bc13.0e4c9298.6adf8529&sitem=";
-					}
-					[self actionWebTitle:NSLocalizedString(@"Shop Rakuten", nil)
-									 URL:zUrl
-								  Domain:@".rakuten.co.jp"];
-				}
-					break;
-				case 21: // ケンコーコム Search
-				{			// アフィリエイトID
-					NSString *zUrl = @"http://sp.kenko.com/";
-					[self actionWebTitle:NSLocalizedString(@"Shop Kenko.com", nil)
-									 URL:zUrl
-								  Domain:@".kenko.com"];
-				}
-					break;
-			}
-		} break;
+	if (indexPath.section==0) {
+		switch (indexPath.row) {
+			case 0: { // Group
+				// selectGroupTVC へ
+				selectGroupTVC *selectGroup = [[selectGroupTVC alloc] init];
+				selectGroup.RaE2array = e2array_;
+				selectGroup.RlbGroup = lbGroup_; // .tag=E2.row  .text=E2.name
+				[self.navigationController pushViewController:selectGroup animated:YES];
+			}	break;
+				
+			case 1: { // Name
+				[tfName_ becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
+			} break;
+				
+			case 2: { // Note
+				[tvNote_ becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
+			} break;
+				
+			case 6: // Picasa Photo
+				//右ボタンにした//[self actionCamera];
+				break;
+		}
 	}
-}
-
-
-#pragma mark  <WebView delegate>
-// @protocolでない非形式プロトコル（カテゴリ）方式によるデリゲート
-- (void)webSiteBookmarkUrl:(NSString *)url
-{
-	e3target_.shopUrl = url;
-	[self.tableView reloadData];
+	else if (indexPath.section==1) {
+		switch (indexPath.row) {
+			case 0: // Shop Photo
+				if (e3target_.shopUrl) {
+					// WebViewを開ける
+					[self actionWebUrl: e3target_.shopUrl];
+				}
+				break;
+				
+			case 1: // Shop Search keyword
+				[tfKeyword_ becomeFirstResponder];
+				break;
+				
+			case 2: // Shop
+			case 3: // Shop
+			case 4: { // Shop
+				UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+				switch (cell.tag) {
+					case 00: // Name
+					{
+						[tfKeyword_ becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
+					} break;
+					
+					case 01: // Amazon.co.jp
+					{
+						NSString *zUrl;
+						if (appDelegate_.app_is_iPad) {
+							// PCサイト　　　　URL表示するようになったので長くする＜＜TAGが見えないように
+							// アソシエイトリンク作成方法⇒ https://affiliate.amazon.co.jp/gp/associates/help/t121/a1
+							//www.amazon.co.jp/gp/search?ie=UTF8&keywords=[SEARCH_PARAMETERS]&tag=[ASSOCIATE_TAG]&index=blended&linkCode=ure&creative=6339
+							zUrl = @"http://www.amazon.co.jp/s/?ie=UTF8&index=blended&linkCode=ure&creative=6339&tag=art063-22&keywords=";
+						} else {
+							// モバイルサイト　　　　　"ie=UTF8" が無いと日本語キーワードが化ける
+							//www.amazon.co.jp/gp/aw/s/ref=is_s_?__mk_ja_JP=%83J%83%5E%83J%83i&k=[SEARCH_PARAMETERS]&url=search-alias%3Daps
+							zUrl = @"http://www.amazon.co.jp/gp/aw/s/ref=is_s_?ie=UTF8&__mk_ja_JP=%83J%83%5E%83J%83i&url=search-alias%3Daps&at=art063-22&k=";
+						}
+						[self actionWebTitle:NSLocalizedString(@"Shop Amazon.co.jp", nil)
+										 URL:zUrl
+									  Domain:@".amazon.co.jp"];
+					} break;
+					
+					case 02: // Amazon.com
+					{
+						NSString *zUrl;
+						if (appDelegate_.app_is_iPad) {
+							// PCサイト
+							//www.amazon.com/s/?tag=azuk-20&creative=392009&campaign=212361&link_code=wsw&_encoding=UTF-8&search-alias=aps&field-keywords=LEGO&Submit.x=16&Submit.y=14&Submit=Go
+							//NSString *zUrl = @"http://www.amazon.com/s/?tag=azuk-20&_encoding=UTF-8&k="; URL表示するようになったので長くする＜＜TAGが見えないように
+							zUrl = @"http://www.amazon.com/s/?_encoding=UTF-8&search-alias=aps&creative=392009&campaign=212361&tag=azuk-20&field-keywords=";
+						} else {
+							// モバイルサイト
+							//www.amazon.com/gp/aw/s/ref=is_box_?k=LEGO
+							zUrl = @"http://www.amazon.com/gp/aw/s/ref=is_box_?_encoding=UTF-8&link_code=wsw&search-alias=aps&tag=azuk-20&k=";
+						}
+						[self actionWebTitle:NSLocalizedString(@"Shop Amazon.com", nil)
+										 URL:zUrl
+									  Domain:@".amazon.com"];
+					} break;
+					
+					case 11: // 楽天 Search
+					{			// アフィリエイトID(β版): &afid=0e4c9297.0f29bc13.0e4c9298.6adf8529
+						NSString *zUrl;
+						if (appDelegate_.app_is_iPad) {
+							// PCサイト
+							zUrl = @"http://search.rakuten.co.jp/search/mall/?sv=2&p=0&afid=0e4c9297.0f29bc13.0e4c9298.6adf8529&sitem=";
+						} else {
+							// モバイルサイト
+							//http://search.rakuten.co.jp/search/spmall?sv=2&p=0&sitem=SG7&submit=商品検索&scid=af_ich_link_search&scid=af_ich_link_search
+							zUrl = @"http://search.rakuten.co.jp/search/spmall/?sv=2&p=0&afid=0e4c9297.0f29bc13.0e4c9298.6adf8529&sitem=";
+						}
+						[self actionWebTitle:NSLocalizedString(@"Shop Rakuten", nil)
+										 URL:zUrl
+									  Domain:@".rakuten.co.jp"];
+					} break;
+					
+					case 21: // ケンコーコム Search
+					{			// アフィリエイトID
+						NSString *zUrl = @"http://sp.kenko.com/";
+						[self actionWebTitle:NSLocalizedString(@"Shop Kenko.com", nil)
+										 URL:zUrl
+									  Domain:@".kenko.com"];
+					} break;
+				}
+			} break;
+		}
+	}
 }
 
 
@@ -1763,6 +1799,55 @@
 	}
 }
 
+
+#pragma mark - <UIWebViewDelegate>
+//ORIGINAL  @protocolでない非形式プロトコル（カテゴリ）方式によるデリゲート
+- (void)webSiteBookmarkUrl:(NSString *)url
+{
+	e3target_.shopUrl = url;
+	[self.tableView reloadData];
+}
+
+- (void)webViewDidStartLoad:(UIWebView *)webView 
+{	// ウェブビューがコンテンツの読み込みを始めた後
+	[mActivityIndicator_on_IconShop startAnimating];
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView 
+{	// ウェブビューがコンテンツの読み込みを完了した後
+	[mActivityIndicator_on_IconShop stopAnimating];
+	mWebViewShop.hidden = NO;
+}
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error 
+{	// ウェブビューがコンテンツの読み込みに失敗した場合
+	[mActivityIndicator_on_IconShop stopAnimating];
+}
+
+/*** ここでは操作禁止にしているので不要
+// URL制限する：無制限ならばレーティング"17+"になってしまう！
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request 
+ navigationType:(UIWebViewNavigationType)navigationType
+{	
+	if (navigationType == UIWebViewNavigationTypeLinkClicked) // リンクをクリックしたとき、だけチェックする 
+	{
+		NSString *zHost = [[request URL] host];
+		// 主ドメインからのリンク先で許可するドメイン
+		// Amazon
+		if ([zHost hasSuffix:@".amazon.co.jp"]) return YES; // 許可ドメイン
+		if ([zHost hasSuffix:@".amazon.com"]) return YES; // 許可ドメイン
+		if ([zHost hasSuffix:@".javari.jp"]) return YES; // 許可ドメイン
+		// 楽天
+		if ([zHost hasSuffix:@".rakuten.ne.jp"]) return YES; // 許可ドメイン
+		// Azukid support
+		if ([zHost hasSuffix:@".tumblr.com"]) return YES; // 許可ドメイン
+		if ([zHost hasSuffix:@".seesaa.net"]) return YES; // 許可ドメイン
+		if ([zHost hasSuffix:@".apple.com"]) return YES; // 許可ドメイン
+		return NO;
+	}
+	return YES;
+}
+*/
 
 @end
 

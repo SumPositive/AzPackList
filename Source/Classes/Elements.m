@@ -54,6 +54,7 @@
 	@dynamic weightLack;
 	@dynamic shopKeyword;	// Data Model Version.4
 	@dynamic shopNote;			// Data Model Version.4
+	@dynamic shopUrl;				//5//
 	@dynamic photoUrl;			//5//
 	@dynamic parent;
 	@dynamic e4photo;			//5//

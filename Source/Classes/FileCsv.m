@@ -145,14 +145,14 @@ static NSString *csvToStr( NSString *inCsv ) {
 			//----------------------------------------------------------------------------E3 [Goods]
 			//[1.0] ,,,"name","note",stock,need,weight,
 			//[1.1] ,,,"name","note",stock,need,weight,"shopKeyword","shopNote",
-			//[2.0] ,,,"name","note",stock,need,weight,"shopKeyword","shopNote","photoUrl",
+			//[2.0] ,,,"name","note",stock,need,weight,"shopKeyword","shopNote","shopUrl","photoUrl",
 			NSMutableArray *e3list = [[NSMutableArray alloc] initWithArray:[e2node.childs allObjects]];
 			[e3list sortUsingDescriptors:sortRow];	// .row 昇順にCSV書き出す
 			for (E3 *e3node in e3list) 
 			{
 				if ((-1) < [e3node.need integerValue] && 0 < [e3node.name length]) 
 				{ //(-1)Add専用ノードを除外する
-					str = [NSString stringWithFormat:@",,,\"%@\",\"%@\",%ld,%ld,%ld,\"%@\",\"%@\",\"%@\",\n", 
+					str = [NSString stringWithFormat:@",,,\"%@\",\"%@\",%ld,%ld,%ld,\"%@\",\"%@\",\"%@\",\"%@\",\n", 
 						   strToCsv(e3node.name),
 						   strToCsv(e3node.note),
 						   [e3node.stock longValue], 
@@ -160,6 +160,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 						   [e3node.weight longValue],
 						   strToCsv(e3node.shopKeyword),
 						   strToCsv(e3node.shopNote),
+						   strToCsv(e3node.shopUrl),
 						   strToCsv(e3node.photoUrl)];
 					AzLOG(@"E3> %@", str);
 					[PzCsv appendString:str];
@@ -514,8 +515,8 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 			//--------------------------------------------------------------------------------[Item] E3
 			//[1.0] [  ,  ,   ,"name","note",stock,need,weight,]
 			//[1.1] [  ,  ,   ,"name","note",stock,need,weight,"shopKeyword","shopNote",]
-			//[2.0] [  ,  ,   ,"name","note",stock,need,weight,"shopKeyword","shopNote","photoUrl",]
-			//[2.0] [0,1,2,          3,         4,       5,      6,         7,                       8,                 9,             10,]
+			//[2.0] [  ,  ,   ,"name","note",stock,need,weight,"shopKeyword","shopNote","shopUrl","photoUrl",]
+			//[2.0] [0,1,2,          3,         4,       5,      6,         7,                       8,                 9,            10,             11,]
 			else if (e2node && 7 < [aSplit count] 
 					 && [[aSplit objectAtIndex:0] isEqualToString:@""] 
 					 && [[aSplit objectAtIndex:1] isEqualToString:@""] 
@@ -555,8 +556,9 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 						e3node.shopNote		= [aSplit objectAtIndex:9];
 					}
 					//-----------------------------------------------[2.0]
-					if (10 < [aSplit count]) {
-						e3node.photoUrl = [aSplit objectAtIndex:10];
+					if (11 < [aSplit count]) {
+						e3node.shopUrl = [aSplit objectAtIndex:10];
+						e3node.photoUrl = [aSplit objectAtIndex:11];
 					}
 					//-----------------------------------------------Linking
 					[e2node addChildsObject:e3node];
