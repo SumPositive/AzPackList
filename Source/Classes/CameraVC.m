@@ -266,7 +266,7 @@
 			} else {
 				self.contentSizeForViewInPopover = CGSizeMake(640, 480);
 			}*/
-			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
+			self.contentSizeForViewInPopover = GD_POPOVER_SIZE_Camera;
 		}
     }
     return self;

@@ -129,10 +129,7 @@
     if (self) {
         // Custom initialization
 		e1upload_ = e1upload;
-		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;  //   CGSizeMake(320, 416); //iPad-Popover
-		
-		//fileJson_ = [[FileJson alloc] init];
-		//assert(fileJson_);
+		//self.contentSizeForViewInPopover =  //FormSheetスタイルにしたので不要
     }
     return self;
 }

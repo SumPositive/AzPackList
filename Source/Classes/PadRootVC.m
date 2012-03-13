@@ -70,7 +70,7 @@
 		
 		//iPad// これが、最初の Index Popover のサイズになる。
 		//self.contentSizeForViewInPopover = GD_POPOVER_SIZE; //アクションメニュー配下(Share,Googleなど）においてサイズ統一
-		self.contentSizeForViewInPopover = CGSizeMake(350, 800); //配下全てFormSheetスタイルにしたことにより自由になったので最大化
+		self.contentSizeForViewInPopover = GD_POPOVER_SIZE_PadMenu; //配下全てFormSheetスタイルにしたことにより自由になったので最大化
    }
     return self;
 }
@@ -181,7 +181,7 @@
 		  withBarButtonItem:(UIBarButtonItem*)barButtonItem 
 	   forPopoverController:(UIPopoverController*)pc		//左ペインが内包されるPopover
 {
-    barButtonItem.title = @"padRoot";
+	barButtonItem.title = NSLocalizedString(@"Index button", nil);
 	//self.popoverController = pc;
     popoverButtonItem_ = barButtonItem;
 	UINavigationController *navi = [svc.viewControllers objectAtIndex:1];

@@ -107,7 +107,7 @@
 	}
 }
 
-- (void)closeCopyUrl:(id)sender 
+- (void)closeBookmarkUrl:(id)sender 
 {	// 現在のURLを送信する
 	NSString* url = [MwebView stringByEvaluatingJavaScriptFromString:@"document.URL"];
 	if (10<[url length]) {
@@ -172,55 +172,50 @@
     [super viewDidLoad];
 	self.title = nil;
 	
-	// 上部のバーを無くして、全て下部ツールバーだけにした。
-	//self.navigationController.navigationBarHidden = YES;
-	
-/*	UIBarButtonItem *buFixed = [[UIBarButtonItem alloc] 
+	/*	UIBarButtonItem *buFixed = [[UIBarButtonItem alloc] 
 								initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
 								target:nil action:nil];*/
-	
-	UIBarButtonItem *buClose = [[UIBarButtonItem alloc] 
-								initWithTitle:NSLocalizedString(@"Back", nil)
-								style:UIBarButtonItemStyleBordered
-								target:self action:@selector(close:)];
 
-	if (mBookmarkDelegate) {
-		mBuCopyUrl = [[UIBarButtonItem alloc] 
-					  initWithTitle:NSLocalizedString(@"Bookmark", nil)
-					  style:UIBarButtonItemStyleBordered
-					  target:self action:@selector(closeCopyUrl:)];
-	} else {
-		mBuCopyUrl = nil;
-	}
-	
+	// 左側ボタン
 	MbuBack = [[UIBarButtonItem alloc] 
-				initWithImage:[UIImage imageNamed:@"Icon16-WebBack"]
-				style:UIBarButtonItemStylePlain
-				target:self action:@selector(toolBack)];
+			   initWithImage:[UIImage imageNamed:@"Icon16-WebBack"]
+			   style:UIBarButtonItemStylePlain
+			   target:self action:@selector(toolBack)];
 	MbuForward = [[UIBarButtonItem alloc] 
-				   initWithImage:[UIImage imageNamed:@"Icon16-WebForward"]
-				   style:UIBarButtonItemStylePlain
-				   target:self action:@selector(toolForward)];
+				  initWithImage:[UIImage imageNamed:@"Icon16-WebForward"]
+				  style:UIBarButtonItemStylePlain
+				  target:self action:@selector(toolForward)];
 	MbuReload = [[UIBarButtonItem alloc] 
-				  initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
-				  target:self action:@selector(toolReload)];
+				 initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
+				 target:self action:@selector(toolReload)];
 	
 	MactivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 32.0f, 32.0f)];
 	[MactivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
 	[MactivityIndicator startAnimating]; // 通信不能のとき、インジケータだけ動かすため
 	UIBarButtonItem *buActInd = [[UIBarButtonItem alloc] initWithCustomView:MactivityIndicator];
 
-	// 左側ボタン
-	self.navigationItem.leftBarButtonItems = 
-	[NSArray arrayWithObjects:  buClose, nil];
-	//self.navigationController.toolbarHidden = NO;
-	//self.navigationController.toolbar.barStyle = UIBarStyleBlackOpaque;
-	//[self setToolbarItems:aArray animated:YES];
+	if (mBookmarkDelegate) {
+		mBuCopyUrl = [[UIBarButtonItem alloc] 
+					  initWithTitle:NSLocalizedString(@"Bookmark", nil)
+					  style:UIBarButtonItemStyleBordered
+					  target:self action:@selector(closeBookmarkUrl:)];
+	} else {
+		mBuCopyUrl = nil;
+	}
+	// 左は正順に並べる
+	self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:  
+											   MbuBack, MbuReload, MbuForward, buActInd, mBuCopyUrl, nil];
 	
-	// 右側ボタン(逆順)
-	self.navigationItem.rightBarButtonItems =
-	[NSArray arrayWithObjects:  MbuForward, MbuReload, MbuBack, buActInd, mBuCopyUrl, nil];
-
+	// 右側ボタン
+	/*UIBarButtonItem *buClose = [[UIBarButtonItem alloc] 
+								initWithTitle:NSLocalizedString(@"Back", nil)
+								style:UIBarButtonItemStyleBordered
+								target:self action:@selector(close:)];*/
+	UIBarButtonItem *buClose = [[UIBarButtonItem alloc] 
+								initWithBarButtonSystemItem:UIBarButtonSystemItemStop
+								target:self action:@selector(close:)];
+	// 右は逆順に並べる
+	self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects: buClose, nil];
 	
 	// URL表示用のラベル生成
 	MlbMessage = [[UILabel alloc] init];
@@ -317,7 +312,6 @@
 	if (MwebView) {
 		[MwebView stopLoading];
 		MwebView.delegate = nil; // これしないと落ちます
-		//[MwebView release], 
 		MwebView = nil;
 	}
 	

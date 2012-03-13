@@ -116,7 +116,7 @@
 																  patternImage:[UIImage imageNamed:@"Tx-Back"]]; // タイルパターン生成
 				[view addSubview:tv];
 			}
-			self.contentSizeForViewInPopover = GD_POPOVER_E3detailTVC_SIZE;
+			self.contentSizeForViewInPopover = GD_POPOVER_SIZE_E3edit;
 			//[1.1]//[self.tableView setScrollEnabled:NO]; // スクロール禁止
 		}
 		else {
@@ -348,12 +348,12 @@
 
 - (void)dealloc    // 生成とは逆順に解放するのが好ましい
 {
-	//[selfPopover release], 
+	if (mWebViewShop) {
+		[mWebViewShop stopLoading];
+		mWebViewShop.delegate = nil; // これしないと落ちます
+		mWebViewShop = nil;
+	}
 	selfPopover_ = nil;
-	//[e3target_ release];
-	//[RaE3array release];
-	//[RaE2array release];
-	//[super dealloc];
 }
 
 
@@ -960,12 +960,12 @@
 // TableView セクションフッタを応答
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section 
 {
-	switch (section) {
-		case 1:	
-			return	@"\n\n\n\n\n"
-						@"AzukiSoft Project\n"
-						COPYRIGHT
-						@"\n\n\n\n\n";
+	if (section==1) {
+		NSString *zz = NSLocalizedString(@"Product Bookmark Footer", nil);
+		return [zz stringByAppendingString:	@"\n\n"
+																	@"AzukiSoft Project\n"
+																	COPYRIGHT
+																	@"\n\n\n\n\n"];
 	}
 	return nil;
 }
@@ -1626,6 +1626,80 @@
 }
 
 
+#pragma mark  TableView - Editting
+/*
+// TableView Editモードの表示
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated 
+{
+	if (editing) {
+		// 編集モードに入るとき
+	} else {
+		// 編集モードから出るとき
+	}
+	[super setEditing:editing animated:animated];
+}*/
+
+// TableView Editボタンスタイル
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	if (indexPath.section==0 && indexPath.row==6) return UITableViewCellEditingStyleDelete; // Picasa
+	if (indexPath.section==1 && indexPath.row==0) return UITableViewCellEditingStyleDelete; // Shop
+	return UITableViewCellEditingStyleNone; // なし
+}
+
+// TableView Editモード処理
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
+								forRowAtIndexPath:(NSIndexPath *)indexPath 
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+		if (indexPath.section==0 && indexPath.row==6) { // Picasa
+			E4photo *e4 = e3target_.e4photo;
+			if (e4) {
+				e4.photoData = nil;
+				// [e3target_.managedObjectContext deleteObject:e4]; リンクを切るだけで削除されるハズ ＜＜未確認
+			}
+			e3target_.e4photo = nil;
+			e3target_.photoUrl = nil;
+			appDelegate_.app_UpdateSave = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
+			[self.tableView reloadData];
+		}
+		else if (indexPath.section==1 && indexPath.row==0) { // Shop
+			if (mWebViewShop) {
+				mWebViewShop.hidden = YES;
+				[mWebViewShop stopLoading];
+				mWebViewShop.delegate = nil; // これしないと落ちます
+				mWebViewShop = nil;
+			}
+			e3target_.shopUrl = nil;
+			appDelegate_.app_UpdateSave = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
+			[self.tableView reloadData];
+		}
+    }
+}
+
+// Editモード時の行Edit可否
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath 
+{
+	if (indexPath.section==0 && indexPath.row==6) return YES; // 行編集許可 // Picasa
+	if (indexPath.section==1 && indexPath.row==0) return YES; // 行編集許可 // Shop
+	return NO;
+}
+
+/*
+ - (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+ // スワイプにより1行だけが編集モードに入るときに呼ばれる。
+ // このオーバーライドにより、setEditting が呼び出されないようにしている。 Add行を出さないため
+ }
+ 
+ - (void)tableView:(UITableView *)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+ // スワイプにより1行だけが編集モードに入り、それが解除されるときに呼ばれる。
+ // このオーバーライドにより、setEditting が呼び出されないようにしている。 Add行を出さないため
+ }
+ */
+
+
 #pragma mark - <UITextFieldDelegete>
 //============================================<UITextFieldDelegete>
 - (void)nameDone:(id)sender {
@@ -1805,6 +1879,8 @@
 - (void)webSiteBookmarkUrl:(NSString *)url
 {
 	e3target_.shopUrl = url;
+	appDelegate_.app_UpdateSave = YES; // 変更あり
+	self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
 	[self.tableView reloadData];
 }
 

@@ -56,7 +56,7 @@
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		appDelegate_.app_UpdateSave = NO;
 		if (appDelegate_.app_is_iPad) {
-			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
+			self.contentSizeForViewInPopover = GD_POPOVER_SIZE_E1edit;
 		}
 		// 背景テクスチャ・タイルペイント
 		self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];

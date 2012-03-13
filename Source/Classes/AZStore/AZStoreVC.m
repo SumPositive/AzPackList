@@ -108,13 +108,13 @@ NSString *passCode()
     if (self) {
         // Custom initialization
 		unLock_ = unlock;
+		//self.contentSizeForViewInPopover =  //FormSheetスタイルにしたので不要
 
 		// 背景色　小豆色 RGB(152,81,75) #98514B
 		self.view.backgroundColor = [UIColor colorWithRed:152/255.0f 
 													green:81/255.0f 
 													 blue:75/255.0f
 													alpha:1.0f];
-		self.contentSizeForViewInPopover = GD_POPOVER_iPhoneSIZE;
     }
     return self;
 }

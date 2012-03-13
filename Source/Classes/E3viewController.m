@@ -168,7 +168,7 @@
 
 	if (appDelegate_.app_is_iPad) {
 		if (sharePlanList_) {
-			self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
+			self.contentSizeForViewInPopover = GD_POPOVER_SIZE_Share;
 			self.navigationController.toolbarHidden = YES;	// ツールバー不要
 			optItemsGrayShow_ = YES; //グレー全表示
 			return;  // 以下不要
@@ -1516,23 +1516,6 @@
 	return cell;
 }
 
-// TableView Editボタンスタイル
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	E3 *e3obj = [[e3array_ objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-	if (!optItemsGrayShow_ && [e3obj.need integerValue]==0) {
-		return UITableViewCellEditingStyleNone; // なし
-	}
-	else if ([e3obj.need integerValue] == (-1)) {
-		//if (0 <= sortType_) return UITableViewCellEditingStyleNone; // ソートモード時なし
-		//else                 return UITableViewCellEditingStyleInsert;
-		return UITableViewCellEditingStyleNone;
-		
-	} 
-	return UITableViewCellEditingStyleDelete;
-}
-
-
 // TableView 行選択時の動作
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {
@@ -1552,6 +1535,22 @@
 }*/
 
 #pragma mark  TableView - Editting
+
+// TableView Editボタンスタイル
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	E3 *e3obj = [[e3array_ objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+	if (!optItemsGrayShow_ && [e3obj.need integerValue]==0) {
+		return UITableViewCellEditingStyleNone; // なし
+	}
+	else if ([e3obj.need integerValue] == (-1)) {
+		//if (0 <= sortType_) return UITableViewCellEditingStyleNone; // ソートモード時なし
+		//else                 return UITableViewCellEditingStyleInsert;
+		return UITableViewCellEditingStyleNone;
+		
+	} 
+	return UITableViewCellEditingStyleDelete;
+}
 
 // TableView Editモードの表示
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated 

@@ -795,7 +795,7 @@
 				[view addSubview:tv];
 			}
 			//self.contentSizeForViewInPopover = GD_POPOVER_SIZE; //アクションメニュー配下(Share,Googleなど）においてサイズ統一
-			self.contentSizeForViewInPopover = CGSizeMake(350, 800); //配下全てFormSheetスタイルにしたことにより自由になったので最大化
+			self.contentSizeForViewInPopover = GD_POPOVER_SIZE_PadMenu; //配下全てFormSheetスタイルにしたことにより自由になったので最大化
 			//最初に表示されるサイズだけは、PadRootVC:init にある設定で決まる。
 		} 
 		else {

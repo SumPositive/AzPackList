@@ -68,6 +68,7 @@
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		// 背景テクスチャ・タイルペイント
 		self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+		//self.contentSizeForViewInPopover =  //FormSheetスタイルにしたので不要
 	}
 	return self;
 }
@@ -77,9 +78,6 @@
 - (void)loadView
 {
 	//NG//遅い//appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	/*if (appDelegate_.app_is_iPad) {
-		self.contentSizeForViewInPopover = GD_POPOVER_SIZE;
-	}*/
     [super loadView];
 	// メモリ不足時に self.viewが破棄されると同時に破棄されるオブジェクトを初期化する
 	Mpicker = nil;		// ここで生成
