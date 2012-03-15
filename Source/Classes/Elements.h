@@ -60,13 +60,14 @@
 
 //---------------------------------------------------------------------------------------E3
 // 変更した場合は、E3viewController:paste:を確認すること。
+// 変更した場合は、Copy,Paste関係も見直すこと。
 @interface E3 : NSManagedObject
 	@property (nonatomic, retain) NSNumber	*row;
 	@property (nonatomic, retain) NSString		*name;
 	@property (nonatomic, retain) NSString		*note;
 	@property (nonatomic, retain) NSNumber	*stock;		// 在庫数
-	@property (nonatomic, retain) NSNumber	*need;		// 必要数
-	@property (nonatomic, retain) NSNumber	*lack;		// 不足数
+	@property (nonatomic, retain) NSNumber	*need;			// 必要数
+	@property (nonatomic, retain) NSNumber	*lack;			// 不足数
 	@property (nonatomic, retain) NSNumber	*noGray;		// Data Model Version.3
 	@property (nonatomic, retain) NSNumber	*noCheck;	// Data Model Version.2
 	@property (nonatomic, retain) NSNumber	*weight;
@@ -74,11 +75,11 @@
 	@property (nonatomic, retain) NSNumber	*weightNed;
 	@property (nonatomic, retain) NSNumber	*weightLack;
 	@property (nonatomic, retain) NSString		*shopKeyword;	//4//[1.1]Shopping
-	@property (nonatomic, retain) NSString		*shopNote;			//4//未使用
-	@property (nonatomic, retain) NSString		*shopUrl;				//5//
-	@property (nonatomic, retain) NSString		*photoUrl;			//5//
+	@property (nonatomic, retain) NSString		*shopNote;			//4//未使用　　　商品仕様（ＪＡＮから引用）
+	@property (nonatomic, retain) NSString		*shopUrl;					//5//
+	@property (nonatomic, retain) NSString		*photoUrl;				//5//
 	@property (nonatomic, retain) E2					*parent;				// E3---> E2
-	@property (nonatomic, retain) E4photo		*e4photo;			//5// E3----> E4photo <Delete Cascade>
+	@property (nonatomic, retain) E4photo		*e4photo;				//5// E3----> E4photo <Delete Cascade>
 @end
 
 // END

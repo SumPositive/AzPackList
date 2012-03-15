@@ -701,14 +701,10 @@
 		nc.modalPresentationStyle = UIModalPresentationPageSheet;  // 背景Viewが保持される
 		// FullScreenにするとPopoverが閉じられる。さらに、背後が破棄されてE3viewController:viewWillAppear が呼び出されるようになる。
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;//	UIModalTransitionStyleFlipHorizontal
-		//[self　 presentModalViewController:nc animated:YES];  NG//回転しない
-		//[self.navigationController presentModalViewController:nc animated:YES];  NG//回転しない
 		[appDelegate_.mainSVC presentModalViewController:nc animated:YES];  //回転する
-		//[nc release];
 	} else {
 		[self.navigationController pushViewController:web animated:YES];
 	}
-	//[web release];
 }
 
 - (void)actionWebUrl:(NSString*)zUrl
@@ -1498,6 +1494,7 @@
 					cell.textLabel.font = [UIFont systemFontOfSize:12];
 					cell.textLabel.numberOfLines = 2;
 					cell.textLabel.text = NSLocalizedString(@"Product Bookmark msg", nil);
+					cell.textLabel.textColor = [UIColor grayColor];
 					cell.accessoryType = UITableViewCellAccessoryNone;
 					cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
 				}

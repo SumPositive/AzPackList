@@ -24,9 +24,9 @@
 	NSString		*Rurl;
 	NSString		*RzDomain;
 	id					mBookmarkDelegate;
-	//----------------------------------------------viewDidLoadでnil, dealloc時にrelese
+
 	NSURL			*urlOutside;		//ポインタ代入につきcopyしている
-	//----------------------------------------------Owner移管につきdealloc時のrelese不要
+	
 	UIWebView *MwebView;
 	UIBarButtonItem *mBuCopyUrl;
 	UIBarButtonItem *MbuBack;
@@ -34,9 +34,10 @@
 	UIBarButtonItem *MbuForward;
 	UIActivityIndicatorView *MactivityIndicator;
 	UILabel				*MlbMessage;
-	//----------------------------------------------assign
+
 	AppDelegate		*appDelegate_;
 	BOOL MbOptShouldAutorotate;
+	UIAlertView			*mAlertMsg;
 }
 @synthesize Rurl, RzDomain;
 
@@ -84,18 +85,6 @@
 
 - (void)toolForward {
 	if (MwebView.canGoForward) [MwebView goForward];
-}
-
-//urlOutsideをcopy属性で保存している
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-// アラートビューでボタンがクリックされた時に呼び出されるデリゲート
-{
-    NSLog(@"button=%d",buttonIndex);
-    if (buttonIndex!=alertView.cancelButtonIndex) { // 「はい」のとき
-        NSLog(@"urlOutside=%@",urlOutside);
-        // リンクへ飛ぶ
-        [[UIApplication sharedApplication] openURL:urlOutside]; // httpがあるので自動的にブラウザが立ち上がる
-    }
 }
 
 - (void)close:(id)sender 
@@ -149,28 +138,26 @@
 	return self;
 }
 
+/*
 - (void)loadView {
     [super loadView];
-    
-	//NSLog(@"frameWeb=(%f,%f)-(%f,%f)", frameWeb.origin.x,frameWeb.origin.y, frameWeb.size.width,frameWeb.size.height);
-	//MwebView = [[UIWebView alloc] initWithFrame:frameWeb];
-	MwebView = [[UIWebView alloc] init];
-	MwebView.scalesPageToFit = YES;
-	MwebView.delegate = self;
-	MwebView.frame = self.view.bounds;
-	//MwebView.frame = frameWeb;
-	MwebView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	//MwebView.autoresizingMask = UIViewAutoresizingNone;
-	//MwebView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	MwebView.clipsToBounds = YES;
-	MwebView.contentMode = UIViewContentModeCenter;
-	[self.view addSubview:MwebView];  //dealloc//[MwebView release]
-}
+}*/
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
 	self.title = nil;
+	
+	MwebView = [[UIWebView alloc] init];
+	MwebView.scalesPageToFit = YES;
+	MwebView.delegate = self;
+	MwebView.frame = self.view.bounds;	// = frameWeb;
+	MwebView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	//MwebView.autoresizingMask = UIViewAutoresizingNone;
+	//MwebView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+	MwebView.clipsToBounds = YES;
+	MwebView.contentMode = UIViewContentModeCenter;
+	[self.view addSubview:MwebView];
 	
 	/*	UIBarButtonItem *buFixed = [[UIBarButtonItem alloc] 
 								initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
@@ -287,25 +274,40 @@
 // ビューが非表示にされる前や解放される前に呼ばれる
 - (void)viewWillDisappear:(BOOL)animated 
 {
+	if (MwebView) {	// viewDidUnload:では遅い?かPopoverでは通らないようだ。 iPadでは、ここで処理しなければ落ちる。
+		[MwebView stopLoading];
+		MwebView.delegate = nil; // これしないと落ちます
+		MwebView = nil;
+	}
+	
 	// 画面表示から消す
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
 	// 上部のバーを復帰（表示）させる
 	self.navigationController.navigationBarHidden = NO;	// 見えている間に処理する必要あり＜＜viewDidDisappear:だと効かない
 	// 下部のバーを消す処理は不要　（POPで戻るときに消される）
 	// ただし、呼び出し側で .hidesBottomBarWhenPushed = YES としていると逆に残ってしまうようだ。
+	
 	[super viewWillDisappear:animated];
 }
 
-/* // ビューが非表示になった後に呼ばれる
+/*
+// ビューが非表示になった後に呼ばれる
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
-}*/
+}
+*/
 
 - (void)viewDidUnload 
-{
-	// メモリ不足時、裏側にある場合に呼び出されるので、viewDidLoadで生成したObjを解放する。
+{	// メモリ不足時、裏側にある場合に呼び出されるので、viewDidLoadで生成したObjを解放する。
+	if (MwebView) {
+		[MwebView stopLoading];
+		MwebView.delegate = nil; // これしないと落ちます
+		MwebView = nil;
+	}
+	[super viewDidUnload];
 }
+
 
 - (void)dealloc 
 {
@@ -315,14 +317,9 @@
 		MwebView = nil;
 	}
 	
-	//[urlOutside release], 
 	urlOutside = nil;
-	// @property (retain)
-	//[Rurl release], 
 	Rurl = nil;
-	//[RzDomain release], 
 	RzDomain = nil;
-    //[super dealloc];
 }
 
 
@@ -369,6 +366,7 @@
 		if ([zHost hasSuffix:@".amazon.co.jp"]) return YES; // 許可ドメイン
 		if ([zHost hasSuffix:@".amazon.com"]) return YES; // 許可ドメイン
 		if ([zHost hasSuffix:@".javari.jp"]) return YES; // 許可ドメイン
+		if ([zHost hasSuffix:@".doubleclick.net"]) return YES; // 許可ドメイン Google
 		// 楽天
 		if ([zHost hasSuffix:@".rakuten.ne.jp"]) return YES; // 許可ドメイン
 		// Azukid support
@@ -382,17 +380,29 @@
 		NSLog(@"urlOutside=%@", urlOutside);
 
 		// 範囲外へのアクセス禁止
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WebSite CAUTION", nil)
+		//ARC//UIAlertView *alert =  ローカル変数では、デリゲート呼び出しされる前に解放されて落ちるようだ。
+		mAlertMsg = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WebSite CAUTION", nil)
 														message:[urlOutside absoluteString]
 													   delegate:self
 											  cancelButtonTitle:NSLocalizedString(@"WebSite Cancel", nil)
 											  otherButtonTitles:NSLocalizedString(@"WebSite GoOut", nil), nil];
-		[alert show];
-		//[alert release];
+		[mAlertMsg show];
 		MlbMessage.backgroundColor = [UIColor redColor]; //許可していないドメイン
 		return NO;
 	}
 	return YES;
+}
+
+//urlOutsideをcopy属性で保存している
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+// アラートビューでボタンがクリックされた時に呼び出されるデリゲート
+{
+    NSLog(@"button=%d",buttonIndex);
+    if (buttonIndex!=alertView.cancelButtonIndex) { // 「はい」のとき
+        NSLog(@"urlOutside=%@",urlOutside);
+        // リンクへ飛ぶ
+        [[UIApplication sharedApplication] openURL:urlOutside]; // httpがあるので自動的にブラウザが立ち上がる
+    }
 }
 
 

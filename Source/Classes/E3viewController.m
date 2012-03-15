@@ -1108,8 +1108,9 @@
 		e3new.shopKeyword = e3clip.shopKeyword;
 		e3new.shopNote = e3clip.shopNote;
 		// Model-V5
+		e3new.shopUrl = e3clip.shopUrl;
 		e3new.photoUrl = e3clip.photoUrl;
-		//e3new.photoData = e3clip.photoData;＜＜写真非対応にした。
+		//e3new.e4photo = 改めてダウンロードさせる
 	}
 	
 	if (1 < [appDelegate_.clipE3objects count]) { // 最後の1個を残すため。それが次にCutやCopyしたものと置き換わる
