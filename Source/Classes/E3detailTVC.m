@@ -52,10 +52,10 @@
 @implementation E3detailTVC
 {
 @private
-	UILabel		*lbGroup_;	// .tag = E2.row　　　以下全てcellがOwnerになる
-	UITextField	*tfName_;
-	UITextField	*tfKeyword_;	//[1.1]Shopping keyword
-	UITextView	*tvNote_;
+	UILabel		*mLbGroup;	// .tag = E2.row　　　以下全てcellがOwnerになる
+	UITextField	*mTfName;
+	UITextField	*mTfKeyword;	//[1.1]Shopping keyword
+	UITextView	*mTvNote;
 	UILabel		*lbStock_;
 	UILabel		*lbNeed_;
 	UILabel		*lbWeight_;
@@ -63,7 +63,7 @@
 	AZDial			*dialNeed_;
 	AZDial			*dialWeight_;
 	
-	CalcView				*calcView_;
+	CalcView				*mCalcView;
 	
 	// Picasa Photo
 	UILabel				*mLbPhotoMsg;
@@ -80,18 +80,17 @@
 	//UIScrollView			*mSvShop;
 	UIWebView				*mWebViewShop;
 	
-	AppDelegate		*appDelegate_;
-	float						tableViewContentY_;
+	AppDelegate		*mAppDelegate;
+	float						mTableViewContentY;
 }
-@synthesize e2array = e2array_;
-@synthesize e3array = e3array_;
-@synthesize e3target = e3target_;
-@synthesize addE2section = addE2section_;
-@synthesize addE3row = addE3row_;
-@synthesize sharePlanList = sharePlanList_;
-@synthesize delegate = delegate_;
-@synthesize selfPopover = selfPopover_;
-
+@synthesize e2array = pE2array;
+@synthesize e3array = pE3array;
+@synthesize e3target = pE3target;
+@synthesize addE2section = pAddE2section;
+@synthesize addE3row = pAddE3row;
+@synthesize sharePlanList = pSharePlanList;
+@synthesize delegate = pDelegate;
+@synthesize selfPopover = pSelfPopover;
 
 
 
@@ -102,13 +101,13 @@
 {
 	if ((self = [super initWithStyle:UITableViewStyleGrouped])) {  // セクションありテーブル
 		// 初期化成功
-		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		appDelegate_.app_UpdateSave = NO;
-		sharePlanList_ = NO;
-		tableViewContentY_ = -1;
+		mAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		mAppDelegate.app_UpdateSave = NO;
+		pSharePlanList = NO;
+		mTableViewContentY = -1;
 
 		// 背景テクスチャ・タイルペイント
-		if (appDelegate_.app_is_iPad) {
+		if (mAppDelegate.app_is_iPad) {
 			//self.view.backgroundColor = //iPad1では無効
 			UIView* view = self.tableView.backgroundView;
 			if (view) {
@@ -142,7 +141,7 @@
 											  initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
 											  target:self action:@selector(cancelClose:)];
 	
-	if (sharePlanList_==NO) {
+	if (pSharePlanList==NO) {
 		// SAVEボタンを右側に追加する
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] 
 												   initWithBarButtonSystemItem:UIBarButtonSystemItemSave
@@ -172,11 +171,11 @@
 {
     [super viewWillAppear:animated];
 
-	self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
+	self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
 
 	// 電卓が出ておれば消す
-	if (calcView_ && [calcView_ isShow]) {
-		[calcView_ hide]; //　ここでは隠すだけ。 removeFromSuperviewするとアニメ無く即消えてしまう。
+	if (mCalcView && [mCalcView isShow]) {
+		[mCalcView hide]; //　ここでは隠すだけ。 removeFromSuperviewするとアニメ無く即消えてしまう。
 	}
 	
 	// 画面表示に関係する Option Setting を取得する
@@ -196,7 +195,7 @@
 - (void)viewDesignPhoto
 {
 	CGRect rcPhoto;
-	if (appDelegate_.app_is_iPad) { // iPad  TableView(Grouped)両端の余白:-20
+	if (mAppDelegate.app_is_iPad) { // iPad  TableView(Grouped)両端の余白:-20
 		//rcPhoto = CGRectMake(8, 44-4, self.tableView.bounds.size.width-16-60, 480);
 		rcPhoto = CGRectMake(4, 44-4, self.contentSizeForViewInPopover.width-8-60, 400);
 	}
@@ -231,10 +230,12 @@
 		mSvPhoto.minimumZoomScale = fh;
 		mSvPhoto.zoomScale = fh;
 	}
-	
-	// Shop 表示位置調整
-	rcPhoto.origin.y = 4;
-	mWebViewShop.frame = rcPhoto;
+
+	if (mWebViewShop) {
+		// Shop 表示位置調整
+		rcPhoto.origin.y = 4;
+		mWebViewShop.frame = rcPhoto;
+	}
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
@@ -251,21 +252,21 @@
 	CGRect rect;
 	float fWidth = self.tableView.frame.size.width;
 	
-	rect = lbGroup_.frame;
+	rect = mLbGroup.frame;
 	rect.size.width = fWidth - 80;
-	lbGroup_.frame = rect;
+	mLbGroup.frame = rect;
 	
-	rect = tfName_.frame;
+	rect = mTfName.frame;
 	rect.size.width = fWidth - 60;
-	tfName_.frame = rect;
+	mTfName.frame = rect;
 	
-	rect = tvNote_.frame;
+	rect = mTvNote.frame;
 	rect.size.width = fWidth - 60;
-	tvNote_.frame = rect;
+	mTvNote.frame = rect;
 	
-	rect = tfKeyword_.frame;
+	rect = mTfKeyword.frame;
 	rect.size.width = fWidth - 60;
-	tfKeyword_.frame = rect;
+	mTfKeyword.frame = rect;
 	
 	rect = dialStock_.frame;
 	rect.size.width = fWidth - 80;
@@ -278,8 +279,8 @@
 
 - (void)performNameFirstResponder
 {
-	if (tfName_ && [tfName_.text length]<=0) {			// ブランクならば、
-		[tfName_ becomeFirstResponder];  // キーボード表示  NG/iPadでは効かなかった。0.5秒後にするとOK
+	if (mTfName && [mTfName.text length]<=0) {			// ブランクならば、
+		[mTfName becomeFirstResponder];  // キーボード表示  NG/iPadでは効かなかった。0.5秒後にするとOK
 	}
 }
 
@@ -290,9 +291,9 @@
 	[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
 	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 	
-	if (appDelegate_.app_opt_Ad) {
+	if (mAppDelegate.app_opt_Ad) {
 		// 各viewDidAppear:にて「許可/禁止」を設定する
-		[appDelegate_ AdRefresh:NO];	//広告禁止
+		[mAppDelegate AdRefresh:NO];	//広告禁止
 	}
 	
 	//この時点で MtfName は未生成だから、0.5秒後に処理する
@@ -302,14 +303,14 @@
 // ビューが非表示にされる前や解放される前ににこの処理が呼ばれる
 - (void)viewWillDisappear:(BOOL)animated 
 {
-	if (appDelegate_.app_is_iPad) {
+	if (mAppDelegate.app_is_iPad) {
 		//
 	} else {
-		if (calcView_) {	// あれば破棄する
-			[calcView_ hide];
-			[calcView_ removeFromSuperview];  // これでCalcView.deallocされる
+		if (mCalcView) {	// あれば破棄する
+			[mCalcView hide];
+			[mCalcView removeFromSuperview];  // これでCalcView.deallocされる
 			//[McalcView release]; +1残っているが、viewが破棄されるときにreleseされるので、ここは不要
-			calcView_ = nil;
+			mCalcView = nil;
 		}
 	}
 	[super viewWillDisappear:animated];
@@ -321,10 +322,10 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
-	if (appDelegate_.app_is_iPad) {
+	if (mAppDelegate.app_is_iPad) {
 		return YES;	// FormSheet窓対応
 	}
-	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+	else if (mAppDelegate.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
     return YES;
@@ -333,8 +334,8 @@
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration
 {	// ユーザインタフェースの回転前に呼ばれる。 ＜＜OS 3.0以降の推奨メソッド＞＞
 	// この開始時に消す。　　この時点で self.view.frame は回転していない。
-	if (calcView_ && [calcView_ isShow]) {
-		[calcView_ hide]; //　ここでは隠すだけ。 removeFromSuperviewするとアニメ無く即消えてしまう。
+	if (mCalcView && [mCalcView isShow]) {
+		[mCalcView hide]; //　ここでは隠すだけ。 removeFromSuperviewするとアニメ無く即消えてしまう。
 	}
 }
 
@@ -353,7 +354,7 @@
 		mWebViewShop.delegate = nil; // これしないと落ちます
 		mWebViewShop = nil;
 	}
-	selfPopover_ = nil;
+	pSelfPopover = nil;
 }
 
 
@@ -371,7 +372,7 @@
 
 - (void)cancelClose:(id)sender 
 {	// E3は、Cancel時、新規ならば破棄、修正ならば復旧、させる
-	if (e3target_ && sharePlanList_==NO) {  // Sample表示のときrollbackすると、一時表示用のE1まで消えてしまうので回避する。
+	if (pE3target && pSharePlanList==NO) {  // Sample表示のときrollbackすると、一時表示用のE1まで消えてしまうので回避する。
 		// ROLLBACK
 #ifdef xxxDEBUG
 		NSManagedObjectContext *moc = e3target_.managedObjectContext;
@@ -391,7 +392,7 @@
 #endif		
 
 		//[1.0.6]今更ながら、insert後、saveしていない限り、rollbackだけで十分であることが解った。 ＜＜前後のDEBUGによる検証済み。
-		[e3target_.managedObjectContext rollback]; // 前回のSAVE以降を取り消す
+		[pE3target.managedObjectContext rollback]; // 前回のSAVE以降を取り消す
 		
 #ifdef xxxDEBUG
 		//NSLog(@"--2-- e3target_=%@", e3target_);
@@ -411,9 +412,9 @@
 		
 	}
 
-	if (appDelegate_.app_is_iPad) {
-		if (selfPopover_) {
-			[selfPopover_ dismissPopoverAnimated:YES];
+	if (mAppDelegate.app_is_iPad) {
+		if (pSelfPopover) {
+			[pSelfPopover dismissPopoverAnimated:YES];
 		}
 	} else {
 		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
@@ -423,19 +424,19 @@
 // 編集フィールドの値を e3target_ にセットする
 - (void)saveClose:(id)sender 
 {
-	if (sharePlanList_) return; // [Save]ボタンを消しているので通らないハズだが、念のため。
+	if (pSharePlanList) return; // [Save]ボタンを消しているので通らないハズだが、念のため。
 	
-	if (appDelegate_.app_is_iPad) {
+	if (mAppDelegate.app_is_iPad) {
 	} else {
 		//[McalcView hide]; // 電卓が出ておれば消す
-		if (calcView_) {	// あれば破棄する
-			[calcView_ save]; // 有効値あれば保存
+		if (mCalcView) {	// あれば破棄する
+			[mCalcView save]; // 有効値あれば保存
 		}
 	}
 	
-	NSInteger lWeight = [e3target_.weight integerValue];  // MlbWeight.text integerValue];
-	NSInteger lStock = [e3target_.stock integerValue];  // MlbStock.text integerValue];
-	NSInteger lNeed = [e3target_.need integerValue];  // MlbNeed.text integerValue];
+	NSInteger lWeight = [pE3target.weight integerValue];  // MlbWeight.text integerValue];
+	NSInteger lStock = [pE3target.stock integerValue];  // MlbStock.text integerValue];
+	NSInteger lNeed = [pE3target.need integerValue];  // MlbNeed.text integerValue];
 	//[0.2c]プラン総重量制限
 	if (0 < lWeight) {  // longオーバーする可能性があるため商は求めない
 		if (AzMAX_PLAN_WEIGHT / lWeight < lStock OR AzMAX_PLAN_WEIGHT / lWeight < lNeed) {
@@ -446,112 +447,112 @@
 	
 	//Pe3target,Pe2selected は ManagedObject だから更新すれば ManagedObjectContext に反映される
 	// PICKER 指定したコンポーネントで選択された行のインデックスを返す。
-	NSInteger newSection = lbGroup_.tag;
-	if ([e2array_ count]<=newSection) {
+	NSInteger newSection = mLbGroup.tag;
+	if ([pE2array count]<=newSection) {
 		NSLog(@"*** OVER newSection=%d", newSection);
 		return;
 	}
-	E2 *e2objNew = [e2array_ objectAtIndex:newSection];
+	E2 *e2objNew = [pE2array objectAtIndex:newSection];
 	
-	if (addE2section_< 0 && 0 <= newSection)
+	if (pAddE2section< 0 && 0 <= newSection)
 	{	// Edit mode のときだけ、グループ移動による「旧グループの再集計」が必要になる
-		NSInteger oldSection = [e3target_.parent.row integerValue];  // Edit mode
+		NSInteger oldSection = [pE3target.parent.row integerValue];  // Edit mode
 		
 		if (oldSection != newSection) 
 		{	// グループに変化があれば、
 			// E2セクション(Group)の変更あり  self.e3section ==>> newSection
-			NSInteger oldRow = [e3target_.row integerValue];	// 元ノードのrow　最後のrow更新処理で、ie3nodeRow以降を更新する。
+			NSInteger oldRow = [pE3target.row integerValue];	// 元ノードのrow　最後のrow更新処理で、ie3nodeRow以降を更新する。
 			
 			NSInteger newRow = (-1);
 			// Add行に追加する （Add行は1つ下へ）
-			for (E3* e3 in [e3array_ objectAtIndex:newSection]) {
+			for (E3* e3 in [pE3array objectAtIndex:newSection]) {
 				if ([e3.need integerValue]==(-1)) { // Add行
 					newRow = [e3.row integerValue];
 				}
 			}
 			if (newRow<0) {	// 万一、Add行がバグで削除されたときのため
-				newRow = [[e3array_ objectAtIndex:newSection] count];  // セクション末尾
+				newRow = [[pE3array objectAtIndex:newSection] count];  // セクション末尾
 			}
 			
-			E2 *e2objOld = [e2array_ objectAtIndex:oldSection];
+			E2 *e2objOld = [pE2array objectAtIndex:oldSection];
 			//--------------------------------------------------(1)MutableArrayの移動
-			[[e3array_ objectAtIndex:oldSection] removeObjectAtIndex:oldRow];
-			[[e3array_ objectAtIndex:newSection] insertObject:e3target_ atIndex:newRow];
+			[[pE3array objectAtIndex:oldSection] removeObjectAtIndex:oldRow];
+			[[pE3array objectAtIndex:newSection] insertObject:pE3target atIndex:newRow];
 			
 			// 異セクション間の移動　＜＜親(.e2selected)の変更が必要＞＞
 			// 移動元セクション（親）から子を削除する
-			[e2objOld removeChildsObject:e3target_];	// 元の親ノードにある子登録を抹消する
+			[e2objOld removeChildsObject:pE3target];	// 元の親ノードにある子登録を抹消する
 			// e2objOld 子が無くなったので再集計する
 			[e2objOld setValue:[e2objOld valueForKeyPath:@"childs.@sum.noGray"] forKey:@"sumNoGray"];
 			[e2objOld setValue:[e2objOld valueForKeyPath:@"childs.@sum.noCheck"] forKey:@"sumNoCheck"];
 			[e2objOld setValue:[e2objOld valueForKeyPath:@"childs.@sum.weightStk"] forKey:@"sumWeightStk"];
 			[e2objOld setValue:[e2objOld valueForKeyPath:@"childs.@sum.weightNed"] forKey:@"sumWeightNed"];
 			// 異動先セクション（親）へ子を追加する
-			[e2objNew addChildsObject:e3target_];	// 新しい親ノードに子登録する
+			[e2objNew addChildsObject:pE3target];	// 新しい親ノードに子登録する
 			// e2objNew の再集計は、変更を含めて最後に実施
 			
 			// 元のrow付け替え処理　 異セクション間での移動： 双方のセクションで変化あったrow以降、全て更新
 			NSInteger i;
 			E3 *e3obj;
-			for (i = oldRow ; i < [[e3array_ objectAtIndex:oldSection] count] ; i++) {
-				e3obj = [[e3array_ objectAtIndex:oldSection] objectAtIndex:i];
+			for (i = oldRow ; i < [[pE3array objectAtIndex:oldSection] count] ; i++) {
+				e3obj = [[pE3array objectAtIndex:oldSection] objectAtIndex:i];
 				e3obj.row = [NSNumber numberWithInteger:i];
 			}
 			// Add行に追加
-			e3target_.row = [NSNumber numberWithInteger:newRow];  
+			pE3target.row = [NSNumber numberWithInteger:newRow];  
 			// Add行以下のrow付け替え処理
-			for (i = newRow ; i < [[e3array_ objectAtIndex:newSection] count] ; i++) {
-				e3obj = [[e3array_ objectAtIndex:newSection] objectAtIndex:i];
+			for (i = newRow ; i < [[pE3array objectAtIndex:newSection] count] ; i++) {
+				e3obj = [[pE3array objectAtIndex:newSection] objectAtIndex:i];
 				e3obj.row = [NSNumber numberWithInteger:i];
 			}
 		}
 	}
 	
-	if( 50 < [tfName_.text length] ){
+	if( 50 < [mTfName.text length] ){
 		// 長さが50超ならば、0文字目から50文字を切り出して保存　＜以下で切り出すとフリーズする＞
-		[e3target_ setValue:[tfName_.text substringWithRange:NSMakeRange(0, 50)] forKey:@"name"];
+		[pE3target setValue:[mTfName.text substringWithRange:NSMakeRange(0, 50)] forKey:@"name"];
 	}
-	else if ([tfName_.text length]<=0) {
+	else if ([mTfName.text length]<=0) {
 		// 品名未定ならば代入する　＜＜[Save]ボタンを押したのだから、削除されないようにする
-		e3target_.name = NSLocalizedString(@"Untitled", nil);
+		pE3target.name = NSLocalizedString(@"Untitled", nil);
 	}
 	else {
-		e3target_.name = tfName_.text;
+		pE3target.name = mTfName.text;
 	}
 	
-	if( 50 < [tfKeyword_.text length] ){
+	if( 50 < [mTfKeyword.text length] ){
 		// 長さが50超ならば、0文字目から50文字を切り出して保存　＜以下で切り出すとフリーズする＞
-		[e3target_ setValue:[tfKeyword_.text substringWithRange:NSMakeRange(0, 50)] forKey:@"shopKeyword"];
+		[pE3target setValue:[mTfKeyword.text substringWithRange:NSMakeRange(0, 50)] forKey:@"shopKeyword"];
 	} else {
-		e3target_.shopKeyword = tfKeyword_.text;
+		pE3target.shopKeyword = mTfKeyword.text;
 	}
 	
 	NSString *zNote;
-	zNote = tvNote_.text;
+	zNote = mTvNote.text;
 	if( TEXTVIEW_MAXLENGTH < [zNote length] ){
 		// 長さがTEXTVIEW_MAXLENGTH超ならば、0文字目からTEXTVIEW_MAXLENGTH文字を切り出して保存　＜以下で切り出すとフリーズする＞
-		[e3target_ setValue:[zNote substringWithRange:NSMakeRange(0, TEXTVIEW_MAXLENGTH)] forKey:@"note"];
+		[pE3target setValue:[zNote substringWithRange:NSMakeRange(0, TEXTVIEW_MAXLENGTH)] forKey:@"note"];
 	} else {
-		[e3target_ setValue:zNote forKey:@"note"];
+		[pE3target setValue:zNote forKey:@"note"];
 	}
 	
-	[e3target_ setValue:[NSNumber numberWithInteger:lWeight] forKey:@"weight"];  // 最小値が0でないとエラー発生
-	[e3target_ setValue:[NSNumber numberWithInteger:lStock] forKey:@"stock"];
-	[e3target_ setValue:[NSNumber numberWithInteger:lNeed] forKey:@"need"];
-	[e3target_ setValue:[NSNumber numberWithInteger:(lWeight*lStock)] forKey:@"weightStk"];
-	[e3target_ setValue:[NSNumber numberWithInteger:(lWeight*lNeed)] forKey:@"weightNed"];
-	[e3target_ setValue:[NSNumber numberWithInteger:(lNeed-lStock)] forKey:@"lack"]; // 不足数
-	[e3target_ setValue:[NSNumber numberWithInteger:((lNeed-lStock)*lWeight)] forKey:@"weightLack"]; // 不足重量
+	[pE3target setValue:[NSNumber numberWithInteger:lWeight] forKey:@"weight"];  // 最小値が0でないとエラー発生
+	[pE3target setValue:[NSNumber numberWithInteger:lStock] forKey:@"stock"];
+	[pE3target setValue:[NSNumber numberWithInteger:lNeed] forKey:@"need"];
+	[pE3target setValue:[NSNumber numberWithInteger:(lWeight*lStock)] forKey:@"weightStk"];
+	[pE3target setValue:[NSNumber numberWithInteger:(lWeight*lNeed)] forKey:@"weightNed"];
+	[pE3target setValue:[NSNumber numberWithInteger:(lNeed-lStock)] forKey:@"lack"]; // 不足数
+	[pE3target setValue:[NSNumber numberWithInteger:((lNeed-lStock)*lWeight)] forKey:@"weightLack"]; // 不足重量
 	
 	NSInteger iNoGray = 0;
 	if (0 < lNeed) iNoGray = 1;
-	[e3target_ setValue:[NSNumber numberWithInteger:iNoGray] forKey:@"noGray"]; // NoGray:有効(0<必要数)アイテム
+	[pE3target setValue:[NSNumber numberWithInteger:iNoGray] forKey:@"noGray"]; // NoGray:有効(0<必要数)アイテム
 	
 	NSInteger iNoCheck = 0;
 	if (0 < lNeed && lStock < lNeed) iNoCheck = 1;
-	[e3target_ setValue:[NSNumber numberWithInteger:iNoCheck] forKey:@"noCheck"]; // NoCheck:不足アイテム
+	[pE3target setValue:[NSNumber numberWithInteger:iNoCheck] forKey:@"noCheck"]; // NoCheck:不足アイテム
 	
-	if (0 <= addE2section_&& 0 <= addE3row_) {
+	if (0 <= pAddE2section&& 0 <= pAddE3row) {
 		/*(V0.4)addE3row_ に新規追加する。 addE3row_以下を先にずらすこと。
 		 // 新規のとき、末尾になるように行番号を付与する
 		 NSInteger rows = [[Pe3array objectAtIndex:newSection] count]; // 追加するセクションの現在行数
@@ -562,15 +563,15 @@
 		
 		//(V0.4)addE3row_以下について、.row++ して、addE3row_を空ける。
 		//		NSArray *aE3s = [NSArray arrayWithArray:[Pe3array objectAtIndex:newSection]];
-		for (E3 *e3 in [e3array_ objectAtIndex:newSection]) {
-			if (addE3row_ <= [e3.row integerValue]) {
+		for (E3 *e3 in [pE3array objectAtIndex:newSection]) {
+			if (pAddE3row <= [e3.row integerValue]) {
 				e3.row = [NSNumber numberWithInteger:[e3.row integerValue]+1]; // +1
 			}
 		}
 		//(V0.4)addE3row_に追加する。
-		e3target_.row = [NSNumber numberWithInteger:addE3row_];
+		pE3target.row = [NSNumber numberWithInteger:pAddE3row];
 		// E2-E3 Link
-		e3target_.parent = e2objNew;
+		pE3target.parent = e2objNew;
 	}
 	
 	// E2 sum属性　＜高速化＞ 親sum保持させる
@@ -593,31 +594,31 @@
 	[e1obj setValue:sumWeStk forKey:@"sumWeightStk"];
 	[e1obj setValue:sumWeNed forKey:@"sumWeightNed"];
 	
-	if (sharePlanList_==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
+	if (pSharePlanList==NO) {  // SpMode=YESならば[SAVE]ボタンを非表示にしたので通らないハズだが、念のため。
 		// SAVE : e3edit,e2list は ManagedObject だから更新すれば ManagedObjectContext に反映されている
 		NSError *err = nil;
-		if (![e3target_.managedObjectContext save:&err]) {
+		if (![pE3target.managedObjectContext save:&err]) {
 			NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
 			//abort();
 		}
 	}
 
 	// Photo
-	if ([e3target_.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
-		E4photo *e4 = e3target_.e4photo;
+	if ([pE3target.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
+		E4photo *e4 = pE3target.e4photo;
 		if (e4.photoData) {
 			// 写真DATAあるがＵＲＬ:UUIDにつき、Picasaアップする
-			[GoogleService photoUploadE3:e3target_];
+			[GoogleService photoUploadE3:pE3target];
 		}
 	}
 	
-	if (appDelegate_.app_is_iPad) {
+	if (mAppDelegate.app_is_iPad) {
 		//[(PadNaviCon*)self.navigationController dismissPopoverSaved];  // SAVE: PadNaviCon拡張メソッド
-		if (selfPopover_) {
-			if ([delegate_ respondsToSelector:@selector(refreshE3view)]) {	// メソッドの存在を確認する
-				[delegate_ refreshE3view];// 親の再描画を呼び出す
+		if (pSelfPopover) {
+			if ([pDelegate respondsToSelector:@selector(refreshE3view)]) {	// メソッドの存在を確認する
+				[pDelegate refreshE3view];// 親の再描画を呼び出す
 			}
-			[selfPopover_ dismissPopoverAnimated:YES];
+			[pSelfPopover dismissPopoverAnimated:YES];
 		}
 	} else {
 		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
@@ -641,19 +642,19 @@
 
 - (void)closePopover
 {
-	if (selfPopover_) {	//dismissPopoverCancel
-		if (calcView_ && [calcView_ isShow]) {
-			[calcView_ cancel];  //　ラベル表示を元に戻す
+	if (pSelfPopover) {	//dismissPopoverCancel
+		if (mCalcView && [mCalcView isShow]) {
+			[mCalcView cancel];  //　ラベル表示を元に戻す
 		}
-		[selfPopover_ dismissPopoverAnimated:YES];
+		[pSelfPopover dismissPopoverAnimated:YES];
 	}
 }
 
 
 - (void)actionWebTitle:(NSString*)zTitle  URL:(NSString*)zUrl  Domain:(NSString*)zDomain
 {
-	if ([tfKeyword_.text length]<=0) {
-		tfKeyword_.text = tfName_.text;
+	if ([mTfKeyword.text length]<=0) {
+		mTfKeyword.text = mTfName.text;
 		
 /*NG	// 絵文字を除去する
 		int iLen = [tfName_.text length];
@@ -672,8 +673,8 @@
 			tfKeyword_.text = str;
 		}*/
 		
-		appDelegate_.app_UpdateSave = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
+		mAppDelegate.app_UpdateSave = YES; // 変更あり
+		self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
 	}
 	// 日本語を含むURLをUTF8でエンコーディングする
 	// 第3引数のCFSTR(";,/?:@&=+$#")で指定した文字列はエンコードされずにそのまま残る
@@ -685,7 +686,7 @@
 	
 	// __bridge_transfer : CオブジェクトをARC管理オブジェクトにする
 	NSString *zKeyword = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-																							   (__bridge CFStringRef)tfKeyword_.text,
+																							   (__bridge CFStringRef)mTfKeyword.text,
 																							   CFSTR(";,/?:@&=+$#"),
 																							   NULL,
 																							   kCFStringEncodingUTF8);	// release必要
@@ -696,12 +697,12 @@
 	web.RzDomain = zDomain;
 	zKeyword = nil;
 	
-	if (appDelegate_.app_is_iPad) {
+	if (mAppDelegate.app_is_iPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:web];
 		nc.modalPresentationStyle = UIModalPresentationPageSheet;  // 背景Viewが保持される
 		// FullScreenにするとPopoverが閉じられる。さらに、背後が破棄されてE3viewController:viewWillAppear が呼び出されるようになる。
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;//	UIModalTransitionStyleFlipHorizontal
-		[appDelegate_.mainSVC presentModalViewController:nc animated:YES];  //回転する
+		[mAppDelegate.mainSVC presentModalViewController:nc animated:YES];  //回転する
 	} else {
 		[self.navigationController pushViewController:web animated:YES];
 	}
@@ -714,11 +715,11 @@
 	web.Rurl = zUrl;
 	web.RzDomain = nil;
 	
-	if (appDelegate_.app_is_iPad) {
+	if (mAppDelegate.app_is_iPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:web];
 		nc.modalPresentationStyle = UIModalPresentationPageSheet;  // 背景Viewが保持される
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;//	UIModalTransitionStyleFlipHorizontal
-		[appDelegate_.mainSVC presentModalViewController:nc animated:YES];  //回転する
+		[mAppDelegate.mainSVC presentModalViewController:nc animated:YES];  //回転する
 	} else {
 		[self.navigationController pushViewController:web animated:YES];
 	}
@@ -729,7 +730,7 @@
 	// CameraVC へ 　　＜＜＜ UIImagePickerController:を使わないカメラ。　将来の機能アップ時に利用するかも
 	CameraVC *cam = [[CameraVC alloc] init];
 	cam.imageView = mIvPhoto;
-	cam.e3target = e3target_;
+	cam.e3target = pE3target;
 	[self.navigationController pushViewController:cam animated:YES];
 	
 /*	// 標準カメラにした。
@@ -809,21 +810,21 @@
 		 withRow:(NSInteger)iRow
 		 withMax:(NSInteger)iMax
 {
-	if (calcView_) {	// あれば一旦、破棄する
-		[calcView_ hide];
-		[calcView_ removeFromSuperview];  // これでCalcView.deallocされる
+	if (mCalcView) {	// あれば一旦、破棄する
+		[mCalcView hide];
+		[mCalcView removeFromSuperview];  // これでCalcView.deallocされる
 		//[McalcView release]; +1残っているが、viewが破棄されるときにreleseされるので、ここは不要
-		calcView_ = nil;
+		mCalcView = nil;
 	}
-	[tfName_ resignFirstResponder]; // ファーストレスポンダでなくす ⇒ キーボード非表示
-	[tvNote_ resignFirstResponder]; // ファーストレスポンダでなくす ⇒ キーボード非表示
-	[tfKeyword_ resignFirstResponder]; // ファーストレスポンダでなくす ⇒ キーボード非表示
+	[mTfName resignFirstResponder]; // ファーストレスポンダでなくす ⇒ キーボード非表示
+	[mTvNote resignFirstResponder]; // ファーストレスポンダでなくす ⇒ キーボード非表示
+	[mTfKeyword resignFirstResponder]; // ファーストレスポンダでなくす ⇒ キーボード非表示
 	
 	CGRect rect = self.tableView.bounds;
 	CGFloat fTableTopY = 0;
 	//テンキー表示位置 ＜＜とりあえず力ずくで位置合わせした。
-	tableViewContentY_ = self.tableView.contentOffset.y; // Hide時に元の表示に戻すため
-	if (appDelegate_.app_is_iPad) {
+	mTableViewContentY = self.tableView.contentOffset.y; // Hide時に元の表示に戻すため
+	if (mAppDelegate.app_is_iPad) {
 		//rect.origin.y = 400;  //全体が見えるようにした + (iRow-3)*60;  
 		fTableTopY = -45 + (iRow-3)*60;
 		rect.origin.y = self.tableView.bounds.size.height - 210;
@@ -850,15 +851,15 @@
 	// アニメ実行
 	[UIView commitAnimations];
 	
-	calcView_ = [[CalcView alloc] initWithFrame:rect];
-	calcView_.Rlabel = pLabel;  // MlbAmount.tag にはCalc入力された数値(long)が記録される
-	calcView_.Rentity = e3target_;
-	calcView_.RzKey = zKey;
-	calcView_.delegate = self;
-	calcView_.maxValue = iMax;
+	mCalcView = [[CalcView alloc] initWithFrame:rect];
+	mCalcView.Rlabel = pLabel;  // MlbAmount.tag にはCalc入力された数値(long)が記録される
+	mCalcView.Rentity = pE3target;
+	mCalcView.RzKey = zKey;
+	mCalcView.delegate = self;
+	mCalcView.maxValue = iMax;
 	//[self.view addSubview:calcView_];
-	[self.navigationController.view addSubview:calcView_];
-	[calcView_ show];
+	[self.navigationController.view addSubview:mCalcView];
+	[mCalcView show];
 }
 
 #pragma mark  <CalcView delegate>
@@ -871,19 +872,19 @@
 - (void)calcViewWillDisappear	// CalcViewが隠れるときに呼び出される
 {
 	[self.tableView setScrollEnabled:YES]; // スクロール許可
-	if (0 <= tableViewContentY_) {
+	if (0 <= mTableViewContentY) {
 		// AzPacking Original 元の位置に戻す
-		self.tableView.contentOffset = CGPointMake(0, tableViewContentY_);
+		self.tableView.contentOffset = CGPointMake(0, mTableViewContentY);
 	}
-	[dialStock_ setDial:[e3target_.stock integerValue] animated:YES];
-	[dialNeed_ setDial:[e3target_.need integerValue] animated:YES];
+	[dialStock_ setDial:[pE3target.stock integerValue] animated:YES];
+	[dialNeed_ setDial:[pE3target.need integerValue] animated:YES];
 #ifdef WEIGHT_MAX
-	[dialWeight_ setDial:[e3target_.weight integerValue] animated:YES];
+	[dialWeight_ setDial:[pE3target.weight integerValue] animated:YES];
 #else
 	[self viewWillAppear:NO]; // スライドバーを再描画するため
 #endif
 	
-	self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
+	self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
 }
 
 
@@ -972,7 +973,7 @@
 	if (indexPath.section==0) {
 		switch (indexPath.row) {
 			case 2:
-				if (appDelegate_.app_is_iPad) {
+				if (mAppDelegate.app_is_iPad) {
 					return 150; // Note
 				}
 				return 110; // Note
@@ -982,9 +983,9 @@
 			case 5:
 				return 58;
 			case 6:	// Picasa
-				if (e3target_.e4photo) { //＜＜E4photo ロードで待たされる！
+				if (pE3target.e4photo) { //＜＜E4photo ロードで待たされる！
 					//if (e3target_.photoUrl) {
-					if (appDelegate_.app_is_iPad) {
+					if (mAppDelegate.app_is_iPad) {
 						return 40+400+8;
 					} else {
 						return 40+320+8;
@@ -996,8 +997,8 @@
 	else if (indexPath.section==1) {
 		switch (indexPath.row) {
 			case 0:	// Shop Bookmark
-				if (e3target_.shopUrl) {
-					if (appDelegate_.app_is_iPad) {
+				if (pE3target.shopUrl) {
+					if (mAppDelegate.app_is_iPad) {
 						return 4+400+4;
 					} else {
 						return 4+320+4;
@@ -1007,7 +1008,7 @@
 		}
 	}
 	
-	if (appDelegate_.app_is_iPad) {
+	if (mAppDelegate.app_is_iPad) {
 		return 50;
 	}
 	return 44; // デフォルト：44ピクセル
@@ -1022,7 +1023,7 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:zCellIndex];
 	if (cell==nil) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault  reuseIdentifier:zCellIndex];
-		if (sharePlanList_) {
+		if (pSharePlanList) {
 			// 選択禁止
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
@@ -1051,7 +1052,7 @@
 		}
 		switch (indexPath.row) {
 			case 0: // Group
-				if (lbGroup_==nil) {
+				if (mLbGroup==nil) {
 					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 100,12)];
 					label.text = NSLocalizedString(@"Group", nil);
 					label.textColor = [UIColor grayColor];
@@ -1059,35 +1060,35 @@
 					label.font = [UIFont systemFontOfSize:12];
 					[cell.contentView addSubview:label]; //[label release];
 					
-					if (appDelegate_.app_is_iPad) {
-						lbGroup_ = [[UILabel alloc] initWithFrame:
+					if (mAppDelegate.app_is_iPad) {
+						mLbGroup = [[UILabel alloc] initWithFrame:
 									CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
-						lbGroup_.font = [UIFont systemFontOfSize:20];
+						mLbGroup.font = [UIFont systemFontOfSize:20];
 					} else {
-						lbGroup_ = [[UILabel alloc] initWithFrame:
+						mLbGroup = [[UILabel alloc] initWithFrame:
 									CGRectMake(20,18, self.tableView.frame.size.width-60,16)];
-						lbGroup_.font = [UIFont systemFontOfSize:14];
+						mLbGroup.font = [UIFont systemFontOfSize:14];
 					}
 					// cell.frame.size.width ではダメ。初期幅が常に縦になっているため
 					// selectGroupTVC が MlbGroup を参照、変更する
-					if (addE2section_< 0) {
+					if (pAddE2section< 0) {
 						// Edit Mode
-						lbGroup_.tag = [e3target_.parent.row integerValue]; // E2.row
-						lbGroup_.text = e3target_.parent.name;
+						mLbGroup.tag = [pE3target.parent.row integerValue]; // E2.row
+						mLbGroup.text = pE3target.parent.name;
 					} else {
 						// Add Mode
-						lbGroup_.tag = addE2section_; // E2.row
-						lbGroup_.text = [[e2array_ objectAtIndex:addE2section_] valueForKey:@"name"];
+						mLbGroup.tag = pAddE2section; // E2.row
+						mLbGroup.text = [[pE2array objectAtIndex:pAddE2section] valueForKey:@"name"];
 					}
-					if ([lbGroup_.text length] <= 0) { // (未定)
-						lbGroup_.text = NSLocalizedString(@"(New Index)", nil);
+					if ([mLbGroup.text length] <= 0) { // (未定)
+						mLbGroup.text = NSLocalizedString(@"(New Index)", nil);
 					}
-					lbGroup_.backgroundColor = [UIColor clearColor]; // [UIColor grayColor]; //範囲チェック用
-					[cell.contentView addSubview:lbGroup_]; //[MlbGroup release];
+					mLbGroup.backgroundColor = [UIColor clearColor]; // [UIColor grayColor]; //範囲チェック用
+					[cell.contentView addSubview:mLbGroup]; //[MlbGroup release];
 				}
 				break;
 			case 1: // Name
-				if (tfName_==nil) {
+				if (mTfName==nil) {
 					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 100,12)];
 					label.font = [UIFont systemFontOfSize:12];
 					label.text = NSLocalizedString(@"Item name", nil);
@@ -1095,27 +1096,28 @@
 					label.backgroundColor = [UIColor clearColor];
 					[cell.contentView addSubview:label]; //[label release];
 					
-					if (appDelegate_.app_is_iPad) {
-						tfName_ = [[UITextField alloc] initWithFrame:
+					if (mAppDelegate.app_is_iPad) {
+						mTfName = [[UITextField alloc] initWithFrame:
 								   CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
-						tfName_.font = [UIFont systemFontOfSize:20];
+						mTfName.font = [UIFont systemFontOfSize:20];
 					} else {
-						tfName_ = [[UITextField alloc] initWithFrame:
+						mTfName = [[UITextField alloc] initWithFrame:
 								   CGRectMake(20,18, self.tableView.frame.size.width-60,20)];
-						tfName_.font = [UIFont systemFontOfSize:16];
+						mTfName.font = [UIFont systemFontOfSize:16];
 					}
-					tfName_.placeholder = NSLocalizedString(@"(New Goods)", nil);
-					tfName_.keyboardType = UIKeyboardTypeDefault;
-					tfName_.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-					tfName_.returnKeyType = UIReturnKeyDone; // ReturnキーをDoneに変える
-					tfName_.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
-					tfName_.delegate = self; // textFieldShouldReturn:を呼び出すため
-					[cell.contentView addSubview:tfName_]; //[MtfName release];
+					mTfName.placeholder = NSLocalizedString(@"(New Goods)", nil);
+					mTfName.keyboardType = UIKeyboardTypeDefault;
+					mTfName.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+					mTfName.returnKeyType = UIReturnKeyDone; // ReturnキーをDoneに変える
+					mTfName.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
+					mTfName.delegate = self; // textFieldShouldReturn:を呼び出すため
+					[cell.contentView addSubview:mTfName]; //[MtfName release];
 					cell.accessoryType = UITableViewCellAccessoryNone; // なし
 				}
+				mTfName.text = pE3target.name; // (未定)表示しない。Editへ持って行かれるため
 				break;
 			case 2: // Note
-				if (tvNote_==nil) {
+				if (mTvNote==nil) {
 					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 100,12)];
 					label.text = NSLocalizedString(@"Note", nil);
 					label.textColor = [UIColor grayColor];
@@ -1123,23 +1125,28 @@
 					label.font = [UIFont systemFontOfSize:12];
 					[cell.contentView addSubview:label]; //[label release];
 					
-					if (appDelegate_.app_is_iPad) {
-						tvNote_ = [[UITextView alloc] initWithFrame:
+					if (mAppDelegate.app_is_iPad) {
+						mTvNote = [[UITextView alloc] initWithFrame:
 								   CGRectMake(20,15, self.tableView.frame.size.width-60,130)];
-						tvNote_.font = [UIFont systemFontOfSize:20];
+						mTvNote.font = [UIFont systemFontOfSize:20];
 					} else {
-						tvNote_ = [[UITextView alloc] initWithFrame:
+						mTvNote = [[UITextView alloc] initWithFrame:
 								   CGRectMake(20,15, self.tableView.frame.size.width-60,95)];
-						tvNote_.font = [UIFont systemFontOfSize:16];
+						mTvNote.font = [UIFont systemFontOfSize:16];
 					}
-					tvNote_.textAlignment = UITextAlignmentLeft;
-					tvNote_.keyboardType = UIKeyboardTypeDefault;
-					tvNote_.returnKeyType = UIReturnKeyDefault;  //改行有効にする
-					tvNote_.backgroundColor = [UIColor clearColor];
+					mTvNote.textAlignment = UITextAlignmentLeft;
+					mTvNote.keyboardType = UIKeyboardTypeDefault;
+					mTvNote.returnKeyType = UIReturnKeyDefault;  //改行有効にする
+					mTvNote.backgroundColor = [UIColor clearColor];
 					//MtvNote.backgroundColor = [UIColor grayColor]; //範囲チェック用
-					tvNote_.delegate = self;
-					[cell.contentView addSubview:tvNote_]; //[MtvNote release];
+					mTvNote.delegate = self;
+					[cell.contentView addSubview:mTvNote]; //[MtvNote release];
 					cell.accessoryType = UITableViewCellAccessoryNone; // なし
+				}
+				if (pE3target.note == nil) {
+					mTvNote.text = @"";  // TextViewは、(nil) と表示されるので、それを消すため。
+				} else {
+					mTvNote.text = pE3target.note;
 				}
 				break;
 			case 3: // Stock Qty.
@@ -1190,6 +1197,7 @@
 					dialNeed_.backgroundColor = [UIColor clearColor];
 					[cell.contentView addSubview:dialNeed_];
 				}
+				// 配置は、willDisplayCell: にて
 				break;
 			case 5: // Weight
 				if (lbWeight_==nil) {
@@ -1268,8 +1276,47 @@
 					//cell.imageView.image = nil;
 					//cell.textLabel.text = nil;
 				}
+				//DEBUG_LOG_RECT(cell.contentView.frame, @"willDisplayCell: cell.contentView.frame");
+				//[mActivityIndicator_on_IconPicasa stopAnimating];
+				E4photo *e4 = pE3target.e4photo;
+				if (e4.photoData) {		// 写真データあり
+					mIvPhoto.image = [UIImage imageWithData: e4.photoData];
+					if ([pE3target.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み
+						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
+						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo Uploaded", nil);
+					} else {		// アップ待ち　リトライ
+						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+						if (mAppDelegate.app_UpdateSave) {
+							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo UploadWait", nil);
+						} else {
+							[mActivityIndicator_on_IconPicasa startAnimating];
+							mLbPhotoMsg.text = NSLocalizedString(@"Google Uploading", nil);
+						}
+					}
+				}
+				else {	// e3target_.photoUrl==nil; 写真データなし
+					mIvPhoto.image = nil;
+					if ([pE3target.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み  ダウンロード待ち
+						//cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+						[mActivityIndicator_on_IconPicasa startAnimating];
+						mLbPhotoMsg.text = NSLocalizedString(@"Google Downloading", nil);
+						// 写真キャッシュに無いのでダウンロードする
+						[GoogleService photoDownloadE3:pE3target errorLabel:mLbPhotoMsg]; //非同期処理
+						// スクロールして繰り返して呼び出された場合、処理中ならば拒否するようになっている。
+					}
+					else if ([pE3target.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
+						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo NoUpload", nil);
+					}
+					else {	// Picasaアップなし　撮影してください
+						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
+						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo", nil);
+					} 
+				}
 				// この時点では、cell.contentView.frameが無効である。willDisplayCell:にて有効になっている。
-				// 写真表示など動的な実装は、willDisplayCell:へ
+				// よって、viewDesignPhoto:による配置は、willDisplayCell:へ
+				// [self viewDesignPhoto];
 				break;
 		}
 	}
@@ -1289,10 +1336,41 @@
 					//mActivityIndicator_on_IconShop.frame = cell.imageView.frame;
 					[cell.imageView  addSubview:mActivityIndicator_on_IconShop];
 				}
+				if (pE3target.shopUrl) {
+					//[mActivityIndicator_on_IconShop stopAnimating]; webViewDidStartLoad:にて開始
+					cell.textLabel.font = [UIFont systemFontOfSize:12];
+					cell.textLabel.numberOfLines = 10;
+					cell.textLabel.lineBreakMode = UILineBreakModeCharacterWrap; //単語の途中でも改行する
+					cell.textLabel.text = [NSString stringWithFormat:@"%@\nURL{%@}", 
+										   NSLocalizedString(@"Product Bookmark URL", nil), pE3target.shopUrl];
+					//cell.textLabel.text = nil;
+					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+					// WebView
+					if (mWebViewShop==nil) {
+						mWebViewShop = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 640)]; // 固定
+						mWebViewShop.scalesPageToFit = YES;  //.frameに収める ＜＜iPhoneサイトには効果なしだが、PCサイトは縮小される
+						mWebViewShop.delegate = self;	// 読み込み終了にて[mActivityIndicator_on_IconShop stopAnimating];するため
+						mWebViewShop.userInteractionEnabled = NO;		// 操作禁止
+						mWebViewShop.hidden = YES; //非表示にしてURLを見せる、読み込み成功時に表示する
+						[cell.contentView addSubview:mWebViewShop];
+						// 「URLから読み込む」
+						NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:pE3target.shopUrl]];
+						[mWebViewShop loadRequest:request];
+					}
+					// 配置は、willDisplayCell: にて
+				} else {
+					cell.textLabel.font = [UIFont systemFontOfSize:12];
+					cell.textLabel.numberOfLines = 2;
+					cell.textLabel.text = NSLocalizedString(@"Product Bookmark msg", nil);
+					cell.textLabel.textColor = [UIColor grayColor];
+					cell.accessoryType = UITableViewCellAccessoryNone;
+					cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
+				}
 				break;
 				
 			case 1: // Shop Search keyword
-				if (tfKeyword_==nil) {
+				if (mTfKeyword==nil) {
 					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 300,12)];
 					label.font = [UIFont systemFontOfSize:12];
 					label.text = NSLocalizedString(@"Shop Keyword", nil);
@@ -1300,23 +1378,23 @@
 					label.backgroundColor = [UIColor clearColor];
 					[cell.contentView addSubview:label];
 					
-					if (appDelegate_.app_is_iPad) {
-						tfKeyword_ = [[UITextField alloc] initWithFrame:
+					if (mAppDelegate.app_is_iPad) {
+						mTfKeyword = [[UITextField alloc] initWithFrame:
 									  CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
-						tfKeyword_.font = [UIFont systemFontOfSize:20];
+						mTfKeyword.font = [UIFont systemFontOfSize:20];
 					} else {
-						tfKeyword_ = [[UITextField alloc] initWithFrame:
+						mTfKeyword = [[UITextField alloc] initWithFrame:
 									  CGRectMake(20,18, self.tableView.frame.size.width-60,20)];
-						tfKeyword_.font = [UIFont systemFontOfSize:16];
+						mTfKeyword.font = [UIFont systemFontOfSize:16];
 					}
-					tfKeyword_.placeholder = NSLocalizedString(@"Shop Keyword placeholder", nil);
-					tfKeyword_.keyboardType = UIKeyboardTypeDefault;
-					tfKeyword_.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-					tfKeyword_.returnKeyType = UIReturnKeyDone; // ReturnキーをDoneに変える
-					tfKeyword_.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
-					tfKeyword_.delegate = self; // textFieldShouldReturn:を呼び出すため
-					[cell.contentView addSubview:tfKeyword_]; //[MtfKeyword release];
-					tfKeyword_.text = e3target_.shopKeyword; // (未定)表示しない。Editへ持って行かれるため
+					mTfKeyword.placeholder = NSLocalizedString(@"Shop Keyword placeholder", nil);
+					mTfKeyword.keyboardType = UIKeyboardTypeDefault;
+					mTfKeyword.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+					mTfKeyword.returnKeyType = UIReturnKeyDone; // ReturnキーをDoneに変える
+					mTfKeyword.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
+					mTfKeyword.delegate = self; // textFieldShouldReturn:を呼び出すため
+					[cell.contentView addSubview:mTfKeyword]; //[MtfKeyword release];
+					mTfKeyword.text = pE3target.shopKeyword; // (未定)表示しない。Editへ持って行かれるため
 					cell.accessoryType = UITableViewCellAccessoryNone; // なし
 					cell.tag = 00;
 				}
@@ -1368,138 +1446,47 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{	// セルが表示される直前に呼び出される。　この時点で、cell.contentView.frameが有効になっている。
+{	// セルが表示される直前に「毎回」呼び出される。 セルの生成時と更新時に描画するものはcellForRowAtIndexPath:へ
+	// この時点で、cell.contentView.frameが有効になっている。
+	
 	if (indexPath.section==0) {
 		switch (indexPath.row) {
-			case 0:
-				break;
-				
-			case 1:
-				tfName_.text = e3target_.name; // (未定)表示しない。Editへ持って行かれるため
-				break;
-				
-			case 2:
-				if (e3target_.note == nil) {
-					tvNote_.text = @"";  // TextViewは、(nil) と表示されるので、それを消すため。
-				} else {
-					tvNote_.text = e3target_.note;
-				}
-				break;
-				
 			case 3:
 			case 4:
 			case 5: {
 				CGFloat fDialWidth = self.tableView.frame.size.width-80;
-				if (appDelegate_.app_is_iPad) {
+				if (mAppDelegate.app_is_iPad) {
 					fDialWidth -= 40;  // 両端の余白が増えるため
 				}
 				CGRect rc = CGRectMake(10,16, fDialWidth,44);
 				switch (indexPath.row) {
 					case 3: // Stock Qty.
 						dialStock_.frame = rc;
-						[dialStock_ setDial:[e3target_.stock integerValue] animated:YES];
-						lbStock_.text = GstringFromNumber(e3target_.stock); // 3桁コンマ付加
+						[dialStock_ setDial:[pE3target.stock integerValue] animated:YES];
+						lbStock_.text = GstringFromNumber(pE3target.stock); // 3桁コンマ付加
 						break;
 					case 4: // Need
 						dialNeed_.frame = rc;
-						[dialNeed_ setDial:[e3target_.need integerValue] animated:YES];
-						lbNeed_.text = GstringFromNumber(e3target_.need);	// 3桁コンマ付加
+						[dialNeed_ setDial:[pE3target.need integerValue] animated:YES];
+						lbNeed_.text = GstringFromNumber(pE3target.need);	// 3桁コンマ付加
 						break;
 					case 5: // Weight
 						dialWeight_.frame = rc;
-						[dialWeight_ setDial:[e3target_.weight integerValue] animated:YES];
-						lbWeight_.text = GstringFromNumber(e3target_.weight);		// 3桁コンマ付加
+						[dialWeight_ setDial:[pE3target.weight integerValue] animated:YES];
+						lbWeight_.text = GstringFromNumber(pE3target.weight);		// 3桁コンマ付加
 						break;
 				}
 			} break;
 				
 			case 6: {
-				//DEBUG_LOG_RECT(cell.contentView.frame, @"willDisplayCell: cell.contentView.frame");
-				[mActivityIndicator_on_IconPicasa stopAnimating];
-				E4photo *e4 = e3target_.e4photo;
-				if (e4.photoData) {		// 写真データあり
-					mIvPhoto.image = [UIImage imageWithData: e4.photoData];
-					if ([e3target_.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み
-						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
-						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo Uploaded", nil);
-					} else {		// アップ待ち　リトライ
-						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-						if (appDelegate_.app_UpdateSave) {
-							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo UploadWait", nil);
-						} else {
-							[mActivityIndicator_on_IconPicasa startAnimating];
-							mLbPhotoMsg.text = NSLocalizedString(@"Google Uploading", nil);
-						}
-					}
-				}
-				else {	// e3target_.photoUrl==nil; 写真データなし
-					mIvPhoto.image = nil;
-					if ([e3target_.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み  ダウンロード待ち
-						//cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-						[mActivityIndicator_on_IconPicasa startAnimating];
-						mLbPhotoMsg.text = NSLocalizedString(@"Google Downloading", nil);
-						// 写真キャッシュに無いのでダウンロードする
-						[GoogleService photoDownloadE3:e3target_ errorLabel:mLbPhotoMsg]; //非同期処理
-						// スクロールして繰り返して呼び出された場合、処理中ならば拒否するようになっている。
-					}
-					else if ([e3target_.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
-						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo NoUpload", nil);
-					}
-					else {	// Picasaアップなし　撮影してください
-						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
-						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo", nil);
-					} 
-				}
-				// Icon位置なども変化するため
-				[self viewDesignPhoto];
+				// この時点では、cell.contentView.frameが有効になっている。
+				[self viewDesignPhoto];	// mIvPhoto:配置
 			} break;
 		}
 	}
-	else if (indexPath.section==1) {
-		switch (indexPath.row) {
-			case 0: {
-#ifdef DEBUGxxx
-				e3target_.shopUrl = @"http://www.amazon.co.jp/gp/aw/d/B0033A080G?qid=1331460608&sr=8-1";
-#endif
-				if (e3target_.shopUrl) {
-					//[mActivityIndicator_on_IconShop stopAnimating]; webViewDidStartLoad:にて開始
-					cell.textLabel.font = [UIFont systemFontOfSize:12];
-					cell.textLabel.numberOfLines = 10;
-					cell.textLabel.lineBreakMode = UILineBreakModeCharacterWrap; //単語の途中でも改行する
-					cell.textLabel.text = [NSString stringWithFormat:@"%@\nURL{%@}", 
-										   NSLocalizedString(@"Product Bookmark URL", nil), e3target_.shopUrl];
-					//cell.textLabel.text = nil;
-					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-					if (mWebViewShop) {
-						// 「URLから読み込む」
-						NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:e3target_.shopUrl]];
-						[mWebViewShop loadRequest:request];
-					} else {
-						// WebView生成
-						mWebViewShop = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 640)]; // 固定
-						mWebViewShop.scalesPageToFit = YES;  //.frameに収める ＜＜iPhoneサイトには効果なしだが、PCサイトは縮小される
-						mWebViewShop.delegate = self;	// 読み込み終了にて[mActivityIndicator_on_IconShop stopAnimating];するため
-						mWebViewShop.userInteractionEnabled = NO;		// 操作禁止
-						mWebViewShop.hidden = YES; //非表示にしてURLを見せる、読み込み成功時に表示する
-						[cell.contentView addSubview:mWebViewShop];
-						//[cell.textLabel.window bringSubviewToFront:mWebViewShop];
-						// 再読み込み 通知発信---> mWebViewShop != nil --> 「URLから読み込む」
-						[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
-																			object:self userInfo:nil];	//この後、再度ここが呼び出されて「URLから読み込む」の方を通る。
-					}
-				} else {
-					cell.textLabel.font = [UIFont systemFontOfSize:12];
-					cell.textLabel.numberOfLines = 2;
-					cell.textLabel.text = NSLocalizedString(@"Product Bookmark msg", nil);
-					cell.textLabel.textColor = [UIColor grayColor];
-					cell.accessoryType = UITableViewCellAccessoryNone;
-					cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
-				}
-			} break;
-		}
+	else if (indexPath.section==1 && indexPath.row==0) {
+		// この時点では、cell.contentView.frameが有効になっている。
+		[self viewDesignPhoto];		// mWebViewShop:配置
 	}
 }
 
@@ -1507,26 +1494,26 @@
 {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];	// 選択状態を解除する
 
-	[tfName_ resignFirstResponder]; // キーボード非表示
-	[tvNote_ resignFirstResponder]; // キーボード非表示
-	[tfKeyword_ resignFirstResponder]; // キーボード非表示
+	[mTfName resignFirstResponder]; // キーボード非表示
+	[mTvNote resignFirstResponder]; // キーボード非表示
+	[mTfKeyword resignFirstResponder]; // キーボード非表示
 	
 	if (indexPath.section==0) {
 		switch (indexPath.row) {
 			case 0: { // Group
 				// selectGroupTVC へ
 				selectGroupTVC *selectGroup = [[selectGroupTVC alloc] init];
-				selectGroup.RaE2array = e2array_;
-				selectGroup.RlbGroup = lbGroup_; // .tag=E2.row  .text=E2.name
+				selectGroup.RaE2array = pE2array;
+				selectGroup.RlbGroup = mLbGroup; // .tag=E2.row  .text=E2.name
 				[self.navigationController pushViewController:selectGroup animated:YES];
 			}	break;
 				
 			case 1: { // Name
-				[tfName_ becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
+				[mTfName becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
 			} break;
 				
 			case 2: { // Note
-				[tvNote_ becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
+				[mTvNote becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
 			} break;
 				
 			case 6: // Picasa Photo
@@ -1537,14 +1524,14 @@
 	else if (indexPath.section==1) {
 		switch (indexPath.row) {
 			case 0: // Shop Photo
-				if (e3target_.shopUrl) {
+				if (pE3target.shopUrl) {
 					// WebViewを開ける
-					[self actionWebUrl: e3target_.shopUrl];
+					[self actionWebUrl: pE3target.shopUrl];
 				}
 				break;
 				
 			case 1: // Shop Search keyword
-				[tfKeyword_ becomeFirstResponder];
+				[mTfKeyword becomeFirstResponder];
 				break;
 				
 			case 2: // Shop
@@ -1554,13 +1541,13 @@
 				switch (cell.tag) {
 					case 00: // Name
 					{
-						[tfKeyword_ becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
+						[mTfKeyword becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
 					} break;
 					
 					case 01: // Amazon.co.jp
 					{
 						NSString *zUrl;
-						if (appDelegate_.app_is_iPad) {
+						if (mAppDelegate.app_is_iPad) {
 							// PCサイト　　　　URL表示するようになったので長くする＜＜TAGが見えないように
 							// アソシエイトリンク作成方法⇒ https://affiliate.amazon.co.jp/gp/associates/help/t121/a1
 							//www.amazon.co.jp/gp/search?ie=UTF8&keywords=[SEARCH_PARAMETERS]&tag=[ASSOCIATE_TAG]&index=blended&linkCode=ure&creative=6339
@@ -1578,7 +1565,7 @@
 					case 02: // Amazon.com
 					{
 						NSString *zUrl;
-						if (appDelegate_.app_is_iPad) {
+						if (mAppDelegate.app_is_iPad) {
 							// PCサイト
 							//www.amazon.com/s/?tag=azuk-20&creative=392009&campaign=212361&link_code=wsw&_encoding=UTF-8&search-alias=aps&field-keywords=LEGO&Submit.x=16&Submit.y=14&Submit=Go
 							//NSString *zUrl = @"http://www.amazon.com/s/?tag=azuk-20&_encoding=UTF-8&k="; URL表示するようになったので長くする＜＜TAGが見えないように
@@ -1596,7 +1583,7 @@
 					case 11: // 楽天 Search
 					{			// アフィリエイトID(β版): &afid=0e4c9297.0f29bc13.0e4c9298.6adf8529
 						NSString *zUrl;
-						if (appDelegate_.app_is_iPad) {
+						if (mAppDelegate.app_is_iPad) {
 							// PCサイト
 							zUrl = @"http://search.rakuten.co.jp/search/mall/?sv=2&p=0&afid=0e4c9297.0f29bc13.0e4c9298.6adf8529&sitem=";
 						} else {
@@ -1650,15 +1637,15 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
 		if (indexPath.section==0 && indexPath.row==6) { // Picasa
-			E4photo *e4 = e3target_.e4photo;
+			E4photo *e4 = pE3target.e4photo;
 			if (e4) {
 				e4.photoData = nil;
 				// [e3target_.managedObjectContext deleteObject:e4]; リンクを切るだけで削除されるハズ ＜＜未確認
 			}
-			e3target_.e4photo = nil;
-			e3target_.photoUrl = nil;
-			appDelegate_.app_UpdateSave = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
+			pE3target.e4photo = nil;
+			pE3target.photoUrl = nil;
+			mAppDelegate.app_UpdateSave = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
 			[self.tableView reloadData];
 		}
 		else if (indexPath.section==1 && indexPath.row==0) { // Shop
@@ -1668,9 +1655,9 @@
 				mWebViewShop.delegate = nil; // これしないと落ちます
 				mWebViewShop = nil;
 			}
-			e3target_.shopUrl = nil;
-			appDelegate_.app_UpdateSave = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
+			pE3target.shopUrl = nil;
+			mAppDelegate.app_UpdateSave = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
 			[self.tableView reloadData];
 		}
     }
@@ -1700,22 +1687,22 @@
 #pragma mark - <UITextFieldDelegete>
 //============================================<UITextFieldDelegete>
 - (void)nameDone:(id)sender {
-	[tfName_ resignFirstResponder]; // キーボード非表示
-	[tvNote_ resignFirstResponder]; // キーボード非表示
-	[tfKeyword_ resignFirstResponder]; // キーボード非表示
+	[mTfName resignFirstResponder]; // キーボード非表示
+	[mTvNote resignFirstResponder]; // キーボード非表示
+	[mTfKeyword resignFirstResponder]; // キーボード非表示
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-	if (calcView_) {	// あれば一旦、破棄する
-		[calcView_ hide];
-		[calcView_ removeFromSuperview];  // これでCalcView.deallocされる
-		calcView_ = nil;
+	if (mCalcView) {	// あれば一旦、破棄する
+		[mCalcView hide];
+		[mCalcView removeFromSuperview];  // これでCalcView.deallocされる
+		mCalcView = nil;
 	}
 	// スクロールして textField が隠れた状態で resignFirstResponder するとフリースするため
 	self.tableView.scrollEnabled = NO; // スクロール禁止
 	//self.navigationItem.leftBarButtonItem.enabled = NO;
-	if (appDelegate_.app_is_iPad) {
+	if (mAppDelegate.app_is_iPad) {
 		//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
 	} else {
 		// 左[Cancel] 無効にする
@@ -1735,8 +1722,8 @@
     [zText replaceCharactersInRange:range withString:string];
 	// 置き換えた後の長さをチェックする
 	if ([zText length] <= TEXTFIELD_MAXLENGTH) {
-		appDelegate_.app_UpdateSave = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
+		mAppDelegate.app_UpdateSave = YES; // 変更あり
+		self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
 		return YES;
 	} else {
 		return NO;
@@ -1753,7 +1740,7 @@
 {
 	self.tableView.scrollEnabled = YES; // スクロール許可
 	//self.navigationItem.leftBarButtonItem.enabled = YES;
-	if (appDelegate_.app_is_iPad) {
+	if (mAppDelegate.app_is_iPad) {
 		//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
 	} else {
 		// 左[Cancel] 有効にする
@@ -1769,19 +1756,19 @@
 #pragma mark - <UITextViewDelegete>
 //============================================<UITextViewDelegete>
 - (void)noteDone:(id)sender {
-	[tvNote_ resignFirstResponder];
+	[mTvNote resignFirstResponder];
 }
 
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
-	if (calcView_) {	// あれば一旦、破棄する
-		[calcView_ hide];
-		[calcView_ removeFromSuperview];  // これでCalcView.deallocされる
-		calcView_ = nil;
+	if (mCalcView) {	// あれば一旦、破棄する
+		[mCalcView hide];
+		[mCalcView removeFromSuperview];  // これでCalcView.deallocされる
+		mCalcView = nil;
 	}
 	self.tableView.scrollEnabled = NO; // スクロール禁止
 	//self.navigationItem.leftBarButtonItem.enabled = NO;
-	if (appDelegate_.app_is_iPad) {
+	if (mAppDelegate.app_is_iPad) {
 		//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
 	} else {
 		// 左[Cancel] 無効にする
@@ -1802,8 +1789,8 @@
     [zText replaceCharactersInRange:range withString:zReplace];
 	// 置き換えた後の長さをチェックする
 	if ([zText length] <= TEXTVIEW_MAXLENGTH) {
-		appDelegate_.app_UpdateSave = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
+		mAppDelegate.app_UpdateSave = YES; // 変更あり
+		self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
 		return YES;
 	} else {
 		return NO;
@@ -1815,7 +1802,7 @@
 {
 	self.tableView.scrollEnabled = YES; // スクロール許可
 	//self.navigationItem.leftBarButtonItem.enabled = YES;
-	if (appDelegate_.app_is_iPad) {
+	if (mAppDelegate.app_is_iPad) {
 		//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
 	} else {
 		// 左[Cancel] 有効にする
@@ -1845,27 +1832,27 @@
 - (void)dialDone:(id)sender  dial:(NSInteger)dial
 {
 	if (sender==dialStock_) {
-		if ([e3target_.stock longValue] != dial) { // 変更あり
+		if ([pE3target.stock longValue] != dial) { // 変更あり
 			lbStock_.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
-			e3target_.stock = [NSNumber numberWithInteger:dial];
-			appDelegate_.app_UpdateSave = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
+			pE3target.stock = [NSNumber numberWithInteger:dial];
+			mAppDelegate.app_UpdateSave = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
 		}
 	}
 	else if (sender==dialNeed_) {
-		if ([e3target_.need longValue] != dial) { // 変更あり
+		if ([pE3target.need longValue] != dial) { // 変更あり
 			lbNeed_.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
-			e3target_.need = [NSNumber numberWithInteger:dial];
-			appDelegate_.app_UpdateSave = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
+			pE3target.need = [NSNumber numberWithInteger:dial];
+			mAppDelegate.app_UpdateSave = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
 		}
 	}
 	else if (sender==dialWeight_) {
-		if ([e3target_.weight longValue] != dial) { // 変更あり
+		if ([pE3target.weight longValue] != dial) { // 変更あり
 			lbWeight_.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
-			e3target_.weight = [NSNumber numberWithInteger:dial];
-			appDelegate_.app_UpdateSave = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
+			pE3target.weight = [NSNumber numberWithInteger:dial];
+			mAppDelegate.app_UpdateSave = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
 		}
 	}
 }
@@ -1875,10 +1862,13 @@
 //ORIGINAL  @protocolでない非形式プロトコル（カテゴリ）方式によるデリゲート
 - (void)webSiteBookmarkUrl:(NSString *)url
 {
-	e3target_.shopUrl = url;
-	appDelegate_.app_UpdateSave = YES; // 変更あり
-	self.navigationItem.rightBarButtonItem.enabled = appDelegate_.app_UpdateSave;
-	[self.tableView reloadData];
+	pE3target.shopUrl = url;
+	mAppDelegate.app_UpdateSave = YES; // 変更あり
+	self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
+	// 「URLから読み込む」
+	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:pE3target.shopUrl]];
+	[mWebViewShop loadRequest:request];
+	[self.tableView reloadData]; // セル高さ、配置
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView 

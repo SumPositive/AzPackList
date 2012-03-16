@@ -8,11 +8,6 @@
 
 #import "Elements.h"
 
-//---------------------------------------------------------------------------------------E4photo		//5//
-@implementation E4photo
-	@dynamic photoData;		//5//
-@end
-
 //---------------------------------------------------------------------------------------E1 Title
 @implementation E1
 	@dynamic row;
@@ -38,6 +33,11 @@
 	@dynamic childs;
 @end
 
+//---------------------------------------------------------------------------------------E4photo		//5//
+@implementation E4photo
+	@dynamic photoData;		//5//
+@end
+
 //---------------------------------------------------------------------------------------E3 Item
 @implementation E3
 	@dynamic row;
@@ -59,5 +59,6 @@
 	@dynamic parent;
 	@dynamic e4photo;			//5//
 @end
+
 
 // END

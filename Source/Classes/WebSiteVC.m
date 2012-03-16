@@ -369,6 +369,7 @@
 		if ([zHost hasSuffix:@".doubleclick.net"]) return YES; // 許可ドメイン Google
 		// 楽天
 		if ([zHost hasSuffix:@".rakuten.ne.jp"]) return YES; // 許可ドメイン
+		if ([zHost hasSuffix:@".rakuten.co.jp"]) return YES; // 許可ドメイン
 		// Azukid support
 		if ([zHost hasSuffix:@".tumblr.com"]) return YES; // 許可ドメイン
 		if ([zHost hasSuffix:@".seesaa.net"]) return YES; // 許可ドメイン

@@ -10,12 +10,6 @@
 
 #define AzDataModelVersion	3
 
-//---------------------------------------------------------------------------------------E4photo	//5//
-// E1,2,3が重くならないように分離した。　これは、CSV保存しない。参照時にphotoUrlよりダウンロード生成する。
-@interface E4photo : NSManagedObject
-	@property (nonatomic, retain) NSData			*photoData;		//5//
-@end
-#define PHOTO_URL_UUID_PRIFIX			@"PackList:"
 
 //---------------------------------------------------------------------------------------E1
 @interface E1 : NSManagedObject
@@ -58,6 +52,13 @@
 	- (void)removeChilds:(NSSet *)value;
 @end
 
+//---------------------------------------------------------------------------------------E4photo	//5//
+// E1,2,3が重くならないように分離した。　これは、CSV保存しない。参照時にphotoUrlよりダウンロード生成する。
+@interface E4photo : NSManagedObject
+	@property (nonatomic, retain) NSData				*photoData;		//5//
+@end
+#define PHOTO_URL_UUID_PRIFIX			@"PackList:"
+
 //---------------------------------------------------------------------------------------E3
 // 変更した場合は、E3viewController:paste:を確認すること。
 // 変更した場合は、Copy,Paste関係も見直すこと。
@@ -75,11 +76,12 @@
 	@property (nonatomic, retain) NSNumber	*weightNed;
 	@property (nonatomic, retain) NSNumber	*weightLack;
 	@property (nonatomic, retain) NSString		*shopKeyword;	//4//[1.1]Shopping
-	@property (nonatomic, retain) NSString		*shopNote;			//4//未使用　　　商品仕様（ＪＡＮから引用）
-	@property (nonatomic, retain) NSString		*shopUrl;					//5//
-	@property (nonatomic, retain) NSString		*photoUrl;				//5//
+	@property (nonatomic, retain) NSString		*shopNote;			//4// 未使用　　　商品仕様（ＪＡＮから引用）
+	@property (nonatomic, retain) NSString		*shopUrl;				//5//
+	@property (nonatomic, retain) NSString		*photoUrl;			//5//
 	@property (nonatomic, retain) E2					*parent;				// E3---> E2
-	@property (nonatomic, retain) E4photo		*e4photo;				//5// E3----> E4photo <Delete Cascade>
+	@property (nonatomic, retain) E4photo		*e4photo;			//5// E3<Cascade>----> E4photo
 @end
+
 
 // END
