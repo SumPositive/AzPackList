@@ -655,41 +655,40 @@
 {
 	if ([mTfKeyword.text length]<=0) {
 		mTfKeyword.text = mTfName.text;
-		
-/*NG	// 絵文字を除去する
-		int iLen = [tfName_.text length];
-		if (0 < iLen) {
-			NSMutableString *str = [NSMutableString string];
-			NSString *z1 = nil; // 1文字
-			NSString *zEmojiS = [NSString stringWithFormat:@"%C", 0xE001];	//絵文字
-			NSString *zEmojiE = [NSString stringWithFormat:@"%C", 0xE537];	//絵文字
-			NSLog(@"Emoji %@ - %@", zEmojiS, zEmojiE);
-			for (int i=0; i<iLen; i++) {
-				z1 = [tfName_.text substringWithRange:NSMakeRange(i, 1)];
-				if ([z1 compare:zEmojiS]==NSOrderedAscending || [zEmojiE compare:z1]==NSOrderedAscending) { // <
-					[str appendString:z1];
-				}
-			}
-			tfKeyword_.text = str;
-		}*/
-		
 		mAppDelegate.app_UpdateSave = YES; // 変更あり
 		self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
+		
+		// 絵文字を除去する
+		NSMutableString *zKey = [NSMutableString new];
+		for (NSUInteger i = 0; i < [mTfKeyword.text length]; i++)
+		{
+			// UNICODE(UTF-16)文字を順に取り出します。
+			unichar code = [mTfKeyword.text characterAtIndex:i];
+			// UNICODE(UTF-16)絵文字範囲 http://ja.wikipedia.org/wiki/SoftBank%E7%B5%B5%E6%96%87%E5%AD%97
+			if ((0x20E0<=code && code<=0x2FFF) OR (0xD830<=code && code<=0xDFFF))
+			{
+				//NSLog(@"\\u%04x <<<", code);
+				i++;
+			} 
+			else {
+				//NSLog(@"\\u%04x", code);
+				[zKey appendFormat:@"%C", code];
+			}
+		}
+		NSLog(@"actionWebTitle: zKey=%@", zKey);
+		mTfKeyword.text = zKey;
 	}
-	// 日本語を含むURLをUTF8でエンコーディングする
-	// 第3引数のCFSTR(";,/?:@&=+$#")で指定した文字列はエンコードされずにそのまま残る
-	//NSString *zKeyword = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-	//																		 (CFStringRef)MtfKeyword.text,
-	//																		 CFSTR(";,/?:@&=+$#"),
-	//																		 NULL,
-	//																		 kCFStringEncodingUTF8);	// release必要
 	
+	// 日本語を含むURLをUTF8でエンコーディングする
+	// stringByAddingPercentEscapesUsingEncoding:はダメ　＜＜"(0×20)"#%><[\]^`{|}" しかエスケープしないため。
 	// __bridge_transfer : CオブジェクトをARC管理オブジェクトにする
-	NSString *zKeyword = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+	static const CFStringRef kCharsToForceEscape = CFSTR("!*'();:@&=+$,/?%#[]");	// 通常ではエスケープされないが、してほしい文字を記述
+	NSString *zKeyword = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
+																							   kCFAllocatorDefault,	
 																							   (__bridge CFStringRef)mTfKeyword.text,
-																							   CFSTR(";,/?:@&=+$#"),
 																							   NULL,
-																							   kCFStringEncodingUTF8);	// release必要
+																							   kCharsToForceEscape,
+																							   kCFStringEncodingUTF8);
 	
 	WebSiteVC *web = [[WebSiteVC alloc] initWithBookmarkDelegate:self];	// [Bookmark] <webSiteBookmarkUrl:>
 	web.title = zTitle;
@@ -801,6 +800,7 @@
 	}
 }
 */
+
 
 #pragma mark - CalcRoll
 
@@ -1544,6 +1544,7 @@
 						[mTfKeyword becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
 					} break;
 					
+					// アフェリエイトTAGは、WebSiteVC:stringAddTagUrl: にて付加している。
 					case 01: // Amazon.co.jp
 					{
 						NSString *zUrl;
@@ -1551,11 +1552,11 @@
 							// PCサイト　　　　URL表示するようになったので長くする＜＜TAGが見えないように
 							// アソシエイトリンク作成方法⇒ https://affiliate.amazon.co.jp/gp/associates/help/t121/a1
 							//www.amazon.co.jp/gp/search?ie=UTF8&keywords=[SEARCH_PARAMETERS]&tag=[ASSOCIATE_TAG]&index=blended&linkCode=ure&creative=6339
-							zUrl = @"http://www.amazon.co.jp/s/?ie=UTF8&index=blended&linkCode=ure&creative=6339&tag=art063-22&keywords=";
+							zUrl = @"http://www.amazon.co.jp/s/?ie=UTF8&index=blended&linkCode=ure&creative=6339&keywords=";
 						} else {
 							// モバイルサイト　　　　　"ie=UTF8" が無いと日本語キーワードが化ける
 							//www.amazon.co.jp/gp/aw/s/ref=is_s_?__mk_ja_JP=%83J%83%5E%83J%83i&k=[SEARCH_PARAMETERS]&url=search-alias%3Daps
-							zUrl = @"http://www.amazon.co.jp/gp/aw/s/ref=is_s_?ie=UTF8&__mk_ja_JP=%83J%83%5E%83J%83i&url=search-alias%3Daps&at=art063-22&k=";
+							zUrl = @"http://www.amazon.co.jp/gp/aw/s/ref=is_s_?ie=UTF8&__mk_ja_JP=%83J%83%5E%83J%83i&url=search-alias%3Daps&k=";
 						}
 						[self actionWebTitle:NSLocalizedString(@"Shop Amazon.co.jp", nil)
 										 URL:zUrl
@@ -1569,11 +1570,11 @@
 							// PCサイト
 							//www.amazon.com/s/?tag=azuk-20&creative=392009&campaign=212361&link_code=wsw&_encoding=UTF-8&search-alias=aps&field-keywords=LEGO&Submit.x=16&Submit.y=14&Submit=Go
 							//NSString *zUrl = @"http://www.amazon.com/s/?tag=azuk-20&_encoding=UTF-8&k="; URL表示するようになったので長くする＜＜TAGが見えないように
-							zUrl = @"http://www.amazon.com/s/?_encoding=UTF-8&search-alias=aps&creative=392009&campaign=212361&tag=azuk-20&field-keywords=";
+							zUrl = @"http://www.amazon.com/s/?_encoding=UTF-8&search-alias=aps&creative=392009&campaign=212361&field-keywords=";
 						} else {
 							// モバイルサイト
 							//www.amazon.com/gp/aw/s/ref=is_box_?k=LEGO
-							zUrl = @"http://www.amazon.com/gp/aw/s/ref=is_box_?_encoding=UTF-8&link_code=wsw&search-alias=aps&tag=azuk-20&k=";
+							zUrl = @"http://www.amazon.com/gp/aw/s/ref=is_box_?_encoding=UTF-8&link_code=wsw&search-alias=aps&k=";
 						}
 						[self actionWebTitle:NSLocalizedString(@"Shop Amazon.com", nil)
 										 URL:zUrl
@@ -1585,11 +1586,11 @@
 						NSString *zUrl;
 						if (mAppDelegate.app_is_iPad) {
 							// PCサイト
-							zUrl = @"http://search.rakuten.co.jp/search/mall/?sv=2&p=0&afid=0e4c9297.0f29bc13.0e4c9298.6adf8529&sitem=";
+							zUrl = @"http://search.rakuten.co.jp/search/mall/?sv=2&p=0&sitem=";
 						} else {
 							// モバイルサイト
 							//http://search.rakuten.co.jp/search/spmall?sv=2&p=0&sitem=SG7&submit=商品検索&scid=af_ich_link_search&scid=af_ich_link_search
-							zUrl = @"http://search.rakuten.co.jp/search/spmall/?sv=2&p=0&afid=0e4c9297.0f29bc13.0e4c9298.6adf8529&sitem=";
+							zUrl = @"http://search.rakuten.co.jp/search/spmall/?sv=2&p=0&sitem=";
 						}
 						[self actionWebTitle:NSLocalizedString(@"Shop Rakuten", nil)
 										 URL:zUrl

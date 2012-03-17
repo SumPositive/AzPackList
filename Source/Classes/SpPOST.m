@@ -43,17 +43,16 @@ NSMutableURLRequest *requestSpPOST( NSString *PzBody )
 
 	//AzLOG(@"dataSpPOST:PzBody=%@", PzBody);
 	// 日本語を含むURLをUTF8でエンコーディングする
-	// 第3引数のCFSTR(";,/?:@&=+$#")で指定した文字列はエンコードされずにそのまま残る
-	NSString *encodedCmd = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-																			   (__bridge CFStringRef)PzBody,
-																			   CFSTR(";,/?:@&=+$#"),
-																			   NULL,
-																			   kCFStringEncodingUTF8);	// release必要
+	static const CFStringRef kCharsToForceEscape = CFSTR("!*'();:@&=+$,/?%#[]");	// 通常ではエスケープされないが、してほしい文字を記述
+	NSString *encodedCmd = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
+																							   kCFAllocatorDefault,	
+																							   (__bridge CFStringRef)PzBody,
+																							   NULL,
+																							   kCharsToForceEscape,
+																							   kCFStringEncodingUTF8);
 
-	//[PzBody release] //CFURLCreateStringBy...にてretainされるが、encodedCmd解放時に同時に解放される。
 	//AzLOG(@"encodedCmd: %@", encodedCmd);
 	[req setHTTPBody:[encodedCmd dataUsingEncoding:NSUTF8StringEncoding]];  //エンコ済みコマンドセット
-	//[encodedCmd release], 
 	encodedCmd = nil;
 	//同期通信を開始
 	return req;

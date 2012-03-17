@@ -109,17 +109,6 @@
 	previewLayer_.frame = ibImageView.frame;
 	previewLayer_.videoGravity = AVLayerVideoGravityResizeAspectFill;
 	previewLayer_.automaticallyAdjustsMirroring = NO;
-	
-	// 回転対応
-	UIInterfaceOrientation interOri;
-	if (appDelegate_.app_is_iPad) {
-		interOri = appDelegate_.mainSVC.interfaceOrientation;    //parentViewController.interfaceOrientation;
-	} else {
-		//interOri = appDelegate_.mainNC.visibleViewController.interfaceOrientation;
-		interOri = self.interfaceOrientation;
-	}
-	[self rotateToOrientation:interOri];
-
 	//[self.view.layer insertSublayer: previewLayer_ atIndex: 0];
 	[self.view.layer  addSublayer: previewLayer_];
 	
@@ -132,6 +121,16 @@
 	ibImageView.hidden = YES;
 	buRedo_.enabled = NO;
 	buDone_.enabled = NO;
+
+	// 回転対応
+	UIInterfaceOrientation interOri;
+	if (appDelegate_.app_is_iPad) {
+		interOri = appDelegate_.mainSVC.interfaceOrientation;    //parentViewController.interfaceOrientation;
+	} else {
+		//interOri = appDelegate_.mainNC.visibleViewController.interfaceOrientation;
+		interOri = self.interfaceOrientation;
+	}
+	[self rotateToOrientation:interOri];
 
 	// ON
 	previewLayer_.hidden = NO;

@@ -120,6 +120,43 @@
 	MbuForward.enabled = MwebView.canGoForward;
 }
 
+- (NSString *)stringAddTagUrl:(NSString*)strUrl
+{	// Shop Url に アフェリエイト TAG/ID が無ければ付加する
+	NSString *zTag = nil;
+	
+	NSRange rg = [strUrl rangeOfString:@".amazon.co.jp/"];
+	if (0 < rg.length) {
+		if (appDelegate_.app_is_iPad) {	// PCサイト
+			zTag = @"&tag=art063-22";
+		} else {	// モバイルサイト　　　　　"ie=UTF8" が無いと日本語キーワードが化ける
+			zTag = @"&at=art063-22";
+		}
+	} 
+	else {
+		rg = [strUrl rangeOfString:@".amazon.com/"];
+		if (0 < rg.length) {
+			zTag = @"&tag=azuk-20";
+		} 
+		else {
+			rg = [strUrl rangeOfString:@".rakuten.co.jp/"];
+			if (0 < rg.length) {
+				zTag = @"&afid=0e4c9297.0f29bc13.0e4c9298.6adf8529";
+			}
+		}
+	}
+	
+	if (zTag) {
+		rg = [strUrl rangeOfString:zTag];
+		if (rg.length==0) {
+			// Tagなし 末尾へ追加する
+			return [strUrl stringByAppendingString:zTag];
+		} else {
+			// Tagあり
+			return strUrl;
+		}
+	}
+	return strUrl;
+}
 
 
 #pragma mark - View lifecicle
@@ -224,21 +261,22 @@
 	MwebView.frame = self.view.bounds;
 
 	[self messageShow:self.Rurl holdSec:5.0f];
-
-	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:self.Rurl]];
-	[MwebView loadRequest:request];
-	[self updateToolBar];
-
-	[self didRotateFromInterfaceOrientation:self.interfaceOrientation]; // 回転に合わせて.frame調整している
 }
 
 - (void)viewDidAppear:(BOOL)animated 
 {
     [super viewDidAppear:animated];
 	
-	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:self.Rurl]];
-	[MwebView loadRequest:request];
-	[self updateToolBar];
+	NSString *strUrl = [self stringAddTagUrl:self.Rurl];
+	NSLog(@"WebSiteVC: stringAddTagUrl: {%@}", strUrl);
+	if (10 < [strUrl length]) {
+		NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:strUrl]];
+		[MwebView loadRequest:request];
+		[self updateToolBar];
+		[self didRotateFromInterfaceOrientation:self.interfaceOrientation]; // 回転に合わせて.frame調整している
+	} else {
+		[self close:nil];
+	}
 }
 
 // 回転サポート
