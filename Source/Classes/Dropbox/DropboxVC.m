@@ -180,7 +180,8 @@
 		//self.title = NSLocalizedString(@"Backup Dropbox", nil);
 		if (e1upload_.name) {
 			self.title = e1upload_.name;
-			ibTfName.text = e1upload_.name;
+			//ibTfName.text = e1upload_.name;
+			ibTfName.text = GstringNoEmoji(  e1upload_.name ); // 絵文字を除去する
 		} else {
 			self.title = NSLocalizedString(@"(New Pack)", nil);
 			ibTfName.text = NSLocalizedString(@"(New Pack)", nil);

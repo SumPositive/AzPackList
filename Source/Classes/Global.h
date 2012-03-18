@@ -89,6 +89,7 @@ void alertBox( NSString *zTitle, NSString *zMsg, NSString *zButton );
 UIColor *GcolorBlue(float percent);
 UIImage *GimageFromString(float Pfx, float Pfy, float PfSize, NSString* str);
 NSString *GstringFromNumber( NSNumber *num );
+NSString *GstringNoEmoji( NSString *emoji );
 NSString *getMacAddress();
 NSDate *dateFromUTC( NSString *zUTC );
 NSString *utcFromDate( NSDate *dTZ );

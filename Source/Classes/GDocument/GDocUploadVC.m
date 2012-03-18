@@ -135,7 +135,8 @@
 	//self.title = NSLocalizedString(@"Backup Google", nil);
 	if (Re1selected.name) {
 		self.title = Re1selected.name;
-		ibTfName.text = Re1selected.name;
+		//ibTfName.text = Re1selected.name;
+		ibTfName.text = GstringNoEmoji(  Re1selected.name ); // 絵文字を除去する
 	} else {
 		self.title = NSLocalizedString(@"(New Pack)", nil);
 		ibTfName.text = NSLocalizedString(@"(New Pack)", nil);
@@ -147,15 +148,8 @@
 		ibSwEncrypt.enabled = YES;
 		[ibSwEncrypt setOn:[defaults boolForKey:UD_Crypt_Switch]];
 	}
-	
 	ibTfName.keyboardType = UIKeyboardTypeDefault;
 	ibTfName.returnKeyType = UIReturnKeyDone;
-	ibTfName.text = Re1selected.name;
-	
-/*	mAlert = [[UIAlertView alloc] initWithTitle:@"" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
-	mActivityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-	mActivityIndicator.frame = CGRectMake(0, 0, 50, 50);
-	[mAlert addSubview:mActivityIndicator];*/
 }
 
 - (void)viewDidUnload

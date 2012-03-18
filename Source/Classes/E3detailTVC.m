@@ -658,7 +658,9 @@
 		mAppDelegate.app_UpdateSave = YES; // 変更あり
 		self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
 		
-		// 絵文字を除去する
+		mTfKeyword.text = GstringNoEmoji( mTfKeyword.text ); // 絵文字を除去する
+		
+	/*	// 絵文字を除去する
 		NSMutableString *zKey = [NSMutableString new];
 		for (NSUInteger i = 0; i < [mTfKeyword.text length]; i++)
 		{
@@ -676,7 +678,7 @@
 			}
 		}
 		NSLog(@"actionWebTitle: zKey=%@", zKey);
-		mTfKeyword.text = zKey;
+	 */
 	}
 	
 	// 日本語を含むURLをUTF8でエンコーディングする

@@ -83,6 +83,28 @@ NSString *GstringFromNumber( NSNumber *num )
 	return str; // autorelease
 }
 
+NSString *GstringNoEmoji( NSString *emoji )
+{
+	// 絵文字を除去する
+	NSMutableString *zKey = [NSMutableString new];
+	for (NSUInteger i = 0; i < [emoji length]; i++)
+	{
+		// UNICODE(UTF-16)文字を順に取り出します。
+		unichar code = [emoji characterAtIndex:i];
+		// UNICODE(UTF-16)絵文字範囲 http://ja.wikipedia.org/wiki/SoftBank%E7%B5%B5%E6%96%87%E5%AD%97
+		if ((0x20E0<=code && code<=0x2FFF) OR (0xD830<=code && code<=0xDFFF))
+		{
+			//NSLog(@"\\u%04x <<<", code);
+			i++;
+		} 
+		else {
+			//NSLog(@"\\u%04x", code);
+			[zKey appendFormat:@"%C", code];
+		}
+	}
+	NSLog(@"actionWebTitle: zKey=%@", zKey);
+	return zKey;
+}
 
 #pragma mark - UUID　-　getMacAddress
 // UDID（デバイスID）非推奨に伴い、MACアドレス利用に変更するため
