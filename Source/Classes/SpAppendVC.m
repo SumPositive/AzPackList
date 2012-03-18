@@ -184,7 +184,7 @@
 	 postCmd = [postCmd stringByAppendingFormat:@"&tag=%@", zz];
 	 }*/
 	
-	NSLog(@"vSharePlanAppend: postCmd=%@", postCmd);
+	NSLog(@"vSharePlanAppend: postCmd={%@}", postCmd);
 	if (RurlConnection) {
 		[RurlConnection cancel]; // 停止させてから解放する
 		//[RurlConnection release];

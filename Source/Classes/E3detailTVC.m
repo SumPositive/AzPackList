@@ -681,16 +681,23 @@
 	 */
 	}
 	
+	/* GstringPercentEscape()
 	// 日本語を含むURLをUTF8でエンコーディングする
 	// stringByAddingPercentEscapesUsingEncoding:はダメ　＜＜"(0×20)"#%><[\]^`{|}" しかエスケープしないため。
+	// エスケープさせない「コマンド使用」など文字を記述
+	static const CFStringRef charactersToLeaveUnescaped = NULL;  //コマンドを含まない文字列を変換するため
+	// 通常ではエスケープされないが、してほしい文字を記述
+	static const CFStringRef legalURLCharactersToBeEscaped = CFSTR("!*'();:@&=+$,./?%#[]");  //全てエスケープさせるため
 	// __bridge_transfer : CオブジェクトをARC管理オブジェクトにする
-	static const CFStringRef kCharsToForceEscape = CFSTR("!*'();:@&=+$,/?%#[]");	// 通常ではエスケープされないが、してほしい文字を記述
 	NSString *zKeyword = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
 																							   kCFAllocatorDefault,	
 																							   (__bridge CFStringRef)mTfKeyword.text,
-																							   NULL,
-																							   kCharsToForceEscape,
+																							   charactersToLeaveUnescaped,
+																							   legalURLCharactersToBeEscaped,
 																							   kCFStringEncodingUTF8);
+	NSLog(@"Escape: zKeyword {%@}", zKeyword);
+	*/
+	NSString *zKeyword = GstringPercentEscape( mTfKeyword.text );
 	
 	WebSiteVC *web = [[WebSiteVC alloc] initWithBookmarkDelegate:self];	// [Bookmark] <webSiteBookmarkUrl:>
 	web.title = zTitle;

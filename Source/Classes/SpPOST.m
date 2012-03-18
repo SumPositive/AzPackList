@@ -41,19 +41,28 @@ NSMutableURLRequest *requestSpPOST( NSString *PzBody )
 	// POST Param1=aaa&Param2=bbb
 	[req setHTTPMethod:@"POST"];	//メソッドをPOSTに指定
 
+	/*[2.0]	//POST全体をエスケープ処理するのは良くない！ 
+					// 日本語やコマンド文字が含まれる可能性のある『パラメータ毎に％エスケープ処理する』こと。
+					// その為の関数 ⇒ GstringPercentEscape();
+					// &tag= が無くなったので日本語などの％エスケープ処理は必要無くなった。
 	//AzLOG(@"dataSpPOST:PzBody=%@", PzBody);
 	// 日本語を含むURLをUTF8でエンコーディングする
-	static const CFStringRef kCharsToForceEscape = CFSTR("!*'();:@&=+$,/?%#[]");	// 通常ではエスケープされないが、してほしい文字を記述
+	// エスケープさせない「コマンド使用」など文字を記述
+	static const CFStringRef charactersToLeaveUnescaped = CFSTR("?&=$");	//POST「コマンド使用」文字を記述
+	// 通常ではエスケープされないが、してほしい文字を記述
+	static const CFStringRef legalURLCharactersToBeEscaped = NULL;	//ここでのPOSTメッセージには不要
+	// __bridge_transfer : CオブジェクトをARC管理オブジェクトにする
 	NSString *encodedCmd = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
-																							   kCFAllocatorDefault,	
-																							   (__bridge CFStringRef)PzBody,
-																							   NULL,
-																							   kCharsToForceEscape,
-																							   kCFStringEncodingUTF8);
-
-	//AzLOG(@"encodedCmd: %@", encodedCmd);
-	[req setHTTPBody:[encodedCmd dataUsingEncoding:NSUTF8StringEncoding]];  //エンコ済みコマンドセット
-	encodedCmd = nil;
+																								 kCFAllocatorDefault,	
+																								 (__bridge CFStringRef)PzBody,
+																								 charactersToLeaveUnescaped,
+																								 legalURLCharactersToBeEscaped,
+																								 kCFStringEncodingUTF8);
+	NSLog(@"Escape: encodedCmd {%@}", encodedCmd);
+	 [req setHTTPBody:[encodedCmd dataUsingEncoding:NSUTF8StringEncoding]];  //エンコ済みコマンドセット
+	 encodedCmd = nil;
+	 */
+	[req setHTTPBody:[PzBody dataUsingEncoding:NSUTF8StringEncoding]];  //エンコ済みコマンドセット
 	//同期通信を開始
 	return req;
 }
@@ -78,7 +87,10 @@ NSString *postCmdAddUserPass( NSString *PzPostCmd )
 	// Zipcode(郵便番号程度の暗唱ワード)を付加して userPass を生成
 	NSString *nickname = [[NSUserDefaults standardUserDefaults] valueForKey:GD_DefNickname];
 	// 公開経験が無ければ、nickname==nil -->> UD_DeviceID 記録しない！
-	userPass = [userPass stringByAppendingFormat:@"syUku%@gAwa", nickname];
+	if (nickname==nil) {
+		nickname = @"";
+	}
+	userPass = [userPass stringByAppendingFormat:@"syUku%@gAwa", nickname];  //【変更禁止】過去にアップした人が削除できなくなるため。
 	NSLog(@"userPass=%@", userPass);
 	
 	// userPass を MD5ハッシュ化

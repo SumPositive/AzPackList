@@ -360,6 +360,7 @@
 				mTfGoogleID.placeholder = @"ID@gmail.com";
 				mTfGoogleID.keyboardType = UIKeyboardTypeASCIICapable;
 				mTfGoogleID.returnKeyType = UIReturnKeyNext;
+				mTfGoogleID.autocapitalizationType = UITextAutocapitalizationTypeNone; //自動SHIFTなし
 				mTfGoogleID.text = @"";
 				mTfGoogleID.delegate = self;
 				[cell.contentView  addSubview:mTfGoogleID];

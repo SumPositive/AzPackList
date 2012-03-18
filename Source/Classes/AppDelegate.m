@@ -111,6 +111,7 @@
 	[kvs synchronize]; // 最新同期
 	app_opt_Ad_ = [kvs boolForKey:KV_OptAdvertising];
 	app_pid_SwitchAd_ = [kvs boolForKey:SK_PID_AdOff];
+	//NSLog(@"app_pid_SwitchAd_=%d", app_pid_SwitchAd_);
 	
 	if (app_pid_SwitchAd_==NO && [userDefaults boolForKey:UD_OptCrypt]) {
 		[userDefaults setBool:NO forKey:UD_OptCrypt];

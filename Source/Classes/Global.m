@@ -106,6 +106,25 @@ NSString *GstringNoEmoji( NSString *emoji )
 	return zKey;
 }
 
+NSString *GstringPercentEscape( NSString *zPara )
+{	// パーセントエスケープ処理してUTF8でエンコーディングする
+	// stringByAddingPercentEscapesUsingEncoding:はダメ　＜＜"(0×20)"#%><[\]^`{|}" しかエスケープしないため。
+	// エスケープさせない「コマンド使用」など文字を記述
+	static const CFStringRef charactersToLeaveUnescaped = NULL;  //なし ＜＜全てエスケープさせるため
+	// 通常ではエスケープされないが、してほしい文字を記述
+	static const CFStringRef legalURLCharactersToBeEscaped = CFSTR("!*'();:@&=+$,./?%#[]");  //全てエスケープさせるため
+	// __bridge_transfer : CオブジェクトをARC管理オブジェクトにする
+	NSString *zEsc = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
+																							   kCFAllocatorDefault,	
+																							   (__bridge CFStringRef)zPara,
+																							   charactersToLeaveUnescaped,
+																							   legalURLCharactersToBeEscaped,
+																							   kCFStringEncodingUTF8);
+	NSLog(@"GstringPercentEscape: {%@}\n⇒{%@}", zPara, zEsc);
+	return zEsc;
+}
+
+
 #pragma mark - UUID　-　getMacAddress
 // UDID（デバイスID）非推奨に伴い、MACアドレス利用に変更するため
 #include <sys/socket.h>

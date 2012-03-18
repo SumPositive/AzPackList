@@ -108,8 +108,7 @@ static	NSURL										*sDocUploadUrl = nil;
 
 + (void)docUploadErrorNo:(NSInteger)errNo  description:(NSString*)description
 {
-	NSString *msg = [NSString stringWithFormat:@"%@ (%ld)\n", 
-					 NSLocalizedString(@"Google DocUpload NG msg", nil), (long)errNo];
+	NSString *msg = [NSString stringWithFormat:@"STOP#(%ld)\n", (long)errNo];
 	if (description) {
 		msg = [msg stringByAppendingString:description];
 	}
@@ -368,8 +367,7 @@ static BOOL staticDocUploading = NO;
 
 + (void)docDownloadErrorNo:(NSInteger)errNo  description:(NSString*)description
 {
-	NSString *msg = [NSString stringWithFormat:@"%@ (%ld)\n", 
-					 NSLocalizedString(@"Google DocDownload NG msg", nil), (long)errNo];
+	NSString *msg = [NSString stringWithFormat:@"STOP#(%ld)\n", (long)errNo];
 	if (description) {
 		msg = [msg stringByAppendingString:description];
 	}

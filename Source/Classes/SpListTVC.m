@@ -87,7 +87,7 @@
 	postCmd = [postCmd stringByAppendingFormat:@"&shLimit=%d", PAGE_LIMIT];
 	postCmd = [postCmd stringByAppendingFormat:@"&shOffset=%ld", (long)iOffset];
 	
-	NSLog(@"vSharePlanSearch: postCmd=%@", postCmd);
+	NSLog(@"vSharePlanSearch: postCmd={%@}", postCmd);
 	
 	if (RurlConnection) {
 		[RurlConnection cancel];

@@ -148,6 +148,7 @@
 		ibSwEncrypt.enabled = YES;
 		[ibSwEncrypt setOn:[defaults boolForKey:UD_Crypt_Switch]];
 	}
+	
 	ibTfName.keyboardType = UIKeyboardTypeDefault;
 	ibTfName.returnKeyType = UIReturnKeyDone;
 }
