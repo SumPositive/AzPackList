@@ -138,9 +138,15 @@
 			zTag = @"&tag=azuk-20";
 		} 
 		else {
-			rg = [strUrl rangeOfString:@".rakuten.co.jp/"];
+			rg = [strUrl rangeOfString:@".amazon.cn/"];
 			if (0 < rg.length) {
-				zTag = @"&afid=0e4c9297.0f29bc13.0e4c9298.6adf8529";
+				zTag = @"&tag=azukid-23";
+			} 
+			else {
+				rg = [strUrl rangeOfString:@".rakuten.co.jp/"];
+				if (0 < rg.length) {
+					zTag = @"&afid=0e4c9297.0f29bc13.0e4c9298.6adf8529";
+				}
 			}
 		}
 	}
@@ -403,6 +409,7 @@
 		// Amazon
 		if ([zHost hasSuffix:@".amazon.co.jp"]) return YES; // 許可ドメイン
 		if ([zHost hasSuffix:@".amazon.com"]) return YES; // 許可ドメイン
+		if ([zHost hasSuffix:@".amazon.cn"]) return YES; // 許可ドメイン
 		if ([zHost hasSuffix:@".javari.jp"]) return YES; // 許可ドメイン
 		if ([zHost hasSuffix:@".doubleclick.net"]) return YES; // 許可ドメイン Google
 		// 楽天

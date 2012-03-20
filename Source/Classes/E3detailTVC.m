@@ -948,7 +948,7 @@
 		case 0:
 			return 7;
 		case 1:	
-			return 5;
+			return 6;
 	}
 	return 0;
 }
@@ -1412,11 +1412,14 @@
 			case 2:
 			case 3:
 			case 4:
+			case 5:
 				if (cell.imageView.image==nil) {
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 					cell.selectionStyle = UITableViewCellSelectionStyleBlue; // 選択時ハイライト
 					int iShop = indexPath.row - 2;
-					if ([NSLocalizedString(@"CountryCode", nil) isEqualToString:@"jp"]) {
+					NSString *language = [[NSLocale preferredLanguages] objectAtIndex:0]; // ja, en, zh-Hans
+					
+					if ([language hasPrefix:@"ja"]) {
 						switch (iShop) {
 							case 0: 
 								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
@@ -1430,8 +1433,33 @@
 								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
 								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.com", nil);	
 								cell.tag = 02;		break;
+							case 3: 
+								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.cn", nil);	
+								cell.tag = 03;		break;
 						}
-					} else {
+					} 
+					else if ([language hasPrefix:@"zh"]) {  // zh-Hans or zh-H
+						switch (iShop) {
+							case 0: 
+								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.cn", nil);	
+								cell.tag = 03;		break;
+							case 1: 
+								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.com", nil);	
+								cell.tag = 02;		break;
+							case 2: 
+								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.co.jp", nil);	
+								cell.tag = 01;		break;
+							case 3: 
+								cell.imageView.image = [UIImage imageNamed:@"Icon32-Rakuten"];
+								cell.textLabel.text = NSLocalizedString(@"Shop Rakuten", nil);				
+								cell.tag = 11;		break;
+						}
+					} 
+					else {							// en, other
 						switch (iShop) {
 							case 0: 
 								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
@@ -1439,9 +1467,13 @@
 								cell.tag = 02;		break;
 							case 1: 
 								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.cn", nil);	
+								cell.tag = 03;		break;
+							case 2: 
+								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
 								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.co.jp", nil);	
 								cell.tag = 01;		break;
-							case 2: 
+							case 3: 
 								cell.imageView.image = [UIImage imageNamed:@"Icon32-Rakuten"];
 								cell.textLabel.text = NSLocalizedString(@"Shop Rakuten", nil);				
 								cell.tag = 11;		break;
@@ -1545,7 +1577,8 @@
 				
 			case 2: // Shop
 			case 3: // Shop
-			case 4: { // Shop
+			case 4: // Shop
+			case 5: { // Shop
 				UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 				switch (cell.tag) {
 					case 00: // Name
@@ -1560,8 +1593,9 @@
 						if (mAppDelegate.app_is_iPad) {
 							// PCサイト　　　　URL表示するようになったので長くする＜＜TAGが見えないように
 							// アソシエイトリンク作成方法⇒ https://affiliate.amazon.co.jp/gp/associates/help/t121/a1
-							//www.amazon.co.jp/gp/search?ie=UTF8&keywords=[SEARCH_PARAMETERS]&tag=[ASSOCIATE_TAG]&index=blended&linkCode=ure&creative=6339
-							zUrl = @"http://www.amazon.co.jp/s/?ie=UTF8&index=blended&linkCode=ure&creative=6339&keywords=";
+							//サーチ（全商品）
+							//ttp://www.amazon.co.jp/gp/search?ie=UTF8&keywords=[SEARCH_PARAMETERS]&tag=[ASSOCIATE_TAG]&index=blended&linkCode=ure&creative=6339	
+							zUrl = @"http://www.amazon.co.jp/gp/search?ie=UTF8&index=blended&linkCode=ure&creative=6339&keywords=";
 						} else {
 							// モバイルサイト　　　　　"ie=UTF8" が無いと日本語キーワードが化ける
 							//www.amazon.co.jp/gp/aw/s/ref=is_s_?__mk_ja_JP=%83J%83%5E%83J%83i&k=[SEARCH_PARAMETERS]&url=search-alias%3Daps
@@ -1577,9 +1611,8 @@
 						NSString *zUrl;
 						if (mAppDelegate.app_is_iPad) {
 							// PCサイト
-							//www.amazon.com/s/?tag=azuk-20&creative=392009&campaign=212361&link_code=wsw&_encoding=UTF-8&search-alias=aps&field-keywords=LEGO&Submit.x=16&Submit.y=14&Submit=Go
-							//NSString *zUrl = @"http://www.amazon.com/s/?tag=azuk-20&_encoding=UTF-8&k="; URL表示するようになったので長くする＜＜TAGが見えないように
-							zUrl = @"http://www.amazon.com/s/?_encoding=UTF-8&search-alias=aps&creative=392009&campaign=212361&field-keywords=";
+							//ttp://www.amazon.com/s/?tag=azuk-20&creative=392009&campaign=212361&link_code=wsw&_encoding=UTF-8&search-alias=aps&field-keywords=LEGO&Submit.x=16&Submit.y=14&Submit=Go
+							zUrl = @"http://www.amazon.com/s/?_encoding=UTF-8&link_code=wsw&search-alias=aps&creative=392009&field-keywords=";
 						} else {
 							// モバイルサイト
 							//www.amazon.com/gp/aw/s/ref=is_box_?k=LEGO
@@ -1590,6 +1623,23 @@
 									  Domain:@".amazon.com"];
 					} break;
 					
+					case 03: // Amazon.cn
+					{
+						NSString *zUrl;
+						if (mAppDelegate.app_is_iPad) {
+							// PCサイト
+							//ttp://www.amazon.cn/s/ref=nb_sb_noss/?tag=azukid-23&link_code=wsw&_encoding=UTF-8&search-alias=aps&field-keywords=TEST&Submit.x=13&Submit.y=7&Submit=Go
+							zUrl = @"http://www.amazon.cn/s/?_encoding=UTF-8&link_code=wsw&search-alias=aps&field-keywords=";
+						} else {
+							// モバイルサイト
+							//www.amazon.cn/gp/aw/s/ref=is_box_?k=LEGO
+							zUrl = @"http://www.amazon.cn/gp/aw/s/ref=is_box_?_encoding=UTF-8&link_code=wsw&search-alias=aps&k=";
+						}
+						[self actionWebTitle:NSLocalizedString(@"Shop Amazon.cn", nil)
+										 URL:zUrl
+									  Domain:@".amazon.cn"];
+					} break;
+
 					case 11: // 楽天 Search
 					{			// アフィリエイトID(β版): &afid=0e4c9297.0f29bc13.0e4c9298.6adf8529
 						NSString *zUrl;

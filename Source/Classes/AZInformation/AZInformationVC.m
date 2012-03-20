@@ -41,17 +41,19 @@
 	} else {
 		zSubj = [zSubj stringByAppendingString:@" for iPhone"];
 	}
-	
-	if (appDelegate_.app_pid_SwitchAd) {
-		zSubj = [zSubj stringByAppendingString:@"  (AdOff)"];
-	}
-	[picker setSubject:zSubj];  
+	[picker setSubject:zSubj];		// 件名：
 	
 	// Body: 本文
 	NSString *zVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]; //（リリース バージョン）は、ユーザーに公開した時のレベルを表現したバージョン表記
 	NSString *zBuild = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]; //（ビルド回数 バージョン）は、ユーザーに非公開のレベルも含めたバージョン表記
 	NSString* zBody = [NSString stringWithFormat:@"Product: %@\n",  zSubj];
+
+	if (appDelegate_.app_pid_SwitchAd) {
+		zBody = [zBody stringByAppendingString:@"Purchased: SwitchAd \n"];
+	}
+	
 	zBody = [zBody stringByAppendingFormat:@"Version: %@ (%@)\n",  zVersion, zBuild];
+
 	UIDevice *device = [UIDevice currentDevice];
 	NSString* deviceID = [device platformString];	
 	zBody = [zBody stringByAppendingFormat:@"Device: %@   iOS: %@\n", 

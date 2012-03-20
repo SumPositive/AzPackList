@@ -37,9 +37,7 @@
 		<string>Icon57.png</string>
 		<string>Icon57@2x.png</string>
 		<string>Icon72.png</string>
-		<string>Default.png</string>
-		<string>Default@2x.png</string>
-		<string>Default-Landscape~ipad.png</string>
+		<string>Icon72@2x.png</string>
 	</array>
 	<key>CFBundleIcons</key>
 	<dict>
@@ -50,9 +48,7 @@
 				<string>Icon57.png</string>
 				<string>Icon57@2x.png</string>
 				<string>Icon72.png</string>
-				<string>Default.png</string>
-				<string>Default@2x.png</string>
-				<string>Default-Landscape~ipad.png</string>
+				<string>Icon72@2x.png</string>
 			</array>
 		</dict>
 	</dict>

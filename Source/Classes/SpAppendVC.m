@@ -177,7 +177,7 @@
 		return zErr;
 	}
 	postCmd = [postCmd stringByAppendingString:@"&planCsv="];
-	postCmd = [postCmd stringByAppendingString:zCsv];
+	postCmd = [postCmd stringByAppendingString: GstringPercentEscape(zCsv)];  //[2.0]パラメータ毎に％エスケープする
 	
 	/*	// tag
 	 for (NSString *zz in maTags) {
