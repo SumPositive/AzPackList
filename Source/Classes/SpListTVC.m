@@ -303,7 +303,10 @@
 	
 	// @"stamp"(W3C-DTF:UTC) --> NSDate 
 	NSDateFormatter *df = [[NSDateFormatter alloc] init];
-	[df setTimeStyle:NSDateFormatterFullStyle];
+	// カレンダーの設定 ＜＜システム設定が「和暦」になると、2012-->平成2012年-->西暦4000年になるのを避けるため、西暦（グレゴリア）に固定
+	NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+	[df setCalendar:calendar];
+	//[df setTimeStyle:NSDateFormatterFullStyle];
 	[df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];
 	NSDate *utc = [df dateFromString:[dic objectForKey:@"stamp"]];
 	NSLog(@"stamp=%@ --> utc=%@", [dic objectForKey:@"stamp"], utc);
@@ -311,7 +314,6 @@
 	[df setLocale:[NSLocale currentLocale]];  // 現在のロケールをセット
 	[df setDateFormat:@"YYYY-MM-dd hh:mm:ss"];
 	NSString *zStamp = [df stringFromDate:utc];
-	//[df release];
 	
 	// Nickname
 	NSString *zNickname = @"";
