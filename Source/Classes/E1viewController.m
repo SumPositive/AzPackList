@@ -8,23 +8,19 @@
 
 #import "Global.h"
 #import "AppDelegate.h"
-#import "Elements.h"
-#import "EntityRelation.h"
 #import "E1viewController.h"
-#import "E1edit.h"
+
 #import "E2viewController.h"
 #import "E3viewController.h"
 #import "SettingTVC.h"
 #import "AZInformationVC.h"
 #import "WebSiteVC.h"
-#import "HTTPServer.h"
 #import "MyHTTPConnection.h"
 #import "localhostAddresses.h"
 #import "FileCsv.h"
 #import "SpSearchVC.h"
 #import "DropboxVC.h"
 #import "PatternImageView.h"
-#import "AZStoreVC.h"
 //#import "GoogleAuth.h"
 //#import "GooDocsTVC.h"
 #import "GDocDownloadTVC.h"
@@ -35,7 +31,8 @@
 #define ACTIONSEET_TAG_MENU			929
 
 #define ALERT_TAG_HTTPServerStop	109
-#define ALERT_TAG_SupportSite		118
+#define ALERT_TAG_SupportSite			118
+#define ALERT_TAG_DELETEPACK		127
 
 
 @interface E1viewController (PrivateMethods)
@@ -49,32 +46,6 @@
 
 
 @implementation E1viewController
-{
-@public		// 外部公開 ＜＜使用禁止！@propertyで外部公開すること＞＞
-@protected	// 自クラスおよびサブクラスから参照できる（無指定時のデフォルト）
-@private	// 自クラス内からだけ参照できる
-	NSManagedObjectContext		*moc_;
-	NSFetchedResultsController	*fetchedE1_;
-	HTTPServer								*httpServer_;
-	UIAlertView								*alertHttpServer_;
-	NSDictionary							*dicAddresses_;
-
-	E1edit							*e1editView_;	
-	//InformationView			*informationView_;
-
-	UIPopoverController	*popOver_;
-	NSIndexPath*				indexPathEdit_;	//[1.1]ポインタ代入注意！copyするように改善した。
-	
-	AppDelegate		*appDelegate_;
-	BOOL					bInformationOpen_;	//[1.0.2]InformationViewを初回自動表示するため
-	NSUInteger			actionDeleteRow_;		//[1.1]削除するRow
-	BOOL					bOptWeightRound_;
-	BOOL					bOptShowTotalWeight_;
-	BOOL					bOptShowTotalWeightReq_;
-	NSInteger			section0Rows_; // E1レコード数　＜高速化＞
-	CGPoint				contentOffsetDidSelect_; // didSelect時のScrollView位置を記録
-	SKProduct			*productUnlock_;
-}
 
 
 #pragma mark - Delegate
@@ -561,15 +532,6 @@
 {
 	// ContextにE1ノードを追加する　E1edit内でCANCELならば削除している
 	E1 *e1newObj = [NSEntityDescription insertNewObjectForEntityForName:@"E1" inManagedObjectContext:moc_];
-	/*
-	 Me1editView = [[E1edit alloc] init]; // popViewで戻れば解放されているため、毎回alloc必要。
-	 Me1editView.title = NSLocalizedString(@"Add Plan", @"PLAN追加");
-	 Me1editView.Re1target = e1newObj;
-	 Me1editView.PiAddRow = MiSection0Rows;  // 追加される行番号(row) ＝ 現在の行数 ＝ 現在の最大行番号＋1
-	 [Me1editView setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-	 [self.navigationController pushViewController:Me1editView animated:YES];
-	 [Me1editView release]; // self.navigationControllerがOwnerになる
-	 */
 	//[1.0.1]「新しい・・方式」として名称未定のまま先に進めるようにした
 	e1newObj.name = nil; //(未定)  NSLocalizedString(@"New Pack",nil);
 	e1newObj.row = [NSNumber numberWithInteger:section0Rows_]; // 末尾に追加：行番号(row) ＝ 現在の行数 ＝ 現在の最大行番号＋1
@@ -652,6 +614,14 @@
 		case ALERT_TAG_SupportSite:
 			if (buttonIndex == 1) { // OK
 				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://packlist.tumblr.com/"]];
+			}
+			break;
+
+		case ALERT_TAG_DELETEPACK: // E1削除
+			if (buttonIndex == 1) //OK 
+			{	//========== E1 削除実行 ==========
+				NSLog(@"MactionDeleteRow=%ld", (long)actionDeleteRow_);
+				[self actionE1deleteCell:actionDeleteRow_];
 			}
 			break;
 	}
@@ -1444,23 +1414,36 @@
 }
 
 // TableView Editモード処理
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
-											forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle				forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
 		// 削除コマンド警告　==>> (void)actionSheet にて処理
 		//NG//MindexPathActionDelete = indexPath;  retainが必要になる
 		actionDeleteRow_ = indexPath.row;
 		// 削除コマンド警告
-		UIActionSheet *action = [[UIActionSheet alloc] 
-								  initWithTitle:NSLocalizedString(@"CAUTION", nil)
-								  delegate:self 
-								  cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-								  destructiveButtonTitle:NSLocalizedString(@"DELETE Pack", nil)
-								  otherButtonTitles:nil];
-		action.tag = ACTIONSEET_TAG_DELETEPACK;
-		//[2.0]ToolBar非表示（TabBarも無い）　＜＜ToolBar無しでshowFromToolbarするとFreeze＞＞
-		[action showInView:self.view]; //windowから出すと回転対応しない
-		//BUG//[action release]; autoreleaseにした
+		UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+		NSString *title = [NSString stringWithFormat:@"%@\n%@",
+						   cell.textLabel.text, NSLocalizedString(@"DELETE Pack caution", nil)];
+		if (appDelegate_.app_is_iPad) {
+			//[2.0.1] iPadだとCancelボタンが表示されないためUIActionSheetにした。
+			UIAlertView *av = [[UIAlertView alloc] initWithTitle: title
+														 message:@"" 
+														delegate:self 
+											   cancelButtonTitle:NSLocalizedString(@"Cancel", nil) 
+											   otherButtonTitles:NSLocalizedString(@"DELETE Pack", nil), nil];
+			av.tag = ALERT_TAG_DELETEPACK;
+			[av show];
+		} else {
+			UIActionSheet *action = [[UIActionSheet alloc] 
+									 initWithTitle: title
+									 delegate:self 
+									 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+									 destructiveButtonTitle:NSLocalizedString(@"DELETE Pack", nil)
+									 otherButtonTitles:nil];
+			action.tag = ACTIONSEET_TAG_DELETEPACK;
+			//[2.0]ToolBar非表示（TabBarも無い）　＜＜ToolBar無しでshowFromToolbarするとFreeze＞＞
+			[action showInView:self.view]; //windowから出すと回転対応しない
+			//BUG//[action release]; autoreleaseにした
+		}
 	}
 }
 
