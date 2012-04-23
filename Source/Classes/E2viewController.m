@@ -32,7 +32,8 @@
 
 #define ALERT_TAG_TESTDATA			109
 #define ALERT_TAG_HTTPServerStop	118
-#define ALERT_TAG_ALLZERO			127
+#define ALERT_TAG_ALLZERO				127
+#define ALERT_TAG_DELETEGROUP		136		//[2.0.1]BugFix
 
 
 @interface E2viewController (PrivateMethods)
@@ -46,29 +47,6 @@
 @end
 
 @implementation E2viewController
-{
-@private
-	UIPopoverController*	menuPopover_;  //[MENU]にて自身を包むPopover  閉じる為に必要
-	// setPopover:にてセットされる
-	
-	NSMutableArray		*e2array_;   // Rrは local alloc につき release 必須を示す
-	HTTPServer			*httpServer_;
-	UIAlertView			*alertHttpServer_;
-	NSDictionary		*dicAddresses_;
-	E2edit				*e2editView_;				// self.navigationControllerがOwnerになる
-	
-	UIPopoverController*			popOver_;
-	NSIndexPath*						indexPathEdit_;	//[1.1]ポインタ代入注意！copyするように改善した。
-	
-	AppDelegate		*appDelegate_;
-	NSIndexPath	  *indexPathActionDelete_;	//[1.1]ポインタ代入注意！copyするように改善した。
-
-	BOOL optWeightRound_;
-	BOOL optShowTotalWeight_;
-	BOOL optShowTotalWeightReq_;
-	NSInteger section0Rows_; // E2レコード数　＜高速化＞
-	CGPoint		contentOffsetDidSelect_; // didSelect時のScrollView位置を記録
-}
 @synthesize e1selected = e1selected_;
 @synthesize sharePlanList = sharePlanList_;
 @synthesize delegateE3viewController = delegateE3viewController_;
@@ -255,7 +233,7 @@
 				UIAlertView *alert = [[UIAlertView alloc] 
 									  initWithTitle:NSLocalizedString(@"CSV Save Fail",nil)
 									  message:zErr
-									  delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+									  delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
 				[alert show];
 				return;
 			}
@@ -536,6 +514,13 @@
 		case ALERT_TAG_ALLZERO:
 			if (buttonIndex != 1) return; // CANCEL
 			[self actionAllZero_OKGO];
+			break;
+			
+		case ALERT_TAG_DELETEGROUP: // E2グループ削除
+			if (buttonIndex == 1) //DELETE
+			{ //========== E2 削除実行 ==========
+				[self actionE2delateCell:indexPathActionDelete_];
+			}
 			break;
 	}
 }
@@ -1319,7 +1304,6 @@
 				}
 				if (indexPath.row == section0Rows_) {
 					cell.imageView.image = [UIImage imageNamed:@"Icon24-GreenPlus.png"];
-					//cell.textLabel.text = NSLocalizedString(@"Add Group",nil);
 					cell.textLabel.text = NSLocalizedString(@"New Index",nil);
 				} else {
 					cell.imageView.image = [UIImage imageNamed:@"Icon24-GreenPlus.png"];
@@ -1669,20 +1653,32 @@
 															forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
 		// 削除コマンド警告　==>> (void)actionSheet にて処理
-		//Bug//MindexPathActionDelete = indexPath;
-		//[MindexPathActionDelete release], 
 		indexPathActionDelete_ = [indexPath copy];
 		// 削除コマンド警告
-		UIActionSheet *action = [[UIActionSheet alloc] 
-								 initWithTitle:NSLocalizedString(@"CAUTION", nil)
-								 delegate:self 
-								 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-								 destructiveButtonTitle:NSLocalizedString(@"DELETE Group", nil)
-								 otherButtonTitles:nil];
-		action.tag = ACTIONSEET_TAG_DELETEGROUP;
-		//[2.0]ToolBarを無くした。
-		//[2.0]ToolBar非表示（TabBarも無い）　＜＜ToolBar無しでshowFromToolbarするとFreeze＞＞
-		[action showInView:self.view]; //windowから出すと回転対応しない
+		UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+		NSString *title = [NSString stringWithFormat:@"%@\n%@",
+						   cell.textLabel.text, NSLocalizedString(@"DELETE Group caution", nil)];
+		if (appDelegate_.app_is_iPad) {
+			//[2.0.1]Bug: iPadタテ向きでUIActionSheetを出すと落ちる(iOSのバグらしい）
+			//[2.0.1]Fix: UIActionSheetを UIAlertViewに変えて回避。
+			UIAlertView *av = [[UIAlertView alloc] initWithTitle: title
+														message:@"" 
+														delegate:self 
+											   cancelButtonTitle:NSLocalizedString(@"Cancel", nil) 
+											   otherButtonTitles:NSLocalizedString(@"DELETE Group", nil), nil];
+			av.tag = ALERT_TAG_DELETEGROUP;
+			[av show];
+		} else {
+			UIActionSheet *action = [[UIActionSheet alloc] 
+									 initWithTitle: title
+									 delegate:self 
+									 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+									 destructiveButtonTitle:NSLocalizedString(@"DELETE Group", nil)
+									 otherButtonTitles:nil];
+			action.tag = ACTIONSEET_TAG_DELETEGROUP;
+			//[2.0]ToolBar非表示（TabBarも無い）　＜＜ToolBar無しでshowFromToolbarするとFreeze＞＞
+			[action showInView:self.view]; //windowから出すと回転対応しない
+		}
     }
 }
 
