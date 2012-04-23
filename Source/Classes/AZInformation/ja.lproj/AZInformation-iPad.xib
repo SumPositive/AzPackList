@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">800</int>
-		<string key="IBDocument.SystemVersion">10K549</string>
-		<string key="IBDocument.InterfaceBuilderVersion">1938</string>
-		<string key="IBDocument.AppKitVersion">1038.36</string>
-		<string key="IBDocument.HIToolboxVersion">461.00</string>
+		<string key="IBDocument.SystemVersion">11D50</string>
+		<string key="IBDocument.InterfaceBuilderVersion">2182</string>
+		<string key="IBDocument.AppKitVersion">1138.32</string>
+		<string key="IBDocument.HIToolboxVersion">568.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">933</string>
+			<string key="NS.object.0">1181</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBUIImageView</string>
@@ -129,7 +129,7 @@
 							<int key="IBUIContentMode">7</int>
 							<bool key="IBUIUserInteractionEnabled">NO</bool>
 							<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-							<string key="IBUIText">PackList  (.azpl)</string>
+							<string key="IBUIText">PackList  (.azp)</string>
 							<reference key="IBUITextColor" ref="145624089"/>
 							<nil key="IBUIHighlightedColor"/>
 							<int key="IBUIBaselineAdjustment">1</int>
@@ -155,7 +155,6 @@
 							<reference key="IBUITextColor" ref="145624089"/>
 							<nil key="IBUIHighlightedColor"/>
 							<int key="IBUIBaselineAdjustment">1</int>
-							<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 							<float key="IBUIMinimumFontSize">10</float>
 							<int key="IBUINumberOfLines">6</int>
 							<int key="IBUITextAlignment">1</int>
@@ -169,6 +168,7 @@
 								<double key="NSSize">12</double>
 								<int key="NSfFlags">16</int>
 							</object>
+							<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						</object>
 						<object class="IBUILabel" id="927815542">
 							<reference key="NSNextResponder" ref="463798347"/>
@@ -187,12 +187,12 @@
 							<reference key="IBUITextColor" ref="145624089"/>
 							<nil key="IBUIHighlightedColor"/>
 							<int key="IBUIBaselineAdjustment">1</int>
-							<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 							<float key="IBUIMinimumFontSize">10</float>
 							<int key="IBUINumberOfLines">6</int>
 							<int key="IBUILineBreakMode">1</int>
 							<reference key="IBUIFontDescription" ref="959387849"/>
 							<reference key="IBUIFont" ref="740864380"/>
+							<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						</object>
 						<object class="IBUILabel" id="149417144">
 							<reference key="NSNextResponder" ref="463798347"/>
@@ -221,7 +221,6 @@ ga7jg5Hjgrnjg6/jg7zjg4njga/mmpflj7fljJbjgZXjgozjgb7jgZnvvIk</string>
 							</object>
 							<nil key="IBUIHighlightedColor"/>
 							<string key="IBUIShadowOffset">{0, 0}</string>
-							<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 							<float key="IBUIMinimumFontSize">10</float>
 							<int key="IBUINumberOfLines">9</int>
 							<int key="IBUILineBreakMode">0</int>
@@ -234,6 +233,7 @@ ga7jg5Hjgrnjg6/jg7zjg4njga/mmpflj7fljJbjgZXjgozjgb7jgZnvvIk</string>
 								<double key="NSSize">14</double>
 								<int key="NSfFlags">16</int>
 							</object>
+							<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						</object>
 						<object class="IBUIButton" id="609702085">
 							<reference key="NSNextResponder" ref="463798347"/>
@@ -318,7 +318,7 @@ ga7jg5Hjgrnjg6/jg7zjg4njga/mmpflj7fljJbjgZXjgozjgb7jgZnvvIk</string>
 							<integer value="1"/>
 							<integer value="3"/>
 						</array>
-						<array class="NSMutableArray" key="dict.values">
+						<array key="dict.values">
 							<string>{540, 620}</string>
 							<string>{540, 620}</string>
 						</array>
@@ -568,6 +568,10 @@ ga7jg5Hjgrnjg6/jg7zjg4njga/mmpflj7fljJbjgZXjgozjgb7jgZnvvIk</string>
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
 			<real value="800" key="NS.object.0"/>
 		</object>
+		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
+			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
+			<real value="1296" key="NS.object.0"/>
+		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.InterfaceBuilder3</string>
 			<real value="4200" key="NS.object.0"/>
@@ -578,6 +582,6 @@ ga7jg5Hjgrnjg6/jg7zjg4njga/mmpflj7fljJbjgZXjgozjgb7jgZnvvIk</string>
 			<string key="NS.key.0">Icon57.png</string>
 			<string key="NS.object.0">{57, 57}</string>
 		</object>
-		<string key="IBCocoaTouchPluginVersion">933</string>
+		<string key="IBCocoaTouchPluginVersion">1181</string>
 	</data>
 </archive>

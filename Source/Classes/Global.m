@@ -14,17 +14,6 @@
 }
 @end
 
-void alertBox( NSString *zTitle, NSString *zMsg, NSString *zButton )
-{
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:zTitle
-													message:zMsg
-												   delegate:nil
-										  cancelButtonTitle:nil
-										  otherButtonTitles:zButton, nil];
-	[alert show];
-	//[alert release];
-}
-
 UIColor *GcolorBlue(float percent) 
 {
 	float red = percent * 255.0f;
