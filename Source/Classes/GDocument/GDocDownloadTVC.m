@@ -238,14 +238,27 @@
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];	// 選択状態を解除する
 
 	mDocSelect = [mDocFeed entryAtIndex:indexPath.row];
-	UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:[[mDocSelect title] stringValue]
-							delegate:self 
-							cancelButtonTitle:NSLocalizedString(@"Cancel",nil)
-							destructiveButtonTitle:nil
-							otherButtonTitles:NSLocalizedString(@"Download START",nil), 
-							nil];
-	sheet.tag = TAG_ACTION_DOWNLOAD_START;
-	[sheet showInView:self.view];
+	
+	if (iS_iPAD) {
+		//[2.0.1]Bug: iPadタテ向きでUIActionSheetを出すと落ちる(iOSのバグらしい）
+		//[2.0.1]Fix: UIActionSheetを UIAlertViewに変えて回避。
+		//さらに、iPadでUIActionSheetを使用するとdestructiveButtonTitleが表示されない不具合あり。
+		UIAlertView *av = [[UIAlertView alloc] initWithTitle: [[mDocSelect title] stringValue]
+													 message:@"" 
+													delegate: self 
+										   cancelButtonTitle: NSLocalizedString(@"Cancel", nil) 
+										   otherButtonTitles: NSLocalizedString(@"Download START",nil), nil];
+		av.tag = TAG_ACTION_DOWNLOAD_START;
+		[av show];
+	} else {
+		UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:[[mDocSelect title] stringValue]
+														   delegate:self 
+												  cancelButtonTitle:NSLocalizedString(@"Cancel",nil)
+											 destructiveButtonTitle:nil
+												  otherButtonTitles:NSLocalizedString(@"Download START",nil), nil];
+		sheet.tag = TAG_ACTION_DOWNLOAD_START;
+		[sheet showInView:self.view];
+	}	
 	
 	/*　リビジョンは、GDoc内で修正した場合だけ記録されるため
 	GDocRevisionTVC *rev = [[GDocRevisionTVC alloc] init];
@@ -265,6 +278,22 @@
 	{
 		case TAG_ACTION_DOWNLOAD_START:
 			if (buttonIndex == 0 && mDocSelect) {  // START  actionSheetの上から順に(0〜)
+				// Download開始
+				[GoogleService docDownloadEntry:mDocSelect];
+			}
+			break;
+	}
+}
+
+#pragma mark - <UIAlertViewDelegate>
+// Called when a button is clicked. The view will be automatically dismissed after this call returns
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+	if (buttonIndex==alertView.cancelButtonIndex) return;
+	
+	switch (alertView.tag) {
+		case TAG_ACTION_DOWNLOAD_START:
+			if (buttonIndex == 1 && mDocSelect) {  // START
 				// Download開始
 				[GoogleService docDownloadEntry:mDocSelect];
 			}

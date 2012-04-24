@@ -35,7 +35,7 @@
 	UIAlertView						*mAlert;
 	NSIndexPath					*mDidSelectRowAtIndexPath;
 
-	E1									*e1upload_;
+	E1									*mE1upload;
 	NSString							*overWriteRev_;
 	NSString							*deletePath_;
 	

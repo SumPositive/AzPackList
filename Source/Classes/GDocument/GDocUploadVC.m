@@ -60,13 +60,26 @@
 		return;
 	}
 	
-	UIActionSheet *as = [[UIActionSheet alloc] initWithTitle: filename
-													delegate:self 
+	if (iS_iPAD) {
+		//[2.0.1]Bug: iPadタテ向きでUIActionSheetを出すと落ちる(iOSのバグらしい）
+		//[2.0.1]Fix: UIActionSheetを UIAlertViewに変えて回避。
+		//さらに、iPadでUIActionSheetを使用するとdestructiveButtonTitleが表示されない不具合あり。
+		UIAlertView *av = [[UIAlertView alloc] initWithTitle: filename
+													 message:@"" 
+													delegate: self 
 										   cancelButtonTitle: NSLocalizedString(@"Cancel", nil) 
-									  destructiveButtonTitle: nil
-										   otherButtonTitles: NSLocalizedString(@"Google Start upload", nil), nil];
-	as.tag = TAG_ACTION_UPLOAD;
-	[as showInView:self.view];
+										   otherButtonTitles: NSLocalizedString(@"Google Start upload",nil), nil];
+		av.tag = TAG_ACTION_UPLOAD;
+		[av show];
+	} else {
+		UIActionSheet *as = [[UIActionSheet alloc] initWithTitle: filename
+														delegate:self 
+											   cancelButtonTitle: NSLocalizedString(@"Cancel", nil) 
+										  destructiveButtonTitle: nil
+											   otherButtonTitles: NSLocalizedString(@"Google Start upload", nil), nil];
+		as.tag = TAG_ACTION_UPLOAD;
+		[as showInView:self.view];
+	}
 	[ibTfName resignFirstResponder]; // キーボードを隠す
 }
 
@@ -74,16 +87,6 @@
 {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	[defaults setBool:ibSwEncrypt.isOn forKey:UD_Crypt_Switch];
-}
-
-#pragma mark  <UIActionSheetDelegate>
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	if (buttonIndex == actionSheet.cancelButtonIndex) return; // CANCEL
-	if (actionSheet.tag != TAG_ACTION_UPLOAD) return;
-	
-	// アップロード開始
-	[GoogleService docUploadE1:Re1selected  title:ibTfName.text  crypt:ibSwEncrypt.isOn];
 }
 
 
@@ -171,6 +174,31 @@
     return YES;
 }
 
+#pragma mark  <UIActionSheetDelegate>
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+	if (buttonIndex == actionSheet.cancelButtonIndex) return; // CANCEL
+	if (actionSheet.tag != TAG_ACTION_UPLOAD) return;
+	
+	// アップロード開始
+	[GoogleService docUploadE1:Re1selected  title:ibTfName.text  crypt:ibSwEncrypt.isOn];
+}
+
+#pragma mark - <UIAlertViewDelegate>
+// Called when a button is clicked. The view will be automatically dismissed after this call returns
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+	if (buttonIndex==alertView.cancelButtonIndex) return;
+	
+	switch (alertView.tag) {
+		case TAG_ACTION_UPLOAD:
+			if (buttonIndex == 1) {  // START
+				// アップロード開始
+				[GoogleService docUploadE1:Re1selected  title:ibTfName.text  crypt:ibSwEncrypt.isOn];
+			}
+			break;
+	}
+}
 
 
 @end

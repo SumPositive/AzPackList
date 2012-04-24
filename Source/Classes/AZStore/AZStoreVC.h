@@ -17,7 +17,7 @@
 
 
 @interface AZStoreVC : UIViewController <UITableViewDelegate, UITableViewDataSource, 
-																		UITextFieldDelegate, UIActionSheetDelegate,
+																		UITextFieldDelegate,
 																		SKProductsRequestDelegate, SKPaymentTransactionObserver>
 {
 	//IBOutlet UILabel			*ibLbInviteTitle;

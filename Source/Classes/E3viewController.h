@@ -15,7 +15,7 @@
 //@class ItemTouchView;
 //@class E2viewController;
 
-@interface E3viewController : UITableViewController <UIActionSheetDelegate, UISearchBarDelegate
+@interface E3viewController : UITableViewController <UISearchBarDelegate
 	,UIPopoverControllerDelegate>
 
 @property (nonatomic, retain) E1					*e1selected;	//grandParent;
