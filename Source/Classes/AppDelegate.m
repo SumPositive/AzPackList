@@ -14,9 +14,7 @@
 #import "FileCsv.h"
 #import "padRootVC.h"
 #import "E1viewController.h"
-//#import "E2viewController.h"
 #import "DropboxVC.h"
-#import "AZStoreVC.h"
 
 
 #define CoreData_iCloud_SYNC		NO	// YES or NO
@@ -107,10 +105,12 @@
 	if ([kvs objectForKey: KV_OptAdvertising]==nil)					[kvs setBool:YES forKey: KV_OptAdvertising];
 	
 	// AZStore PID  ＜＜productIdentifier をそのままKEYにする
-	if ([kvs objectForKey: SK_PID_AdOff]==nil)							[kvs setBool:NO  forKey: SK_PID_AdOff];
+	if ([kvs objectForKey: STORE_PRODUCTID_AdOff]==nil)		[kvs setBool:NO  forKey: STORE_PRODUCTID_AdOff];
+	
 	[kvs synchronize]; // 最新同期
+	
 	app_opt_Ad_ = [kvs boolForKey:KV_OptAdvertising];
-	app_pid_SwitchAd_ = [kvs boolForKey:SK_PID_AdOff];
+	app_pid_SwitchAd_ = [kvs boolForKey:STORE_PRODUCTID_AdOff];
 	//NSLog(@"app_pid_SwitchAd_=%d", app_pid_SwitchAd_);
 	
 	if (app_pid_SwitchAd_==NO && [userDefaults boolForKey:UD_OptCrypt]) {

@@ -8,15 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "HTTPServer.h"
+#import "AZAboutVC.h"
+#import "AZStoreTVC.h"	//<AZStoreDelegate>
 
 #import "Elements.h"
 #import "EntityRelation.h"
 #import "E1edit.h"
-#import "AZStoreVC.h"
 
 
 @interface E1viewController : UITableViewController 
-	<NSFetchedResultsControllerDelegate, UIActionSheetDelegate	,UIPopoverControllerDelegate>
+	<NSFetchedResultsControllerDelegate, UIActionSheetDelegate	,UIPopoverControllerDelegate, AZStoreDelegate>
 {
 @public		// 外部公開 ＜＜使用禁止！@propertyで外部公開すること＞＞
 @protected	// 自クラスおよびサブクラスから参照できる（無指定時のデフォルト）

@@ -13,8 +13,7 @@
 #import "E2viewController.h"
 #import "E3viewController.h"
 #import "SettingTVC.h"
-#import "AZInformationVC.h"
-#import "WebSiteVC.h"
+//#import "WebSiteVC.h"
 #import "MyHTTPConnection.h"
 #import "localhostAddresses.h"
 #import "FileCsv.h"
@@ -108,7 +107,7 @@
 	//{
 		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
 		//[kvs synchronize]; <<<変化通知により同期済みであるから不要
-		if (appDelegate_.app_pid_SwitchAd==NO  &&  [kvs boolForKey:SK_PID_AdOff]) 
+		if (appDelegate_.app_pid_SwitchAd==NO  &&  [kvs boolForKey:STORE_PRODUCTID_AdOff]) 
 		{	// iCloud OFF --> ON
 			appDelegate_.app_pid_SwitchAd = YES;
 			//[appDelegate_ managedObjectContextReset]; // iCloud対応の moc再生成する。
@@ -415,7 +414,7 @@
 
 - (void)actionInformation
 {
-	AZInformationVC *vc = [[AZInformationVC alloc] init];
+/*	AZInformationVC *vc = [[AZInformationVC alloc] init];
 
 	if (appDelegate_.app_is_iPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
@@ -426,6 +425,28 @@
 	else {
 		if (appDelegate_.app_opt_Ad) {
 			// 各viewDidAppear:にて「許可/禁止」を設定する
+			[appDelegate_ AdRefresh:NO];	//広告禁止
+		}
+		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+		[self.navigationController pushViewController:vc animated:YES];
+	}*/
+	
+	// このアプリについて
+	AZAboutVC *vc = [[AZAboutVC alloc] init];
+	vc.ppProductTitle = NSLocalizedString(@"Product Title",nil);
+	vc.ppProductSubtitle = @"PackList  (.azp)";
+	vc.ppProductYear = @"1995";
+	vc.ppImgIcon = [UIImage imageNamed:@"Icon57"];
+	vc.ppSupportSite = @"http://packlist.azukid.com/";
+	//vc.hidesBottomBarWhenPushed = YES; //以降のタブバーを消す
+	//[self.navigationController pushViewController:vc animated:YES];
+	if (appDelegate_.app_is_iPad) {
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+		nc.modalPresentationStyle = UIModalPresentationFormSheet; // iPad画面1/4サイズ
+		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+		[self presentModalViewController:nc animated:YES];
+	} else {
+		if (appDelegate_.app_opt_Ad) {	// 各viewDidAppear:にて「許可/禁止」を設定する
 			[appDelegate_ AdRefresh:NO];	//広告禁止
 		}
 		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
@@ -455,10 +476,19 @@
 
 - (void)actionIAZStore
 {
-	AZStoreVC *vc = [[AZStoreVC alloc] initWithUnLock:appDelegate_.app_pid_SwitchAd];
+/*	AZStoreVC *vc = [[AZStoreVC alloc] initWithUnLock:appDelegate_.app_pid_SwitchAd];
 	vc.delegate = self; //--> azStorePurchesed:
 	vc.productIDs = [NSSet setWithObjects:SK_PID_AdOff, nil]; // 商品が複数ある場合は列記
-
+*/
+	// あずき商店
+	AZStoreTVC *vc = [[AZStoreTVC alloc] init];
+	// 商品IDリスト
+	NSSet *pids = [NSSet setWithObjects:STORE_PRODUCTID_AdOff, nil]; // 商品が複数ある場合は列記
+	[vc setProductIDs:pids];
+	[vc	setGiftDetail:NSLocalizedString(@"STORE GiftDetail", nil)
+			productID:STORE_PRODUCTID_AdOff
+			secretKey:@"1615AzPackList"]; //[1.2]にあるsecretKeyに一致すること
+	
 	if (appDelegate_.app_is_iPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -475,16 +505,22 @@
 	}
 }
 
-#pragma mark <AZStoreDelegate>
+
+#pragma mark - <AZStoreDelegate>
 - (void)azStorePurchesed:(NSString*)productID
-{
-	if ([productID isEqualToString:SK_PID_AdOff]) 
-	{	// iCloud対応： NSPersistentStoreCoordinator, NSManagedObjectModel 再生成してiCloud対応する
+{	//既に呼び出し元にて、[userDefaults setBool:YES  forKey:productID]　登録済み
+	GA_TRACK_EVENT(@"AZStore", @"azStorePurchesed", productID,1);
+	if ([productID isEqualToString:STORE_PRODUCTID_AdOff]) {
+		appDelegate_.app_pid_SwitchAd = YES; //広告スイッチ 購入済み
+		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+		[kvs setBool:YES  forKey: STORE_PRODUCTID_AdOff];
+		[kvs synchronize];
 		// 再フィッチ＆画面リフレッシュ通知  ＜＜＜＜ E1viewController:refetcheAllData: にて iCloud OFF --> ON している。
 		[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFRESH_ALL_VIEWS
 															object:self userInfo:nil];
 	}
 }
+
 
 - (void)toE2fromE1:(E1*)e1obj  withIndex:(NSIndexPath *)indexPath 
 {	// 次回の画面復帰のための状態記録

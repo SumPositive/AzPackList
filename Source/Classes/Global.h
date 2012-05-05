@@ -17,6 +17,9 @@
 #define AdMobID_PackPAD	@"a14dd004bc6bc0a";		//AdMobパブリッシャー ID  "モチメモ Free iPad"
 #define AdMobID_PackList	@"a14d4cec1e082c1";		//AdMobパブリッシャー ID  "モチメモ Free iPhone"　
 
+// AppStore In-App Purchase ProductIdentifier
+#define STORE_PRODUCTID_AdOff		@"com.azukid.AzPackList5.AdOff"	// Ad Off/On （おまけ iCloud対応）
+
 
 //#define AzMAX_PLANS		 20		// 最大PLAN数
 //#define AzMAX_GROUPS	100		// 最大GROUP数
@@ -93,7 +96,6 @@ UIImage *GimageFromString(float Pfx, float Pfy, float PfSize, NSString* str);
 NSString *GstringFromNumber( NSNumber *num );
 NSString *GstringNoEmoji( NSString *emoji );
 NSString *GstringPercentEscape( NSString *zPara );
-NSString *getMacAddress();
 NSDate *dateFromUTC( NSString *zUTC );
 NSString *utcFromDate( NSDate *dTZ );
 NSString *uuidString(void);

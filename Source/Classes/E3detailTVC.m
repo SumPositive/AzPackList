@@ -14,7 +14,7 @@
 #import "selectGroupTVC.h"
 #import "editLabelNumberVC.h"
 #import "CalcView.h"
-#import "WebSiteVC.h"
+//#import "WebSiteVC.h"
 #import "PatternImageView.h"
 
 #import "GoogleService.h"
@@ -651,7 +651,42 @@
 }
 
 
-- (void)actionWebTitle:(NSString*)zTitle  URL:(NSString*)zUrl  Domain:(NSString*)zDomain
+- (void)actionWebTitle:(NSString*)zTitle  Url:(NSString*)zUrl
+{
+	/*	WebSiteVC *web = [[WebSiteVC alloc] initWithBookmarkDelegate:self];	// [Bookmark] <webSiteBookmarkUrl:>
+	 web.title = nil;
+	 web.Rurl = zUrl;
+	 web.RzDomain = nil;*/
+	
+	AZWebView *wv = [[AZWebView alloc] init];
+	wv.ppDelegate = self;
+	wv.title = zTitle;
+	wv.ppUrl = zUrl;
+	wv.ppDomain = [NSSet setWithObjects:
+				   @".amazon.co.jp",
+				   @".amazon.com",
+				   @".amazon.cn",
+				   @".javari.jp",					//Amazon
+				   @".doubleclick.net",		//Google
+				   @".rakuten.ne.jp",
+				   @".rakuten.co.jp",
+				   @".apple.com",
+				   @".azukid.com",
+				   @".tumblr.com",
+				   @"azukisoft.seesaa.net",
+				   nil]; //許可ドメインを列記する
+	
+	if (mAppDelegate.app_is_iPad) {
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:wv];
+		nc.modalPresentationStyle = UIModalPresentationPageSheet;  // 背景Viewが保持される
+		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;//	UIModalTransitionStyleFlipHorizontal
+		[mAppDelegate.mainSVC presentModalViewController:nc animated:YES];  //回転する
+	} else {
+		[self.navigationController pushViewController:wv animated:YES];
+	}
+}
+
+- (void)actionWebSearchTitle:(NSString*)zTitle  URL:(NSString*)zUrl
 {
 	if ([mTfKeyword.text length]<=0) {
 		mTfKeyword.text = mTfName.text;
@@ -697,40 +732,19 @@
 																							   kCFStringEncodingUTF8);
 	NSLog(@"Escape: zKeyword {%@}", zKeyword);
 	*/
+	
 	NSString *zKeyword = GstringPercentEscape( mTfKeyword.text );
 	
+/*	
 	WebSiteVC *web = [[WebSiteVC alloc] initWithBookmarkDelegate:self];	// [Bookmark] <webSiteBookmarkUrl:>
 	web.title = zTitle;
 	web.Rurl = [zUrl stringByAppendingString:zKeyword];
 	web.RzDomain = zDomain;
 	zKeyword = nil;
-	
-	if (mAppDelegate.app_is_iPad) {
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:web];
-		nc.modalPresentationStyle = UIModalPresentationPageSheet;  // 背景Viewが保持される
-		// FullScreenにするとPopoverが閉じられる。さらに、背後が破棄されてE3viewController:viewWillAppear が呼び出されるようになる。
-		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;//	UIModalTransitionStyleFlipHorizontal
-		[mAppDelegate.mainSVC presentModalViewController:nc animated:YES];  //回転する
-	} else {
-		[self.navigationController pushViewController:web animated:YES];
-	}
-}
+*/
 
-- (void)actionWebUrl:(NSString*)zUrl
-{
-	WebSiteVC *web = [[WebSiteVC alloc] initWithBookmarkDelegate:self];	// [Bookmark] <webSiteBookmarkUrl:>
-	web.title = nil;
-	web.Rurl = zUrl;
-	web.RzDomain = nil;
-	
-	if (mAppDelegate.app_is_iPad) {
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:web];
-		nc.modalPresentationStyle = UIModalPresentationPageSheet;  // 背景Viewが保持される
-		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;//	UIModalTransitionStyleFlipHorizontal
-		[mAppDelegate.mainSVC presentModalViewController:nc animated:YES];  //回転する
-	} else {
-		[self.navigationController pushViewController:web animated:YES];
-	}
+	[self actionWebTitle:zTitle Url:[zUrl stringByAppendingString:zKeyword]];
+	zKeyword = nil;
 }
 
 - (void)actionCamera
@@ -1567,7 +1581,7 @@
 			case 0: // Shop Photo
 				if (pE3target.shopUrl) {
 					// WebViewを開ける
-					[self actionWebUrl: pE3target.shopUrl];
+					[self actionWebTitle: nil  Url: pE3target.shopUrl];
 				}
 				break;
 				
@@ -1601,9 +1615,7 @@
 							//www.amazon.co.jp/gp/aw/s/ref=is_s_?__mk_ja_JP=%83J%83%5E%83J%83i&k=[SEARCH_PARAMETERS]&url=search-alias%3Daps
 							zUrl = @"http://www.amazon.co.jp/gp/aw/s/ref=is_s_?ie=UTF8&__mk_ja_JP=%83J%83%5E%83J%83i&url=search-alias%3Daps&k=";
 						}
-						[self actionWebTitle:NSLocalizedString(@"Shop Amazon.co.jp", nil)
-										 URL:zUrl
-									  Domain:@".amazon.co.jp"];
+						[self actionWebSearchTitle:NSLocalizedString(@"Shop Amazon.co.jp", nil) URL:zUrl];
 					} break;
 					
 					case 02: // Amazon.com
@@ -1618,9 +1630,7 @@
 							//www.amazon.com/gp/aw/s/ref=is_box_?k=LEGO
 							zUrl = @"http://www.amazon.com/gp/aw/s/ref=is_box_?_encoding=UTF-8&link_code=wsw&search-alias=aps&k=";
 						}
-						[self actionWebTitle:NSLocalizedString(@"Shop Amazon.com", nil)
-										 URL:zUrl
-									  Domain:@".amazon.com"];
+						[self actionWebSearchTitle:NSLocalizedString(@"Shop Amazon.com", nil) URL:zUrl];
 					} break;
 					
 					case 03: // Amazon.cn
@@ -1635,9 +1645,7 @@
 							//www.amazon.cn/gp/aw/s/ref=is_box_?k=LEGO
 							zUrl = @"http://www.amazon.cn/gp/aw/s/ref=is_box_?_encoding=UTF-8&link_code=wsw&search-alias=aps&k=";
 						}
-						[self actionWebTitle:NSLocalizedString(@"Shop Amazon.cn", nil)
-										 URL:zUrl
-									  Domain:@".amazon.cn"];
+						[self actionWebSearchTitle:NSLocalizedString(@"Shop Amazon.cn", nil) URL:zUrl];
 					} break;
 
 					case 11: // 楽天 Search
@@ -1651,17 +1659,13 @@
 							//http://search.rakuten.co.jp/search/spmall?sv=2&p=0&sitem=SG7&submit=商品検索&scid=af_ich_link_search&scid=af_ich_link_search
 							zUrl = @"http://search.rakuten.co.jp/search/spmall/?sv=2&p=0&sitem=";
 						}
-						[self actionWebTitle:NSLocalizedString(@"Shop Rakuten", nil)
-										 URL:zUrl
-									  Domain:@".rakuten.co.jp"];
+						[self actionWebSearchTitle:NSLocalizedString(@"Shop Rakuten", nil) URL:zUrl];
 					} break;
 					
 					case 21: // ケンコーコム Search
 					{			// アフィリエイトID
 						NSString *zUrl = @"http://sp.kenko.com/";
-						[self actionWebTitle:NSLocalizedString(@"Shop Kenko.com", nil)
-										 URL:zUrl
-									  Domain:@".kenko.com"];
+						[self actionWebSearchTitle:NSLocalizedString(@"Shop Kenko.com", nil) URL:zUrl];
 					} break;
 				}
 			} break;
