@@ -7,23 +7,22 @@
 //
 
 #import "Global.h"
+#import "AZDropboxVC.h"
+
 #import "AppDelegate.h"
+#import "PadRootVC.h"
 #import "Elements.h"
 #import "E2viewController.h"
 #import "E3viewController.h"
 #import "E2edit.h"
-//#import "GooDocsTVC.h"
 #import "SettingTVC.h"
 #import "ExportServerVC.h"
 #import "HTTPServer.h"
 #import "MyHTTPConnection.h"
 #import "localhostAddresses.h"
 #import "FileCsv.h"
-//#import "WebSiteVC.h"
 #import "SpAppendVC.h"
-#import "DropboxVC.h"
 #import "PatternImageView.h"
-//#import "GoogleAuth.h"
 #import "GDocUploadVC.h"
 
 
@@ -297,7 +296,12 @@
 	// 未認証の場合、認証処理後、AppDelegate:handleOpenURL:から呼び出される
 	if ([[DBSession sharedSession] isLinked]) 
 	{	// Dropbox 認証済み
-		DropboxVC *vc = [[DropboxVC alloc] initWithE1:e1selected_];
+		//DropboxVC *vc = [[DropboxVC alloc] initWithE1:e1selected_];
+		appDelegate_.dropboxSaveE1selected = e1selected_; //Up対象E1
+		AZDropboxVC *vc = [[AZDropboxVC alloc] initWithMode:AZDropboxUpload
+												  extension:GD_EXTENSION delegate:appDelegate_];
+		[vc setUpFileName:e1selected_.name];
+		[vc setCryptHidden:NO Enabled:appDelegate_.app_pid_SwitchAd];
 		assert(vc);
 		if (appDelegate_.app_is_iPad) {
 			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];

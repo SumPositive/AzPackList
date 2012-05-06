@@ -18,6 +18,7 @@
 //@property (nonatomic, strong) NSMutableArray			*errorMsgs;
 
 - (id)init;
+- (id)initWithTmpFilePath:(NSString*)tmpFilePath;
 
 //Private//- (BOOL)zSavePrivate:(E1 *)Pe1  toMutableString:(NSMutableString *)PzCsv;
 - (NSString *)zSave:(E1 *)Pe1 toMutableString:(NSMutableString *)PzCsv  crypt:(BOOL)bCrypt;

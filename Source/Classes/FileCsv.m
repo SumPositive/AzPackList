@@ -77,6 +77,23 @@ static NSString *csvToStr( NSString *inCsv ) {
     return self;
 }
 
+- (id)initWithTmpFilePath:(NSString*)tmpFilePath
+{
+	self = [super init];
+    if (self) {
+        // Custom initialization
+		// 一時ファイルパス
+		tmpPathFile_ = tmpFilePath;
+		NSLog(@"FileCsv: init: tempPath_ = '%@'", tmpPathFile_);
+		if (tmpPathFile_==nil) {
+			[self errorMsg:@"NG tmp path"];
+		}
+		isShardMode_ = NO;
+		didEncryption_ = NO;
+    }
+    return self;
+}
+
 - (void)dealloc
 {
 	//if (tmpPathFile_) {	// 一時ファイルを削除する

@@ -91,8 +91,8 @@ NSString *GstringNoEmoji( NSString *emoji )
 			[zKey appendFormat:@"%C", code];
 		}
 	}
-	NSLog(@"actionWebTitle: zKey=%@", zKey);
-	return zKey;
+	NSLog(@"GstringNoEmoji: zKey=%@", zKey);
+	return [NSString stringWithString: zKey];
 }
 
 NSString *GstringPercentEscape( NSString *zPara )

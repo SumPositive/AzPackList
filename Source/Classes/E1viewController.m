@@ -6,22 +6,25 @@
 //  Copyright __MyCompanyName__ 2009. All rights reserved.
 //
 
+#import "HTTPServer.h"
+#import "MyHTTPConnection.h"
+#import "localhostAddresses.h"
+
 #import "Global.h"
 #import "AppDelegate.h"
-#import "E1viewController.h"
+#import "AZAboutVC.h"
+#import "AZDropboxVC.h"
 
+#import "Elements.h"
+#import "EntityRelation.h"
+#import "E1viewController.h"
+#import "E1edit.h"
 #import "E2viewController.h"
 #import "E3viewController.h"
 #import "SettingTVC.h"
-//#import "WebSiteVC.h"
-#import "MyHTTPConnection.h"
-#import "localhostAddresses.h"
 #import "FileCsv.h"
 #import "SpSearchVC.h"
-#import "DropboxVC.h"
 #import "PatternImageView.h"
-//#import "GoogleAuth.h"
-//#import "GooDocsTVC.h"
 #import "GDocDownloadTVC.h"
 
 
@@ -275,7 +278,9 @@
 	// 未認証の場合、認証処理後、AppDelegate:handleOpenURL:から呼び出される
 	if ([[DBSession sharedSession] isLinked]) 
 	{	// Dropbox 認証済み
-		DropboxVC *vc = [[DropboxVC alloc] initWithE1:nil];  // nil=Download
+		//DropboxVC *vc = [[DropboxVC alloc] initWithE1:nil];  // nil=Download
+		AZDropboxVC *vc = [[AZDropboxVC alloc] initWithMode:AZDropboxDownload
+												  extension:GD_EXTENSION delegate:appDelegate_];
 		assert(vc);
 		if (appDelegate_.app_is_iPad) {
 			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];

@@ -7,21 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "HTTPServer.h"
-#import "AZAboutVC.h"
 #import "AZStoreTVC.h"	//<AZStoreDelegate>
 
-#import "Elements.h"
-#import "EntityRelation.h"
-#import "E1edit.h"
+@class E1edit;
+@class AppDelegate;
+@class SKProduct;
+@class HTTPServer;
 
 
 @interface E1viewController : UITableViewController 
 	<NSFetchedResultsControllerDelegate, UIActionSheetDelegate	,UIPopoverControllerDelegate, AZStoreDelegate>
 {
-@public		// 外部公開 ＜＜使用禁止！@propertyで外部公開すること＞＞
-@protected	// 自クラスおよびサブクラスから参照できる（無指定時のデフォルト）
-@private	// 自クラス内からだけ参照できる
+@private
 	NSManagedObjectContext		*moc_;
 	NSFetchedResultsController	*fetchedE1_;
 	HTTPServer								*httpServer_;
@@ -35,6 +32,7 @@
 	NSIndexPath*				indexPathEdit_;	//[1.1]ポインタ代入注意！copyするように改善した。
 	
 	AppDelegate		*appDelegate_;
+
 	BOOL					bInformationOpen_;	//[1.0.2]InformationViewを初回自動表示するため
 	NSUInteger			actionDeleteRow_;		//[1.1]削除するRow
 	BOOL					bOptWeightRound_;

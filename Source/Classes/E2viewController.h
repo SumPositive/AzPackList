@@ -15,8 +15,7 @@
 @class HTTPServer;
 @class E3viewController;
 
-@interface E2viewController : UITableViewController 	<UIActionSheetDelegate, MFMailComposeViewControllerDelegate
-	, UIPopoverControllerDelegate>
+@interface E2viewController : UITableViewController 	<UIActionSheetDelegate, MFMailComposeViewControllerDelegate, UIPopoverControllerDelegate>
 {
 @private
 	UIPopoverController*	menuPopover_;  //[MENU]にて自身を包むPopover  閉じる為に必要

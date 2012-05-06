@@ -20,7 +20,6 @@
 @interface DropboxVC : UIViewController <UITableViewDelegate, UITableViewDataSource, 
 										UITextFieldDelegate, DBRestClientDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 {
-	//IBOutlet UIButton		*ibBuClose;		//iPadで使用
 	IBOutlet UIButton		*ibBuSave;
 	IBOutlet UITextField	*ibTfName;
 	IBOutlet UILabel			*ibLbEncrypt;
@@ -29,6 +28,7 @@
 	IBOutlet UISegmentedControl	*ibSegSort;
 	IBOutlet UITableView	*ibTableView;
 
+@private
 	DBRestClient					*restClient;
 	NSMutableArray				*mMetadatas;
 	UIActivityIndicatorView	*mActivityIndicator;

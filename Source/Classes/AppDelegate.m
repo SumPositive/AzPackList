@@ -9,12 +9,11 @@
 
 #import "Global.h"
 #import "AppDelegate.h"
+#import "padRootVC.h"
 #import "Elements.h"
 #import "EntityRelation.h"
 #import "FileCsv.h"
-#import "padRootVC.h"
 #import "E1viewController.h"
-#import "DropboxVC.h"
 
 
 #define CoreData_iCloud_SYNC		NO	// YES or NO
@@ -32,28 +31,13 @@
 
 
 @implementation AppDelegate
-{
-@private	// 自クラス内からだけ参照できる
-	NSManagedObjectModel				*mCoreModel;
-	NSPersistentStoreCoordinator		*mCorePsc;
-	
-	ADBannerView				*miAdView;
-	GADBannerView				*mAdMobView;
-	BOOL								mAdCanVisible;		//YES:表示可能な状況　 NO:表示してはいけない状況
-	
-	// Clip Borad
-	//NSMutableArray				*clipE3objects; //(V0.4.4) [Cut][Copy]されたE3をPUSHスタックする。[Paste]でPOPする
-
-	UIAlertView						*mAlertProgress;
-	UIActivityIndicatorView	*mAlertIndicator;
-}
 @synthesize window = window_;
 @synthesize managedObjectContext = moc_;
 @synthesize mainNC = mainNC_;
 @synthesize mainSVC = mainSVC_;
 @synthesize padRootVC = padRootVC_;
 @synthesize clipE3objects = clipE3objects_;		// [Cut][Copy]されたE3をPUSHスタックする。[Paste]でPOPする
-@synthesize dropboxSaveE1selected = dropboxSaveE1selected_;
+@synthesize dropboxSaveE1selected = __dropboxSaveE1selected;
 //@synthesize picasaBox = picasaBox_;
 @synthesize app_opt_Autorotate = app_opt_Autorotate_;
 @synthesize app_opt_Ad = app_opt_Ad_;				//Setting選択フラグ
@@ -224,7 +208,7 @@
 {
 	if ([url isFileURL]) {	// .packlist OR .azp ファイルをタッチしたとき、
 		NSLog(@"File loaded into [url path]=%@", [url path]);
-		if ([[[url pathExtension] lowercaseString] isEqualToString:DBOX_EXTENSION]) 
+		if ([[[url pathExtension] lowercaseString] isEqualToString:GD_EXTENSION]) 
 		{	// ファイル・タッチ対応
 			UIAlertView *alert = [[UIAlertView alloc] init];
 			alert.title = NSLocalizedString(@"Please Wait",nil);
@@ -282,12 +266,21 @@
         if ([[DBSession sharedSession] isLinked]) 
 		{	// Dropbox 認証成功
             NSLog(@"App linked successfully!");
-			// DropboxTVC を開ける
-			DropboxVC *vc = [[DropboxVC alloc] initWithE1:dropboxSaveE1selected_];
+			// Dropbox を開ける
+			AZDropboxMode mode;
+			if (__dropboxSaveE1selected) {
+				mode = AZDropboxUpload;
+			} else {
+				mode = AZDropboxDownload;
+			}
+			//DropboxVC *vc = [[DropboxVC alloc] initWithE1:__dropboxSaveE1selected];
+			AZDropboxVC *vc = [[AZDropboxVC alloc] initWithMode:mode extension:GD_EXTENSION delegate:self];
+			if (mode==AZDropboxUpload) {
+				[vc setUpFileName:__dropboxSaveE1selected.name];
+				[vc setCryptHidden:NO Enabled:app_pid_SwitchAd_];
+			}
 			if (app_is_iPad_) {
-				// Dropboxだけは、認証して戻ったときAppDelegate内で再現させるため座標情報が不要なFormSheetにしている。
-			//	vc.modalPresentationStyle = UIModalPresentationFormSheet;
-			//	[mainSVC_ presentModalViewController:vc animated:YES];
+				//認証して戻ったときAppDelegate内で再現させるため座標情報が不要なFormSheetにしている。
 				UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 				nc.modalPresentationStyle = UIModalPresentationFormSheet;
 				nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
@@ -604,6 +597,26 @@
 }*/
 - (NSString *)applicationDocumentsDirectory {
 	return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+}
+
+
+#pragma mark - <AZDropboxDelegate>
+- (NSString*)azDropboxBeforeUpFilePath:(NSString*)filePath crypt:(BOOL)crypt
+{	//Up前処理＜UPするファイルを準備する＞
+	// ファイルへ書き出す
+	if (__dropboxSaveE1selected) {
+		FileCsv *fcsv = [[FileCsv alloc] initWithTmpFilePath:filePath];
+		return [fcsv zSaveTmpFile:__dropboxSaveE1selected crypt:crypt];
+	} else {
+		return NSLocalizedString(@"Dropbox NoFile", nil);
+	}
+}
+
+- (NSString*)azDropboxDownAfterFilePath:(NSString*)filePath
+{	//Down後処理＜DOWNしたファイルを読み込むなど＞
+	// ファイルから読み込む
+	FileCsv *fcsv = [[FileCsv alloc] initWithTmpFilePath:filePath];
+	return [fcsv zLoadTmpFile];
 }
 
 

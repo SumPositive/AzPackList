@@ -5,15 +5,31 @@
 //  Created by 松山 和正 on 09/12/03.
 //  Copyright __MyCompanyName__ 2009. All rights reserved.
 //
-
-#import "Elements.h"
-#import "padRootVC.h"
 #import <iAd/iAd.h>
 #import "GADBannerView.h"
+#import "AZDropboxVC.h"		//<AZDropboxDelegate>
+
+@class PadRootVC;
+@class E1;
 
 
 @interface AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate
-									,ADBannerViewDelegate	,GADBannerViewDelegate> 
+						,ADBannerViewDelegate ,GADBannerViewDelegate, AZDropboxDelegate> 
+{
+@private	// 自クラス内からだけ参照できる
+	NSManagedObjectModel				*mCoreModel;
+	NSPersistentStoreCoordinator		*mCorePsc;
+	
+	ADBannerView				*miAdView;
+	GADBannerView				*mAdMobView;
+	BOOL								mAdCanVisible;		//YES:表示可能な状況　 NO:表示してはいけない状況
+	
+	// Clip Borad
+	//NSMutableArray				*clipE3objects; //(V0.4.4) [Cut][Copy]されたE3をPUSHスタックする。[Paste]でPOPする
+	
+	UIAlertView						*mAlertProgress;
+	UIActivityIndicatorView	*mAlertIndicator;
+}
 
 @property (nonatomic, retain) UIWindow		*window;
 @property (nonatomic, retain) UINavigationController		*mainNC;		//for iPhone

@@ -17,6 +17,11 @@
 #define AdMobID_PackPAD	@"a14dd004bc6bc0a";		//AdMobパブリッシャー ID  "モチメモ Free iPad"
 #define AdMobID_PackList	@"a14d4cec1e082c1";		//AdMobパブリッシャー ID  "モチメモ Free iPhone"　
 
+// Dropbox
+#define DBOX_APPKEY			@"jngoip8t4z187ot"	// PackList
+#define DBOX_SECRET			@"l6rho4qt0jpiarq"
+//#define DBOX_EXTENSION		@"azp" ⇒ GD_EXTENSION
+
 // AppStore In-App Purchase ProductIdentifier
 #define STORE_PRODUCTID_AdOff		@"com.azukid.AzPackList5.AdOff"	// Ad Off/On （おまけ iCloud対応）
 
