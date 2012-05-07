@@ -616,7 +616,13 @@
 {	//Down後処理＜DOWNしたファイルを読み込むなど＞
 	// ファイルから読み込む
 	FileCsv *fcsv = [[FileCsv alloc] initWithTmpFilePath:filePath];
-	return [fcsv zLoadTmpFile];
+	NSString *zErr = [fcsv zLoadTmpFile];
+	if (zErr==nil) {
+		// 読み込み成功につき再描画を要求する
+		[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
+															object:self userInfo:nil];
+	}
+	return zErr;
 }
 
 

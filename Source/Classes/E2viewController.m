@@ -300,8 +300,6 @@
 		appDelegate_.dropboxSaveE1selected = e1selected_; //Up対象E1
 		AZDropboxVC *vc = [[AZDropboxVC alloc] initWithMode:AZDropboxUpload
 												  extension:GD_EXTENSION delegate:appDelegate_];
-		[vc setUpFileName:e1selected_.name];
-		[vc setCryptHidden:NO Enabled:appDelegate_.app_pid_SwitchAd];
 		assert(vc);
 		if (appDelegate_.app_is_iPad) {
 			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
@@ -316,6 +314,9 @@
 			[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 			[self.navigationController pushViewController:vc animated:YES];
 		}
+		//表示後にセットすること
+		[vc setUpFileName:e1selected_.name];
+		[vc setCryptHidden:NO Enabled:appDelegate_.app_pid_SwitchAd];
 	}
 	else {
 		// Dropbox 未認証
@@ -1665,6 +1666,7 @@
 		if (appDelegate_.app_is_iPad) {
 			//[2.0.1]Bug: iPadタテ向きでUIActionSheetを出すと落ちる(iOSのバグらしい）
 			//[2.0.1]Fix: UIActionSheetを UIAlertViewに変えて回避。
+			//[2012-05-07]showFromRect:によりPopoverにしても落ちた。
 			UIAlertView *av = [[UIAlertView alloc] initWithTitle: title
 														message:@"" 
 														delegate:self 
@@ -1680,7 +1682,7 @@
 									 destructiveButtonTitle:NSLocalizedString(@"DELETE Group", nil)
 									 otherButtonTitles:nil];
 			action.tag = ACTIONSEET_TAG_DELETEGROUP;
-			//[2.0]ToolBar非表示（TabBarも無い）　＜＜ToolBar無しでshowFromToolbarするとFreeze＞＞
+			//[2.0]ToolBar非表示（TabBarも無い）　＜＜ToolBar無しでshowFromToolbarするとFreeze
 			[action showInView:self.view]; //windowから出すと回転対応しない
 		}
     }

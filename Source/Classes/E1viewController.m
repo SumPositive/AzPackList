@@ -106,24 +106,21 @@
 
 - (void)refreshAllViews:(NSNotification*)note 
 {	// iCloud-CoreData に変更があれば呼び出される
-	//@synchronized(note)
-	//{
-		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
-		//[kvs synchronize]; <<<変化通知により同期済みであるから不要
-		if (appDelegate_.app_pid_SwitchAd==NO  &&  [kvs boolForKey:STORE_PRODUCTID_AdOff]) 
-		{	// iCloud OFF --> ON
-			appDelegate_.app_pid_SwitchAd = YES;
-			//[appDelegate_ managedObjectContextReset]; // iCloud対応の moc再生成する。
-			appDelegate_.app_opt_Ad = NO;
-			[kvs setBool:NO forKey:KV_OptAdvertising];
-			[appDelegate_ AdRefresh:NO];
-		}
-		
-		moc_ = [EntityRelation getMoc]; //購入後、再生成された場合のため
-		contentOffsetDidSelect_.y = 0;  // 直前のdidSelectRowAtIndexPath位置に戻らないようにクリアしておく
-		[self viewWillAppear:YES];	//この中で、refetcheAllData:が呼ばれる
-		[appDelegate_ AdViewWillRotate:self.interfaceOrientation];	// AdOFF-->ONのとき回転補正が必要
-	//}
+	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+	//[kvs synchronize]; <<<変化通知により同期済みであるから不要
+	if (appDelegate_.app_pid_SwitchAd==NO  &&  [kvs boolForKey:STORE_PRODUCTID_AdOff]) 
+	{	// iCloud OFF --> ON
+		appDelegate_.app_pid_SwitchAd = YES;
+		//[appDelegate_ managedObjectContextReset]; // iCloud対応の moc再生成する。
+		appDelegate_.app_opt_Ad = NO;
+		[kvs setBool:NO forKey:KV_OptAdvertising];
+		[appDelegate_ AdRefresh:NO];
+	}
+	
+	moc_ = [EntityRelation getMoc]; //購入後、再生成された場合のため
+	contentOffsetDidSelect_.y = 0;  // 直前のdidSelectRowAtIndexPath位置に戻らないようにクリアしておく
+	[self viewWillAppear:YES];	//この中で、refetcheAllData:が呼ばれる
+	[appDelegate_ AdViewWillRotate:self.interfaceOrientation];	// AdOFF-->ONのとき回転補正が必要
 }
 
 - (void)deleteBlankData
