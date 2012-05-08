@@ -255,17 +255,18 @@
 			// Body: 添付ファイル
 			NSString* fileName = [NSString stringWithFormat:@"%@.%@", zPackName, GD_EXTENSION];
 			NSData* fileData = [NSData dataWithContentsOfFile:csvPath];
-			[picker addAttachmentData:fileData mimeType:@"application/packlist" fileName:fileName];
+			// application/vnd.packlist
+			[picker addAttachmentData:fileData mimeType:@"application/vnd.packlist" fileName:fileName];
 			
 			// Email オープン
 			if (appDelegate_.app_is_iPad) {
 				picker.modalPresentationStyle = UIModalPresentationFormSheet;
 				picker.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 				//[appDelegate_.mainSVC presentModalViewController:picker animated:YES];
-				[self presentModalViewController:picker animated:YES];
 			} else {
-				[appDelegate_.mainNC presentModalViewController:picker animated:YES];
+				//[appDelegate_.mainNC presentModalViewController:picker animated:YES];
 			}
+			[self presentModalViewController:picker animated:YES];
 		});
 	});
 }
@@ -474,11 +475,12 @@
             break;
     }
 
-	if (appDelegate_.app_is_iPad) {
-		[appDelegate_.mainSVC dismissModalViewControllerAnimated:YES];
-	} else {
-		[appDelegate_.mainNC dismissModalViewControllerAnimated:YES];
-	}
+	//if (appDelegate_.app_is_iPad) {
+	//	[appDelegate_.mainSVC dismissModalViewControllerAnimated:YES];
+	//} else {
+	//	[appDelegate_.mainNC dismissModalViewControllerAnimated:YES];
+	//}
+	[controller dismissModalViewControllerAnimated:YES];
 }
 
 
