@@ -50,9 +50,13 @@
 	
 	// Sort条件
 	NSInteger iSort = MsegSort.selectedSegmentIndex;
-	if (iSort <= 0)	vc.RzSort = @"N"; //N 新着順
-	else					vc.RzSort = @"P"; //P 人気順
-	
+	if (iSort <= 0)	{
+		vc.RzSort = @"N"; //N 新着順
+		GA_TRACK_METHOD_LABEL(@"Sort New",0)
+	} else {
+		vc.RzSort = @"P"; //P 人気順
+		GA_TRACK_METHOD_LABEL(@"Sort Pop",0)
+	}
 	[self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -190,6 +194,7 @@
 - (void)viewDidAppear:(BOOL)animated 
 {
 	[super viewDidAppear:animated];
+	GA_TRACK_METHOD
 	
 	//viewWillAppearでキーを表示すると画面表示が無いまま待たされてしまうので、viewDidAppearでキー表示するように改良した。
 //	[MtfAmount becomeFirstResponder];  // キーボード表示

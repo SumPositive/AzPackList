@@ -54,6 +54,7 @@
 	captureSession_ = [[AVCaptureSession alloc] init];
 	if (!captureSession_) {
 		NSLog(@"ERROR: !captureSession -- No Camera");
+		GA_TRACK_EVENT_ERROR(@"No Camera",0)
 		return;
 	}
 	
@@ -148,6 +149,7 @@
 	}
 	if (!captureOutput_ OR !captureSession_) return;
 	
+	GA_TRACK_METHOD
 	// 撮影開始
 	AVCaptureConnection *connection = [captureOutput_.connections lastObject];
 	[captureOutput_ captureStillImageAsynchronouslyFromConnection: connection
@@ -360,7 +362,8 @@
 - (void)viewDidAppear:(BOOL)animated 
 {
 	[super viewDidAppear:animated];
-
+	GA_TRACK_METHOD
+	
 	[self cameraPreview];
 }
 

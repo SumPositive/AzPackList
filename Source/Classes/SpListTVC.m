@@ -147,6 +147,7 @@
 - (void)viewDidAppear:(BOOL)animated 
 {
     [super viewDidAppear:animated];
+	GA_TRACK_METHOD
 	
 	MbSearching = NO;
 	

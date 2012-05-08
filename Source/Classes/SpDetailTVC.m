@@ -201,6 +201,7 @@
 - (void)viewDidAppear:(BOOL)animated 
 {
     [super viewDidAppear:animated];
+	GA_TRACK_METHOD
 	
 	if (Re1add==nil) { // 初回
 		@autoreleasepool {

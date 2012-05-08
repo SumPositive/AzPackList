@@ -54,7 +54,11 @@
 //[1.1]メール添付ファイル"*.packlist" をタッチしてモチメモを選択すると、launchOptions にファイルの URL (file://…というスキーマ) で渡される。
 //- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 - (void)applicationDidFinishLaunching:(UIApplication *)application
-{    
+{
+	GA_INIT_TRACKER(@"UA-30305032-7", 10, nil);	//-7:PackList2
+	GA_TRACK_EVENT(@"Device", @"model", [[UIDevice currentDevice] model], 0);
+	GA_TRACK_EVENT(@"Device", @"systemVersion", [[UIDevice currentDevice] systemVersion], 0);
+
 	// MainWindow    ＜＜MainWindow.xlb を使用しないため、ここで生成＞＞
 	window_ = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	
@@ -90,7 +94,9 @@
 	
 	// AZStore PID  ＜＜productIdentifier をそのままKEYにする
 	if ([kvs objectForKey: STORE_PRODUCTID_AdOff]==nil)		[kvs setBool:NO  forKey: STORE_PRODUCTID_AdOff];
-	
+	if (kvs==nil) {
+		GA_TRACK_EVENT_ERROR(@"KVS==nil",0);
+	}
 	[kvs synchronize]; // 最新同期
 	
 	app_opt_Ad_ = [kvs boolForKey:KV_OptAdvertising];
@@ -98,9 +104,9 @@
 	//NSLog(@"app_pid_SwitchAd_=%d", app_pid_SwitchAd_);
 	
 	if (app_pid_SwitchAd_==NO && [userDefaults boolForKey:UD_OptCrypt]) {
-		[userDefaults setBool:NO forKey:UD_OptCrypt];
 		[userDefaults setBool:NO forKey:UD_Crypt_Switch];
 	}
+	[userDefaults setBool:app_pid_SwitchAd_ forKey:UD_OptCrypt];
 	
 #ifdef AzMAKE_SPLASHFACE
 	app_opt_Ad_ = NO;
@@ -117,6 +123,7 @@
 	if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0"]==NSOrderedAscending) { // ＜ "5.0"
 		// iOS5.0より前
 		alertBox(@"! STOP !", @"Need more iOS 5.0", nil);
+		GA_TRACK_EVENT_ERROR(@"STOP < iOS 5.0",0);
 		exit(0);
 	}
 	//app_is_iPad_ = [[[UIDevice currentDevice] model] hasPrefix:@"iPad"];	// iPad
@@ -232,6 +239,7 @@
 						[alert show];
 					} 
 					else {
+						GA_TRACK_EVENT_ERROR(zErr,0);
 						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Fail",nil)  //ダウンロード失敗
 														   message: zErr
 														  delegate:nil 
@@ -352,6 +360,7 @@
 	if (moc_ && [moc_ hasChanges]) { //未保存があれば保存する
 		NSError *error;
         if (![moc_ save:&error]) {
+			GA_TRACK_EVENT_ERROR([error localizedDescription],0);
 			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 			assert(NO); //DEBUGでは落とす
         } 
@@ -493,6 +502,7 @@
 			 [psc lock];
 			 if (![psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:options error:&error]) 
 			 {
+				 GA_TRACK_EVENT_ERROR([error localizedDescription],0);
 				 NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 				 abort();
 			 }
@@ -521,6 +531,7 @@
 		 if (![mCorePsc addPersistentStoreWithType:NSSQLiteStoreType 	 configuration:nil 
 																   URL:storeUrl  options:options  error:&error])
 		 {
+			 GA_TRACK_EVENT_ERROR([error localizedDescription],0);
 			 NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 			 abort();
 		 }

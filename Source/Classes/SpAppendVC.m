@@ -70,6 +70,7 @@
 
 - (void)vBuPublish:(id)sender
 {
+	GA_TRACK_METHOD
 	// Name
 	if ([MtfName.text length] < 3) {
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Publish Name Title",nil)
@@ -319,6 +320,7 @@
 - (void)viewDidAppear:(BOOL)animated 
 {
 	[super viewDidAppear:animated];
+	GA_TRACK_METHOD
 	
 	if (appDelegate_.app_opt_Ad) {
 		// 各viewDidAppear:にて「許可/禁止」を設定する
@@ -458,6 +460,7 @@
 				// Append - Upload - Publish
 				NSString *err = [self vSharePlanAppend]; // HTTP非同期
 				if (err) {
+					GA_TRACK_EVENT_ERROR(err,0)
 					UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append Err",nil)
 																	message:err
 																   delegate:self 
@@ -466,6 +469,7 @@
 					alert.tag = ALERT_TAG_PREVIEW; // 前のViewへ戻る
 					[alert show];
 				} else {
+					GA_TRACK_METHOD_LABEL(@"OK Published",0)
 					/* connectionDidFinishLoading:通信終了時に表示するようにした。
 					UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Append OK",nil)
 																	message:NSLocalizedString(@"Append OK Msg",nil)

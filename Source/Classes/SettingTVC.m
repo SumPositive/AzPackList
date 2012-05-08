@@ -105,6 +105,7 @@
 - (void)viewDidAppear:(BOOL)animated 
 {
     [super viewDidAppear:animated];
+	GA_TRACK_METHOD
 	//[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 
 	// 広告表示に変化があれば、広告スペースを調整するための処理

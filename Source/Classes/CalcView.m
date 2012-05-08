@@ -621,7 +621,8 @@ replacementString:(NSString *)text
 {
 	if (MbShow) return;
 	MbShow = YES;
-
+	GA_TRACK_METHOD
+	
 	//if (RzLabelText) {
 	//	[RzLabelText release];
 	//}

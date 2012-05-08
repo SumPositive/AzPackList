@@ -205,13 +205,16 @@ static NSString *csvToStr( NSString *inCsv ) {
 	}
 	@catch (NSString *errMsg) {
 		[self errorMsg:errMsg];
+		GA_TRACK_EVENT_ERROR(errMsg,0)
 	}
 	@catch(id error) {
 		[self errorMsg:@"Save NG: Logic error"];  // Entity定義を疑え！
+		GA_TRACK_EVENT_ERROR([error localizedDescription],0)
 	}
 	@catch (NSException *errEx) {
 		NSString *msg = [NSString stringWithFormat:@"Save Exception: %@: %@", [errEx name], [errEx reason]];
 		[self errorMsg:msg];
+		GA_TRACK_EVENT_ERROR(msg,0)
 	}
 	@finally {
 		//
@@ -231,6 +234,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 	//----------------------------------------------------------------------------Crypt 暗号化
 	didEncryption_ = NO;
 	if (bCrypt) {
+		GA_TRACK_METHOD_LABEL(@"Crypt ON",0)
 		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 		if ([userDefaults boolForKey:UD_OptCrypt]) {
 			// KeyChainから保存しているパスワードを取得する
@@ -249,6 +253,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 				didEncryption_ = YES;
 			}
 			else {
+				GA_TRACK_EVENT_ERROR(@"Crypt NoKey",0)
 				[self errorMsg:NSLocalizedString(@"PackListCrypt NoKey",nil)];
 				return errorMsg_;
 			}
@@ -285,10 +290,12 @@ static NSString *csvToStr( NSString *inCsv ) {
 	}
 	@catch(id error) {
 		[self errorMsg:NSLocalizedString(@"File error",nil)];
+		GA_TRACK_EVENT_ERROR([error localizedDescription],0)
 	}
 	@catch (NSException *errEx) {
 		NSString *msg = [NSString stringWithFormat:@"zSaveTmpFile: NSException: %@: %@", [errEx name], [errEx reason]];
 		[self errorMsg:msg];
+		GA_TRACK_EVENT_ERROR(msg,0)
 	}
 	@finally {
 		[output closeFile];
@@ -311,10 +318,12 @@ static NSString *csvToStr( NSString *inCsv ) {
 	}
 	@catch(id error) {
 		[self errorMsg:NSLocalizedString(@"File error",nil)];
+		GA_TRACK_EVENT_ERROR([error localizedDescription],0)
 	}
 	@catch (NSException *errEx) {
 		NSString *msg = [NSString stringWithFormat:@"zSavePasteboard: Exception: %@: %@", [errEx name], [errEx reason]];
 		[self errorMsg:msg];
+		GA_TRACK_EVENT_ERROR(msg,0)
 	}
 	@finally {
 		//
@@ -624,6 +633,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 	} //@try
 	@catch (NSString *errMsg) {
 		[self errorMsg:errMsg];
+		GA_TRACK_EVENT_ERROR(errMsg,0)
 		if (e1node) {
 			[moc rollback];
 			//rollbackで十分//[moc deleteObject:e1node]; // insertNewObjectForEntityForNameしたEntityを削除する
@@ -633,6 +643,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 	@catch (NSException *errEx) {
 		NSString *msg = [NSString stringWithFormat:@"zLoad: Exception: %@: %@", [errEx name], [errEx reason]];
 		[self errorMsg:msg];
+		GA_TRACK_EVENT_ERROR(msg,0)
 		if (e1node) {
 			[moc rollback];
 			//rollbackで十分//[moc deleteObject:e1node]; // insertNewObjectForEntityForNameしたEntityを削除する
@@ -694,6 +705,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 	NSString *zCsv = [NSString stringWithContentsOfURL:Url encoding:NSUTF8StringEncoding error:&err];
 	if (err) {
 		[self errorMsg:[err localizedDescription]];
+		GA_TRACK_EVENT_ERROR(errorMsg_,0)
 		return errorMsg_;
 	}
 	//NSLog(@"zCsv=%@", zCsv);
@@ -753,10 +765,12 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 	}
 	@catch(id error) {
 		[self errorMsg:NSLocalizedString(@"File error",nil)];
+		GA_TRACK_EVENT_ERROR([error localizedDescription],0)
 	}
 	@catch (NSException *errEx) {
 		NSString *msg = [NSString stringWithFormat:@"zLoadTmpFile: Exception: %@: %@", [errEx name], [errEx reason]];
 		[self errorMsg:msg];
+		GA_TRACK_EVENT_ERROR(msg,0)
 	}
 	@finally {
 		[csvHandle closeFile];

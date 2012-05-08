@@ -68,6 +68,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {	// ＜＜魅せる処理＞＞
     [super viewDidAppear:animated];
+	GA_TRACK_METHOD
 	
 	// 選択グループを中央に近づける
 	NSIndexPath* indexPath = [NSIndexPath indexPathForRow:RlbGroup.tag inSection:0];
