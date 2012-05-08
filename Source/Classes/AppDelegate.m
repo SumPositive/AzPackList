@@ -119,7 +119,8 @@
 		alertBox(@"! STOP !", @"Need more iOS 5.0", nil);
 		exit(0);
 	}
-	app_is_iPad_ = [[[UIDevice currentDevice] model] hasPrefix:@"iPad"];	// iPad
+	//app_is_iPad_ = [[[UIDevice currentDevice] model] hasPrefix:@"iPad"];	// iPad
+	app_is_iPad_ = iS_iPAD;
 	NSLog(@"app_is_iPad_=%d,  app_is_Ad_=%d,  app_pid_AdOff_=%d", app_is_iPad_, app_opt_Ad_, app_pid_SwitchAd_);
 	
 /*	// iCloud完全クリアする　＜＜＜同期矛盾が生じたときや構造変更時に使用
@@ -616,13 +617,14 @@
 {	//Down後処理＜DOWNしたファイルを読み込むなど＞
 	// ファイルから読み込む
 	FileCsv *fcsv = [[FileCsv alloc] initWithTmpFilePath:filePath];
-	NSString *zErr = [fcsv zLoadTmpFile];
-	if (zErr==nil) {
-		// 読み込み成功につき再描画を要求する
-		[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
-															object:self userInfo:nil];
-	}
-	return zErr;
+	return  [fcsv zLoadTmpFile];
+}
+
+- (void)azDropboxDownCompleated
+{	//ここで、Down成功後の再描画など行う
+	// 再読み込み 通知発信---> E1viewController
+	[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
+														object:self userInfo:nil];
 }
 
 
