@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PatternImageView.h"
 
 
 @class E1;

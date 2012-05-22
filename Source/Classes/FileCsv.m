@@ -198,7 +198,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 		AzLOG(@"End> %@", str);
 		[PzCsv appendString:str];
 		if (0 < iPhotoNoUpCount) {
-			alertBox(NSLocalizedString(@"Picasa CSV NoUpload", nil), NSLocalizedString(@"Picasa CSV NoUpload msg", nil), @"OK");
+			azAlertBox(NSLocalizedString(@"Picasa CSV NoUpload", nil), NSLocalizedString(@"Picasa CSV NoUpload msg", nil), @"OK");
 		}
 		// Compleat!
 		return errorMsg_; //=nil

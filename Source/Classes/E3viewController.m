@@ -169,7 +169,7 @@
 	if (appDelegate_.app_is_iPad) {
 		if (sharePlanList_) {
 			self.contentSizeForViewInPopover = GD_POPOVER_SIZE_Share;
-			self.navigationController.toolbarHidden = YES;	// ツールバー不要
+			//self.navigationController.toolbarHidden = YES;	// ツールバー不要
 			optItemsGrayShow_ = YES; //グレー全表示
 			return;  // 以下不要
 		} else {
@@ -182,6 +182,23 @@
 		self.navigationItem.rightBarButtonItem = self.editButtonItem;
 		self.tableView.allowsSelectionDuringEditing = YES;
 	}
+
+	//[2.0.2]エリア拡大とiAd表示するため、ToolBar完全廃止。 buGrayを右上へ設置。
+	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
+	optItemsGrayShow_ = [kvs boolForKey:KV_OptItemsGrayShow];
+	// Tool Bar Button
+	// セグメントが回転に対応せず不具合（高さが変わる）発生するため、ボタンに戻した。
+	UIImage *imgGray;
+	if (optItemsGrayShow_) {
+		imgGray = [UIImage imageNamed:@"Icon16-ItemGrayShow"]; // Gray Show
+	} else {
+		imgGray = [UIImage imageNamed:@"Icon16-ItemGrayHide"]; // Gray Hide
+	}
+	UIBarButtonItem *buGray = [[UIBarButtonItem alloc] initWithImage:imgGray
+															   style:UIBarButtonItemStylePlain
+															  target:self 
+															  action:@selector(azItemsGrayHide:)];
+	
 	
 	if (e1selected_.name) {		// self.titleは、TopBarへ挿入する処理のため必要になる。
 		self.title = e1selected_.name;
@@ -206,7 +223,7 @@
 			UIBarButtonItem* buTitle = [[UIBarButtonItem alloc] initWithTitle:str style:UIBarButtonItemStylePlain target:nil action:nil];
 			
 			NSMutableArray* buttons = [[NSMutableArray alloc] initWithObjects:
-									   buFixed, buFlexible, buTitle, buFlexible, nil];
+									   buFixed, buFlexible, buTitle, buFlexible, buGray, buFixed, nil];
 			
 			if (appDelegate_.padRootVC.popoverButtonItem) {
 				appDelegate_.padRootVC.popoverButtonItem.title = NSLocalizedString(@"Index button", nil);
@@ -225,6 +242,8 @@
 												  initWithTitle:NSLocalizedString(@"Back", nil)
 												  style:UIBarButtonItemStylePlain  
 												  target:nil  action:nil];
+
+		self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects: self.editButtonItem, buGray, nil];
 	}
 	
 	// Search Bar
@@ -235,6 +254,7 @@
 	self.tableView.tableHeaderView = sb; 
 	//[sb release];
 	
+	/*[2.0.2]エリア拡大とiAd表示するため、ToolBar完全廃止。 buGrayを右上へ設置。
 	// ここで参照しているため。 基本的には、viewWillAppearで取得すること
 	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	//MbAzOptItemsQuickSort = [defaults boolForKey:GD_OptItemsQuickSort];  [1.0.3]廃止
@@ -264,6 +284,7 @@
 								   target:self action:@selector(azReflesh)];
 	NSArray *aArray = [NSArray arrayWithObjects:  buGray, buFlex, buRefresh, buFlex, buSearch, nil];
 	[self setToolbarItems:aArray animated:YES];
+	 */
 }
 
 - (void)viewDidLoad 
@@ -335,7 +356,8 @@
 {
     [super viewDidAppear:animated];
 	
-	if (appDelegate_.app_is_iPad) {
+	[self.navigationController setToolbarHidden:YES animated:NO]; //[2.0.2]ツールバー廃止
+	/*if (appDelegate_.app_is_iPad) {
 		//loadViewの設定優先　[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
 	} else {
 		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) { // ヨコ
@@ -343,13 +365,23 @@
 		} else {
 			[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
 		}
-	}
+	}*/
 	
 	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 
 	if (appDelegate_.app_opt_Ad) {
 		// 各viewDidAppear:にて「許可/禁止」を設定する
-		[appDelegate_ AdRefresh:NO];	//広告禁止
+		[appDelegate_ AdRefresh:YES];	//iPadでは表示
+		
+		//下部の広告スペースを空ける 
+		//回転時に解除されるようなので、didRotateFromInterfaceOrientation:でも処理している
+		CGRect rc = self.tableView.frame;
+		if (iS_iPAD) {
+			rc.size.height -= 66;	
+		} else {
+			rc.size.height -= 50;
+		}
+		self.tableView.frame = rc;
 	}
 	
 	// Photo E3detail保存時にアップできなかった場合など、未アップがあれば順次アップする
@@ -602,15 +634,15 @@
 		return YES;	// FormSheet窓対応
 	}
 	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
-		[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
+		//[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
 	// 回転許可
-	if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {	// タテ
+/*	if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {	// タテ
 		[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
 	} else {
 		[self.navigationController setToolbarHidden:YES animated:YES]; // ツールバー消す
-	}
+	}*/
     return YES;
 }
 
@@ -620,7 +652,7 @@
 {
 	// 広告非表示でも回転時に位置調整しておく必要あり ＜＜現れるときの開始位置のため＞＞
 	[appDelegate_ AdViewWillRotate:toInterfaceOrientation];
-	
+
 	if (appDelegate_.app_is_iPad) {	// CameraVC:で受信している
 		NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:
 							  [NSNumber numberWithInteger:toInterfaceOrientation], NFM_ToInterfaceOrientation, 
@@ -655,6 +687,17 @@
 			[popOver_ dismissPopoverAnimated:YES];
 			//[Mpopover release], Mpopover = nil;
 		}
+	}
+
+	if (appDelegate_.app_opt_Ad) {
+		//下部の広告スペースを空ける ＜＜回転時に解除されるようなので、毎回実施
+		CGRect rc = self.tableView.frame;
+		if (iS_iPAD) {
+			rc.size.height -= 66;	
+		} else {
+			rc.size.height -= 50;
+		}
+		self.tableView.frame = rc;
 	}
 }
 
@@ -1767,7 +1810,7 @@
 	}*/
 	
 	if (appDelegate_.app_UpdateSave) { // 変更あるので閉じさせない
-		alertBox(NSLocalizedString(@"Cancel or Save",nil), 
+		azAlertBox(NSLocalizedString(@"Cancel or Save",nil), 
 				 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
 		return NO; 
 	}

@@ -291,12 +291,13 @@
 - (void)viewDidAppear:(BOOL)animated 
 {
     [super viewDidAppear:animated];
-	[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
+	[self.navigationController setToolbarHidden:YES animated:NO]; //[2.0.2]ツールバー廃止
+	//[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
 	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 	
 	if (mAppDelegate.app_opt_Ad) {
 		// 各viewDidAppear:にて「許可/禁止」を設定する
-		[mAppDelegate AdRefresh:NO];	//広告禁止
+		[mAppDelegate AdRefresh:iS_iPAD];  //iPhoneは消すことにした。
 	}
 	
 	//この時点で MtfName は未生成だから、0.5秒後に処理する
@@ -696,7 +697,7 @@
 		mAppDelegate.app_UpdateSave = YES; // 変更あり
 		self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
 		
-		mTfKeyword.text = GstringNoEmoji( mTfKeyword.text ); // 絵文字を除去する
+		mTfKeyword.text = azStringNoEmoji( mTfKeyword.text ); // 絵文字を除去する
 		
 	/*	// 絵文字を除去する
 		NSMutableString *zKey = [NSMutableString new];
@@ -736,7 +737,7 @@
 	NSLog(@"Escape: zKeyword {%@}", zKeyword);
 	*/
 	
-	NSString *zKeyword = GstringPercentEscape( mTfKeyword.text );
+	NSString *zKeyword = azStringPercentEscape( mTfKeyword.text );
 	
 /*	
 	WebSiteVC *web = [[WebSiteVC alloc] initWithBookmarkDelegate:self];	// [Bookmark] <webSiteBookmarkUrl:>

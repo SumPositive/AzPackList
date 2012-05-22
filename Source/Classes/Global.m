@@ -72,47 +72,6 @@ NSString *GstringFromNumber( NSNumber *num )
 	return str; // autorelease
 }
 
-NSString *GstringNoEmoji( NSString *emoji )
-{
-	// 絵文字を除去する
-	NSMutableString *zKey = [NSMutableString new];
-	for (NSUInteger i = 0; i < [emoji length]; i++)
-	{
-		// UNICODE(UTF-16)文字を順に取り出します。
-		unichar code = [emoji characterAtIndex:i];
-		// UNICODE(UTF-16)絵文字範囲 http://ja.wikipedia.org/wiki/SoftBank%E7%B5%B5%E6%96%87%E5%AD%97
-		if ((0x20E0<=code && code<=0x2FFF) OR (0xD830<=code && code<=0xDFFF))
-		{
-			//NSLog(@"\\u%04x <<<", code);
-			i++;
-		} 
-		else {
-			//NSLog(@"\\u%04x", code);
-			[zKey appendFormat:@"%C", code];
-		}
-	}
-	NSLog(@"GstringNoEmoji: zKey=%@", zKey);
-	return [NSString stringWithString: zKey];
-}
-
-NSString *GstringPercentEscape( NSString *zPara )
-{	// パーセントエスケープ処理してUTF8でエンコーディングする
-	// stringByAddingPercentEscapesUsingEncoding:はダメ　＜＜"(0×20)"#%><[\]^`{|}" しかエスケープしないため。
-	// エスケープさせない「コマンド使用」など文字を記述
-	static const CFStringRef charactersToLeaveUnescaped = NULL;  //なし ＜＜全てエスケープさせるため
-	// 通常ではエスケープされないが、してほしい文字を記述
-	static const CFStringRef legalURLCharactersToBeEscaped = CFSTR("!*'();:@&=+$,./?%#[]");  //全てエスケープさせるため
-	// __bridge_transfer : CオブジェクトをARC管理オブジェクトにする
-	NSString *zEsc = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
-																							   kCFAllocatorDefault,	
-																							   (__bridge CFStringRef)zPara,
-																							   charactersToLeaveUnescaped,
-																							   legalURLCharactersToBeEscaped,
-																							   kCFStringEncodingUTF8);
-	NSLog(@"GstringPercentEscape: {%@}\n⇒{%@}", zPara, zEsc);
-	return zEsc;
-}
-
 
 #pragma mark - UTC協定世界時
 

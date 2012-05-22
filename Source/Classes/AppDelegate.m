@@ -122,7 +122,7 @@
 	//-------------------------------------------------デバイス、ＯＳ確認
 	if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0"]==NSOrderedAscending) { // ＜ "5.0"
 		// iOS5.0より前
-		alertBox(@"! STOP !", @"Need more iOS 5.0", nil);
+		azAlertBox(@"! STOP !", @"Need more iOS 5.0", nil);
 		GA_TRACK_EVENT_ERROR(@"STOP < iOS 5.0",0);
 		exit(0);
 	}
@@ -271,38 +271,7 @@
 			[alv	show];
 		}
 	}
-    else if ([[DBSession sharedSession] handleOpenURL:url]) {
-        if ([[DBSession sharedSession] isLinked]) 
-		{	// Dropbox 認証成功
-            NSLog(@"App linked successfully!");
-			// Dropbox を開ける
-			AZDropboxMode mode;
-			if (__dropboxSaveE1selected) {
-				mode = AZDropboxUpload;
-			} else {
-				mode = AZDropboxDownload;
-			}
-			//DropboxVC *vc = [[DropboxVC alloc] initWithE1:__dropboxSaveE1selected];
-			AZDropboxVC *vc = [[AZDropboxVC alloc] initWithMode:mode extension:GD_EXTENSION delegate:self];
-			if (mode==AZDropboxUpload) {
-				[vc setUpFileName:__dropboxSaveE1selected.name];
-				[vc setCryptHidden:NO Enabled:app_pid_SwitchAd_];
-			}
-			if (app_is_iPad_) {
-				//認証して戻ったときAppDelegate内で再現させるため座標情報が不要なFormSheetにしている。
-				UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
-				nc.modalPresentationStyle = UIModalPresentationFormSheet;
-				nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-				[mainSVC_ presentModalViewController:nc animated:YES];
-			} 
-			else {
-				if (app_opt_Ad_) {
-					[self AdRefresh:NO];	//広告禁止
-				}
-				[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-				[mainNC_ pushViewController:vc animated:YES];
-			}
-        }
+	else if ([[DBSession sharedSession] handleOpenURL:url]) { //OAuth結果：urlに認証キーが含まれる
         return YES;
     }
     return NO;
@@ -734,17 +703,17 @@
 
 	if (app_is_iPad_) {
 		if (miAdView) {
-			CGRect rc = miAdView.frame;
+			//CGRect rc = miAdView.frame;
 			if (mAdCanVisible && miAdView.tag==1) {
 				if (miAdView.alpha==0) {
-					rc.origin.y += FREE_AD_OFFSET_Y;
-					miAdView.frame = rc;
+					//rc.origin.y += FREE_AD_OFFSET_Y;
+					//miAdView.frame = rc;
 					miAdView.alpha = 1;
 				}
 			} else {
 				if (miAdView.alpha==1) {
-					rc.origin.y -= FREE_AD_OFFSET_Y;	//(-)上に隠す
-					miAdView.frame = rc;
+					//rc.origin.y -= FREE_AD_OFFSET_Y;	//(-)上に隠す
+					//miAdView.frame = rc;
 					miAdView.alpha = 0;
 				}
 			}
@@ -767,42 +736,39 @@
 	}
 	else {
 		if (miAdView) {
-			CGRect rc = miAdView.frame;
+			//CGRect rc = miAdView.frame;
 			if (mAdCanVisible && miAdView.tag==1) {
 				if (miAdView.alpha==0) {
-					rc.origin.y -= FREE_AD_OFFSET_Y;
-					miAdView.frame = rc;
+					//rc.origin.y -= FREE_AD_OFFSET_Y;
+					//miAdView.frame = rc;
 					miAdView.alpha = 1;
 				}
 			} else {
 				if (miAdView.alpha==1) {
-					rc.origin.y += FREE_AD_OFFSET_Y;	//(+)下へ隠す
-					miAdView.frame = rc;
+					//rc.origin.y += FREE_AD_OFFSET_Y;	//(+)下へ隠す
+					//miAdView.frame = rc;
 					miAdView.alpha = 0;
 				}
 			}
 		}
 		
 		if (mAdMobView) {
-			CGRect rc = mAdMobView.frame;
+			//CGRect rc = mAdMobView.frame;
 			if (mAdCanVisible && mAdMobView.tag==1 && miAdView.alpha==0) { //iAdが非表示のときだけAdMob表示
 				if (mAdMobView.alpha==0) {
-					rc.origin.y = 480 - 50;		//AdMobはヨコ向き常に非表示 ＜＜これはタテの配置なのでヨコだと何もしなくても範囲外で非表示になる
-					mAdMobView.frame = rc;
+					//rc.origin.y = 480 - 50;		//AdMobはヨコ向き常に非表示 ＜＜これはタテの配置なのでヨコだと何もしなくても範囲外で非表示になる
+					//mAdMobView.frame = rc;
 					mAdMobView.alpha = 1;
 				}
 			} else {
 				if (mAdMobView.alpha==1) {
-					rc.origin.y = 480 + 10; // 下部へ隠す
-					mAdMobView.frame = rc;
+					//rc.origin.y = 480 + 10; // 下部へ隠す
+					//mAdMobView.frame = rc;
 					mAdMobView.alpha = 0;	//[1.0.1]3GS-4.3.3においてAdで電卓キーが押せない不具合報告あり。未確認だがこれにて対応
 				}
 				// リクエスト
 				GADRequest *request = [GADRequest request];
 				[mAdMobView loadRequest:request];	
-				/*		// 破棄する ＜＜通信途絶してから復帰した場合、再生成するまで受信できないため。再生成する機会を増やす。
-				 RoAdMobView.delegate = nil;
-				 [RoAdMobView release], RoAdMobView = nil; */
 			}
 		}
 	}
@@ -845,15 +811,19 @@
 
 	if (app_is_iPad_) {
 		if (mAdMobView) {
+			CGFloat fyOfs = 64+GAD_SIZE_300x250.height;
+			if (miAdView.alpha==1) {
+				fyOfs += 66;
+			}
 			if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) {	// タテ
 				mAdMobView.frame = CGRectMake(
 											   768-45-GAD_SIZE_300x250.width,
-											   1024-64-GAD_SIZE_300x250.height,
+											   1024-fyOfs,
 											   GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);
 			} else {	// ヨコ
 				mAdMobView.frame = CGRectMake(
 											   10,
-											   768-64-GAD_SIZE_300x250.height,
+											   768-fyOfs,
 											   GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);
 			}
 		}
@@ -872,14 +842,22 @@
 	} else {
 		miAdView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
 	}
+	//常にタテ用（幅768）にする。
+	//miAdView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
 
 	if (app_is_iPad_) {
-		if (mAdCanVisible && miAdView.alpha==1) {
-			miAdView.frame = CGRectMake(0, 40,  0,0);	// 表示
-		} else {
-			miAdView.frame = CGRectMake(0, 40 - FREE_AD_OFFSET_Y,  0,0);  // 上に隠す
+		if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {	//ヨコ
+			miAdView.frame = CGRectMake(0, 768-64-66,  0,0);	// 表示
+		} else {	//タテ
+			miAdView.frame = CGRectMake(0, 1024-64-66,  0,0);	// 表示
 		}
 	} else {
+		if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+			miAdView.frame = CGRectMake(0, 320-32,  0,0);	//ヨコ：下部に表示
+		} else {
+			miAdView.frame = CGRectMake(0, 480-50,  0,0);	//タテ：下部に表示
+		}
+	/*.alpha=0 だけにし、隠さない
 		if (mAdCanVisible && miAdView.alpha==1) {	// 表示
 			if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
 				miAdView.frame = CGRectMake(0, 320-32,  0,0);	//ヨコ：下部に表示
@@ -892,7 +870,7 @@
 			} else {
 				miAdView.frame = CGRectMake(0, 480-50 + FREE_AD_OFFSET_Y,  0,0);	//タテ：下へ隠す
 			}
-		}
+		}*/
 	}
 }
 

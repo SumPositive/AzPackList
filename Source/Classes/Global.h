@@ -99,8 +99,6 @@
 UIColor *GcolorBlue(float percent);
 UIImage *GimageFromString(float Pfx, float Pfy, float PfSize, NSString* str);
 NSString *GstringFromNumber( NSNumber *num );
-NSString *GstringNoEmoji( NSString *emoji );
-NSString *GstringPercentEscape( NSString *zPara );
 NSDate *dateFromUTC( NSString *zUTC );
 NSString *utcFromDate( NSDate *dTZ );
 NSString *uuidString(void);

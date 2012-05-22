@@ -107,7 +107,7 @@
 					  }];
 	}
 	else {
-		alertBox(NSLocalizedString(@"Google Login NG", nil), nil, @"OK");
+		azAlertBox(NSLocalizedString(@"Google Login NG", nil), nil, @"OK");
 		//[GoogleService docDownloadErrorNo:110 description:NSLocalizedString(@"Google Login NG", nil)];
 	}
 }

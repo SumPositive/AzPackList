@@ -567,12 +567,12 @@
 			mTfPass2.hidden = YES;
 			mTfPass2.text = @"";
 			[self.tableView reloadData];  // cell表示更新のため
-			alertBox(NSLocalizedString(@"PackListCrypt Disable",nil), nil, @"OK");
+			azAlertBox(NSLocalizedString(@"PackListCrypt Disable",nil), nil, @"OK");
 			return YES;
 		}
 		else if ([sender.text length] < 3 OR 20 < [sender.text length]) {
 			sender.text = @"";
-			alertBox(NSLocalizedString(@"PackListCrypt Key Over",nil), nil, @"OK");
+			azAlertBox(NSLocalizedString(@"PackListCrypt Key Over",nil), nil, @"OK");
 			return NO;
 		}
 		mTfPass2.hidden = NO;
@@ -595,12 +595,12 @@
 				[mTfPass1 becomeFirstResponder];
 				mTfPass2.hidden = YES;
 				mTfPass2.text = @"";
-				alertBox(NSLocalizedString(@"PackListCrypt Key Error",nil), 
+				azAlertBox(NSLocalizedString(@"PackListCrypt Key Error",nil), 
 						 [error localizedDescription], @"OK");
 			} else {
 				[defaults setBool:YES forKey:UD_OptCrypt]; // 有効
 				[self.tableView reloadData];  // cell表示更新のため
-				alertBox(NSLocalizedString(@"PackListCrypt Key Changed",nil), nil, @"OK");
+				azAlertBox(NSLocalizedString(@"PackListCrypt Key Changed",nil), nil, @"OK");
 			}
 			mTfPass2.hidden = YES;
 		}
@@ -609,7 +609,7 @@
 			mTfPass2.hidden = NO;
 			mTfPass2.text = @"";
 			[mTfPass2 becomeFirstResponder];
-			alertBox(NSLocalizedString(@"PackListCrypt Key NoMatch",nil), nil, @"OK");
+			azAlertBox(NSLocalizedString(@"PackListCrypt Key NoMatch",nil), nil, @"OK");
 		}
 	}
 	else if (sender==mTfGoogleID) {	//-------------------------------------------------------------Google+ ID
@@ -625,7 +625,7 @@
 			[mTfGoogleID resignFirstResponder];
 			mTfGooglePW.text = @"";
 			[self.tableView reloadData];  // cell表示更新のため
-			alertBox(NSLocalizedString(@"Picasa ID delete",nil), nil, @"OK");
+			azAlertBox(NSLocalizedString(@"Picasa ID delete",nil), nil, @"OK");
 			return YES;
 		}
 		// ID KeyChainに保存する
@@ -648,7 +648,7 @@
 									  andServiceName:GS_KC_ServiceName error:&error];
 			sender.text = @"";
 			[self.tableView reloadData];  // cell表示更新のため
-			alertBox(NSLocalizedString(@"Picasa PW delete",nil), nil, @"OK");
+			azAlertBox(NSLocalizedString(@"Picasa PW delete",nil), nil, @"OK");
 			return YES;
 		}
 		if (0 < [mTfGoogleID.text length] && 0 < [mTfGooglePW.text length]) {

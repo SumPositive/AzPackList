@@ -82,7 +82,7 @@ NSString *postCmdAddUserPass( NSString *PzPostCmd )
 #else
 	//DEPRECATED//NSString *userPass = [UIDevice currentDevice].uniqueIdentifier;		// デバイスID文字列
 	//DEPRECATEDにつき、無効になったとき、MACアドレスを使うようにした [2.0]
-	NSString *userPass = getMacAddress();  // in Global.m
+	NSString *userPass = azMacAddress();  // in AZClass.m
 #endif
 	// Zipcode(郵便番号程度の暗唱ワード)を付加して userPass を生成
 	NSString *nickname = [[NSUserDefaults standardUserDefaults] valueForKey:GD_DefNickname];

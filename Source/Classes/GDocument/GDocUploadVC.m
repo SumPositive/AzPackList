@@ -56,7 +56,7 @@
 {
 	NSString *filename = [ibTfName.text stringByDeletingPathExtension]; // 拡張子があれば除く
 	if ([filename length] < 3) {
-		alertBox(NSLocalizedString(@"Dropbox NameLeast", nil), NSLocalizedString(@"Dropbox NameLeastMsg", nil), @"OK");
+		azAlertBox(NSLocalizedString(@"Dropbox NameLeast", nil), NSLocalizedString(@"Dropbox NameLeastMsg", nil), @"OK");
 		return;
 	}
 	
@@ -139,7 +139,7 @@
 	if (Re1selected.name) {
 		self.title = Re1selected.name;
 		//ibTfName.text = Re1selected.name;
-		ibTfName.text = GstringNoEmoji(  Re1selected.name ); // 絵文字を除去する
+		ibTfName.text = azStringNoEmoji(  Re1selected.name ); // 絵文字を除去する
 	} else {
 		self.title = NSLocalizedString(@"(New Pack)", nil);
 		ibTfName.text = NSLocalizedString(@"(New Pack)", nil);

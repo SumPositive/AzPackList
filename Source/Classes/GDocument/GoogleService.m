@@ -68,7 +68,7 @@ static GDataServiceTicket *staticActiveTicket = nil; // docのみ ＜＜photoは
 {
 	NSLog(@"GoogleService: loginID :-----------------------");
 	if ([googleID length]<=0 OR [googlePW length]<=0) {
-		if (isSetting) alertBox(NSLocalizedString(@"Google Login NG", nil), nil, @"OK");
+		if (isSetting) azAlertBox(NSLocalizedString(@"Google Login NG", nil), nil, @"OK");
 		return;
 	}
 	
@@ -84,7 +84,7 @@ static GDataServiceTicket *staticActiveTicket = nil; // docのみ ＜＜photoは
 				if (error) {
 					// 失敗
 					NSLog(@"GoogleService(100) Failed '%@'\n", error.localizedDescription);
-					if (isSetting) alertBox(NSLocalizedString(@"Google Login NG", nil), nil, @"OK");
+					if (isSetting) azAlertBox(NSLocalizedString(@"Google Login NG", nil), nil, @"OK");
 				} else {
 					// 成功
 					if (isSetting) {
@@ -94,7 +94,7 @@ static GDataServiceTicket *staticActiveTicket = nil; // docのみ ＜＜photoは
 											 andPassword: googlePW
 										  forServiceName:GS_KC_ServiceName 
 										  updateExisting:YES error:&error];
-						alertBox(NSLocalizedString(@"Google Login OK", nil), NSLocalizedString(@"Google Login OK msg",nil), @"OK");
+						azAlertBox(NSLocalizedString(@"Google Login OK", nil), NSLocalizedString(@"Google Login OK msg",nil), @"OK");
 					}
 				}
 			}];
@@ -113,7 +113,7 @@ static	NSURL										*sDocUploadUrl = nil;
 		msg = [msg stringByAppendingString:description];
 	}
 	[GoogleService alertIndicatorOff];
-	alertBox(NSLocalizedString(@"Google DocUpload NG", nil), msg, @"OK");
+	azAlertBox(NSLocalizedString(@"Google DocUpload NG", nil), msg, @"OK");
 }
 
 + (void)docServiceClear
@@ -329,7 +329,7 @@ static BOOL staticDocUploading = NO;
 																	if (error) {
 																		// 失敗
 																		if (error.code==404) {	// 404 data:No album found.
-																			alertBox(NSLocalizedString(@"Google NoFolder", nil), 
+																			azAlertBox(NSLocalizedString(@"Google NoFolder", nil), 
 																					 NSLocalizedString(@"Google NoFolder msg", nil), @"OK");
 																			sDocUploadUrl = nil;  // 改めてフォルダ追加させるため
 																		} else {
@@ -339,7 +339,7 @@ static BOOL staticDocUploading = NO;
 																		// 成功
 																		NSLog(@"G> OK [ec sourceURI]=[%@]", [[entry content] sourceURI]);	//NSString
 																		[GoogleService alertIndicatorOff];
-																		alertBox(NSLocalizedString(@"Google DocUpload OK", nil), nil, @"OK");
+																		azAlertBox(NSLocalizedString(@"Google DocUpload OK", nil), nil, @"OK");
 																	}
 																}];
 										  // Progress:フォルダ移動
@@ -372,7 +372,7 @@ static BOOL staticDocUploading = NO;
 		msg = [msg stringByAppendingString:description];
 	}
 	[GoogleService alertIndicatorOff];
-	alertBox(NSLocalizedString(@"Google DocDownload NG", nil), msg, @"OK");
+	azAlertBox(NSLocalizedString(@"Google DocDownload NG", nil), msg, @"OK");
 }
 
 
@@ -401,7 +401,7 @@ static BOOL staticDocUploading = NO;
 				}
 				else {
 					// 成功
-					alertBox(NSLocalizedString(@"Download successful",nil), NSLocalizedString(@"Added Plan",nil), @"OK");
+					azAlertBox(NSLocalizedString(@"Download successful",nil), NSLocalizedString(@"Added Plan",nil), @"OK");
 					// 再読み込み 通知発信---> E1viewController
 					[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
 																		object:self userInfo:nil];
@@ -661,7 +661,7 @@ static BOOL staticPhotoUploading = NO;
 										  // 失敗
 										  NSLog(@"G> Failed '%@'", error.localizedDescription);
 										  if (error.code==404) {	// 404 data:No album found.
-											  alertBox(NSLocalizedString(@"Google NoAlbum", nil), 
+											  azAlertBox(NSLocalizedString(@"Google NoAlbum", nil), 
 													   NSLocalizedString(@"Google NoAlbum msg", nil), @"OK");
 											  sPhotoUploadUrl = nil;  // 改めてアルバム追加させるため
 										  }

@@ -101,7 +101,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-	[self.navigationController setToolbarHidden:NO animated:NO]; // ツールバー表示
+	[self.navigationController setToolbarHidden:YES animated:NO]; //[2.0.2]ツールバー廃止
+	//[self.navigationController setToolbarHidden:NO animated:NO]; // ツールバー表示
 }
 
 // SplitViewは、透明なので通らない！

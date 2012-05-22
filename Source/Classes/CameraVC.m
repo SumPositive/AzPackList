@@ -291,7 +291,7 @@
 		}
 	}
 	if (captureDevice_==nil) {
-		alertBox(NSLocalizedString(@"Camera Non",nil), nil, @"OK");
+		azAlertBox(NSLocalizedString(@"Camera Non",nil), nil, @"OK");
 		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
 	}
 	

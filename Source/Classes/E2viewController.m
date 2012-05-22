@@ -294,36 +294,45 @@
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 	}*/
 	
-	// 未認証の場合、認証処理後、AppDelegate:handleOpenURL:から呼び出される
+	appDelegate_.dropboxSaveE1selected = e1selected_; //Up対象E1
+	AZDropboxVC *vc = [[AZDropboxVC alloc] initWithAppKey:DBOX_APPKEY 
+												appSecret: DBOX_SECRET
+													 root: kDBRootAppFolder
+												 rootPath: @"/" 
+													 mode: AZDropboxUpload 
+												extension: GD_EXTENSION 
+												 delegate: appDelegate_];
+	assert(vc);
+	if (appDelegate_.app_is_iPad) {
+		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+		nc.modalPresentationStyle = UIModalPresentationFormSheet;
+		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+		[self presentModalViewController:nc animated:YES];
+	} 
+	else {
+		if (appDelegate_.app_opt_Ad) {
+			[appDelegate_ AdRefresh:NO];	//広告禁止
+		}
+		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+		[self.navigationController pushViewController:vc animated:YES];
+	}
+	//表示後にセットすること
+	[vc setUpFileName:e1selected_.name];
+	[vc setCryptHidden:NO Enabled:appDelegate_.app_pid_SwitchAd];
+
+/*	// 未認証の場合、認証処理後、AppDelegate:handleOpenURL:から呼び出される
 	if ([[DBSession sharedSession] isLinked]) 
 	{	// Dropbox 認証済み
 		//DropboxVC *vc = [[DropboxVC alloc] initWithE1:e1selected_];
-		appDelegate_.dropboxSaveE1selected = e1selected_; //Up対象E1
-		AZDropboxVC *vc = [[AZDropboxVC alloc] initWithMode:AZDropboxUpload
-												  extension:GD_EXTENSION delegate:appDelegate_];
-		assert(vc);
-		if (appDelegate_.app_is_iPad) {
-			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
-			nc.modalPresentationStyle = UIModalPresentationFormSheet;
-			nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-			[self presentModalViewController:nc animated:YES];
-		} 
-		else {
-			if (appDelegate_.app_opt_Ad) {
-				[appDelegate_ AdRefresh:NO];	//広告禁止
-			}
-			[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-			[self.navigationController pushViewController:vc animated:YES];
-		}
-		//表示後にセットすること
-		[vc setUpFileName:e1selected_.name];
-		[vc setCryptHidden:NO Enabled:appDelegate_.app_pid_SwitchAd];
+		//AZDropboxVC *vc = [[AZDropboxVC alloc] initWithMode:AZDropboxUpload
+		//										  extension:GD_EXTENSION delegate:appDelegate_];
+		
 	}
 	else {
 		// Dropbox 未認証
 		appDelegate_.dropboxSaveE1selected = e1selected_;	// [SAVE]
-		[[DBSession sharedSession] link];
-	}
+		//[[DBSession sharedSession] link];
+	}*/
 }
 
 - (void)actionBackupGoogle:(NSIndexPath*)indexPath
@@ -465,11 +474,11 @@
             break;
         case MFMailComposeResultSent:
             //送信した場合
-			alertBox( NSLocalizedString(@"Contact Sent",nil), nil, @"OK" );
+			azAlertBox( NSLocalizedString(@"Contact Sent",nil), nil, @"OK" );
             break;
         case MFMailComposeResultFailed:
             //送信失敗
-			alertBox( NSLocalizedString(@"Contact Failed",nil), NSLocalizedString(@"Contact Failed msg",nil), @"OK" );
+			azAlertBox( NSLocalizedString(@"Contact Failed",nil), NSLocalizedString(@"Contact Failed msg",nil), @"OK" );
             break;
         default:
             break;
@@ -832,16 +841,17 @@
 {
 	[super viewWillAppear:animated];
 	
+	[self.navigationController setToolbarHidden:YES animated:NO]; //[2.0.2]ツールバー廃止
 	if (appDelegate_.app_is_iPad) {
 		if (sharePlanList_) {
 			self.navigationItem.hidesBackButton = NO;  // 必要
-			[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
+			//[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
 		} else {
 			self.navigationItem.hidesBackButton = YES;	// E3側に統一したので不要になった。
-			[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
+			//[self.navigationController setToolbarHidden:NO animated:animated]; // ツールバー表示する
 		}
 	} else {
-		[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
+		//[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
 	}
 	
 	if (sharePlanList_==NO) {	// loadViewやviewDidLoad:では、@property が参照できないので、viewWillAppear:へ移設
@@ -915,7 +925,7 @@
 		//[apd AdViewWillRotate:self.interfaceOrientation];
 		// 各viewDidAppear:にて「許可/禁止」を設定する
 		if (appDelegate_.app_is_iPad) {
-			[appDelegate_ AdRefresh:NO];	//広告禁止  iPadでは、E2とE3を同時表示するため
+			[appDelegate_ AdRefresh:YES];
 		} else {
 			if (sharePlanList_) {
 				[appDelegate_ AdRefresh:NO];	//広告禁止 Fix[1.1.0]
@@ -1149,7 +1159,7 @@
 			}
 			if (appDelegate_.app_opt_Ad) {
 				if (appDelegate_.app_is_iPad) {
-					return @"\n\n\n\n\n\n\n\n\n\n\n\n\n\n";	// 大型AdMobスペースのための下部余白
+					return @"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";	// 大型AdMobスペースのための下部余白
 				} else {
 					return @"\n\n\n";	// 広告スペースのための下部余白
 				}
@@ -1425,7 +1435,7 @@
 					}
 					break;
 				case 4:
-					cell.imageView.image = [UIImage imageNamed:@"Icon32-Dropbox"];
+					cell.imageView.image = [UIImage imageNamed:@"AZDropbox-32"];
 					cell.textLabel.text = NSLocalizedString(@"Backup Dropbox",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"Backup Dropbox msg",nil);
 					if (appDelegate_.app_is_iPad==NO) {
@@ -1773,7 +1783,7 @@
 	UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
 	if ( [[nc visibleViewController] isMemberOfClass:[E2edit class]] ) {	// E2edit のときだけ、
 		if (appDelegate_.app_UpdateSave) { // E2editにて、変更あるので閉じさせない
-			alertBox(NSLocalizedString(@"Cancel or Save",nil), 
+			azAlertBox(NSLocalizedString(@"Cancel or Save",nil), 
 					 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
 			return NO; 
 		}
