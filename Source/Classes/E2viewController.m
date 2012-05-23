@@ -1159,7 +1159,7 @@
 			}
 			if (appDelegate_.app_opt_Ad) {
 				if (appDelegate_.app_is_iPad) {
-					return @"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";	// 大型AdMobスペースのための下部余白
+					return @"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";	// 大型AdMobスペースのための下部余白
 				} else {
 					return @"\n\n\n";	// 広告スペースのための下部余白
 				}

@@ -811,10 +811,7 @@
 
 	if (app_is_iPad_) {
 		if (mAdMobView) {
-			CGFloat fyOfs = 64+GAD_SIZE_300x250.height;
-			if (miAdView.alpha==1) {
-				fyOfs += 66;
-			}
+			CGFloat fyOfs = GAD_SIZE_300x250.height+20+66;  // 20=ステータスバー高さ　　66=iAd高さ
 			if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) {	// タテ
 				mAdMobView.frame = CGRectMake(
 											   768-45-GAD_SIZE_300x250.width,
@@ -847,9 +844,9 @@
 
 	if (app_is_iPad_) {
 		if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {	//ヨコ
-			miAdView.frame = CGRectMake(0, 768-64-66,  0,0);	// 表示
+			miAdView.frame = CGRectMake(0, self.window.frame.size.width-20-66,  0,0);	// 20=ステータスバー高さ
 		} else {	//タテ
-			miAdView.frame = CGRectMake(0, 1024-64-66,  0,0);	// 表示
+			miAdView.frame = CGRectMake(0, self.window.frame.size.height-20-66,  0,0);
 		}
 	} else {
 		if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {

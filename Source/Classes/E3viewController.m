@@ -157,6 +157,7 @@
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		e3array_ = nil;
 		sharePlanList_ = NO;
+		
 	}
 	return self;
 }
@@ -371,17 +372,10 @@
 
 	if (appDelegate_.app_opt_Ad) {
 		// 各viewDidAppear:にて「許可/禁止」を設定する
-		[appDelegate_ AdRefresh:YES];	//iPadでは表示
+		[appDelegate_ AdRefresh:YES];
 		
-		//下部の広告スペースを空ける 
-		//回転時に解除されるようなので、didRotateFromInterfaceOrientation:でも処理している
-		CGRect rc = self.tableView.frame;
-		if (iS_iPAD) {
-			rc.size.height -= 66;	
-		} else {
-			rc.size.height -= 50;
-		}
-		self.tableView.frame = rc;
+		// 広告の下部スペースを空ける
+		[self viewDesign];
 	}
 	
 	// Photo E3detail保存時にアップできなかった場合など、未アップがあれば順次アップする
@@ -423,9 +417,7 @@
 
 - (void)requreyMe3array		//:(NSString *)searchText
 {
-	//[1.0.2]
 	if (e2array_) {
-		//[RaE2array release], 
 		e2array_ = nil;
 	}
 	e2array_ = [[NSMutableArray alloc] initWithArray:[e1selected_.childs allObjects]];
@@ -434,9 +426,6 @@
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
 	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:&sortDescriptor count:1];
 	[e2array_ sortUsingDescriptors:sortDescriptors];
-	//[sortDescriptor release];
-	//[sortDescriptors release];
-	
 	
 	NSString *zSearchText = nil;
 	if (self.tableView.tableHeaderView) {
@@ -504,20 +493,8 @@
 			// 並べ替えを実行してlistContentに格納します。
 			[muSection sortUsingDescriptors:sortDescriptors]; // NSMutableArray内ソート　NSArrayはダメ
 			[muE3arry addObject:muSection];  // 二次元追加　addObjectsFromArray:にすると同次元になってしまう。
-			//[muSection release];
-			//[sortDescriptors release];
-			//[sortDescriptor release];
 		}
-		/*** ここで保存は不要　＜＜＜競合が発生する
-		if (sharePlanList_==NO) {
-			// SAVE : 変更あれば保存する		Bug:Add行が通常行のように表示される-->Fix[1.1.0]
-			NSError *error = nil;
-			if ([e1selected_.managedObjectContext hasChanges] && ![e1selected_.managedObjectContext save:&error]) {
-				// Handle error.
-				NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-				assert(NO); //DEBUGでは落とす
-			} 
-		}*/
+		// ここでMoc保存しない　＜＜＜競合が発生するため
 	}
 	else {
 		// 全体ソートリスト　＜＜セクション[0]に全アイテムを入れてソートする＞＞
@@ -591,8 +568,6 @@
 		NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:&sortDescriptor count:1];
 		// 並べ替えを実行
 		[muSect0 sortUsingDescriptors:sortDescriptors]; // muE3arry[0]をソートしていることになる
-		//[sortDescriptor release];
-		//[sortDescriptors release];
 	}
 	
 	if (e3array_ != muE3arry) {
@@ -688,21 +663,25 @@
 			//[Mpopover release], Mpopover = nil;
 		}
 	}
-
-	if (appDelegate_.app_opt_Ad) {
-		//下部の広告スペースを空ける ＜＜回転時に解除されるようなので、毎回実施
-		CGRect rc = self.tableView.frame;
-		if (iS_iPAD) {
-			rc.size.height -= 66;	
-		} else {
-			rc.size.height -= 50;
-		}
-		self.tableView.frame = rc;
-	}
+	[self viewDesign];
 }
 
 - (void)viewDesign
 {	// 回転によるリサイズ
+	if (appDelegate_.app_opt_Ad) {
+		// 広告の下部スペースを空ける
+		CGRect rc = self.tableView.frame;
+		if (iS_iPAD) {
+			rc.size.height -= 66;
+		} else {
+			if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+				rc.size.height -= 50;	//タテ
+			} else {
+				rc.size.height -= 32;	// ヨコ
+			}
+		}
+		self.tableView.frame = rc;
+	}
 	// Search Bar
 	[self.tableView.tableHeaderView sizeToFit];
 }
