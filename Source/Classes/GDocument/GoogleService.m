@@ -524,8 +524,10 @@ static	NSURL										*sPhotoUploadUrl = nil;
 {	// 専用アルバムを見つけるか、新規追加し、その位置を sPhotoUploadUrl にセットする
 	NSLog(@"GoogleService: photoAlbumUploadE3 :-----------------------");
 	GDataServiceGooglePhotos *photoService = [self photoService];
-	//[photoService setUserCredentialsWithUsername:googleID password:googlePW];
-	
+	if (photoService==nil) {
+		NSLog(@"G> No Login");  // ログイン登録していない
+		return;
+	}
 	// get the URL for the user
 	if ([photoService username]==nil) {
 		NSLog(@"photoAlbumUploadE3: NoLogin");
@@ -633,6 +635,10 @@ static BOOL staticPhotoUploading = NO;
 	staticPhotoUploading = NO;
 
 	GDataEntryPhoto *newPhoto = [GDataEntryPhoto photoEntry];
+	if (newPhoto==nil) {
+		NSLog(@"G> No Login");  // ログイン登録していない
+		return;
+	}
 	if (0 < [e3target.name length]) {
 		[newPhoto setTitleWithString: e3target.name];
 	} else {
@@ -707,6 +713,12 @@ static BOOL staticPhotoUploading = NO;
 	staticActive = YES;
 
 	GDataServiceGooglePhotos *service = [self photoService];
+	if (service==nil) {
+		NSLog(@"G> No Login");  // ログイン登録していない
+		staticActive = NO;
+		return;
+	}
+	
 	NSMutableURLRequest *request;
 	if ([e3target.photoUrl  hasPrefix:GS_PHOTO_UUID_PREFIX]) {
 		// Description を検索する

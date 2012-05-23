@@ -7,8 +7,6 @@
 //
 #import "E3detailTVC.h"
 
-#import "AZDial.h"
-#import "AZWebView.h"
 
 #import "Global.h"
 #import "AppDelegate.h"
@@ -297,7 +295,7 @@
 	
 	if (mAppDelegate.app_opt_Ad) {
 		// 各viewDidAppear:にて「許可/禁止」を設定する
-		[mAppDelegate AdRefresh:iS_iPAD];  //iPhoneは消すことにした。
+		[mAppDelegate AdRefresh:YES];  //iPhoneは消すことにした。
 	}
 	
 	//この時点で MtfName は未生成だから、0.5秒後に処理する
@@ -368,6 +366,7 @@
 	@synchronized(note)
 	{
 		[self viewWillAppear:YES];
+		[mActivityIndicator_on_IconPicasa stopAnimating];
 	}
 }
 
@@ -663,7 +662,7 @@
 	 web.RzDomain = nil;*/
 	
 	AZWebView *wv = [[AZWebView alloc] init];
-	wv.ppDelegate = self;
+	wv.ppBookmarkDelegate = self;
 	wv.title = zTitle;
 	wv.ppUrl = zUrl;
 	wv.ppDomain = [NSSet setWithObjects:
@@ -1024,7 +1023,7 @@
 	else if (indexPath.section==1) {
 		switch (indexPath.row) {
 			case 0:	// Shop Bookmark
-				if (pE3target.shopUrl) {
+				if (10<[pE3target.shopUrl length]) {
 					if (mAppDelegate.app_is_iPad) {
 						return 4+400+4;
 					} else {
@@ -1329,8 +1328,13 @@
 						[mActivityIndicator_on_IconPicasa startAnimating];
 						mLbPhotoMsg.text = NSLocalizedString(@"Google Downloading", nil);
 						// 写真キャッシュに無いのでダウンロードする
-						[GoogleService photoDownloadE3:pE3target errorLabel:mLbPhotoMsg]; //非同期処理
-						// スクロールして繰り返して呼び出された場合、処理中ならば拒否するようになっている。
+						if ([GoogleService photoService]==nil) {	// Google未Login
+							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo NoLogin", nil);
+							[mActivityIndicator_on_IconPicasa stopAnimating];
+						} else {
+							[GoogleService photoDownloadE3:pE3target errorLabel:mLbPhotoMsg]; //非同期処理
+							// スクロールして繰り返して呼び出された場合、処理中ならば拒否するようになっている。
+						}
 					}
 					else if ([pE3target.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
 						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
@@ -1352,18 +1356,12 @@
 			case 0: // Shop Photo
 				if (mActivityIndicator_on_IconShop==nil) {
 					// Icon Shop 
-					/*mIvIconShop = [[UIImageView alloc] init];
-					mIvIconShop.contentMode = UIViewContentModeScaleAspectFit;
-					mIvIconShop.frame = CGRectMake(4, 6, 32, 32);
-					mIvIconShop.image = [UIImage imageNamed:@"Icon-Store-32"];
-					[cell.contentView addSubview:mIvIconShop];*/
 					cell.imageView.image = [UIImage imageNamed:@"Icon-Store-32"];
 					mActivityIndicator_on_IconShop = [[UIActivityIndicatorView alloc]
 														initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-					//mActivityIndicator_on_IconShop.frame = cell.imageView.frame;
 					[cell.imageView  addSubview:mActivityIndicator_on_IconShop];
 				}
-				if (pE3target.shopUrl) {
+				if (10<[pE3target.shopUrl length]) {
 					//[mActivityIndicator_on_IconShop stopAnimating]; webViewDidStartLoad:にて開始
 					cell.textLabel.font = [UIFont systemFontOfSize:12];
 					cell.textLabel.numberOfLines = 10;
@@ -1583,7 +1581,7 @@
 	else if (indexPath.section==1) {
 		switch (indexPath.row) {
 			case 0: // Shop Photo
-				if (pE3target.shopUrl) {
+				if (10<[pE3target.shopUrl length]) {
 					// WebViewを開ける
 					[self actionWebTitle: nil  Url: pE3target.shopUrl];
 				}
@@ -1926,9 +1924,8 @@
 }
 
 
-#pragma mark - <UIWebViewDelegate>
-//ORIGINAL  @protocolでない非形式プロトコル（カテゴリ）方式によるデリゲート
-- (void)webSiteBookmarkUrl:(NSString *)url
+#pragma mark - <AZWebViewBookmarkDelegate>
+- (void)azWebViewBookmark:(NSString *)url
 {
 	pE3target.shopUrl = url;
 	mAppDelegate.app_UpdateSave = YES; // 変更あり
@@ -1939,6 +1936,7 @@
 	[self.tableView reloadData]; // セル高さ、配置
 }
 
+#pragma mark - <UIWebViewDelegate>
 - (void)webViewDidStartLoad:(UIWebView *)webView 
 {	// ウェブビューがコンテンツの読み込みを始めた後
 	[mActivityIndicator_on_IconShop startAnimating];

@@ -44,6 +44,7 @@
 + (void)docDownloadEntry:(GDataEntryDocBase *)docEntry;
 
 // Photo <Picasa>
++ (GDataServiceGooglePhotos *)photoService;
 + (void)photoServiceClear;	//Login IDを変更したときにクリアするため
 + (void)photoUploadE3:(E3*)e3target;
 + (void)photoDownloadE3:(E3*)e3target  errorLabel:(UILabel*)errorLabel;
