@@ -29,9 +29,9 @@
 //#define AzMAX_PLANS		 20		// 最大PLAN数
 //#define AzMAX_GROUPS	100		// 最大GROUP数
 //#define AzMAX_ITEMS	   1000		// 最大ITEM数 (全GROUP合計)
-#define AzMAX_PLAN_WEIGHT		999999	//[0.2c] 1プランの総重量制限(g)
-#define AzMAX_NAME_LENGTH		50		//[0.2c] .name 最大文字数
-#define AzMAX_NOTE_LENGTH		200		//[0.2c] .note 最大文字数
+#define AzMAX_PLAN_WEIGHT		999999	// 1プランの総重量制限(g)
+#define AzMAX_NAME_LENGTH		50		// .name 最大文字数
+#define AzMAX_NOTE_LENGTH		200		// .note 最大文字数
 
 #define GD_CSV_HEADER_ID	@"AzPacking"		// CSV Version.1
 //#define GD_COREDATANAME	@"AzPack.sqlite"	// CoreData Saved SQLlite File name

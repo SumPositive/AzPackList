@@ -720,16 +720,20 @@
 		}
 		
 		if (mAdMobView) {
-			if (mAdCanVisible && mAdMobView.tag==1) {
-				if (mAdMobView.alpha==0) {
-					mAdMobView.alpha = 1;
-				}
+			if (UIInterfaceOrientationIsPortrait(mainSVC_.interfaceOrientation)) {
+				mAdMobView.alpha = 0;	//iPadのみ、タテのとき消す
 			} else {
-				if (app_is_iPad_ && app_opt_Ad_) {
-					mAdMobView.alpha = 1;		// iPadは常時表示
-				}
-				else if (mAdMobView.alpha==1) {
-					mAdMobView.alpha = 0;
+				if (mAdCanVisible && mAdMobView.tag==1) {
+					if (mAdMobView.alpha==0) {
+						mAdMobView.alpha = 1;
+					}
+				} else {
+					if (app_is_iPad_ && app_opt_Ad_) {
+						mAdMobView.alpha = 1;		// iPadは常時表示
+					}
+					else if (mAdMobView.alpha==1) {
+						mAdMobView.alpha = 0;
+					}
 				}
 			}
 		}
@@ -813,11 +817,13 @@
 		if (mAdMobView) {
 			CGFloat fyOfs = GAD_SIZE_300x250.height+20+66;  // 20=ステータスバー高さ　　66=iAd高さ
 			if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) {	// タテ
-				mAdMobView.frame = CGRectMake(
+				/*mAdMobView.frame = CGRectMake(
 											   768-45-GAD_SIZE_300x250.width,
 											   1024-fyOfs,
-											   GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);
+											   GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);*/
+				mAdMobView.alpha = 0;	//[2.0.2]タテ非表示にした。iAdを常時表示にしたため。
 			} else {	// ヨコ
+				mAdMobView.alpha = 1;
 				mAdMobView.frame = CGRectMake(
 											   10,
 											   768-fyOfs,
