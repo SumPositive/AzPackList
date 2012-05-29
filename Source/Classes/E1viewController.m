@@ -116,11 +116,11 @@
 	if (0 < [arE1 count]) {
 		E1 *e1last = [arE1 lastObject];
 		if (0 < [e1last.childs count]) {
-			NSArray *arE2 = [e1last.childs allObjects];
-			for (E2 *e2 in arE2) {
+			//NSArray *arE2 = [e1last.childs allObjects];
+			for (E2 *e2 in [e1last.childs allObjects]) {
 				if (0 < [e2.childs count]) {
-					NSArray *arE3 = [e2.childs allObjects];
-					for (E3 *e3 in arE3) {
+					//NSArray *arE3 = [e2.childs allObjects];
+					for (E3 *e3 in [e2.childs allObjects]) {
 						//NSLog(@"name=%@ note=%@ stock=%d need=%d weight=%d", e3.name, e3.note,
 						//	  [e3.stock integerValue], [e3.need integerValue], [e3.weight integerValue]);
 						if ([e3.name length]<=0 && [e3.note length]<=0
@@ -182,8 +182,8 @@
 	NSIndexPath *ixp = [NSIndexPath indexPathForRow:uiRow inSection:0];
 	E1 *e1objDelete = [fetchedE1_ objectAtIndexPath:ixp];
 	// CoreDataモデル：削除ルール「無効にする」につき末端ノードより独自に削除する
-	for (E2 *e2obj in e1objDelete.childs) {
-		for (E3 *e3obj in e2obj.childs) {
+	for (E2 *e2obj in [e1objDelete.childs allObjects]) {
+		for (E3 *e3obj in [e2obj.childs allObjects]) {
 			[moc_ deleteObject:e3obj];
 		}
 		[moc_ deleteObject:e2obj];

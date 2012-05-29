@@ -462,7 +462,7 @@
 			}
 			else {
 				// Search 抽出
-				for (E3 *e3obj in e2obj.childs) {
+				for (E3 *e3obj in e2obj.childs) {  //ここで、e2obj.childsは変化しないのでallObjects不要
 					if ([e3obj.need integerValue] == (-1)) { // Add専用行
 						bE3Add = YES;
 					} else {											// options:大文字小文字を区別しない
@@ -511,7 +511,7 @@
 			}
 			else {
 				// Search 抽出
-				for (E3 *e3obj in e2obj.childs) {
+				for (E3 *e3obj in e2obj.childs) {  //ここで、e2obj.childsは変化しないのでallObjects不要
 					if ([e3obj.need integerValue] == (-1)) { // Add専用行
 						// Throw
 					} else {											// options:大文字小文字を区別しない

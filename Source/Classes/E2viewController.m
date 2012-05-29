@@ -89,7 +89,7 @@
 		e2obj.row = [NSNumber numberWithInteger:i];
 	}
 	// e2obj.childs を全て削除する  ＜＜managedObjectContext を直接削除している＞＞
-	for (E3 *e3obj in e2objDelete.childs) {
+	for (E3 *e3obj in [e2objDelete.childs allObjects]) {
 		[e1selected_.managedObjectContext deleteObject:e3obj];
 	}
 	// RrE2arrayの削除はmanagedObjectContextに反映されないため、ここで削除する。
