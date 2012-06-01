@@ -56,7 +56,7 @@
 	BOOL					bOptShowTotalWeightReq_;
 	NSInteger			section0Rows_; // E1レコード数　＜高速化＞
 	CGPoint				contentOffsetDidSelect_; // didSelect時のScrollView位置を記録
-	SKProduct			*productUnlock_;
+	//SKProduct			*productUnlock_;
 }
 
 //- (void)refreshE1view;

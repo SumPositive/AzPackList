@@ -27,8 +27,8 @@
 	// Clip Borad
 	//NSMutableArray				*clipE3objects; //(V0.4.4) [Cut][Copy]されたE3をPUSHスタックする。[Paste]でPOPする
 	
-	UIAlertView						*mAlertProgress;
-	UIActivityIndicatorView	*mAlertIndicator;
+	//UIAlertView						*mAlertProgress;
+	//UIActivityIndicatorView	*mAlertIndicator;
 }
 
 @property (nonatomic, retain) UIWindow		*window;
