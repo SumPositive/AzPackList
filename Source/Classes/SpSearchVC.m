@@ -95,7 +95,7 @@
 											  style:UIBarButtonItemStylePlain  
 											  target:nil  action:nil];
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		// CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
 		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
 												 initWithTitle:NSLocalizedString(@"Back", nil)
@@ -150,7 +150,7 @@
 	rect.size.height = 216;  // iOS4.1から高さ可変になったようだが3.0互換のため規定値(216)にする
 	Mpicker.frame = rect;
 	
-	if (appDelegate_.app_is_iPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
+	if (appDelegate_.ppIsPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
 	{	// タテ
 		rect.origin.y += (Mpicker.frame.size.height + 20);
 		rect.size.width = 250;
@@ -203,10 +203,10 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		return YES;	// FormSheet窓対応
 	}
-	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+	else if (appDelegate_.ppOptAutorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
     return YES;

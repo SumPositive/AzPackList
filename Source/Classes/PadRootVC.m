@@ -59,7 +59,7 @@
     if (self) {
         // Custom initialization
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		appDelegate_.app_UpdateSave = NO;
+		appDelegate_.ppChanged = NO;
 		// 背景テクスチャ・タイルペイント
 		//self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 		// 背景色
@@ -110,8 +110,8 @@
 {
     [super viewDidAppear:animated];
 	
-	if (appDelegate_.app_BagSwing) {		// 振る // 全収納済みとなったE1から戻ったとき。
-		appDelegate_.app_BagSwing = NO; // 解除
+	if (appDelegate_.ppBagSwing) {		// 振る // 全収納済みとなったE1から戻ったとき。
+		appDelegate_.ppBagSwing = NO; // 解除
 		
 		// Anime 開始位置
 		imgBag_.transform = CGAffineTransformIdentity;

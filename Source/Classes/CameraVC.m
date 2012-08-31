@@ -125,7 +125,7 @@
 
 	// 回転対応
 	UIInterfaceOrientation interOri;
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		interOri = appDelegate_.mainSVC.interfaceOrientation;    //parentViewController.interfaceOrientation;
 	} else {
 		//interOri = appDelegate_.mainNC.visibleViewController.interfaceOrientation;
@@ -174,8 +174,8 @@
 													buDone_.enabled = YES;
 													ibLbCamera.text = NSLocalizedString(@"Camera msg2",nil);
 													
-													if (appDelegate_.app_is_iPad) {	//Popover外タッチで閉じないようにするため。
-														appDelegate_.app_UpdateSave = YES; // 変更あり
+													if (appDelegate_.ppIsPad) {	//Popover外タッチで閉じないようにするため。
+														appDelegate_.ppChanged = YES; // 変更あり
 													}
 											   } 
 	 ];
@@ -234,7 +234,7 @@
 
 	// PicasaID をセットする
 	if (e3target_) {
-		appDelegate_.app_UpdateSave = YES; // 変更あり
+		appDelegate_.ppChanged = YES; // 変更あり
 		// Mocへキャッシュ保存
 		E4photo *e4 = e3target_.e4photo;
 		if (!e4) {
@@ -261,7 +261,7 @@
         // Custom initialization
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
-		if (appDelegate_.app_is_iPad) {
+		if (appDelegate_.ppIsPad) {
 			/*if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
 				self.contentSizeForViewInPopover = CGSizeMake(480, 640);  //GD_POPOVER_SIZE;
 			} else {
@@ -344,7 +344,7 @@
 											 selector:@selector(actionCamera:)
 												 name: @"AVSystemController_SystemVolumeDidChangeNotification" object:nil]; 
  */
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		[[NSNotificationCenter defaultCenter] addObserver:self 
 												 selector:@selector(notification_ToInterfaceOrientation:)
 													 name: NFM_ToInterfaceOrientation object:nil]; 
@@ -369,11 +369,11 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	// Return YES for supported orientations
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		return YES;	// Popover窓内対応
 	} else {
 		// 回転禁止の場合、万一ヨコからはじまった場合、タテにはなるようにしてある。
-		return appDelegate_.app_opt_Autorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
+		return appDelegate_.ppOptAutorotate OR (interfaceOrientation == UIInterfaceOrientationPortrait);
 	}
 }
 
@@ -402,7 +402,7 @@
 	CGFloat fL = 640 / 2;		// Land 長辺
 	CGFloat fS = 480 / 2;		// Short 短辺
 	CGRect rect;
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		fL = self.view.bounds.size.width - 10;
 		fS = fL * 480/640;
 	}
@@ -420,14 +420,14 @@
 		case UIInterfaceOrientationLandscapeLeft:
 			previewLayer_.orientation = AVCaptureVideoOrientationLandscapeLeft;
 			rect = CGRectMake((self.view.bounds.size.width-fL)/2, (self.view.bounds.size.height-fS)/2, fL, fS);	// Landscape
-			if (appDelegate_.app_is_iPad==NO) {
+			if (appDelegate_.ppIsPad==NO) {
 				ibLbCamera.hidden = YES;
 			}
 			break;
 		case UIInterfaceOrientationLandscapeRight:
 			previewLayer_.orientation = AVCaptureVideoOrientationLandscapeRight;
 			rect = CGRectMake((self.view.bounds.size.width-fL)/2, (self.view.bounds.size.height-fS)/2, fL, fS);	// Landscape
-			if (appDelegate_.app_is_iPad==NO) {
+			if (appDelegate_.ppIsPad==NO) {
 				ibLbCamera.hidden = YES;
 			}
 			break;

@@ -103,12 +103,12 @@
 	if ((self = [super initWithStyle:UITableViewStyleGrouped])) {  // セクションありテーブル
 		// 初期化成功
 		mAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		mAppDelegate.app_UpdateSave = NO;
+		mAppDelegate.ppChanged = NO;
 		pSharePlanList = NO;
 		mTableViewContentY = -1;
 
 		// 背景テクスチャ・タイルペイント
-		if (mAppDelegate.app_is_iPad) {
+		if (mAppDelegate.ppIsPad) {
 			//self.view.backgroundColor = //iPad1では無効
 			UIView* view = self.tableView.backgroundView;
 			if (view) {
@@ -172,7 +172,7 @@
 {
     [super viewWillAppear:animated];
 
-	self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
+	self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
 
 	// 電卓が出ておれば消す
 	if (mCalcView && [mCalcView isShow]) {
@@ -196,7 +196,7 @@
 - (void)viewDesignPhoto
 {
 	CGRect rcPhoto;
-	if (mAppDelegate.app_is_iPad) { // iPad  TableView(Grouped)両端の余白:-20
+	if (mAppDelegate.ppIsPad) { // iPad  TableView(Grouped)両端の余白:-20
 		//rcPhoto = CGRectMake(8, 44-4, self.tableView.bounds.size.width-16-60, 480);
 		rcPhoto = CGRectMake(4, 44-4, self.contentSizeForViewInPopover.width-8-60, 400);
 	}
@@ -293,7 +293,7 @@
 	//[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
 	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 	
-	if (mAppDelegate.app_opt_Ad) {
+	if (mAppDelegate.ppOptShowAd) {
 		// 各viewDidAppear:にて「許可/禁止」を設定する
 		[mAppDelegate AdRefresh:YES];  //iPhoneは消すことにした。
 	}
@@ -305,7 +305,7 @@
 // ビューが非表示にされる前や解放される前ににこの処理が呼ばれる
 - (void)viewWillDisappear:(BOOL)animated 
 {
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 		//
 	} else {
 		if (mCalcView) {	// あれば破棄する
@@ -324,10 +324,10 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 		return YES;	// FormSheet窓対応
 	}
-	else if (mAppDelegate.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+	else if (mAppDelegate.ppOptAutorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
     return YES;
@@ -415,7 +415,7 @@
 		
 	}
 
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 		if (pSelfPopover) {
 			[pSelfPopover dismissPopoverAnimated:YES];
 		}
@@ -429,7 +429,7 @@
 {
 	if (pSharePlanList) return; // [Save]ボタンを消しているので通らないハズだが、念のため。
 	
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 	} else {
 		//[McalcView hide]; // 電卓が出ておれば消す
 		if (mCalcView) {	// あれば破棄する
@@ -615,7 +615,7 @@
 		}
 	}
 	
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 		//[(PadNaviCon*)self.navigationController dismissPopoverSaved];  // SAVE: PadNaviCon拡張メソッド
 		if (pSelfPopover) {
 			if ([pDelegate respondsToSelector:@selector(refreshE3view)]) {	// メソッドの存在を確認する
@@ -679,7 +679,7 @@
 				   @"azukisoft.seesaa.net",
 				   nil]; //許可ドメインを列記する
 	
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:wv];
 		nc.modalPresentationStyle = UIModalPresentationPageSheet;  // 背景Viewが保持される
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;//	UIModalTransitionStyleFlipHorizontal
@@ -693,8 +693,8 @@
 {
 	if ([mTfKeyword.text length]<=0) {
 		mTfKeyword.text = mTfName.text;
-		mAppDelegate.app_UpdateSave = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
+		mAppDelegate.ppChanged = YES; // 変更あり
+		self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
 		
 		mTfKeyword.text = azStringNoEmoji( mTfKeyword.text ); // 絵文字を除去する
 		
@@ -850,7 +850,7 @@
 	CGFloat fTableTopY = 0;
 	//テンキー表示位置 ＜＜とりあえず力ずくで位置合わせした。
 	mTableViewContentY = self.tableView.contentOffset.y; // Hide時に元の表示に戻すため
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 		//rect.origin.y = 400;  //全体が見えるようにした + (iRow-3)*60;  
 		fTableTopY = -45 + (iRow-3)*60;
 		rect.origin.y = self.tableView.bounds.size.height - 210;
@@ -910,7 +910,7 @@
 	[self viewWillAppear:NO]; // スライドバーを再描画するため
 #endif
 	
-	self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
+	self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
 }
 
 
@@ -999,7 +999,7 @@
 	if (indexPath.section==0) {
 		switch (indexPath.row) {
 			case 2:
-				if (mAppDelegate.app_is_iPad) {
+				if (mAppDelegate.ppIsPad) {
 					return 150; // Note
 				}
 				return 110; // Note
@@ -1011,7 +1011,7 @@
 			case 6:	// Picasa
 				if (pE3target.e4photo) { //＜＜E4photo ロードで待たされる！
 					//if (e3target_.photoUrl) {
-					if (mAppDelegate.app_is_iPad) {
+					if (mAppDelegate.ppIsPad) {
 						return 40+400+8;
 					} else {
 						return 40+320+8;
@@ -1024,7 +1024,7 @@
 		switch (indexPath.row) {
 			case 0:	// Shop Bookmark
 				if (10<[pE3target.shopUrl length]) {
-					if (mAppDelegate.app_is_iPad) {
+					if (mAppDelegate.ppIsPad) {
 						return 4+400+4;
 					} else {
 						return 4+320+4;
@@ -1034,7 +1034,7 @@
 		}
 	}
 	
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 		return 50;
 	}
 	return 44; // デフォルト：44ピクセル
@@ -1086,7 +1086,7 @@
 					label.font = [UIFont systemFontOfSize:12];
 					[cell.contentView addSubview:label]; //[label release];
 					
-					if (mAppDelegate.app_is_iPad) {
+					if (mAppDelegate.ppIsPad) {
 						mLbGroup = [[UILabel alloc] initWithFrame:
 									CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
 						mLbGroup.font = [UIFont systemFontOfSize:20];
@@ -1122,7 +1122,7 @@
 					label.backgroundColor = [UIColor clearColor];
 					[cell.contentView addSubview:label]; //[label release];
 					
-					if (mAppDelegate.app_is_iPad) {
+					if (mAppDelegate.ppIsPad) {
 						mTfName = [[UITextField alloc] initWithFrame:
 								   CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
 						mTfName.font = [UIFont systemFontOfSize:20];
@@ -1151,7 +1151,7 @@
 					label.font = [UIFont systemFontOfSize:12];
 					[cell.contentView addSubview:label]; //[label release];
 					
-					if (mAppDelegate.app_is_iPad) {
+					if (mAppDelegate.ppIsPad) {
 						mTvNote = [[UITextView alloc] initWithFrame:
 								   CGRectMake(20,15, self.tableView.frame.size.width-60,130)];
 						mTvNote.font = [UIFont systemFontOfSize:20];
@@ -1312,7 +1312,7 @@
 						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo Uploaded", nil);
 					} else {		// アップ待ち　リトライ
 						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-						if (mAppDelegate.app_UpdateSave) {
+						if (mAppDelegate.ppChanged) {
 							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo UploadWait", nil);
 						} else {
 							[mActivityIndicator_on_IconPicasa startAnimating];
@@ -1403,7 +1403,7 @@
 					label.backgroundColor = [UIColor clearColor];
 					[cell.contentView addSubview:label];
 					
-					if (mAppDelegate.app_is_iPad) {
+					if (mAppDelegate.ppIsPad) {
 						mTfKeyword = [[UITextField alloc] initWithFrame:
 									  CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
 						mTfKeyword.font = [UIFont systemFontOfSize:20];
@@ -1512,7 +1512,7 @@
 			case 4:
 			case 5: {
 				CGFloat fDialWidth = self.tableView.frame.size.width-80;
-				if (mAppDelegate.app_is_iPad) {
+				if (mAppDelegate.ppIsPad) {
 					fDialWidth -= 40;  // 両端の余白が増えるため
 				}
 				CGRect rc = CGRectMake(10,16, fDialWidth,44);
@@ -1606,7 +1606,7 @@
 					case 01: // Amazon.co.jp
 					{
 						NSString *zUrl;
-						if (mAppDelegate.app_is_iPad) {
+						if (mAppDelegate.ppIsPad) {
 							// PCサイト　　　　URL表示するようになったので長くする＜＜TAGが見えないように
 							// アソシエイトリンク作成方法⇒ https://affiliate.amazon.co.jp/gp/associates/help/t121/a1
 							//サーチ（全商品）
@@ -1623,7 +1623,7 @@
 					case 02: // Amazon.com
 					{
 						NSString *zUrl;
-						if (mAppDelegate.app_is_iPad) {
+						if (mAppDelegate.ppIsPad) {
 							// PCサイト
 							//ttp://www.amazon.com/s/?tag=azuk-20&creative=392009&campaign=212361&link_code=wsw&_encoding=UTF-8&search-alias=aps&field-keywords=LEGO&Submit.x=16&Submit.y=14&Submit=Go
 							zUrl = @"http://www.amazon.com/s/?_encoding=UTF-8&link_code=wsw&search-alias=aps&creative=392009&field-keywords=";
@@ -1638,7 +1638,7 @@
 					case 03: // Amazon.cn
 					{
 						NSString *zUrl;
-						if (mAppDelegate.app_is_iPad) {
+						if (mAppDelegate.ppIsPad) {
 							// PCサイト
 							//ttp://www.amazon.cn/s/ref=nb_sb_noss/?tag=azukid-23&link_code=wsw&_encoding=UTF-8&search-alias=aps&field-keywords=TEST&Submit.x=13&Submit.y=7&Submit=Go
 							zUrl = @"http://www.amazon.cn/s/?_encoding=UTF-8&link_code=wsw&search-alias=aps&field-keywords=";
@@ -1653,7 +1653,7 @@
 					case 11: // 楽天 Search
 					{			// アフィリエイトID(β版): &afid=0e4c9297.0f29bc13.0e4c9298.6adf8529
 						NSString *zUrl;
-						if (mAppDelegate.app_is_iPad) {
+						if (mAppDelegate.ppIsPad) {
 							// PCサイト
 							zUrl = @"http://search.rakuten.co.jp/search/mall/?sv=2&p=0&sitem=";
 						} else {
@@ -1710,8 +1710,8 @@
 			}
 			pE3target.e4photo = nil;
 			pE3target.photoUrl = nil;
-			mAppDelegate.app_UpdateSave = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
+			mAppDelegate.ppChanged = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
 			[self.tableView reloadData];
 		}
 		else if (indexPath.section==1 && indexPath.row==0) { // Shop
@@ -1722,8 +1722,8 @@
 				mWebViewShop = nil;
 			}
 			pE3target.shopUrl = nil;
-			mAppDelegate.app_UpdateSave = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
+			mAppDelegate.ppChanged = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
 			[self.tableView reloadData];
 		}
     }
@@ -1768,7 +1768,7 @@
 	// スクロールして textField が隠れた状態で resignFirstResponder するとフリースするため
 	self.tableView.scrollEnabled = NO; // スクロール禁止
 	//self.navigationItem.leftBarButtonItem.enabled = NO;
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 		//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
 	} else {
 		// 左[Cancel] 無効にする
@@ -1788,8 +1788,8 @@
     [zText replaceCharactersInRange:range withString:string];
 	// 置き換えた後の長さをチェックする
 	if ([zText length] <= TEXTFIELD_MAXLENGTH) {
-		mAppDelegate.app_UpdateSave = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
+		mAppDelegate.ppChanged = YES; // 変更あり
+		self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
 		return YES;
 	} else {
 		return NO;
@@ -1806,7 +1806,7 @@
 {
 	self.tableView.scrollEnabled = YES; // スクロール許可
 	//self.navigationItem.leftBarButtonItem.enabled = YES;
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 		//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
 	} else {
 		// 左[Cancel] 有効にする
@@ -1834,7 +1834,7 @@
 	}
 	self.tableView.scrollEnabled = NO; // スクロール禁止
 	//self.navigationItem.leftBarButtonItem.enabled = NO;
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 		//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
 	} else {
 		// 左[Cancel] 無効にする
@@ -1855,8 +1855,8 @@
     [zText replaceCharactersInRange:range withString:zReplace];
 	// 置き換えた後の長さをチェックする
 	if ([zText length] <= TEXTVIEW_MAXLENGTH) {
-		mAppDelegate.app_UpdateSave = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
+		mAppDelegate.ppChanged = YES; // 変更あり
+		self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
 		return YES;
 	} else {
 		return NO;
@@ -1868,7 +1868,7 @@
 {
 	self.tableView.scrollEnabled = YES; // スクロール許可
 	//self.navigationItem.leftBarButtonItem.enabled = YES;
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 		//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
 	} else {
 		// 左[Cancel] 有効にする
@@ -1901,24 +1901,24 @@
 		if ([pE3target.stock longValue] != dial) { // 変更あり
 			lbStock_.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
 			pE3target.stock = [NSNumber numberWithInteger:dial];
-			mAppDelegate.app_UpdateSave = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
+			mAppDelegate.ppChanged = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
 		}
 	}
 	else if (sender==dialNeed_) {
 		if ([pE3target.need longValue] != dial) { // 変更あり
 			lbNeed_.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
 			pE3target.need = [NSNumber numberWithInteger:dial];
-			mAppDelegate.app_UpdateSave = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
+			mAppDelegate.ppChanged = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
 		}
 	}
 	else if (sender==dialWeight_) {
 		if ([pE3target.weight longValue] != dial) { // 変更あり
 			lbWeight_.text = GstringFromNumber([NSNumber numberWithInteger:dial]);
 			pE3target.weight = [NSNumber numberWithInteger:dial];
-			mAppDelegate.app_UpdateSave = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
+			mAppDelegate.ppChanged = YES; // 変更あり
+			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
 		}
 	}
 }
@@ -1928,8 +1928,8 @@
 - (void)azWebViewBookmark:(NSString *)url
 {
 	pE3target.shopUrl = url;
-	mAppDelegate.app_UpdateSave = YES; // 変更あり
-	self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.app_UpdateSave;
+	mAppDelegate.ppChanged = YES; // 変更あり
+	self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
 	// 「URLから読み込む」
 	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:pE3target.shopUrl]];
 	[mWebViewShop loadRequest:request];

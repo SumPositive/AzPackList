@@ -686,7 +686,7 @@ static BOOL staticPhotoUploading = NO;
 											  assert(NO); //DEBUGでは落とす
 										  } 
 										  AppDelegate *ad = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-										  ad.app_UpdateSave = NO; //保存済み
+										  ad.ppChanged = NO; //保存済み
 									  }
 								  }];
 }
@@ -766,7 +766,7 @@ static BOOL staticPhotoUploading = NO;
 				assert(NO); //DEBUGでは落とす
 			}*/ 
 			AppDelegate *ad = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-			ad.app_UpdateSave = YES; //変更あり
+			ad.ppChanged = YES; //変更あり
 			// 再読み込み 通知発信---> E3detailTVC
 			[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
 																object:self userInfo:nil];

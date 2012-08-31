@@ -55,7 +55,7 @@
     [super viewDidLoad];
 	self.title = NSLocalizedString(@"Import Google", nil);
 
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 		// CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
 		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
 												 initWithTitle:NSLocalizedString(@"Back", nil)
@@ -129,10 +129,10 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	// Return YES for supported orientations
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 		return YES;	// FormSheet窓対応
 	}
-	else if (mAppDelegate.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+	else if (mAppDelegate.ppOptAutorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
     return YES;

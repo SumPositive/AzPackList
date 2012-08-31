@@ -147,7 +147,7 @@
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
 		// 背景テクスチャ・タイルペイント
-		if (appDelegate_.app_is_iPad) {
+		if (appDelegate_.ppIsPad) {
 			//self.view.backgroundColor = //iPadでは無効
 			UIView* view = self.tableView.backgroundView;
 			if (view) {
@@ -213,10 +213,10 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		return YES;	// FormSheet窓対応
 	}
-	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+	else if (appDelegate_.ppOptAutorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
     return YES;
@@ -366,7 +366,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
 	if (indexPath.section==0 && indexPath.row==1) { // E1.note
-		if (appDelegate_.app_is_iPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
+		if (appDelegate_.ppIsPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
 			return 100;
 		} else { //ヨコ
 			return 64;
@@ -516,7 +516,7 @@
 						[cell.contentView addSubview:lb]; //[lb release];
 					}
 					UILabel *lb = (UILabel *)[cell.contentView viewWithTag:CELL_TAG_NOTE];
-					if (appDelegate_.app_is_iPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
+					if (appDelegate_.ppIsPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
 						lb.frame = CGRectMake(5, 5, 320-30, 100-10);
 					} else { //ヨコ
 						lb.frame = CGRectMake(5, 3, 480-30, 64-6);

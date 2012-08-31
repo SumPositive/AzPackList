@@ -52,10 +52,10 @@
 	if (self) {
 		// 初期化処理：インスタンス生成時に1回だけ通る
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		appDelegate_.app_UpdateSave = NO;
+		appDelegate_.ppChanged = NO;
 		sharePlanList_ = NO;
 
-		if (appDelegate_.app_is_iPad) {
+		if (appDelegate_.ppIsPad) {
 			self.contentSizeForViewInPopover = GD_POPOVER_SIZE_E2edit;
 		}
 		// 背景テクスチャ・タイルペイント
@@ -75,7 +75,7 @@
 	// E2.name
 	MtfName = [[UITextField alloc] init];
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		MtfName.font = [UIFont systemFontOfSize:20];
 	} else {
 		MtfName.font = [UIFont systemFontOfSize:16];
@@ -90,7 +90,7 @@
 	// E2.note
 	MtvNote = [[UITextView alloc] init];
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		MtvNote.font = [UIFont systemFontOfSize:20];
 	} else {
 		MtvNote.font = [UIFont systemFontOfSize:14];
@@ -172,10 +172,10 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		return YES;	// FormSheet窓対応
 	}
-	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+	else if (appDelegate_.ppOptAutorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
     return YES;
@@ -185,7 +185,7 @@
 - (void)willAnimateSecondHalfOfRotationFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation 
 													   duration:(NSTimeInterval)duration
 {
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		[self cancel:nil];	//回転すればキャンセル
 	} else {
 		//[self viewWillAppear:NO];没：これを呼ぶと、回転の都度、編集がキャンセルされてしまう。
@@ -195,7 +195,7 @@
 
 - (void)viewDesign
 {
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		CGRect rect;
 		rect.origin.x = 10;
 		rect.origin.y = 5;
@@ -256,7 +256,7 @@ replacementString:(NSString *)string
     [text replaceCharactersInRange:range withString:string];
 	// 置き換えた後の長さをチェックする
 	if ([text length] <= AzMAX_NAME_LENGTH) {
-		appDelegate_.app_UpdateSave = YES; // 変更あり
+		appDelegate_.ppChanged = YES; // 変更あり
 		self.navigationItem.rightBarButtonItem.enabled = YES; // 変更あり [Save]有効
 		return YES;
 	} else {
@@ -273,7 +273,7 @@ replacementString:(NSString *)string
     [zText replaceCharactersInRange:range withString:zReplace];
 	// 置き換えた後の長さをチェックする
 	if ([zText length] <= AzMAX_NOTE_LENGTH) {
-		appDelegate_.app_UpdateSave = YES; // 変更あり
+		appDelegate_.ppChanged = YES; // 変更あり
 		self.navigationItem.rightBarButtonItem.enabled = YES; // 変更あり [Save]有効
 		return YES;
 	} else {
@@ -284,7 +284,7 @@ replacementString:(NSString *)string
 
 - (void)cancel:(id)sender 
 {
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		if (selfPopover_) 
 		{	//ヨコ： E2viewが左ペインにあるとき、E2editを内包するPopoverを閉じる
 			[selfPopover_ dismissPopoverAnimated:YES];
@@ -316,7 +316,7 @@ replacementString:(NSString *)string
 		}
 	}
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		if (selfPopover_) 
 		{	//ヨコ： E2viewが左ペインにあるとき、E2editを内包するPopoverを閉じる
 			if ([delegate_ respondsToSelector:@selector(refreshE2view)]) {	// メソッドの存在を確認する

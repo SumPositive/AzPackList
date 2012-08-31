@@ -71,7 +71,7 @@
 	
 	self.title = NSLocalizedString(@"menu Setting", nil);
 
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 		// CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
 		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
 												 initWithTitle:NSLocalizedString(@"Back", nil)
@@ -110,8 +110,8 @@
 
 	// 広告表示に変化があれば、広告スペースを調整するための処理
 	BOOL bAd = [[NSUbiquitousKeyValueStore defaultStore] boolForKey:KV_OptAdvertising];
-	if (mAppDelegate.app_opt_Ad != bAd) {
-		mAppDelegate.app_opt_Ad = bAd;
+	if (mAppDelegate.ppOptShowAd != bAd) {
+		mAppDelegate.ppOptShowAd = bAd;
 		// viewWillDisappear:にて再描画する
 	}
 }
@@ -120,10 +120,10 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 		return YES;	// FormSheet窓対応
 	}
-	else if (mAppDelegate.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+	else if (mAppDelegate.ppOptAutorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
     return YES;
@@ -148,8 +148,8 @@
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[NSUbiquitousKeyValueStore defaultStore] synchronize];
 
-	if (mAppDelegate.app_is_iPad) {
-		[mAppDelegate AdRefresh:mAppDelegate.app_opt_Ad];
+	if (mAppDelegate.ppIsPad) {
+		[mAppDelegate AdRefresh:mAppDelegate.ppOptShowAd];
 		// 再描画　　重量表示やAdスペースを変化させるため
 		[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS 
 															object:self userInfo:nil];
@@ -188,7 +188,7 @@
 {
 	switch (section) {
 		case 0: // 
-			if (mAppDelegate.app_is_iPad) {
+			if (mAppDelegate.ppIsPad) {
 				return 8;	// (0)回転は不要
 			} else {
 				return 9;
@@ -202,7 +202,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
 	int iRaw = indexPath.row;
-	if (mAppDelegate.app_is_iPad) iRaw++;
+	if (mAppDelegate.ppIsPad) iRaw++;
 	switch (iRaw) {
 		case 6: // Google+
 		case 8: // Crypt
@@ -240,7 +240,7 @@
 	
 	float fX;
 	int  iCase;
-	if (mAppDelegate.app_is_iPad) {
+	if (mAppDelegate.ppIsPad) {
 		fX = self.tableView.frame.size.width - 60 - 120;
 		 iCase = indexPath.row + 1;
 	} else {
@@ -420,11 +420,11 @@
 				sw.tag = TAG_OptAdvertising;
 				sw.backgroundColor = [UIColor clearColor]; //背景透明
 				//sw.hidden = !(appDelegate_.app_pid_AdOff); // AdOff支払により可視化 ＜＜NG 購入後の状態が解るように見せることにする
-				sw.enabled = mAppDelegate.app_pid_SwitchAd; // AdOff支払により有効化
+				sw.enabled = mAppDelegate.ppPaid_SwitchAd; // AdOff支払により有効化
 				[cell.contentView  addSubview:sw]; //[sw release];
 				cell.textLabel.text = NSLocalizedString(@"Advertising",nil);
 			}
-			if (mAppDelegate.app_pid_SwitchAd) {
+			if (mAppDelegate.ppPaid_SwitchAd) {
 				cell.textLabel.enabled = YES;
 				cell.detailTextLabel.text = NSLocalizedString(@"Advertising enable",nil);
 				cell.detailTextLabel.textColor = [UIColor grayColor];
@@ -447,7 +447,7 @@
 				mTfPass1.keyboardType = UIKeyboardTypeASCIICapable;
 				mTfPass1.secureTextEntry = YES;
 				mTfPass1.returnKeyType = UIReturnKeyNext;
-				mTfPass1.enabled = mAppDelegate.app_pid_SwitchAd; // AdOff支払により有効化
+				mTfPass1.enabled = mAppDelegate.ppPaid_SwitchAd; // AdOff支払により有効化
 				mTfPass1.text = @"";
 				mTfPass1.delegate = self;
 				[cell.contentView  addSubview:mTfPass1];
@@ -469,7 +469,7 @@
 			mTfPass2.frame = CGRectMake(fX-45,38, 140, 25); // 回転対応
 			//
 			cell.textLabel.text = NSLocalizedString(@"PackListCrypt",nil);
-			if (mAppDelegate.app_pid_SwitchAd) {
+			if (mAppDelegate.ppPaid_SwitchAd) {
 				NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 				if ([defaults boolForKey:UD_OptCrypt]) {
 					// KeyChainから保存しているパスワードを取得する
@@ -513,7 +513,7 @@
 	switch (sender.tag) {  // .tag は UIView にて NSInteger で存在する、　
 		case TAG_OptShouldAutorotate: {
 			[defaults setBool: [sender isOn]  forKey:UD_OptShouldAutorotate];
-			mAppDelegate.app_opt_Autorotate = [sender isOn];
+			mAppDelegate.ppOptAutorotate = [sender isOn];
 		}	break;
 		case TAG_OptTotlWeightRound:
 			[kvs setBool:[sender isOn] forKey:KV_OptWeightRound];
@@ -532,7 +532,7 @@
 			break;
 		case TAG_OptAdvertising:
 			[kvs setBool:[sender isOn] forKey:KV_OptAdvertising];
-			mAppDelegate.app_opt_Ad = [sender isOn];
+			mAppDelegate.ppOptShowAd = [sender isOn];
 			// viewWillDisappear:にて再描画する
 			break;
 	}

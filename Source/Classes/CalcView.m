@@ -105,7 +105,7 @@
 	MrectInit = rect;		// 表示位置を記録　showにて復元に使う
 
 	appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		// 位置はそのままで、透明から現れるようにする
 	} else {
 		// 下部から現れるようにする
@@ -151,7 +151,7 @@
 	MscrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	MscrollView.backgroundColor = [UIColor blackColor];
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		MscrollView.delaysContentTouches = NO; //iPadではスクロール不要なのでＮＯにし、タッチ感度を向上させる。
 		//UIScrollView を止めて UIViewを試したが、ボタン隙間のタッチで touchesBegan:が呼び出されて閉じてしまう不具合により没。
 	} else {
@@ -473,7 +473,7 @@ replacementString:(NSString *)text
 	float fW;
 	float fH;
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		fy = 0;
 		MtextField.frame = CGRectMake(5,fy, rect.size.width-10,30);	// 1行
 		fy += MtextField.frame.size.height;
@@ -567,7 +567,7 @@ replacementString:(NSString *)text
 			Rlabel.text = GstringFromNumber(num); // 3桁コンマ付加
 			
 			AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-			appDelegate.app_UpdateSave = YES; // 変更あり
+			appDelegate.ppChanged = YES; // 変更あり
 		}
 	}
 }
@@ -596,7 +596,7 @@ replacementString:(NSString *)text
 	// アニメ終了状態
 	self.alpha = 0;	// 透明
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		[self setFrame:MrectInit];	// 位置はそのまま
 	} else {
 		CGRect rect = MrectInit;
@@ -646,7 +646,7 @@ replacementString:(NSString *)text
 	[UIView beginAnimations:nil context:context];
 	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		[UIView setAnimationDuration:0.6];
 	} else {
 		[UIView setAnimationDuration:0.2]; // 0.15 出は早く

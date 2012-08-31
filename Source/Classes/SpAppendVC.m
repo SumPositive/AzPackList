@@ -58,7 +58,7 @@
 	[MtfNickname resignFirstResponder]; //キーボードを隠す
 	self.navigationItem.rightBarButtonItem = nil; // Hide
 	
-	if (appDelegate_.app_is_iPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
+	if (appDelegate_.ppIsPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
 		CGRect rc = MtvNote.frame;
 		rc.size.height = 60;
 		MtvNote.frame = rc;
@@ -286,7 +286,7 @@
 															 action:@selector(vBarDone:)];
 	}
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		// CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
 		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
 												 initWithTitle:NSLocalizedString(@"Back", nil)
@@ -322,7 +322,7 @@
 	[super viewDidAppear:animated];
 	GA_TRACK_METHOD
 	
-	if (appDelegate_.app_opt_Ad) {
+	if (appDelegate_.ppOptShowAd) {
 		// 各viewDidAppear:にて「許可/禁止」を設定する
 		[appDelegate_ AdRefresh:NO];	//広告禁止
 	}
@@ -340,7 +340,7 @@
 	rect.size.height = 216;
 	mPicker.frame = rect;*/
 	
-	if (appDelegate_.app_is_iPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
+	if (appDelegate_.ppIsPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
 	{	// タテ
 		rect.origin.y =  5;		rect.size.height = 30;
 		rect.origin.x = 10;		rect.size.width -= 20;
@@ -392,10 +392,10 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		return YES;	// FormSheet窓対応
 	}
-	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+	else if (appDelegate_.ppOptAutorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
     return YES;
@@ -446,7 +446,7 @@
 {
 	switch (alertView.tag) {
 		case ALERT_TAG_PREVIEW:	// 前画面に戻す
-			if (appDelegate_.app_is_iPad) {
+			if (appDelegate_.ppIsPad) {
 				if (selfPopover) {
 					[selfPopover dismissPopoverAnimated:YES];
 				}
@@ -491,7 +491,7 @@
 {
 	self.navigationItem.rightBarButtonItem = RbarButtonItemDone;
 	
-	if (appDelegate_.app_is_iPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
+	if (appDelegate_.ppIsPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
 		CGRect rc = MtvNote.frame;
 		rc.size.height = 60;
 		MtvNote.frame = rc;
@@ -516,7 +516,7 @@
 {
 	self.navigationItem.rightBarButtonItem = RbarButtonItemDone;
 	
-	if (appDelegate_.app_is_iPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
+	if (appDelegate_.ppIsPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
 		CGRect rc = MtvNote.frame;
 		rc.size.height = 160;
 		MtvNote.frame = rc;

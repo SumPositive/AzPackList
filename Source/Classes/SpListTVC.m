@@ -162,10 +162,10 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {	
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		return YES;	// FormSheet窓対応
 	}
-	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+	else if (appDelegate_.ppOptAutorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
     return YES;
@@ -226,7 +226,7 @@
 {
 	if ([RaSharePlans count] <= indexPath.row) return 44;
 
-	if (appDelegate_.app_is_iPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
+	if (appDelegate_.ppIsPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
 		return 70; // タテ
 	} else {
 		return 55; //ヨコ
@@ -322,7 +322,7 @@
 		zNickname = [dic objectForKey:@"userName"];
 	}
 	//
-	if (appDelegate_.app_is_iPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
+	if (appDelegate_.ppIsPad || UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) { //タテ
 		// タテ
 		lb = (UILabel *)[cell.contentView viewWithTag:CELL_TAG_NAME];
 		lb.frame = CGRectMake(10,4, cell.frame.size.width-20,18);

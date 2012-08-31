@@ -93,11 +93,11 @@
 {	// iCloud-CoreData に変更があれば呼び出される
 	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
 	//[kvs synchronize]; <<<変化通知により同期済みであるから不要
-	if (appDelegate_.app_pid_SwitchAd==NO  &&  [kvs boolForKey:STORE_PRODUCTID_AdOff]) 
+	if (appDelegate_.ppPaid_SwitchAd==NO  &&  [kvs boolForKey:STORE_PRODUCTID_AdOff]) 
 	{	// iCloud OFF --> ON
-		appDelegate_.app_pid_SwitchAd = YES;
+		appDelegate_.ppPaid_SwitchAd = YES;
 		//[appDelegate_ managedObjectContextReset]; // iCloud対応の moc再生成する。
-		appDelegate_.app_opt_Ad = NO;
+		appDelegate_.ppOptShowAd = NO;
 		[kvs setBool:NO forKey:KV_OptAdvertising];
 		[appDelegate_ AdRefresh:NO];
 	}
@@ -222,13 +222,13 @@
 
 - (void)actionImportSharedPackList
 {
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 	}
 	
 	SpSearchVC *vc = [[SpSearchVC alloc] init];
 	
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 	/*	popOver_ = nil;
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
@@ -247,7 +247,7 @@
 		[self presentModalViewController:nc animated:YES];
 	}
 	else {
-		if (appDelegate_.app_opt_Ad) {
+		if (appDelegate_.ppOptShowAd) {
 			[appDelegate_ AdRefresh:NO];	//広告禁止
 		}
 		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
@@ -265,14 +265,14 @@
 												extension: GD_EXTENSION 
 												 delegate: appDelegate_];
 	assert(vc);
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 		[self presentModalViewController:nc animated:YES];
 	} 
 	else {
-		if (appDelegate_.app_opt_Ad) {
+		if (appDelegate_.ppOptShowAd) {
 			[appDelegate_ AdRefresh:NO];	//広告禁止
 		}
 		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
@@ -297,7 +297,7 @@
 {
 	GDocDownloadTVC *vc = [[GDocDownloadTVC alloc] init];
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
@@ -305,7 +305,7 @@
 		// Download成功後の再描画は、NFM_REFRESH_ALL_VIEWS 通知により処理される
 	} 
 	else {
-		if (appDelegate_.app_opt_Ad) {
+		if (appDelegate_.ppOptShowAd) {
 			[appDelegate_ AdRefresh:NO];	//広告禁止
 		}
 		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
@@ -436,13 +436,13 @@
 	vc.ppAuthor = @"Sum Positive";
 	//vc.hidesBottomBarWhenPushed = YES; //以降のタブバーを消す
 	//[self.navigationController pushViewController:vc animated:YES];
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet; // iPad画面1/4サイズ
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 		[self presentModalViewController:nc animated:YES];
 	} else {
-		if (appDelegate_.app_opt_Ad) {	// 各viewDidAppear:にて「許可/禁止」を設定する
+		if (appDelegate_.ppOptShowAd) {	// 各viewDidAppear:にて「許可/禁止」を設定する
 			[appDelegate_ AdRefresh:NO];	//広告禁止
 		}
 		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
@@ -454,14 +454,14 @@
 {
 	SettingTVC *vc = [[SettingTVC alloc] init];
 	
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 		[self presentModalViewController:nc animated:YES];
 	}
 	else {
-		if (appDelegate_.app_opt_Ad) {
+		if (appDelegate_.ppOptShowAd) {
 			// 各viewDidAppear:にて「許可/禁止」を設定する
 			[appDelegate_ AdRefresh:NO];	//広告禁止
 		}
@@ -485,14 +485,14 @@
 			productID:STORE_PRODUCTID_AdOff
 			secretKey:@"1615AzPackList"]; //[1.2]にあるsecretKeyに一致すること
 	
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 		[self presentModalViewController:nc animated:YES];
 	}
 	else {
-		if (appDelegate_.app_opt_Ad) {
+		if (appDelegate_.ppOptShowAd) {
 			// 各viewDidAppear:にて「許可/禁止」を設定する
 			[appDelegate_ AdRefresh:NO];	//広告禁止
 		}
@@ -507,7 +507,7 @@
 {	//既に呼び出し元にて、[userDefaults setBool:YES  forKey:productID]　登録済み
 	GA_TRACK_EVENT(@"AZStore", @"azStorePurchesed", productID,1);
 	if ([productID isEqualToString:STORE_PRODUCTID_AdOff]) {
-		appDelegate_.app_pid_SwitchAd = YES; //広告スイッチ 購入済み
+		appDelegate_.ppPaid_SwitchAd = YES; //広告スイッチ 購入済み
 		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
 		[kvs setBool:YES  forKey: STORE_PRODUCTID_AdOff];
 		[kvs synchronize];
@@ -524,7 +524,7 @@
 	// E2 へドリルダウン
 	E2viewController *e2view = [[E2viewController alloc] init];
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		e2view.title = NSLocalizedString(@"Product Title",nil);
 	} else {
 		if ([e1obj.name length]<=0) {
@@ -537,7 +537,7 @@
 	e2view.e1selected = e1obj;
 	e2view.sharePlanList = NO;
 	
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		//Split Right
 		E3viewController* e3view = [[E3viewController alloc] init];
 		// 以下は、E3viewControllerの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
@@ -592,7 +592,7 @@
 {
 	if (section0Rows_ <= indexPath.row) return;  // Addボタン行などの場合パスする
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 	}
 	
@@ -604,7 +604,7 @@
 	e1editView_.e1target = e1obj;
 	e1editView_.addRow = (-1); // Edit mode.
 	
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		//[Mpopover release], 
 		popOver_ = nil;
 		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:Me1editView];
@@ -756,7 +756,7 @@
 		//informationView_ = nil; // azInformationViewで生成 [self.view.window addSubview:]
 		
 		// 背景テクスチャ・タイルペイント
-		if (appDelegate_.app_is_iPad) {
+		if (appDelegate_.ppIsPad) {
 			//self.view.backgroundColor = //iPadでは無効
 			UIView* view = self.tableView.backgroundView;
 			if (view) {
@@ -808,7 +808,7 @@
 	self.tableView.allowsSelectionDuringEditing = YES; // 編集モードに入ってる間にユーザがセルを選択できる
 #endif	
 	
-	if (appDelegate_.app_opt_Ad) {
+	if (appDelegate_.ppOptShowAd) {
 		UIImageView* iv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Icon24-Free.png"]];
 		UIBarButtonItem* bui = [[UIBarButtonItem alloc] initWithCustomView:iv];
 		self.navigationItem.leftBarButtonItem	= bui;
@@ -879,7 +879,7 @@
 	
 	//【Tips】タテから始まるとき、willRotateToInterfaceOrientation:を通らずに、ここを通る　⇒ AdRefresh：にて初期タテ配置となる
 	//【Tips】ヨコから始まるとき、ここよりもloadView：よりも先に willRotateToInterfaceOrientation: を通る ⇒ willRotateにてヨコ配置となる
-	[appDelegate_ AdRefresh:appDelegate_.app_opt_Ad];	//広告
+	[appDelegate_ AdRefresh:appDelegate_.ppOptShowAd];	//広告
 	[appDelegate_ AdViewWillRotate:self.interfaceOrientation];
 
 	// アップデート直後、1回だけInformation表示する
@@ -895,7 +895,7 @@
 // この画面が非表示になる直前に呼ばれる
 - (void)viewWillDisappear:(BOOL)animated 
 {
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		if ([popOver_ isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
 			[popOver_ dismissPopoverAnimated:animated];
 		}
@@ -912,10 +912,10 @@
 //				回転後に didRotateFromInterfaceOrientation が呼び出される。
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		return YES;	// FormSheet窓対応
 	}
-	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+	else if (appDelegate_.ppOptAutorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
     return YES;
@@ -1004,7 +1004,7 @@
 {
 	[self unloadRelease];
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		popOver_.delegate = nil;	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
 		//[Mpopover release], 
 		popOver_ = nil;
@@ -1048,7 +1048,7 @@
 {
 	switch (section) {
 		case 0:
-			if (appDelegate_.app_is_iPad  &&  appDelegate_.app_opt_Ad) {
+			if (appDelegate_.ppIsPad  &&  appDelegate_.ppOptShowAd) {
 				if (section0Rows_ <= 0) {
 					return NSLocalizedString(@"Plan Nothing",nil);
 				}
@@ -1090,8 +1090,8 @@
 				}
 			}*/
 			zz = [zz stringByAppendingString:@"\nAzukiSoft Project\n"  COPYRIGHT];
-			if (appDelegate_.app_opt_Ad) {
-				if (appDelegate_.app_is_iPad) {
+			if (appDelegate_.ppOptShowAd) {
+				if (appDelegate_.ppIsPad) {
 					zz = [zz stringByAppendingString:@"\n\n\n\n\n\n\n\n\n\n\n\n\n\n"];
 				} else {
 					zz = [zz stringByAppendingString:@"\n\n\n\n"];
@@ -1107,7 +1107,7 @@
 // セルの高さを指示する
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		return 50;
 	} else {
 		return 44; // デフォルト：44ピクセル
@@ -1146,7 +1146,7 @@
 				cell.textLabel.text = e1obj.name;
 #endif
 
-			if (appDelegate_.app_is_iPad) {
+			if (appDelegate_.ppIsPad) {
 				cell.textLabel.font = [UIFont systemFontOfSize:20];
 				cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
 			} else {
@@ -1244,7 +1244,7 @@
 											   reuseIdentifier:zCellDefault];
 			}
 
-			if (appDelegate_.app_is_iPad) {
+			if (appDelegate_.ppIsPad) {
 				cell.textLabel.font = [UIFont systemFontOfSize:18];
 			} else {
 				cell.textLabel.font = [UIFont systemFontOfSize:14];
@@ -1269,7 +1269,7 @@
 										   reuseIdentifier:zCellSubtitle];
 		}
 
-		if (appDelegate_.app_is_iPad) {
+		if (appDelegate_.ppIsPad) {
 			cell.textLabel.font = [UIFont systemFontOfSize:18];
 			cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
 			cell.accessoryType = UITableViewCellAccessoryNone;
@@ -1455,7 +1455,7 @@
 		UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 		NSString *title = [NSString stringWithFormat:@"%@\n%@",
 						   cell.textLabel.text, NSLocalizedString(@"DELETE Pack caution", nil)];
-		if (appDelegate_.app_is_iPad) {
+		if (appDelegate_.ppIsPad) {
 			//[2.0.1] iPadだとCancelボタンが表示されないためUIActionSheetにした。
 			UIAlertView *av = [[UIAlertView alloc] initWithTitle: title
 														 message:@"" 
@@ -1568,7 +1568,7 @@
 
 	UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
 	if ( [[nc visibleViewController] isMemberOfClass:[E1edit class]] ) {	// E1edit のときだけ、
-		if (appDelegate_.app_UpdateSave) { // E1editにて、変更あるので閉じさせない
+		if (appDelegate_.ppChanged) { // E1editにて、変更あるので閉じさせない
 			azAlertBox(NSLocalizedString(@"Cancel or Save",nil), 
 					 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
 			return NO; 

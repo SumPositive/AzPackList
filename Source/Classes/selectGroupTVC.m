@@ -31,7 +31,7 @@
 	if (self) {
 		// 初期化成功
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		if (appDelegate_.app_is_iPad) {
+		if (appDelegate_.ppIsPad) {
 			self.contentSizeForViewInPopover = GD_POPOVER_SIZE_E3edit;
 		}
     }
@@ -90,10 +90,10 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		return YES;	// FormSheet窓対応
 	}
-	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+	else if (appDelegate_.ppOptAutorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
     return YES;
@@ -138,7 +138,7 @@
 	else
 		cell.textLabel.text = e2obj.name;
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		cell.textLabel.font = [UIFont systemFontOfSize:20];
 	} else {
 		cell.textLabel.font = [UIFont systemFontOfSize:16];
@@ -166,7 +166,7 @@
 		RlbGroup.tag = indexPath.row;
 		RlbGroup.text = cell.textLabel.text;
 		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		appDelegate.app_UpdateSave = YES; // 変更あり
+		appDelegate.ppChanged = YES; // 変更あり
 	}
 	
 #ifdef xxxAzPAD

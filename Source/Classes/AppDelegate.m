@@ -16,7 +16,7 @@
 #import "E1viewController.h"
 
 
-#define CoreData_iCloud_SYNC		NO	// YES or NO
+#define CoreData_iCloud_SYNC		YES	// YES or NO
 
 
 @interface AppDelegate (PrivateMethods) // メソッドのみ記述：ここに変数を書くとグローバルになる。他に同じ名称があると不具合発生する
@@ -31,25 +31,24 @@
 
 
 @implementation AppDelegate
-@synthesize window = window_;
-@synthesize managedObjectContext = moc_;
-@synthesize mainNC = mainNC_;
-@synthesize mainSVC = mainSVC_;
-@synthesize padRootVC = padRootVC_;
-@synthesize clipE3objects = clipE3objects_;		// [Cut][Copy]されたE3をPUSHスタックする。[Paste]でPOPする
+@synthesize window = __window;
+@synthesize managedObjectContext = __moc;
+@synthesize mainNC = __mainNC;
+@synthesize mainSVC = __mainSVC;
+@synthesize padRootVC = __padRootVC;
+@synthesize clipE3objects = __clipE3objects;		// [Cut][Copy]されたE3をPUSHスタックする。[Paste]でPOPする
 @synthesize dropboxSaveE1selected = __dropboxSaveE1selected;
-//@synthesize picasaBox = picasaBox_;
-@synthesize app_opt_Autorotate = app_opt_Autorotate_;
-@synthesize app_opt_Ad = app_opt_Ad_;				//Setting選択フラグ
-@synthesize app_is_iPad = app_is_iPad_;
-@synthesize app_UpdateSave = app_UpdateSave_;
-@synthesize app_pid_SwitchAd = app_pid_SwitchAd_;		//Store購入済フラグ
-@synthesize app_BagSwing = app_BagSwing_;		//YES=PadRootVC:が表示されたとき、バッグを振る。
-@synthesize app_enable_iCloud = app_enable_iCloud_;		// persistentStoreCoordinator:にて設定
+@synthesize ppOptAutorotate = __OptAutorotate;
+@synthesize ppOptShowAd = __OptShowAd;				//Setting選択フラグ
+@synthesize ppIsPad = __IsPad;
+@synthesize ppChanged = __Changed;
+@synthesize ppPaid_SwitchAd = __Paid_SwitchAd;		//Store購入済フラグ
+@synthesize ppBagSwing = __BagSwing;		//YES=PadRootVC:が表示されたとき、バッグを振る。
+@synthesize ppEnabled_iCloud = __Enabled_iCloud;		// persistentStoreCoordinator:にて設定
 
 #pragma mark - Application lifecycle
 
-//static BOOL cleanUbiquitousFolder__ = YES;
+static BOOL cleanUbiquitousFolder__ = YES;  //インストール後、1度だけ処理するため
 
 //[1.1]メール添付ファイル"*.packlist" をタッチしてモチメモを選択すると、launchOptions にファイルの URL (file://…というスキーマ) で渡される。
 //- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -60,7 +59,7 @@
 	GA_TRACK_EVENT(@"Device", @"systemVersion", [[UIDevice currentDevice] systemVersion], 0);
 
 	// MainWindow    ＜＜MainWindow.xlb を使用しないため、ここで生成＞＞
-	window_ = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	__window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	
 	// 端末毎の設定
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -78,7 +77,7 @@
 							  nil];
 	[userDefaults registerDefaults:azOptDef];	// 未定義のKeyのみ更新される
 	[userDefaults synchronize]; // plistへ書き出す
-	app_opt_Autorotate_ = [userDefaults boolForKey:UD_OptShouldAutorotate];
+	__OptAutorotate = [userDefaults boolForKey:UD_OptShouldAutorotate];
 	
 	// iCloud-KVS： 全端末共用（同期）設定
 	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
@@ -99,24 +98,24 @@
 	}
 	[kvs synchronize]; // 最新同期
 	
-	app_opt_Ad_ = [kvs boolForKey:KV_OptAdvertising];
-	app_pid_SwitchAd_ = [kvs boolForKey:STORE_PRODUCTID_AdOff];
-	//NSLog(@"app_pid_SwitchAd_=%d", app_pid_SwitchAd_);
+	__OptShowAd = [kvs boolForKey:KV_OptAdvertising];
+	__Paid_SwitchAd = [kvs boolForKey:STORE_PRODUCTID_AdOff];
+	//NSLog(@"__Paid_SwitchAd=%d", __Paid_SwitchAd);
 	
-	if (app_pid_SwitchAd_==NO && [userDefaults boolForKey:UD_OptCrypt]) {
+	if (__Paid_SwitchAd==NO && [userDefaults boolForKey:UD_OptCrypt]) {
 		[userDefaults setBool:NO forKey:UD_Crypt_Switch];
 	}
-	[userDefaults setBool:app_pid_SwitchAd_ forKey:UD_OptCrypt];
+	[userDefaults setBool:__Paid_SwitchAd forKey:UD_OptCrypt];
 	
 #ifdef AzMAKE_SPLASHFACE
-	app_opt_Ad_ = NO;
+	__OptShowAd = NO;
 #endif
 	
 	//-------------------------------------------------初期化
-	app_UpdateSave_ = NO;
+	__Changed = NO;
 	mAdCanVisible = NO;			// 現在状況、(NO)表示禁止  (YES)表示可能
-	if (clipE3objects_==nil) {
-		clipE3objects_ = [NSMutableArray array];	//　[Clip Board] クリップボード初期化
+	if (__clipE3objects==nil) {
+		__clipE3objects = [NSMutableArray array];	//　[Clip Board] クリップボード初期化
 	}
 
 	//-------------------------------------------------デバイス、ＯＳ確認
@@ -126,54 +125,38 @@
 		GA_TRACK_EVENT_ERROR(@"STOP < iOS 5.0",0);
 		exit(0);
 	}
-	//app_is_iPad_ = [[[UIDevice currentDevice] model] hasPrefix:@"iPad"];	// iPad
-	app_is_iPad_ = iS_iPAD;
-	NSLog(@"app_is_iPad_=%d,  app_is_Ad_=%d,  app_pid_AdOff_=%d", app_is_iPad_, app_opt_Ad_, app_pid_SwitchAd_);
-	
-/*	// iCloud完全クリアする　＜＜＜同期矛盾が生じたときや構造変更時に使用
-	//[[NSFileManager defaultManager] removeItemAtURL:cloudURL error:nil];
-	if (cleanUbiquitousFolder__) {
-		cleanUbiquitousFolder__ = NO;
-		NSFileManager *fileManager = [NSFileManager defaultManager];
-		NSURL *cloudURL = [fileManager URLForUbiquityContainerIdentifier:nil];
-		NSString *file = nil;     
-		NSDirectoryEnumerator *enumerator = [fileManager enumeratorAtPath:[cloudURL path]];  
-		while (file = [enumerator nextObject]) {
-			[fileManager removeItemAtPath:file error:nil];
-			NSLog(@"Removed %@", file);
-		}
-		//return;
-	}*/
-	
+	//__IsPad = [[[UIDevice currentDevice] model] hasPrefix:@"iPad"];	// iPad
+	__IsPad = iS_iPAD;
+	NSLog(@"__IsPad=%d,  app_is_Ad_=%d,  app_pid_AdOff_=%d", __IsPad, __OptShowAd, __Paid_SwitchAd);
 	
 	//-------------------------------------------------
-	if (app_is_iPad_) {
-		padRootVC_ = [[PadRootVC alloc] init]; // retainされる
+	if (__IsPad) {
+		__padRootVC = [[PadRootVC alloc] init]; // retainされる
 		UINavigationController* naviLeft = [[UINavigationController alloc]
-											initWithRootViewController:padRootVC_];
+											initWithRootViewController:__padRootVC];
 		
 		E1viewController *e1viewCon = [[E1viewController alloc] init];
 		UINavigationController* naviRight = [[UINavigationController alloc] initWithRootViewController:e1viewCon];
 		
 		// e1viewCon を splitViewCon へ登録
 		//mainVC = [[PadSplitVC alloc] init]; タテ2分割のための実装だったがRejectされたので没
-		mainSVC_ = [[UISplitViewController alloc] init];
-		mainSVC_.viewControllers = [NSArray arrayWithObjects:naviLeft, naviRight, nil];
-		mainSVC_.delegate = padRootVC_;
+		__mainSVC = [[UISplitViewController alloc] init];
+		__mainSVC.viewControllers = [NSArray arrayWithObjects:naviLeft, naviRight, nil];
+		__mainSVC.delegate = __padRootVC;
 		// mainVC を window へ登録
-		[window_ addSubview:mainSVC_.view];
+		[__window addSubview:__mainSVC.view];
 	}
 	else {
 		E1viewController *e1viewCon = [[E1viewController alloc] init];
 		//e1viewCon.Rmoc = self.managedObjectContext; ＜＜待ちを減らすため、E1viewController:内で生成するように改めた。
 		// e1viewCon を naviCon へ登録
-		mainNC_ = [[UINavigationController alloc] initWithRootViewController:e1viewCon];
+		__mainNC = [[UINavigationController alloc] initWithRootViewController:e1viewCon];
 		// mainVC を window へ登録
-		[window_ addSubview:mainNC_.view];
+		[__window addSubview:__mainNC.view];
 	}
 	
 	//Pad// iOS4以降を前提としてバックグランド機能に任せて前回復帰処理しないことにした。
-	[window_ makeKeyAndVisible];	// 表示開始
+	[__window makeKeyAndVisible];	// 表示開始
 	
 	// Dropbox 標準装備
 	DBSession* dbSession = [[DBSession alloc]
@@ -182,7 +165,20 @@
 							root:kDBRootAppFolder]; // either kDBRootAppFolder or kDBRootDropbox
 	[DBSession setSharedSession:dbSession];
 
-	// 初期生成
+
+	// iCloud完全クリアする　＜＜＜同期矛盾が生じたときや構造変更時に使用
+	if (cleanUbiquitousFolder__) {
+		cleanUbiquitousFolder__ = NO;
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+		NSURL *cloudURL = [fileManager URLForUbiquityContainerIdentifier:nil];
+		NSString *file = nil;
+		NSDirectoryEnumerator *enumerator = [fileManager enumeratorAtPath:[cloudURL path]];
+		while (file = [enumerator nextObject]) {
+			[fileManager removeItemAtPath:file error:nil];
+			NSLog(@"Removed %@", file);
+		}
+	}
+	// MOC 初期生成
 	[EntityRelation setMoc:[self managedObjectContext]];
 	
 	// Photo Picasa
@@ -201,8 +197,8 @@
 		// 別デバイスで設定変更したとき、表示に影響ある設定について再描画する
 		
 		// 広告表示に変化があれば、広告スペースを調整する
-		app_opt_Ad_ = [kvs boolForKey:KV_OptAdvertising];
-		[self AdRefresh:app_opt_Ad_];
+		__OptShowAd = [kvs boolForKey:KV_OptAdvertising];
+		[self AdRefresh:__OptShowAd];
 
 		// 再フィッチ＆画面リフレッシュ通知  ＜＜＜＜ E1viewController:refreshAllViews: にて iCloud OFF --> ON している。
 		[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFRESH_ALL_VIEWS
@@ -248,14 +244,14 @@
 						[alert show];
 					}
 					// 再表示
-					if (app_is_iPad_) {
-						UIViewController *vc = [mainSVC_.viewControllers  objectAtIndex:1]; //[1]Right
+					if (__IsPad) {
+						UIViewController *vc = [__mainSVC.viewControllers  objectAtIndex:1]; //[1]Right
 						if ([vc respondsToSelector:@selector(viewWillAppear:)]) {
 							[vc viewWillAppear:YES];
 						}
 					} else {
-						if ([mainNC_.visibleViewController respondsToSelector:@selector(viewWillAppear:)]) {
-							[mainNC_.visibleViewController viewWillAppear:YES];
+						if ([__mainNC.visibleViewController respondsToSelector:@selector(viewWillAppear:)]) {
+							[__mainNC.visibleViewController viewWillAppear:YES];
 						}
 					}
 				});
@@ -318,17 +314,17 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
 	//--------------------------------------------------[Clip Board] クリップボード クリア処理
-	if (clipE3objects_ && 0 < [clipE3objects_ count]) {
-		for (E3 *e3 in clipE3objects_) {
+	if (__clipE3objects && 0 < [__clipE3objects count]) {
+		for (E3 *e3 in __clipE3objects) {
 			if (e3.parent == nil) {
 				// [Cut]されたE3なので削除する
-				[moc_ deleteObject:e3];
+				[__moc deleteObject:e3];
 			}
 		}
 	}
-	if (moc_ && [moc_ hasChanges]) { //未保存があれば保存する
+	if (__moc && [__moc hasChanges]) { //未保存があれば保存する
 		NSError *error;
-        if (![moc_ save:&error]) {
+        if (![__moc save:&error]) {
 			GA_TRACK_EVENT_ERROR([error localizedDescription],0);
 			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 			assert(NO); //DEBUGでは落とす
@@ -341,9 +337,9 @@
 	mAdCanVisible = NO;  // 以後、Ad表示禁止
 	[self AdRemove];
 	
-	mainNC_.delegate = nil;		mainNC_ = nil;
-	mainSVC_.delegate = nil;	mainSVC_ = nil;
-	padRootVC_ = nil;
+	__mainNC.delegate = nil;		__mainNC = nil;
+	__mainSVC.delegate = nil;	__mainSVC = nil;
+	__padRootVC = nil;
 }
 
 
@@ -366,19 +362,15 @@
 // the main thread for our views & controller
 - (void)mergeChangesFrom_iCloud:(NSNotification *)notification 
 {
-	NSManagedObjectContext* moc = [self managedObjectContext];
-	
-	// this only works if you used NSMainQueueConcurrencyType
-	// otherwise use a dispatch_async back to the main thread yourself
-	[moc performBlock:^{
-        [self mergeiCloudChanges:notification forContext:moc];
-    }];
-
-	/*// Main thread
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[self mergeiCloudChanges:notification forContext:moc];
-	});*/
-
+	//if (__Paid_SwitchAd) {	//有料版のみ更新処理する
+	if (!__OptShowAd) {
+		NSManagedObjectContext* moc = [self managedObjectContext];
+		// this only works if you used NSMainQueueConcurrencyType
+		// otherwise use a dispatch_async back to the main thread yourself
+		[moc performBlock:^{
+			[self mergeiCloudChanges:notification forContext:moc];
+		}];
+	}
 }
 
 
@@ -404,19 +396,21 @@
     }
 	
 	// <Application_Home>/Documents  ＜＜iCloudバックアップ対象
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	//NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	// <Application_Home>/Library/Caches　　＜＜iCloudバックアップされない
 	//NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-
-	NSString *dir = [paths objectAtIndex:0];
+	//NSString *dir = [paths objectAtIndex:0];
 	//NSLog(@"<Application_Home> %@", dir);
-	
-	NSString *storePath = [dir stringByAppendingPathComponent:@"AzPackList.sqlite"];	//【重要】リリース後変更禁止
-	NSLog(@"storePath=%@", storePath);
+	//NSString *storePath = [dir stringByAppendingPathComponent:@"AzPackList.sqlite"];	//【重要】リリース後変更禁止
+	//NSLog(@"storePath=%@", storePath);
+
+    NSURL *storeUrl = [[self applicationDocumentsDirectory]
+					   URLByAppendingPathComponent:@"AzPackList.sqlite"];	//【重要】リリース後変更禁止
+	NSLog(@"storeUrl=%@", storeUrl);
 	
     mCorePsc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
 	
-	app_enable_iCloud_ = NO;
+	__Enabled_iCloud = NO;
 	
 	if (CoreData_iCloud_SYNC  && IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0")) {
 		 // do this asynchronously since if this is the first time this particular device is syncing with preexisting
@@ -429,40 +423,63 @@
 		alertAct.frame = CGRectMake((alert.frame.size.width-50)/2, 20, 50, 50);
 		[alert addSubview:alertAct];
 		[alertAct startAnimating];
-		if (app_is_iPad_) {
-			[mainSVC_.splitViewController.view addSubview:alert];
+		if (__IsPad) {
+			[__mainSVC.splitViewController.view addSubview:alert];
 		} else {
-			[mainNC_.navigationController.view addSubview:alert];
+			[__mainNC.navigationController.view addSubview:alert];
 		}
-		[window_ addSubview:alert];
+		[__window addSubview:alert];
 		
 		 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			 NSFileManager *fileManager = [NSFileManager defaultManager];
 			 // Migrate datamodel
 			 NSDictionary *options = nil;
-			 NSURL *storeUrl = [NSURL fileURLWithPath:storePath];
-			 // this needs to match the entitlements and provisioning profile
 			 NSURL *cloudURL = [fileManager URLForUbiquityContainerIdentifier:nil]; //.entitlementsから自動取得されるようになった。
 			 NSLog(@"cloudURL=1=%@", cloudURL);
+			 NSURL *tlogURL = nil;
 			 if (cloudURL) {
-				 app_enable_iCloud_ = YES;
+				 __Enabled_iCloud = YES;
 				 // アプリ内のコンテンツ名付加：["coredata"]　＜＜＜変わると共有できない。
-				 cloudURL = [cloudURL URLByAppendingPathComponent:@"coredata"];
+				 //cloudURL = [cloudURL URLByAppendingPathComponent:@"coredata"];
+				 //NSLog(@"cloudURL=2=%@", cloudURL);
+				 cloudURL = [cloudURL URLByAppendingPathComponent:@"Documents" isDirectory:YES];
+				 tlogURL = [cloudURL URLByAppendingPathComponent:@"TLOG" isDirectory:YES];
 				 NSLog(@"cloudURL=2=%@", cloudURL);
-
+				 NSLog(@"tlogURL=2=%@", tlogURL);
+				 BOOL exists, isDir;
+				 [fileManager createDirectoryAtURL:cloudURL withIntermediateDirectories:NO attributes:nil error:nil];
+				 exists = [fileManager fileExistsAtPath:[cloudURL relativePath] isDirectory:&isDir];
+				 if (exists && isDir) {
+					 [fileManager createDirectoryAtURL:tlogURL withIntermediateDirectories:NO attributes:nil error:nil];
+					 exists = [fileManager fileExistsAtPath:[tlogURL relativePath] isDirectory:&isDir];
+					 //directory exists
+					 if (exists && isDir) {
+					 } else{
+						 tlogURL = nil;
+						 GA_TRACK_ERROR(@"tlogURL==nil;")
+					 }
+				 } else{
+					 tlogURL = nil;
+					 GA_TRACK_ERROR(@"tlogURL==nil;")
+				 }
+			 } else{
+				 GA_TRACK_ERROR(@"cloudURL==nil;")
+			 }
+			 
+			 if (cloudURL && tlogURL) {
 				 options = [NSDictionary dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
 							[NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption,
-							cloudURL, NSPersistentStoreUbiquitousContentURLKey,			// iCloudのアプリフォルダパス		//【重要】リリース後変更禁止
-							@"AzPackList.sqlog", NSPersistentStoreUbiquitousContentNameKey,	// cloudURL内のフォルダ名	//【重要】リリース後変更禁止
+							@"com.azukid.AzPackList.sqlog", NSPersistentStoreUbiquitousContentNameKey,		//【重要】リリース後変更禁止
+							tlogURL, NSPersistentStoreUbiquitousContentURLKey,													//【重要】リリース後変更禁止
 							nil];
 			 } else {
 				 // iCloud is not available
 				 options = [NSDictionary dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,	// 自動移行
 							[NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption,			// 自動マッピング推論して処理
-							nil];																									// NO ならば、「.xcmappingmodel」を使って移行処理される。
-			 }			 
+							nil];																									// NO ならば、「マッピングモデル」を使って移行処理される。
+			 }
 			 NSLog(@"options=%@", options);
 
 			 // prep the store path and bundle stuff here since NSBundle isn't totally thread safe
@@ -471,8 +488,8 @@
 			 [psc lock];
 			 if (![psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:options error:&error]) 
 			 {
-				 GA_TRACK_EVENT_ERROR([error localizedDescription],0);
 				 NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+				 GA_TRACK_ERROR([error description]);
 				 abort();
 			 }
 			 [psc unlock];
@@ -490,7 +507,7 @@
 		 });
 	 } 
 	 else {	// iCloudなし
-		 NSURL *storeUrl = [NSURL fileURLWithPath:storePath];
+		 //NSURL *storeUrl = [NSURL fileURLWithPath:storePath];
 		 NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
 								  [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
 								  [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption,
@@ -500,8 +517,8 @@
 		 if (![mCorePsc addPersistentStoreWithType:NSSQLiteStoreType 	 configuration:nil 
 																   URL:storeUrl  options:options  error:&error])
 		 {
-			 GA_TRACK_EVENT_ERROR([error localizedDescription],0);
 			 NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+			 GA_TRACK_EVENT_ERROR([error description],0);
 			 abort();
 		 }
 	 }
@@ -515,8 +532,8 @@
  */
 - (NSManagedObjectContext *) managedObjectContext 
 {
-    if (moc_ != nil) {
-        return moc_;
+    if (__moc != nil) {
+        return __moc;
     }
 	
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
@@ -551,34 +568,21 @@
             [moc setPersistentStoreCoordinator:coordinator];
         }		
     }
-	moc_ = moc;
-    return moc_;
+	__moc = moc;
+    return __moc;
 }
-
-// 保存されたらマージポリシーに沿ってマージしてもらう
-- (void)anotherContextDidSave:(NSNotification *)notification
-{
-    [moc_ mergeChangesFromContextDidSaveNotification:notification];
-}
-/*
-- (void) managedObjectContextReset 
-{	// iCloud OFF--->ON したときのため。
-	moc_ = nil;
-	persistentStoreCoordinator_ = nil;
-	// 再生成
-	[EntityRelation setMoc:[self managedObjectContext]];
-}*/
 
 #pragma mark - Application's documents directory
 
 // Returns the URL to the application's Documents directory.
-/*- (NSURL *)applicationDocumentsDirectory
+- (NSURL *)applicationDocumentsDirectory
 {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-}*/
+}
+/*
 - (NSString *)applicationDocumentsDirectory {
 	return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-}
+}*/
 
 
 #pragma mark - <AZDropboxDelegate>
@@ -627,26 +631,26 @@
 //- (void)AdShowApple:(BOOL)bApple AdMob:(BOOL)bMob
 - (void)AdRefresh
 {
-	if (app_opt_Ad_==NO && mAdMobView==nil && miAdView==nil) return;
+	if (__OptShowAd==NO && mAdMobView==nil && miAdView==nil) return;
 	
 	//----------------------------------------------------- AdMob  ＜＜loadView:に入れると起動時に生成失敗すると、以後非表示が続いてしまう。
-	if (app_opt_Ad_ && mAdMobView==nil) {
+	if (__OptShowAd && mAdMobView==nil) {
 		// iPhone タテ下部に表示固定、ヨコ非表示
 		mAdMobView = [[GADBannerView alloc] init];
 		// Adパラメータ初期化
 		mAdMobView.alpha = 0;	// 現在状況、(0)非表示  (1)表示中
 		mAdMobView.tag = 0;		// 広告受信状況  (0)なし (1)あり
 		mAdMobView.delegate = self;
-		if (app_is_iPad_) {
+		if (__IsPad) {
 			mAdMobView.adUnitID = AdMobID_PackPAD;	//iPad//
 			mAdMobView.frame = CGRectMake( 0, 800,  GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);
-			mAdMobView.rootViewController = mainSVC_;
-			[mainSVC_.view addSubview:mAdMobView];
+			mAdMobView.rootViewController = __mainSVC;
+			[__mainSVC.view addSubview:mAdMobView];
 		} else {
 			mAdMobView.adUnitID = AdMobID_PackList;	//iPhone//
 			mAdMobView.frame = CGRectMake( 0, 500, GAD_SIZE_320x50.width, GAD_SIZE_320x50.height);
-			mAdMobView.rootViewController = mainNC_;
-			[mainNC_.view addSubview:mAdMobView];
+			mAdMobView.rootViewController = __mainNC;
+			[__mainNC.view addSubview:mAdMobView];
 		}
 		//【Tips】初期配置は、常にタテ位置にすること。　ヨコのときだけwillRotateToInterfaceOrientation：などの回転通知が届く。
 		[self AdMobWillRotate:UIInterfaceOrientationPortrait]; 
@@ -658,7 +662,7 @@
 	}
 	
 	//----------------------------------------------------- iAd: AdMobの上層になるように後からaddSubviewする
-	if (app_opt_Ad_ && miAdView==nil
+	if (__OptShowAd && miAdView==nil
 		&& [[[UIDevice currentDevice] systemVersion] compare:@"4.0"]!=NSOrderedAscending) { // !<  (>=) "4.0"
 		assert(NSClassFromString(@"ADBannerView"));
 		miAdView = [[ADBannerView alloc] init];		//WithFrame:CGRectZero 
@@ -666,16 +670,16 @@
 		miAdView.alpha = 0;		// 現在状況、(0)非表示  (1)表示中
 		miAdView.tag = 0;		// 広告受信状況  (0)なし (1)あり
 		miAdView.delegate = self;
-		if (app_is_iPad_) {
-			[mainSVC_.view addSubview:miAdView];
+		if (__IsPad) {
+			[__mainSVC.view addSubview:miAdView];
 		} else {
-			[mainNC_.view addSubview:miAdView];
+			[__mainNC.view addSubview:miAdView];
 		}
 		//【Tips】初期配置は、常にタテ位置にすること。　ヨコのときだけwillRotateToInterfaceOrientation：などの回転通知が届く。
 		[self iAdWillRotate:UIInterfaceOrientationPortrait]; 
 	}
 	
-	if (app_opt_Ad_) {
+	if (__OptShowAd) {
 		//NSLog(@"=== AdRefresh: Can[%d] iAd[%d⇒%d] AdMob[%d⇒%d]", adCanVisible_, (int)iAdView_.tag, (int)iAdView_.alpha, 
 		//	  (int)adMobView_.tag, (int)adMobView_.alpha);
 		//if (MbAdCanVisible && MbannerView.alpha==MbannerView.tag && RoAdMobView.alpha==RoAdMobView.tag) {
@@ -696,19 +700,19 @@
 		}
 	} 
 	else {
-		mAdCanVisible = NO;	// app_opt_Ad_==NO につき、Ad非表示にしてから破棄する。
+		mAdCanVisible = NO;	// __OptShowAd==NO につき、Ad非表示にしてから破棄する。
 	}
 	
 	[UIView beginAnimations:nil context:NULL];
 	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
 	[UIView setAnimationDuration:1.2];
 	
-	if (app_opt_Ad_==NO) {		// AdOffのとき、非表示アニメの後、破棄する
+	if (__OptShowAd==NO) {		// AdOffのとき、非表示アニメの後、破棄する
 		[UIView setAnimationDelegate:self];
 		[UIView setAnimationDidStopSelector:@selector(AdRefreshAfter)];
 	}
 
-	if (app_is_iPad_) {
+	if (__IsPad) {
 		if (miAdView) {
 			//CGRect rc = miAdView.frame;
 			if (mAdCanVisible && miAdView.tag==1) {
@@ -727,7 +731,7 @@
 		}
 		
 		if (mAdMobView) {
-			if (UIInterfaceOrientationIsPortrait(mainSVC_.interfaceOrientation)) {
+			if (UIInterfaceOrientationIsPortrait(__mainSVC.interfaceOrientation)) {
 				mAdMobView.alpha = 0;	//iPadのみ、タテのとき消す
 			} else {
 				if (mAdCanVisible && mAdMobView.tag==1) {
@@ -735,7 +739,7 @@
 						mAdMobView.alpha = 1;
 					}
 				} else {
-					if (app_is_iPad_ && app_opt_Ad_) {
+					if (__IsPad && __OptShowAd) {
 						mAdMobView.alpha = 1;		// iPadは常時表示
 					}
 					else if (mAdMobView.alpha==1) {
@@ -805,7 +809,7 @@
 
 - (void)AdRefreshAfter  // 非表示アニメ終了後に呼び出される
 {
-	if (app_opt_Ad_==NO) {		// AdOffのとき、非表示アニメの後、破棄する
+	if (__OptShowAd==NO) {		// AdOffのとき、非表示アニメの後、破棄する
 		[self AdRemove];
 	}
 }
@@ -820,7 +824,7 @@
 {
 	if (mAdMobView==nil) return;
 
-	if (app_is_iPad_) {
+	if (__IsPad) {
 		if (mAdMobView) {
 			CGFloat fyOfs = GAD_SIZE_300x250.height+20+66;  // 20=ステータスバー高さ　　66=iAd高さ
 			if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) {	// タテ
@@ -855,7 +859,7 @@
 	//常にタテ用（幅768）にする。
 	//miAdView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
 
-	if (app_is_iPad_) {
+	if (__IsPad) {
 		if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {	//ヨコ
 			miAdView.frame = CGRectMake(0, self.window.frame.size.width-20-66,  0,0);	// 20=ステータスバー高さ
 		} else {	//タテ

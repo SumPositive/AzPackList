@@ -167,7 +167,7 @@
 {	//【Tips】ここでaddSubviewするオブジェクトは全てautoreleaseにすること。メモリ不足時には自動的に解放後、改めてここを通るので、初回同様に生成するだけ。
 	[super loadView];
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		if (sharePlanList_) {
 			self.contentSizeForViewInPopover = GD_POPOVER_SIZE_Share;
 			//self.navigationController.toolbarHidden = YES;	// ツールバー不要
@@ -206,7 +206,7 @@
 	} else {
 		self.title = NSLocalizedString(@"(New Pack)", nil);
 	}
-	if (appDelegate_.app_is_iPad) {  // TopBarにタイトルを挿入する
+	if (appDelegate_.ppIsPad) {  // TopBarにタイトルを挿入する
 		if (e2toolbar_==nil) {
 			e2toolbar_ = [[UIToolbar alloc] init];
 			
@@ -370,7 +370,7 @@
 	
 	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 
-	if (appDelegate_.app_opt_Ad) {
+	if (appDelegate_.ppOptShowAd) {
 		// 各viewDidAppear:にて「許可/禁止」を設定する
 		[appDelegate_ AdRefresh:YES];
 		
@@ -585,7 +585,7 @@
 // この画面が非表示になる直前に呼ばれる
 - (void)viewWillDisappear:(BOOL)animated 
 {
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		if ([popOver_ isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
 			[popOver_ dismissPopoverAnimated:animated];
 		}
@@ -605,10 +605,10 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		return YES;	// FormSheet窓対応
 	}
-	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+	else if (appDelegate_.ppOptAutorotate==NO) {	// 回転禁止にしている場合
 		//[self.navigationController setToolbarHidden:NO animated:YES]; // ツールバー表示する
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
@@ -628,7 +628,7 @@
 	// 広告非表示でも回転時に位置調整しておく必要あり ＜＜現れるときの開始位置のため＞＞
 	[appDelegate_ AdViewWillRotate:toInterfaceOrientation];
 
-	if (appDelegate_.app_is_iPad) {	// CameraVC:で受信している
+	if (appDelegate_.ppIsPad) {	// CameraVC:で受信している
 		NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:
 							  [NSNumber numberWithInteger:toInterfaceOrientation], NFM_ToInterfaceOrientation, 
 							  nil];
@@ -668,7 +668,7 @@
 
 - (void)viewDesign
 {	// 回転によるリサイズ
-	if (appDelegate_.app_opt_Ad) {
+	if (appDelegate_.ppOptShowAd) {
 		// 広告の下部スペースを空ける
 		CGRect rc = self.tableView.frame;
 		if (iS_iPAD) {
@@ -700,7 +700,7 @@
 - (void)e3detailView:(NSIndexPath *)indexPath 
 {
 	if (sharePlanList_) return;  //サンプルモードにつき
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 	}
 
@@ -729,7 +729,7 @@
 	}
 	e3detail.sharePlanList = sharePlanList_;
 	
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:e3detail];
 		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
 		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
@@ -759,7 +759,7 @@
 	//[RaE3array release],	
 	e3array_ = nil;
 	
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		self.navigationItem.titleView = nil;  //これなしにE1へ戻ると落ちる
 		//[Me2toolbar release], 
 		e2toolbar_ = nil;
@@ -779,7 +779,7 @@
 {
 	[self unloadRelease];
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		popOver_.delegate = nil;	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
 		//[MindexPathEdit release], 
 		indexPathEdit_ = nil;
@@ -974,7 +974,7 @@
 	//[1.0.6]【Tips】結局、これが一番良い。 ＜＜行位置変わらず、表示の乱れも無い
 	[self.tableView reloadData];
 	
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		// 左側 E2 再描画
 		[self padE2refresh:[e2obj.row integerValue]];
 	}
@@ -1058,7 +1058,7 @@
 	[EntityRelation commit];
 	[self.tableView reloadData];
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		// 左側 E2 再描画  ＜＜未チェック数と重量を更新するため
 		[self padE2refresh:indexPathClip_.section];
 	}
@@ -1177,7 +1177,7 @@
 	[EntityRelation commit];
 	[self.tableView reloadData];
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		// 左側 E2 再描画  ＜＜未チェック数と重量を更新するため
 		[self padE2refresh:indexPathClip_.section];
 	}
@@ -1309,7 +1309,7 @@
 		return 0;  // ソートモード時、Add行を非表示
 	}
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		return 50;
 	}
 	return 44; // デフォルト：44ピクセル
@@ -1376,7 +1376,7 @@
 			cell.tag = TAG_CELL_ADD;
 			cell.textLabel.text = NSLocalizedString(@"New Goods",nil); // ここに追加
 
-			if (appDelegate_.app_is_iPad) {
+			if (appDelegate_.ppIsPad) {
 				cell.textLabel.font = [UIFont systemFontOfSize:18];
 			} else {
 				cell.textLabel.font = [UIFont systemFontOfSize:14];
@@ -1408,7 +1408,7 @@
 			// 行毎に変化の無い定義は、ここで最初に1度だけする
 			cell.tag = TAG_CELL_ITEM;
 			//Clip表示//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // ＞
-			if (appDelegate_.app_is_iPad) {
+			if (appDelegate_.ppIsPad) {
 				cell.textLabel.font = [UIFont systemFontOfSize:20];
 				cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
 			} else {
@@ -1529,7 +1529,7 @@
 			cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
 			cell.accessoryType = UITableViewCellAccessoryNone; // なし
 		} else {
-			if (appDelegate_.app_is_iPad) {
+			if (appDelegate_.ppIsPad) {
 				cell.accessoryType = UITableViewCellAccessoryNone; // なし
 			} else {
 				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // ＞
@@ -1739,7 +1739,7 @@
 		[self.tableView reloadData];
 	}
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		// 左側 E2 再描画  ＜＜未チェック数も更新するため
 		[self padE2refresh:oldPath.section];
 		[self padE2refresh:newPath.section];
@@ -1788,7 +1788,7 @@
 		}
 	}*/
 	
-	if (appDelegate_.app_UpdateSave) { // 変更あるので閉じさせない
+	if (appDelegate_.ppChanged) { // 変更あるので閉じさせない
 		azAlertBox(NSLocalizedString(@"Cancel or Save",nil), 
 				 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
 		return NO; 

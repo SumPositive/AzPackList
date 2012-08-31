@@ -119,7 +119,7 @@
 							  withRowAnimation:UITableViewRowAnimationFade];		//アニメ効果のため
 	}
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		// 右ナビ E3 を更新する
 		[self fromE2toE3:(-9)]; // (-9)E3初期化（リロード＆再描画、セクション0表示）
 	}
@@ -191,7 +191,7 @@
 	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
 	[self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		// 右ナビ E3 を更新する
 		[self fromE2toE3:(-9)]; // (-9)E3初期化（リロード＆再描画、セクション0表示）
 	}
@@ -259,7 +259,7 @@
 			[picker addAttachmentData:fileData mimeType:@"application/vnd.packlist" fileName:fileName];
 			
 			// Email オープン
-			if (appDelegate_.app_is_iPad) {
+			if (appDelegate_.ppIsPad) {
 				picker.modalPresentationStyle = UIModalPresentationFormSheet;
 				picker.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 				//[appDelegate_.mainSVC presentModalViewController:picker animated:YES];
@@ -276,7 +276,7 @@
 	SpAppendVC *vc = [[SpAppendVC alloc] init];
 	vc.Re1selected = e1selected_;
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		vc.title = NSLocalizedString(@"SharePlan Append",nil);
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -303,14 +303,14 @@
 												extension: GD_EXTENSION 
 												 delegate: appDelegate_];
 	assert(vc);
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 		[self presentModalViewController:nc animated:YES];
 	} 
 	else {
-		if (appDelegate_.app_opt_Ad) {
+		if (appDelegate_.ppOptShowAd) {
 			[appDelegate_ AdRefresh:NO];	//広告禁止
 		}
 		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
@@ -318,7 +318,7 @@
 	}
 	//表示後にセットすること
 	[vc setUpFileName:e1selected_.name];
-	[vc setCryptHidden:NO Enabled:appDelegate_.app_pid_SwitchAd];
+	[vc setCryptHidden:NO Enabled:appDelegate_.ppPaid_SwitchAd];
 
 /*	// 未認証の場合、認証処理後、AppDelegate:handleOpenURL:から呼び出される
 	if ([[DBSession sharedSession] isLinked]) 
@@ -345,7 +345,7 @@
 	GDocUploadVC *vc = [[GDocUploadVC alloc] init];
 	vc.Re1selected = e1selected_;
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
@@ -549,7 +549,7 @@
 {													// (-9)E3初期化（リロード＆再描画、セクション0表示）
 	E3viewController *e3view;
 	
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		if (sharePlanList_==NO) {
 			// 既存Ｅ３更新
 			if ([delegateE3viewController_ respondsToSelector:@selector(viewWillAppear:)]) {
@@ -579,7 +579,7 @@
 	e3view = [[E3viewController alloc] init];
 	// 以下は、E3viewControllerの viewDidLoad 後！、viewWillAppear の前に処理されることに注意！
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		e3view.title = e1selected_.name;  //  self.title;  // NSLocalizedString(@"Items", nil);
 	} else {
 		e3view.title = self.title;  // PbSharePlanList=YES のとき "Sample" になるように
@@ -619,7 +619,7 @@
 	[e2array_ addObject:e2newObj];
 	section0Rows_ = [e2array_ count];
 	
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		//MindexPathEdit = [NSIndexPath indexPathForRow:0 inSection:MiSection0Rows];	//新しい目次の行
 		[self.tableView reloadData];
 		NSIndexPath* ip = [NSIndexPath indexPathForRow:[e2newObj.row integerValue]  inSection:0]; //Row,0
@@ -642,7 +642,7 @@
 	if (indexPath.section != 0) return;  // ここを通るのはセクション0だけ。
 	if (section0Rows_ <= indexPath.row) return;  // Addボタン行などの場合パスする
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
 	}
 	
@@ -655,7 +655,7 @@
 	e2editView_.addRow = (-1); // Edit mode
 	e2editView_.sharePlanList = sharePlanList_;
 	
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		if ([menuPopover_ isPopoverVisible]) {
 			//タテ： E2viewが[MENU]でPopover内包されているとき、E2editはiPhone同様にNavi遷移するだけ
 			[self.navigationController pushViewController:e2editView_ animated:YES];
@@ -787,7 +787,7 @@
 		//NG//sharePlanList_ = NO;  ＜＜＜常にNOになってしまう。
 		
 		// 背景テクスチャ・タイルペイント
-		if (appDelegate_.app_is_iPad) {
+		if (appDelegate_.ppIsPad) {
 			//self.view.backgroundColor = //iPad1では無効
 			UIView* view = self.tableView.backgroundView;
 			if (view) {
@@ -842,7 +842,7 @@
 	[super viewWillAppear:animated];
 	
 	[self.navigationController setToolbarHidden:YES animated:NO]; //[2.0.2]ツールバー廃止
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		if (sharePlanList_) {
 			self.navigationItem.hidesBackButton = NO;  // 必要
 			//[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
@@ -896,7 +896,7 @@
 	// テーブルビューを更新します。
     [self.tableView reloadData];	// これにより修正結果が表示される
 	
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		// ここ以前の箇所でE2が非表示のときにpop処理すると落ちる。どうやらE2を表示してから処理する必要があるようだ
 		UINavigationController* navRight = [appDelegate_.mainSVC.viewControllers objectAtIndex:1]; //[1]
 		if (navRight.topViewController == [navRight.viewControllers objectAtIndex:0]) {
@@ -920,11 +920,11 @@
 {
     [super viewDidAppear:animated];
 
-	if (appDelegate_.app_opt_Ad) {
+	if (appDelegate_.ppOptShowAd) {
 		// E3で回転してから戻った場合に対応するため ＜＜E3以下全てに回転対応するのが面倒だから
 		//[apd AdViewWillRotate:self.interfaceOrientation];
 		// 各viewDidAppear:にて「許可/禁止」を設定する
-		if (appDelegate_.app_is_iPad) {
+		if (appDelegate_.ppIsPad) {
 			[appDelegate_ AdRefresh:YES];
 		} else {
 			if (sharePlanList_) {
@@ -939,12 +939,12 @@
 // この画面が非表示になる直前に呼ばれる
 - (void)viewWillDisappear:(BOOL)animated 
 {
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		if ([popOver_ isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
 			[popOver_ dismissPopoverAnimated:animated];
 		}
 		// YES=BagSwing // 全収納済みとなったE1から戻ったとき。
-		appDelegate_.app_BagSwing = (0 < [e1selected_.sumNoGray integerValue]				// グレーを除く
+		appDelegate_.ppBagSwing = (0 < [e1selected_.sumNoGray integerValue]				// グレーを除く
 															   && [e1selected_.sumNoCheck integerValue] <= 0	// 全チェック済
 														 && 0 < [e1selected_.childs count]);								// 目次あり
 	}
@@ -958,10 +958,10 @@
 // 回転サポート
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		return YES;	// FormSheet窓対応
 	}
-	else if (appDelegate_.app_opt_Autorotate==NO) {	// 回転禁止にしている場合
+	else if (appDelegate_.ppOptAutorotate==NO) {	// 回転禁止にしている場合
 		return (interfaceOrientation == UIInterfaceOrientationPortrait); // 正面（ホームボタンが画面の下側にある状態）のみ許可
 	}
     return YES;
@@ -971,7 +971,7 @@
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation 
 								duration:(NSTimeInterval)duration
 {
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		//　E1が消えてE2が表示されてからは、ここから呼び出す必要あり。
 		[appDelegate_.padRootVC willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 	}
@@ -1157,8 +1157,8 @@
 			if (sharePlanList_) {
 				return NSLocalizedString(@"SharePLAN PreView",nil);
 			}
-			if (appDelegate_.app_opt_Ad) {
-				if (appDelegate_.app_is_iPad) {
+			if (appDelegate_.ppOptShowAd) {
+				if (appDelegate_.ppIsPad) {
 					return @"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";	// 大型AdMobスペースのための下部余白
 				} else {
 					return @"\n\n\n";	// 広告スペースのための下部余白
@@ -1173,7 +1173,7 @@
 // セルの高さを指示する
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		return 50;
 	} else {
 		return 44; // デフォルト：44ピクセル
@@ -1216,7 +1216,7 @@
 					cell.textLabel.text = e2obj.name;
 #endif
 				
-				if (appDelegate_.app_is_iPad) {
+				if (appDelegate_.ppIsPad) {
 					cell.textLabel.font = [UIFont systemFontOfSize:20];
 					cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
 				} else {
@@ -1327,7 +1327,7 @@
 					cell.textLabel.text = NSLocalizedString(@"Copy Group",nil);
 				}
 
-				if (appDelegate_.app_is_iPad) {
+				if (appDelegate_.ppIsPad) {
 					cell.textLabel.font = [UIFont systemFontOfSize:18];
 				} else {
 					cell.textLabel.font = [UIFont systemFontOfSize:14];
@@ -1346,7 +1346,7 @@
 											   reuseIdentifier:zCellSubtitle];
 			}
 
-			if (appDelegate_.app_is_iPad) {
+			if (appDelegate_.ppIsPad) {
 				cell.textLabel.font = [UIFont systemFontOfSize:18];
 				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
 			} else {
@@ -1389,7 +1389,7 @@
 											   reuseIdentifier:zCellSubtitle];
 			}
 
-			if (appDelegate_.app_is_iPad) {
+			if (appDelegate_.ppIsPad) {
 				cell.textLabel.font = [UIFont systemFontOfSize:18];
 				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
 			} else {
@@ -1422,7 +1422,7 @@
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-Shared"];
 					cell.textLabel.text = NSLocalizedString(@"SharePlan Append",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"SharePlan Append msg",nil);
-					if (appDelegate_.app_is_iPad==NO) {
+					if (appDelegate_.ppIsPad==NO) {
 						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
 					}
 					break;
@@ -1430,7 +1430,7 @@
 					cell.imageView.image = [UIImage imageNamed:@"Icon32-GoogleDoc"];
 					cell.textLabel.text = NSLocalizedString(@"Backup Google",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"Backup Google msg",nil);
-					if (appDelegate_.app_is_iPad==NO) {
+					if (appDelegate_.ppIsPad==NO) {
 						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
 					}
 					break;
@@ -1438,7 +1438,7 @@
 					cell.imageView.image = [UIImage imageNamed:@"AZDropbox-32"];
 					cell.textLabel.text = NSLocalizedString(@"Backup Dropbox",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"Backup Dropbox msg",nil);
-					if (appDelegate_.app_is_iPad==NO) {
+					if (appDelegate_.ppIsPad==NO) {
 						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
 					}
 					break;
@@ -1526,7 +1526,7 @@
 		case 1: // Sort list
 			if (0 < section0Rows_ && indexPath.row < GD_E2SORTLIST_COUNT) 
 			{
-				if (appDelegate_.app_is_iPad) {
+				if (appDelegate_.ppIsPad) {
 					// 既存Ｅ３更新
 					if ([delegateE3viewController_ respondsToSelector:@selector(viewWillAppear:)]) {
 						assert(delegateE3viewController_);
@@ -1591,7 +1591,7 @@
 		}	break;*/
 	}
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		if ([menuPopover_ isPopoverVisible]) {	//選択後、Popoverならば閉じる
 			[menuPopover_ dismissPopoverAnimated:YES];
 		}
@@ -1659,7 +1659,7 @@
 	NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 1)]; // [0]セクションから1個
 	[self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationFade]; // (OS 3.0 Function)
 
-	if (appDelegate_.app_is_iPad) {
+	if (appDelegate_.ppIsPad) {
 		// 右ナビ E3 を更新する
 		[self fromE2toE3:(-9)]; // (-9)E3初期化（リロード＆再描画、セクション0表示）
 	}
@@ -1675,7 +1675,7 @@
 		UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 		NSString *title = [NSString stringWithFormat:@"%@\n%@",
 						   cell.textLabel.text, NSLocalizedString(@"DELETE Group caution", nil)];
-		if (appDelegate_.app_is_iPad) {
+		if (appDelegate_.ppIsPad) {
 			//[2.0.1]Bug: iPadタテ向きでUIActionSheetを出すと落ちる(iOSのバグらしい）
 			//[2.0.1]Fix: UIActionSheetを UIAlertViewに変えて回避。
 			//[2012-05-07]showFromRect:によりPopoverにしても落ちた。
@@ -1782,7 +1782,7 @@
 
 	UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
 	if ( [[nc visibleViewController] isMemberOfClass:[E2edit class]] ) {	// E2edit のときだけ、
-		if (appDelegate_.app_UpdateSave) { // E2editにて、変更あるので閉じさせない
+		if (appDelegate_.ppChanged) { // E2editにて、変更あるので閉じさせない
 			azAlertBox(NSLocalizedString(@"Cancel or Save",nil), 
 					 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
 			return NO; 
