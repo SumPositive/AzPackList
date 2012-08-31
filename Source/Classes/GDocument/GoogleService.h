@@ -28,7 +28,7 @@
 #define GS_PHOTO_UUID_PREFIX				@"PackList:"	//この後にUUIDが続く。 setPhotoDescriptionWithString:でセット
 
 
-@interface GoogleService : NSObject <UIAlertViewDelegate>
+@interface GoogleService : NSObject
 
 + (void)alertIndicatorOn:(NSString*)zTitle;
 + (void)alertIndicatorOff;

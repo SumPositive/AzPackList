@@ -10,7 +10,7 @@
 
 //#define AzMAKE_SPLASHFACE  // 起動画面 Default.png を作るための作業オプション
 
-#define COPYRIGHT		@"©1995-2012 Azukid"
+#define COPYRIGHT		@"©2012 Azukid"
 
 #define GD_PRODUCTNAME	@"AzPackList"	// IMPORTANT PRODUCT NAME  和名「モチメモ」
 

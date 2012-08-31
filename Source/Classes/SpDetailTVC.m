@@ -698,7 +698,7 @@
 
 	// POST URL
 	//NSString *postCmd = @"func=Delete";
-	NSString *postCmd = [NSString stringWithString:@"func=Delete"];
+	NSString *postCmd = @"func=Delete";
 
 	// userPass
 	postCmd = postCmdAddUserPass( postCmd );
@@ -724,8 +724,8 @@
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES; // NetworkアクセスサインON
 
 	// POST URL
-	//NSString *postCmd = @"func=Download";
-	NSString *postCmd = [NSString stringWithString:@"func=Download"];
+	//NSString *postCmd = [NSString stringWithString:@"func=Download"];
+	NSString *postCmd = @"func=Download";
 
 	postCmd = [postCmd stringByAppendingFormat:@"&e1key=%@", zKey];
 	
@@ -746,8 +746,8 @@
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES; // NetworkアクセスサインON
 	
 	// POST URL
-	//NSString *postCmd = @"func=CountUp";
-	NSString *postCmd = [NSString stringWithString:@"func=CountUp"];
+	//NSString *postCmd = [NSString stringWithString:@"func=CountUp"];
+	NSString *postCmd = @"func=CountUp";
 	
 	// key
 	postCmd = [postCmd stringByAppendingFormat:@"&e1key=%@", zKey];

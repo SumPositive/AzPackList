@@ -600,11 +600,18 @@
 	return  [fcsv zLoadTmpFile];
 }
 
-- (void)azDropboxDownCompleated
-{	//ここで、Down成功後の再描画など行う
-	// 再読み込み 通知発信---> E1viewController
-	[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
-														object:self userInfo:nil];
+//結果　　ここで、成功後の再描画など行う
+- (void)azDropboxUpResult:(NSString*)result
+{	//=nil:Up成功
+	return;
+}
+- (void)azDropboxDownResult:(NSString*)result
+{	//=nil:Down成功
+	if (result==nil) {
+		// 再読み込み 通知発信---> E1viewController
+		[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
+															object:self userInfo:nil];
+	}
 }
 
 

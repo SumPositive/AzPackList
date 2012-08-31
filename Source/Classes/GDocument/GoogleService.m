@@ -166,6 +166,7 @@ static	NSURL										*sDocUploadUrl = nil;
 					  staticActiveTicket = nil;
 				   if (error) {
 					   // 失敗
+					   //GA_TRACK_ERROR([error localizedDescription])
 					   [self docUploadErrorNo:100 description:error.localizedDescription];
 					   return;
 				   } else {
@@ -611,12 +612,13 @@ static BOOL staticPhotoUploading = NO;
 {
 	NSLog(@"GoogleService: photoUploadE3 :-----------------------");
 	if (e3target==nil  OR  e3target.e4photo==nil) {
-		NSLog(@"G> No photoData");
+		GA_TRACK_ERROR(@"No photoData")
 		assert(NO);
 		return;
 	}
 	if (e3target && [e3target.photoUrl hasPrefix:@"http"]) {
-		NSLog(@"G> Exist photoUrl=%@", e3target.photoUrl);
+		GA_TRACK_ERROR(@"Exist photoUrl")
+		NSLog(@"Exist photoUrl=%@", e3target.photoUrl);
 		assert(NO);
 		return;
 	}
@@ -636,7 +638,7 @@ static BOOL staticPhotoUploading = NO;
 
 	GDataEntryPhoto *newPhoto = [GDataEntryPhoto photoEntry];
 	if (newPhoto==nil) {
-		NSLog(@"G> No Login");  // ログイン登録していない
+		GA_TRACK_ERROR(@"No Login")  // ログイン登録していない
 		return;
 	}
 	if (0 < [e3target.name length]) {

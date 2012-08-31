@@ -428,11 +428,12 @@
 	
 	// このアプリについて
 	AZAboutVC *vc = [[AZAboutVC alloc] init];
+	vc.ppImgIcon = [UIImage imageNamed:@"Icon57"];
 	vc.ppProductTitle = NSLocalizedString(@"Product Title",nil);
 	vc.ppProductSubtitle = @"PackList  (.azp)";
-	vc.ppProductYear = @"1995";
-	vc.ppImgIcon = [UIImage imageNamed:@"Icon57"];
 	vc.ppSupportSite = @"http://packlist.azukid.com/";
+	vc.ppCopyright = COPYRIGHT;
+	vc.ppAuthor = @"Sum Positive";
 	//vc.hidesBottomBarWhenPushed = YES; //以降のタブバーを消す
 	//[self.navigationController pushViewController:vc animated:YES];
 	if (appDelegate_.app_is_iPad) {

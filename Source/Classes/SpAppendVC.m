@@ -147,7 +147,7 @@
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES; // NetworkアクセスサインON
 	
 	//NSString *postCmd = @"func=Append";
-	NSString *postCmd = [NSString stringWithString:@"func=Append"];
+	NSString *postCmd = @"func=Append";
 	
 	// Nickname
 	postCmd = [postCmd stringByAppendingString:@"&userName="];
