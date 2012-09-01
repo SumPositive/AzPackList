@@ -485,6 +485,10 @@
 			productID:STORE_PRODUCTID_AdOff
 			secretKey:@"1615AzPackList"]; //[1.2]にあるsecretKeyに一致すること
 	
+	// クラッキング対策：非消費型でもレシートチェックが必要になった。
+	// [Manage In-App Purchase]-[View or generate a shared secret]-[Generate]から取得した文字列をセットする
+	vc.ppSharedSecret = @"062e76976c5a468a82bda70683326208";
+	
 	if (appDelegate_.ppIsPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
