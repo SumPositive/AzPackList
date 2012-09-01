@@ -17,6 +17,7 @@
 + (NSManagedObjectContext*)getMoc;
 + (void)commit;
 + (void)rollBack;
++ (void)reset;
 + (NSInteger)E1_maxRow;
 
 @end

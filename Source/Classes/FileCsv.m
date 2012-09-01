@@ -11,7 +11,7 @@
 #import "Global.h"
 #import "AppDelegate.h"
 #import "Elements.h"
-#import "EntityRelation.h"
+#import "MocFunctions.h"
 #import "FileCsv.h"
 #import "GoogleService.h"
 
@@ -438,7 +438,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 
 - (E1 *)e1LoadPrivate:(NSString *)PzCsv  withSave:(BOOL)PbSave // NO=共有プラン詳細表示時、SAVEせずにRollBackするために使用。
 {
-	NSManagedObjectContext *moc = [EntityRelation getMoc];
+	NSManagedObjectContext *moc = [[MocFunctions sharedMocFunctions] getMoc];
 	NSInteger iErrLine = 0;
 	E1 *e1node = nil;
 	E2 *e2node = nil;
@@ -489,7 +489,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 			@throw @"Load error (40)";
 		}
 		//-----------------------------------------------E1.row の最大値を求める
-		NSInteger maxRow = [EntityRelation E1_maxRow];
+		NSInteger maxRow = [[MocFunctions sharedMocFunctions] E1_maxRow];
 		//-----------------------------------------------E1
 		// ContextにE1ノードを追加する　ERROR発生すれば、RollBackしている
 		e1node = [NSEntityDescription insertNewObjectForEntityForName:@"E1" inManagedObjectContext:moc];
@@ -616,13 +616,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 			
 			if (PbSave) {
 				// 保存する
-				NSError *err = nil;
-				if (![moc save:&err]) {
-					// 保存失敗
-					NSString *msg = [NSString stringWithFormat:@"Moc save error: %@", [err localizedDescription]];
-					NSLog(@"Load error (60) %@", msg);
-					@throw msg;
-				}
+				[[MocFunctions sharedMocFunctions] commit];
 			}
 			return e1node; // OK
 		}
@@ -635,7 +629,8 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		[self errorMsg:errMsg];
 		GA_TRACK_EVENT_ERROR(errMsg,0)
 		if (e1node) {
-			[moc rollback];
+			//[moc rollback];
+			[[MocFunctions sharedMocFunctions] rollBack];
 			//rollbackで十分//[moc deleteObject:e1node]; // insertNewObjectForEntityForNameしたEntityを削除する
 			e1node = nil;
 		}
@@ -645,7 +640,8 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		[self errorMsg:msg];
 		GA_TRACK_EVENT_ERROR(msg,0)
 		if (e1node) {
-			[moc rollback];
+			//[moc rollback];
+			[[MocFunctions sharedMocFunctions] rollBack];
 			//rollbackで十分//[moc deleteObject:e1node]; // insertNewObjectForEntityForNameしたEntityを削除する
 			e1node = nil;
 		}

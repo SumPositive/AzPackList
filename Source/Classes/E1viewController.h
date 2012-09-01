@@ -15,7 +15,7 @@
 #import "AppDelegate.h"
 
 #import "Elements.h"
-#import "EntityRelation.h"
+#import "MocFunctions.h"
 #import "E1edit.h"
 #import "E2viewController.h"
 #import "E3viewController.h"

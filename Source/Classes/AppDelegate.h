@@ -17,9 +17,6 @@
 						,ADBannerViewDelegate ,GADBannerViewDelegate, AZDropboxDelegate> 
 {
 @private	// 自クラス内からだけ参照できる
-	NSManagedObjectModel				*mCoreModel;
-	NSPersistentStoreCoordinator		*mCorePsc;
-	
 	ADBannerView				*miAdView;
 	GADBannerView				*mAdMobView;
 	BOOL								mAdCanVisible;		//YES:表示可能な状況　 NO:表示してはいけない状況

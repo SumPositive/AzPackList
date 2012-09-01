@@ -52,6 +52,13 @@ static NSManagedObjectContext *scMoc_ = nil;
 	assert(scMoc_);
 	// ROLLBACK
 	[scMoc_ rollback]; // 前回のSAVE以降を取り消す
+	[scMoc_ reset];
+}
+
++ (void)reset
+{	//NSManagedObject（メモリ上）がすべて開放される。Undo/Redo履歴もクリア
+	assert(scMoc_);
+	[scMoc_ reset];
 }
 
 

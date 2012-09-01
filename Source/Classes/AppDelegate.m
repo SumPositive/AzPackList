@@ -11,12 +11,9 @@
 #import "AppDelegate.h"
 #import "padRootVC.h"
 #import "Elements.h"
-#import "EntityRelation.h"
+#import "MocFunctions.h"
 #import "FileCsv.h"
 #import "E1viewController.h"
-
-
-#define CoreData_iCloud_SYNC		YES	// YES or NO
 
 
 @interface AppDelegate (PrivateMethods) // メソッドのみ記述：ここに変数を書くとグローバルになる。他に同じ名称があると不具合発生する
@@ -98,7 +95,7 @@
 	
 	__OptShowAd = [kvs boolForKey:KV_OptAdvertising];
 	__Paid_SwitchAd = [kvs boolForKey:STORE_PRODUCTID_AdOff];
-	//NSLog(@"__Paid_SwitchAd=%d", __Paid_SwitchAd);
+	NSLog(@"__Paid_SwitchAd=%d", __Paid_SwitchAd);
 	
 	if (__Paid_SwitchAd==NO && [userDefaults boolForKey:UD_OptCrypt]) {
 		[userDefaults setBool:NO forKey:UD_Crypt_Switch];
@@ -163,8 +160,8 @@
 							root:kDBRootAppFolder]; // either kDBRootAppFolder or kDBRootDropbox
 	[DBSession setSharedSession:dbSession];
 
-
-/*	// iCloud完全クリアする　＜＜＜同期矛盾が生じたときや構造変更時に使用
+/**
+	// iCloud完全クリアする　＜＜＜同期矛盾が生じたときや構造変更時に使用
 	static BOOL cleanUbiquitousFolder__ = YES;  //インストール後、1度だけ処理するため
 	if (cleanUbiquitousFolder__) {
 		cleanUbiquitousFolder__ = NO;
@@ -178,7 +175,8 @@
 		}
 	}*/
 	// MOC 初期生成
-	[EntityRelation setMoc:[self managedObjectContext]];
+	//[EntityRelation setMoc:[self managedObjectContext]];
+	[[MocFunctions sharedMocFunctions] start];
 	
 	// Photo Picasa
 	//picasaBox_ = [[AZPicasa alloc] init];
@@ -341,250 +339,6 @@
 	__padRootVC = nil;
 }
 
-
-#pragma mark - iCloud
-
-- (void)mergeiCloudChanges:(NSNotification*)note forContext:(NSManagedObjectContext*)moc 
-{
-	// マージ処理
-    [moc mergeChangesFromContextDidSaveNotification:note]; 
-	
-	//NSLog(@"NSNotification: POST: RefreshAllViews");
-	NSLog(@"mergeiCloudChanges: RefreshAllViews: userInfo=%@", [note userInfo]);
-
-	[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
-														object:self userInfo:[note userInfo]];
-}
-
-// NSNotifications are posted synchronously on the caller's thread
-// make sure to vector this back to the thread we want, in this case
-// the main thread for our views & controller
-- (void)mergeChangesFrom_iCloud:(NSNotification *)notification 
-{
-	//if (__Paid_SwitchAd) {	//有料版のみ更新処理する
-	if (__OptShowAd==NO) {
-		NSManagedObjectContext* moc = [self managedObjectContext];
-		// this only works if you used NSMainQueueConcurrencyType
-		// otherwise use a dispatch_async back to the main thread yourself
-		[moc performBlock:^{
-			[self mergeiCloudChanges:notification forContext:moc];
-		}];
-		__Enabled_iCloud = YES;
-	} else {
-		__Enabled_iCloud = NO;
-	}
-}
-
-
-#pragma mark - CoreData stack
-//[1.2.0.0] AzBodyNote[0.8.0.0]に従って実装した。
-
-- (NSManagedObjectModel *)managedObjectModel 
-{
-    if (mCoreModel != nil) {
-        return mCoreModel;
-    }
-	
-	mCoreModel = [NSManagedObjectModel mergedModelFromBundles:nil];
-	
-	return mCoreModel;
-}
-
-
-- (NSPersistentStoreCoordinator *)persistentStoreCoordinator 
-{
-    if (mCorePsc != nil) {
-        return mCorePsc;
-    }
-	
-	// <Application_Home>/Documents  ＜＜iCloudバックアップ対象
-	//NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	// <Application_Home>/Library/Caches　　＜＜iCloudバックアップされない
-	//NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-	//NSString *dir = [paths objectAtIndex:0];
-	//NSLog(@"<Application_Home> %@", dir);
-	//NSString *storePath = [dir stringByAppendingPathComponent:@"AzPackList.sqlite"];	//【重要】リリース後変更禁止
-	//NSLog(@"storePath=%@", storePath);
-
-    NSURL *storeUrl = [[self applicationDocumentsDirectory]
-					   URLByAppendingPathComponent:@"AzPackList.sqlite"];	//【重要】リリース後変更禁止
-	NSLog(@"storeUrl=%@", storeUrl);
-	
-    mCorePsc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
-	
-	__Enabled_iCloud = NO;
-	
-	if (CoreData_iCloud_SYNC  && IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0")) {
-		 // do this asynchronously since if this is the first time this particular device is syncing with preexisting
-		 // iCloud content it may take a long long time to download
-
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"iCloud sync",nil)
-														message:NSLocalizedString(@"iCloud sync msg",nil)
-													   delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
-		UIActivityIndicatorView *alertAct = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-		alertAct.frame = CGRectMake((alert.frame.size.width-50)/2, 20, 50, 50);
-		[alert addSubview:alertAct];
-		[alertAct startAnimating];
-		if (__IsPad) {
-			[__mainSVC.splitViewController.view addSubview:alert];
-		} else {
-			[__mainNC.navigationController.view addSubview:alert];
-		}
-		[__window addSubview:alert];
-		
-		 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-			 NSFileManager *fileManager = [NSFileManager defaultManager];
-			 // Migrate datamodel
-			 NSDictionary *options = nil;
-			 NSURL *cloudURL = [fileManager URLForUbiquityContainerIdentifier:nil]; //.entitlementsから自動取得されるようになった。
-			 NSLog(@"cloudURL=1=%@", cloudURL);
-			 NSURL *tlogURL = nil;
-			 if (cloudURL) {
-				 __Enabled_iCloud = YES;
-				 // アプリ内のコンテンツ名付加：["coredata"]　＜＜＜変わると共有できない。
-				 //cloudURL = [cloudURL URLByAppendingPathComponent:@"coredata"];
-				 //NSLog(@"cloudURL=2=%@", cloudURL);
-				 cloudURL = [cloudURL URLByAppendingPathComponent:@"Documents" isDirectory:YES];
-				 tlogURL = [cloudURL URLByAppendingPathComponent:@"TLOG" isDirectory:YES];
-				 NSLog(@"cloudURL=2=%@", cloudURL);
-				 NSLog(@"tlogURL=2=%@", tlogURL);
-				 BOOL exists, isDir;
-				 [fileManager createDirectoryAtURL:cloudURL withIntermediateDirectories:NO attributes:nil error:nil];
-				 exists = [fileManager fileExistsAtPath:[cloudURL relativePath] isDirectory:&isDir];
-				 if (exists && isDir) {
-					 [fileManager createDirectoryAtURL:tlogURL withIntermediateDirectories:NO attributes:nil error:nil];
-					 exists = [fileManager fileExistsAtPath:[tlogURL relativePath] isDirectory:&isDir];
-					 //directory exists
-					 if (exists && isDir) {
-					 } else{
-						 tlogURL = nil;
-						 GA_TRACK_ERROR(@"tlogURL==nil;")
-					 }
-				 } else{
-					 tlogURL = nil;
-					 GA_TRACK_ERROR(@"tlogURL==nil;")
-				 }
-			 } else{
-				 GA_TRACK_ERROR(@"cloudURL==nil;")
-			 }
-			 
-			 if (cloudURL && tlogURL) {
-				 options = [NSDictionary dictionaryWithObjectsAndKeys:
-							[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
-							[NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption,
-							@"com.azukid.AzPackList.sqlog", NSPersistentStoreUbiquitousContentNameKey,		//【重要】リリース後変更禁止
-							tlogURL, NSPersistentStoreUbiquitousContentURLKey,													//【重要】リリース後変更禁止
-							nil];
-			 } else {
-				 // iCloud is not available
-				 options = [NSDictionary dictionaryWithObjectsAndKeys:
-							[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,	// 自動移行
-							[NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption,			// 自動マッピング推論して処理
-							nil];																									// NO ならば、「マッピングモデル」を使って移行処理される。
-			 }
-			 NSLog(@"options=%@", options);
-
-			 // prep the store path and bundle stuff here since NSBundle isn't totally thread safe
-			 NSPersistentStoreCoordinator* psc = mCorePsc;
-			 NSError *error = nil;
-			 [psc lock];
-			 if (![psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:options error:&error]) 
-			 {
-				 NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-				 GA_TRACK_ERROR([error description]);
-				 abort();
-			 }
-			 [psc unlock];
-			 
-			 // tell the UI on the main thread we finally added the store and then
-			 // post a custom notification to make your views do whatever they need to such as tell their
-			 // NSFetchedResultsController to -performFetch again now there is a real store
-			 dispatch_async(dispatch_get_main_queue(), ^{
-				 NSLog(@"asynchronously added persistent store!");
-				 [[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
-																	 object:self userInfo:nil];
-				 [alertAct stopAnimating];
-				 [alert dismissWithClickedButtonIndex:alert.cancelButtonIndex animated:YES];
-			 });
-		 });
-	 } 
-	 else {	// iCloudなし
-		 //NSURL *storeUrl = [NSURL fileURLWithPath:storePath];
-		 NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
-								  [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
-								  [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption,
-								  nil];
-		 
-		 NSError *error = nil;
-		 if (![mCorePsc addPersistentStoreWithType:NSSQLiteStoreType 	 configuration:nil 
-																   URL:storeUrl  options:options  error:&error])
-		 {
-			 NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-			 GA_TRACK_EVENT_ERROR([error description],0);
-			 abort();
-		 }
-	 }
-
-    return mCorePsc;
-}
-
-/**
- Returns the managed object context for the application.
- If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
- */
-- (NSManagedObjectContext *) managedObjectContext 
-{
-    if (__moc != nil) {
-        return __moc;
-    }
-	
-    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-	NSManagedObjectContext* moc = nil;
-	
-    if (coordinator != nil) {
-		if (CoreData_iCloud_SYNC  && IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0")) {
-			moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-			//moc = [[NSManagedObjectContext alloc] init];
-			
-			[moc performBlockAndWait:^{
-				// even the post initialization needs to be done within the Block
-				[moc setPersistentStoreCoordinator: coordinator];
-
-				// iCloudに変化があれば通知を受ける　＜＜初期ミス！ applicationDidEnterBackground:にて破棄してしまっていた。
-				[[NSNotificationCenter defaultCenter] addObserver:self 
-														 selector:@selector(mergeChangesFrom_iCloud:) 
-															 name:NSPersistentStoreDidImportUbiquitousContentChangesNotification 
-														   object:coordinator];
-				
-				// 競合解決方法   Context <<>> SQLite <<>> iCloud
-				// NSErrorMergePolicy - マージコンフリクトを起こすとSQLite保存に失敗する（デフォルト）
-				// NSMergeByPropertyStoreTrumpMergePolicy - SQLite(Store)を優先にマージする
-				// NSMergeByPropertyObjectTrumpMergePolicy - Context(Object)を優先にマージする
-				// NSOverwriteMergePolicy - ContextでSQLiteを上書きする		<<<<<<<<<<
-				//　NSRollbackMergePolicy　-　Contextの変更を破棄する
-				//[moc setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
-			}];
-        }
-		else {	// iCloudなし
-            moc = [[NSManagedObjectContext alloc] init];
-            [moc setPersistentStoreCoordinator:coordinator];
-        }		
-    }
-	__moc = moc;
-    return __moc;
-}
-
-#pragma mark - Application's documents directory
-
-// Returns the URL to the application's Documents directory.
-- (NSURL *)applicationDocumentsDirectory
-{
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-}
-/*
-- (NSString *)applicationDocumentsDirectory {
-	return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-}*/
 
 
 #pragma mark - <AZDropboxDelegate>

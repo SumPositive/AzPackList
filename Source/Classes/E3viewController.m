@@ -9,7 +9,7 @@
 #import "Global.h"
 #import "AppDelegate.h"
 #import "Elements.h"
-#import "EntityRelation.h"
+#import "MocFunctions.h"
 #import "E3viewController.h"
 #import "E3detailTVC.h"
 #import "SettingTVC.h"
@@ -1069,7 +1069,7 @@
 	[e1obj setValue:[e1obj valueForKeyPath:@"childs.@sum.sumWeightStk"] forKey:@"sumWeightStk"];
 	[e1obj setValue:[e1obj valueForKeyPath:@"childs.@sum.sumWeightNed"] forKey:@"sumWeightNed"];
 	// Commit!
-	[EntityRelation commit];
+	[[MocFunctions sharedMocFunctions] commit];
 	[self.tableView reloadData];
 
 	if (appDelegate_.ppIsPad) {
@@ -1188,7 +1188,7 @@
 	[e1obj setValue:sumWeStk forKey:@"sumWeightStk"];
 	[e1obj setValue:sumWeNed forKey:@"sumWeightNed"];
 	// Commit!
-	[EntityRelation commit];
+	[[MocFunctions sharedMocFunctions] commit];
 	[self.tableView reloadData];
 
 	if (appDelegate_.ppIsPad) {

@@ -13,13 +13,14 @@
 #import "localhostAddresses.h"
 
 
-#define ACTIONSEET_TAG_DELETEPACK	901
-#define ACTIONSEET_TAG_BarMenu		910
-#define ACTIONSEET_TAG_MENU			929
+#define ACTIONSEET_TAG_DELETEPACK		901
+#define ACTIONSEET_TAG_BarMenu			910
+#define ACTIONSEET_TAG_MENU					929
 
 #define ALERT_TAG_HTTPServerStop	109
 #define ALERT_TAG_SupportSite			118
 #define ALERT_TAG_DELETEPACK		127
+#define ALERT_TAG_CloudReset			136
 
 
 @interface E1viewController (PrivateMethods)
@@ -102,7 +103,8 @@
 		[appDelegate_ AdRefresh:NO];
 	}
 	
-	moc_ = [EntityRelation getMoc]; //購入後、再生成された場合のため
+	//moc_ = [EntityRelation getMoc]; //購入後、再生成された場合のため
+	moc_ = [[MocFunctions sharedMocFunctions] getMoc];
 	contentOffsetDidSelect_.y = 0;  // 直前のdidSelectRowAtIndexPath位置に戻らないようにクリアしておく
 	[self viewWillAppear:YES];	//この中で、refetcheAllData:が呼ばれる
 	[appDelegate_ AdViewWillRotate:self.interfaceOrientation];	// AdOFF-->ONのとき回転補正が必要
@@ -470,12 +472,8 @@
 	}
 }
 
-- (void)actionIAZStore
+- (void)actionAZStore
 {
-/*	AZStoreVC *vc = [[AZStoreVC alloc] initWithUnLock:appDelegate_.app_pid_SwitchAd];
-	vc.delegate = self; //--> azStorePurchesed:
-	vc.productIDs = [NSSet setWithObjects:SK_PID_AdOff, nil]; // 商品が複数ある場合は列記
-*/
 	// あずき商店
 	AZStoreTVC *vc = [[AZStoreTVC alloc] init];
 	// 商品IDリスト
@@ -503,6 +501,24 @@
 		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 		[self.navigationController pushViewController:vc animated:YES];
 	}
+}
+
+- (void)actionCloudReset
+{
+	GA_TRACK_METHOD
+	[[MocFunctions sharedMocFunctions] stopRelease];
+	
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSURL *cloudURL = [fileManager URLForUbiquityContainerIdentifier:nil];
+	NSString *file = nil;
+	NSDirectoryEnumerator *enumerator = [fileManager enumeratorAtPath:[cloudURL path]];
+	while (file = [enumerator nextObject]) {
+		[fileManager removeItemAtPath:file error:nil];
+		NSLog(@"iCloud Removed %@", file);
+	}
+	// MOC 初期生成
+	[[MocFunctions sharedMocFunctions] start];
+	[self refetcheAllData];
 }
 
 
@@ -659,6 +675,9 @@
 				NSLog(@"MactionDeleteRow=%ld", (long)actionDeleteRow_);
 				[self actionE1deleteCell:actionDeleteRow_];
 			}
+			break;
+		case ALERT_TAG_CloudReset:
+			[self actionCloudReset];
 			break;
 	}
 }
@@ -1028,6 +1047,9 @@
 #ifdef AzMAKE_SPLASHFACE
     return 0;
 #else
+	if (appDelegate_.ppPaid_SwitchAd) {
+		return 4;	// (3)iCloud Initial
+	}
 	return 3; // (0)PackList　　(1)Import menu　　(2)Basic menu
 #endif
 }
@@ -1041,8 +1063,8 @@
 			return 3;	//Download menu
 		case 2:
 			return 3;	//menu
-		//case 3:
-		//	return 2;	//Old menu
+		case 3:
+			return 1;	//iCloud Initial
 	}
 	return 0;
 }
@@ -1068,14 +1090,6 @@
 		case 1:
 			return NSLocalizedString(@"menu Action",nil);
 			break;
-
-		case 2:
-			return nil;
-			break;
-			
-	/*	case 3:
-			return NSLocalizedString(@"menu Old",nil);
-			break;*/
 	}
 	return nil;
 }
@@ -1083,26 +1097,20 @@
 // TableView セクションフッタを応答
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section 
 {
-	switch (section) {
-		case 2: {
-			NSString *zz = @"";  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
-		/*	if (appDelegate_.app_pid_AdOff) {
-				if (appDelegate_.app_enable_iCloud) {
-					zz = NSLocalizedString(@"iCloud ON",nil); // 同期中
-				} else {
-					zz = NSLocalizedString(@"iCloud OFF",nil); // 無効
-				}
-			}*/
-			zz = [zz stringByAppendingString:@"\nAzukiSoft Project\n"  COPYRIGHT];
-			if (appDelegate_.ppOptShowAd) {
-				if (appDelegate_.ppIsPad) {
-					zz = [zz stringByAppendingString:@"\n\n\n\n\n\n\n\n\n\n\n\n\n\n"];
-				} else {
-					zz = [zz stringByAppendingString:@"\n\n\n\n"];
-				}
+	if (appDelegate_.ppPaid_SwitchAd) {
+		section--;
+	}
+	if (section==2) {
+		NSString *zz = @"";  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
+		zz = [zz stringByAppendingString:@"\nAzukiSoft Project\n"  COPYRIGHT];
+		if (appDelegate_.ppOptShowAd) {
+			if (appDelegate_.ppIsPad) {
+				zz = [zz stringByAppendingString:@"\n\n\n\n\n\n\n\n\n\n\n\n\n\n"];
+			} else {
+				zz = [zz stringByAppendingString:@"\n\n\n\n"];
 			}
-			return zz;
-		} break;
+		}
+		return zz;
 	}
 	return nil;
 }
@@ -1118,7 +1126,8 @@
 	}
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
 	static NSString *zCellDefault = @"CellDefault";
 	static NSString *zCellSubtitle = @"CellSubtitle";
   //  static NSString *zCelliAd = @"CelliAd";
@@ -1330,23 +1339,14 @@
 					break;
 			}
 		}
-	/*	else if (indexPath.section == 3) { //-----------------------------------------------------------Section 3
-			switch (indexPath.row) {
-				case 0:
-					cell.imageView.image = [UIImage imageNamed:@"Icon32-NearPcAdd"];
-					cell.textLabel.text = NSLocalizedString(@"Import YourPC",nil);
-					cell.detailTextLabel.text = NSLocalizedString(@"Import YourPC msg",nil);
-					cell.accessoryType = UITableViewCellAccessoryNone;
-					break;
-					
-				case 1:
-					cell.imageView.image = [UIImage imageNamed:@"Icon32-PasteAdd"];
-					cell.textLabel.text = NSLocalizedString(@"Import PasteBoard",nil);
-					cell.detailTextLabel.text = NSLocalizedString(@"Import PasteBoard msg",nil);
-					cell.accessoryType = UITableViewCellAccessoryNone;
-					break;
-			}
-		}*/ 
+		else if (indexPath.section == 3) { //-----------------------------------------------------------Section 3
+			// iCloud
+			cell.imageView.image = [UIImage imageNamed:@"Icon32-iCloud"];
+			cell.textLabel.text = NSLocalizedString(@"iCloud Reset",nil);
+			cell.textLabel.textColor = [UIColor redColor];
+			cell.detailTextLabel.text = NSLocalizedString(@"iCloud Reset msg",nil);
+			cell.accessoryType = UITableViewCellAccessoryNone;
+		}
 	}
 	return cell;
 }
@@ -1421,21 +1421,20 @@
 				break;
 				
 			case 2: // Purchase
-				[self actionIAZStore];
+				[self actionAZStore];
 				break;
 		}
 	}
-	/*else if (indexPath.section == 3) {
-		switch (indexPath.row) {
-			case 0: // Restore from YourPC
-				[self actionImportYourPC];
-				break;
-				
-			case 1: // PasteBoard
-				[self actionImportPasteBoard];
-				break;
-		}
-	}*/
+	else if (indexPath.section == 3) {
+		// iCloud Reset
+		UIAlertView *av = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"iCloud Reset", nil)
+													 message: NSLocalizedString(@"iCloud Reset msg", nil)
+													delegate:self
+										   cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+										   otherButtonTitles:NSLocalizedString(@"RESET", nil), nil];
+		av.tag = ALERT_TAG_CloudReset;
+		[av show];
+	}
 }
 
 #pragma mark  TableView - Edit Move
