@@ -48,8 +48,6 @@
 
 #pragma mark - Application lifecycle
 
-static BOOL cleanUbiquitousFolder__ = YES;  //インストール後、1度だけ処理するため
-
 //[1.1]メール添付ファイル"*.packlist" をタッチしてモチメモを選択すると、launchOptions にファイルの URL (file://…というスキーマ) で渡される。
 //- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 - (void)applicationDidFinishLaunching:(UIApplication *)application
@@ -166,7 +164,8 @@ static BOOL cleanUbiquitousFolder__ = YES;  //インストール後、1度だけ
 	[DBSession setSharedSession:dbSession];
 
 
-	// iCloud完全クリアする　＜＜＜同期矛盾が生じたときや構造変更時に使用
+/*	// iCloud完全クリアする　＜＜＜同期矛盾が生じたときや構造変更時に使用
+	static BOOL cleanUbiquitousFolder__ = YES;  //インストール後、1度だけ処理するため
 	if (cleanUbiquitousFolder__) {
 		cleanUbiquitousFolder__ = NO;
 		NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -177,7 +176,7 @@ static BOOL cleanUbiquitousFolder__ = YES;  //インストール後、1度だけ
 			[fileManager removeItemAtPath:file error:nil];
 			NSLog(@"Removed %@", file);
 		}
-	}
+	}*/
 	// MOC 初期生成
 	[EntityRelation setMoc:[self managedObjectContext]];
 	
@@ -363,13 +362,16 @@ static BOOL cleanUbiquitousFolder__ = YES;  //インストール後、1度だけ
 - (void)mergeChangesFrom_iCloud:(NSNotification *)notification 
 {
 	//if (__Paid_SwitchAd) {	//有料版のみ更新処理する
-	if (!__OptShowAd) {
+	if (__OptShowAd==NO) {
 		NSManagedObjectContext* moc = [self managedObjectContext];
 		// this only works if you used NSMainQueueConcurrencyType
 		// otherwise use a dispatch_async back to the main thread yourself
 		[moc performBlock:^{
 			[self mergeiCloudChanges:notification forContext:moc];
 		}];
+		__Enabled_iCloud = YES;
+	} else {
+		__Enabled_iCloud = NO;
 	}
 }
 
