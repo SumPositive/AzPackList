@@ -919,65 +919,79 @@
 		}
 	}
 	
-	// SAVE ----------------------------------------------------------------------
-	[e3obj setValue:[NSNumber numberWithInteger:(lStock)] forKey:@"stock"];
-	[e3obj setValue:[NSNumber numberWithInteger:(lNeed)] forKey:@"need"];
-	
-	[e3obj setValue:[NSNumber numberWithInteger:(lWeight*lStock)] forKey:@"weightStk"];
-	[e3obj setValue:[NSNumber numberWithInteger:(lWeight*lNeed)] forKey:@"weightNed"];
-	[e3obj setValue:[NSNumber numberWithInteger:(lNeed-lStock)] forKey:@"lack"]; // 不足数
-	[e3obj setValue:[NSNumber numberWithInteger:(lWeight*(lNeed-lStock))] forKey:@"weightLack"]; // 不足重量
-	
-	NSInteger iNoGray = 0;
-	if (0 < lNeed) iNoGray = 1;
-	[e3obj setValue:[NSNumber numberWithInteger:iNoGray] forKey:@"noGray"]; // 有効(0<必要)アイテム
-	
+	// CHECK ----------------------------------------------------------------------レス向上策
+	// チェックだけ先に更新し、再表示する
 	NSInteger iNoCheck = 0;
 	if (0 < lNeed && lStock < lNeed) iNoCheck = 1;
 	[e3obj setValue:[NSNumber numberWithInteger:iNoCheck] forKey:@"noCheck"]; // 不足アイテム
+
+	[self.tableView reloadData];	//再表示
 	
-	// E2 sum属性　＜高速化＞ 親sum保持させる
-	E2 *e2obj = e3obj.parent;
-	[e2obj setValue:[e2obj valueForKeyPath:@"childs.@sum.noGray"] forKey:@"sumNoGray"];
-	[e2obj setValue:[e2obj valueForKeyPath:@"childs.@sum.noCheck"] forKey:@"sumNoCheck"];
-	[e2obj setValue:[e2obj valueForKeyPath:@"childs.@sum.weightStk"] forKey:@"sumWeightStk"];
-	[e2obj setValue:[e2obj valueForKeyPath:@"childs.@sum.weightNed"] forKey:@"sumWeightNed"];
 	
-	// E1 sum属性　＜高速化＞ 親sum保持させる
-	E1 *e1obj = e2obj.parent;
-	[e1obj setValue:[e1obj valueForKeyPath:@"childs.@sum.sumNoGray"] forKey:@"sumNoGray"];
-	[e1obj setValue:[e1obj valueForKeyPath:@"childs.@sum.sumNoCheck"] forKey:@"sumNoCheck"];
-	NSNumber *sumWeStk = [e1obj valueForKeyPath:@"childs.@sum.sumWeightStk"];
-	NSNumber *sumWeNed = [e1obj valueForKeyPath:@"childs.@sum.sumWeightNed"];
-	//[0.2c]プラン総重量制限
-	if (AzMAX_PLAN_WEIGHT < [sumWeStk integerValue] OR AzMAX_PLAN_WEIGHT < [sumWeNed integerValue]) {
-		[self alertWeightOver];
-		return;
-	}
-	[e1obj setValue:sumWeStk forKey:@"sumWeightStk"];
-	[e1obj setValue:sumWeNed forKey:@"sumWeightNed"];
-	
-	if (sharePlanList_==NO) {
-		// SAVE : e3edit,e2list は ManagedObject だから更新すれば ManagedObjectContext に反映されている
-		NSError *err = nil;
-		if (![e3obj.managedObjectContext save:&err]) {
-			NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
-			//abort();
+	// SAVE ----------------------------------------------------------------------レス向上策
+	// チェック以外をバック処理する
+	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+	dispatch_async(queue, ^{
+		// 非同期マルチスレッド処理
+		[e3obj setValue:[NSNumber numberWithInteger:(lStock)] forKey:@"stock"];
+		[e3obj setValue:[NSNumber numberWithInteger:(lNeed)] forKey:@"need"];
+		
+		[e3obj setValue:[NSNumber numberWithInteger:(lWeight*lStock)] forKey:@"weightStk"];
+		[e3obj setValue:[NSNumber numberWithInteger:(lWeight*lNeed)] forKey:@"weightNed"];
+		[e3obj setValue:[NSNumber numberWithInteger:(lNeed-lStock)] forKey:@"lack"]; // 不足数
+		[e3obj setValue:[NSNumber numberWithInteger:(lWeight*(lNeed-lStock))] forKey:@"weightLack"]; // 不足重量
+		
+		NSInteger iNoGray = 0;
+		if (0 < lNeed) iNoGray = 1;
+		[e3obj setValue:[NSNumber numberWithInteger:iNoGray] forKey:@"noGray"]; // 有効(0<必要)アイテム
+		
+		// E2 sum属性　＜高速化＞ 親sum保持させる
+		E2 *e2obj = e3obj.parent;
+		[e2obj setValue:[e2obj valueForKeyPath:@"childs.@sum.noGray"] forKey:@"sumNoGray"];
+		[e2obj setValue:[e2obj valueForKeyPath:@"childs.@sum.noCheck"] forKey:@"sumNoCheck"];
+		[e2obj setValue:[e2obj valueForKeyPath:@"childs.@sum.weightStk"] forKey:@"sumWeightStk"];
+		[e2obj setValue:[e2obj valueForKeyPath:@"childs.@sum.weightNed"] forKey:@"sumWeightNed"];
+		
+		// E1 sum属性　＜高速化＞ 親sum保持させる
+		E1 *e1obj = e2obj.parent;
+		[e1obj setValue:[e1obj valueForKeyPath:@"childs.@sum.sumNoGray"] forKey:@"sumNoGray"];
+		[e1obj setValue:[e1obj valueForKeyPath:@"childs.@sum.sumNoCheck"] forKey:@"sumNoCheck"];
+		NSNumber *sumWeStk = [e1obj valueForKeyPath:@"childs.@sum.sumWeightStk"];
+		NSNumber *sumWeNed = [e1obj valueForKeyPath:@"childs.@sum.sumWeightNed"];
+		//[0.2c]プラン総重量制限
+		if (AzMAX_PLAN_WEIGHT < [sumWeStk integerValue] OR AzMAX_PLAN_WEIGHT < [sumWeNed integerValue]) {
+			[self alertWeightOver];
+			return;
 		}
-	}
-	
-	// checkPath だけを再描画する
-	//[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:checkPath] withRowAnimation:NO];
-	//[1.0.6]上の1行再表示では、セクションヘッダにある重量が更新されない不具合あり。
-	//NSIndexSet* iset = [NSIndexSet indexSetWithIndex:checkPath.section];
-	//[self.tableView reloadSections:iset withRowAnimation:NO]; //セクション単位でリロードする
-	//[1.0.6]【Tips】結局、これが一番良い。 ＜＜行位置変わらず、表示の乱れも無い
-	[self.tableView reloadData];
-	
-	if (appDelegate_.ppIsPad) {
-		// 左側 E2 再描画
-		[self padE2refresh:[e2obj.row integerValue]];
-	}
+		[e1obj setValue:sumWeStk forKey:@"sumWeightStk"];
+		[e1obj setValue:sumWeNed forKey:@"sumWeightNed"];
+		
+		if (sharePlanList_==NO) {
+			// SAVE : e3edit,e2list は ManagedObject だから更新すれば ManagedObjectContext に反映されている
+			NSError *err = nil;
+			if (![e3obj.managedObjectContext save:&err]) {
+				NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
+				//abort();
+			}
+		}
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			// 終了後の処理
+			// checkPath だけを再描画する
+			//[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:checkPath] withRowAnimation:NO];
+			//[1.0.6]上の1行再表示では、セクションヘッダにある重量が更新されない不具合あり。
+			//NSIndexSet* iset = [NSIndexSet indexSetWithIndex:checkPath.section];
+			//[self.tableView reloadSections:iset withRowAnimation:NO]; //セクション単位でリロードする
+			//[1.0.6]【Tips】結局、これが一番良い。 ＜＜行位置変わらず、表示の乱れも無い
+			[self.tableView reloadData];
+
+			if (appDelegate_.ppIsPad) {
+				// 左側 E2 再描画
+				[self padE2refresh:[e2obj.row integerValue]];
+			}
+			
+		});
+	});
 }
 
 //----------------------------------------------------------- Clip Board
