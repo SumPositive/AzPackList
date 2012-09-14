@@ -787,7 +787,7 @@
 		//NG//sharePlanList_ = NO;  ＜＜＜常にNOになってしまう。
 		
 		// 背景テクスチャ・タイルペイント
-		if (appDelegate_.ppIsPad) {
+		if (appDelegate_.ppIsPad  OR  IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ) {
 			//self.view.backgroundColor = //iPad1では無効
 			UIView* view = self.tableView.backgroundView;
 			if (view) {

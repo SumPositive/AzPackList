@@ -29,7 +29,7 @@
 
 @implementation AppDelegate
 @synthesize window = __window;
-@synthesize managedObjectContext = __moc;
+//@synthesize managedObjectContext = __moc;
 @synthesize mainNC = __mainNC;
 @synthesize mainSVC = __mainSVC;
 @synthesize padRootVC = __padRootVC;
@@ -309,20 +309,21 @@
 	NSLog(@"applicationWillTerminate ***");
     
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	
+
 	//--------------------------------------------------[Clip Board] クリップボード クリア処理
+	NSManagedObjectContext *moc = [[MocFunctions sharedMocFunctions] getMoc];
 	if (__clipE3objects && 0 < [__clipE3objects count]) {
 		for (E3 *e3 in __clipE3objects) {
 			if (e3.parent == nil) {
 				// [Cut]されたE3なので削除する
-				[__moc deleteObject:e3];
+				[moc deleteObject:e3];
 			}
 		}
 	}
-	if (__moc && [__moc hasChanges]) { //未保存があれば保存する
+	if (moc && [moc hasChanges]) { //未保存があれば保存する
 		NSError *error;
-        if (![__moc save:&error]) {
-			GA_TRACK_EVENT_ERROR([error localizedDescription],0);
+        if (![moc save:&error]) {
+			GA_TRACK_ERROR([error description]);
 			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 			assert(NO); //DEBUGでは落とす
         } 
@@ -404,7 +405,9 @@
 			[__mainSVC.view addSubview:mAdMobView];
 		} else {
 			mAdMobView.adUnitID = AdMobID_PackList;	//iPhone//
-			mAdMobView.frame = CGRectMake( 0, 500, GAD_SIZE_320x50.width, GAD_SIZE_320x50.height);
+			//mAdMobView.frame = CGRectMake( 0, 500, GAD_SIZE_320x50.width, GAD_SIZE_320x50.height);
+			mAdMobView.frame = CGRectMake( 0, self.window.frame.size.height-GAD_SIZE_320x50.height,
+										  GAD_SIZE_320x50.width, GAD_SIZE_320x50.height);
 			mAdMobView.rootViewController = __mainNC;
 			[__mainNC.view addSubview:mAdMobView];
 		}
@@ -625,7 +628,8 @@
 		if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
 			miAdView.frame = CGRectMake(0, 320-32,  0,0);	//ヨコ：下部に表示
 		} else {
-			miAdView.frame = CGRectMake(0, 480-50,  0,0);	//タテ：下部に表示
+			//miAdView.frame = CGRectMake(0, 480-50,  0,0);	//タテ：下部に表示
+			miAdView.frame = CGRectMake(0, self.window.frame.size.height-50,  0,0);	//タテ：下部に表示
 		}
 	/*.alpha=0 だけにし、隠さない
 		if (mAdCanVisible && miAdView.alpha==1) {	// 表示

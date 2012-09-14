@@ -14,7 +14,7 @@
 #import "Elements.h"
 
 
-#define CoreData_iCloud_SYNC		YES	// YES or NO
+#define CoreData_iCloud_SYNC		NO			// YES or NO
 
 
 @interface MocFunctions : NSObject 
@@ -52,6 +52,8 @@
 
 // PackList Original
 - (NSInteger)E1_maxRow;
+
+- (void)iCloudAllClear;
 
 
 @end

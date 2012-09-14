@@ -108,8 +108,7 @@
 		mTableViewContentY = -1;
 
 		// 背景テクスチャ・タイルペイント
-		if (mAppDelegate.ppIsPad) {
-			//self.view.backgroundColor = //iPad1では無効
+		if (mAppDelegate.ppIsPad  OR  IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ) {
 			UIView* view = self.tableView.backgroundView;
 			if (view) {
 				PatternImageView *tv = [[PatternImageView alloc] initWithFrame:view.frame
@@ -339,6 +338,9 @@
 	if (mCalcView && [mCalcView isShow]) {
 		[mCalcView hide]; //　ここでは隠すだけ。 removeFromSuperviewするとアニメ無く即消えてしまう。
 	}
+	
+	[mAppDelegate AdRefresh];	//広告生成のみ
+	[mAppDelegate AdViewWillRotate:orientation];
 }
 
 // ユーザインタフェースの回転の最後の半分が始まる前にこの処理が呼ばれる　＜＜このタイミングで配置転換すると見栄え良い＞＞
@@ -862,8 +864,15 @@
 		}
 		else {
 			// 縦
-			fTableTopY = 65 + (iRow-3)*60;
-			rect.origin.y = 65;
+			//fTableTopY = 65 + (iRow-3)*60;
+			//rect.origin.y = 65;
+			if (mAppDelegate.ppOptShowAd) {	//広告表示中
+				fTableTopY = (500 - self.tableView.bounds.size.height) + 50 + (iRow-3)*60;
+				rect.origin.y = self.tableView.bounds.size.height - 401;
+			} else {
+				fTableTopY = (500 - self.tableView.bounds.size.height) + (iRow-3)*60;
+				rect.origin.y = self.tableView.bounds.size.height - 401 + 50;
+			}
 		}
 	}
 	// テーブルを少し上げてテンキーで隠れないようにする

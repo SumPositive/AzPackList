@@ -32,7 +32,7 @@
 @property (nonatomic, retain) UINavigationController		*mainNC;		//for iPhone
 @property (nonatomic, retain) UISplitViewController		*mainSVC;	//for iPad
 @property (nonatomic, retain) PadRootVC	*padRootVC;  //解放されないようにretain
-@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
+//@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
 
 @property (nonatomic, retain) NSMutableArray	*clipE3objects;  // 外部から参照されるため
 @property (nonatomic, retain) E1							*dropboxSaveE1selected;

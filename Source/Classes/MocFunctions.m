@@ -17,10 +17,14 @@
 static MocFunctions	*staticMocFunctions= nil;
 + (MocFunctions *)sharedMocFunctions 
 {
-	if (staticMocFunctions==nil) {
-		staticMocFunctions = [[MocFunctions alloc] init];
+	@synchronized(self)
+	{	//シングルトン：selfに対する処理が、この間は別のスレッドから行えないようになる。
+		if (staticMocFunctions==nil) {
+			staticMocFunctions = [[MocFunctions alloc] init];
+		}
+		return staticMocFunctions;
 	}
-	return staticMocFunctions;
+	return nil;
 }
 
 
@@ -57,13 +61,10 @@ static MocFunctions	*staticMocFunctions= nil;
 
 - (void)deleteEntity:(NSManagedObject *)entity
 {
-	@synchronized(mContext)
-	{
-		if (entity) {
-			[mContext deleteObject:entity];	// 即commitされる。つまり、rollbackやcommitの対象外である。 ＜＜そんなことは無い！ roolback可能 save必要
-		}
+	if (entity) {
+		[mContext deleteObject:entity];	// 即commitされる。つまり、rollbackやcommitの対象外である。 ＜＜そんなことは無い！ roolback可能 save必要
 	}
-}	
+}
 
 - (BOOL)hasChanges		// YES=commit以後に変更あり
 {
@@ -73,19 +74,16 @@ static MocFunctions	*staticMocFunctions= nil;
 - (BOOL)commit
 {
 	assert(mContext);
-	@synchronized(mContext)
-	{
-		// SAVE
-		NSError *err = nil;
-		if (![mContext  save:&err]) {
-			//NSLog(@"*** MOC commit error ***\n%@\n%@\n***\n", err, [err userInfo]);
-			GA_TRACK_EVENT_ERROR([err description],0);
-			//exit(-1);  // Fail
-			azAlertBox(NSLocalizedString(@"MOC CommitErr",nil),
-					 NSLocalizedString(@"MOC CommitErrMsg",nil),
-					 NSLocalizedString(@"Roger",nil));
-			return NO;
-		}
+	// SAVE
+	NSError *err = nil;
+	if (![mContext  save:&err]) {
+		//NSLog(@"*** MOC commit error ***\n%@\n%@\n***\n", err, [err userInfo]);
+		GA_TRACK_EVENT_ERROR([err description],0);
+		//exit(-1);  // Fail
+		azAlertBox(NSLocalizedString(@"MOC CommitErr",nil),
+				   NSLocalizedString(@"MOC CommitErrMsg",nil),
+				   NSLocalizedString(@"Roger",nil));
+		return NO;
 	}
 	return YES;
 }
@@ -94,22 +92,17 @@ static MocFunctions	*staticMocFunctions= nil;
 - (void)rollBack
 {
 	assert(mContext);
-	@synchronized(mContext)
-	{
-		// ROLLBACK
-		[mContext rollback]; // 前回のSAVE以降を取り消す
-	}
+	// ROLLBACK
+	[mContext rollback]; // 前回のSAVE以降を取り消す
 }
 
 - (void)stopRelease
 {	// MOC（メモリ上）をクリアし、mContextを解放する。
 	GA_TRACK_METHOD
 	assert(mContext);
-	@synchronized(mContext)
-	{
-		[mContext reset];
-		mContext = nil; //解放
-	}
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[mContext reset];
+	mContext = nil; //解放
 }
 
 
@@ -379,6 +372,20 @@ static MocFunctions	*staticMocFunctions= nil;
 
 
 #pragma mark - iCloud
+// iCloud完全クリアする　＜＜＜同期矛盾が生じたときや構造変更時に使用
+- (void)iCloudAllClear
+{
+	// iCloudサーバー上のゴミデータ削除
+	NSURL *icloudURL = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
+	NSError *err;
+	[[NSFileManager defaultManager] removeItemAtURL:icloudURL error:&err];
+	if (err) {
+		GA_TRACK_ERROR([err description])
+	} else {
+		NSLog(@"iCloud: Removed %@", icloudURL);
+	}
+}
+
 - (void)mergeiCloudChanges:(NSNotification*)note forContext:(NSManagedObjectContext*)moc
 {
 	// マージ処理

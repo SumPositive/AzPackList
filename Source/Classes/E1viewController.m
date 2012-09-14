@@ -506,6 +506,8 @@
 - (void)actionCloudReset
 {
 	GA_TRACK_METHOD
+	
+#ifdef xxxxxxxxxxxxxxxx
 	[[MocFunctions sharedMocFunctions] stopRelease];
 	
 	NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -518,6 +520,10 @@
 	}
 	// MOC 初期生成
 	[[MocFunctions sharedMocFunctions] start];
+#else
+	// iCloud Stack Clear
+	[[MocFunctions sharedMocFunctions] iCloudAllClear];
+#endif
 	[self refetcheAllData];
 }
 
@@ -779,8 +785,8 @@
 		//informationView_ = nil; // azInformationViewで生成 [self.view.window addSubview:]
 		
 		// 背景テクスチャ・タイルペイント
-		if (appDelegate_.ppIsPad) {
-			//self.view.backgroundColor = //iPadでは無効
+		if (appDelegate_.ppIsPad  OR  IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ) {
+			//self.view.backgroundColor = //iPadや iOS6.0以降 では無効になったため
 			UIView* view = self.tableView.backgroundView;
 			if (view) {
 				PatternImageView *tv = [[PatternImageView alloc] initWithFrame:view.frame
@@ -872,7 +878,8 @@
 	self.title = NSLocalizedString(@"Product Title",nil);
 	
 	if (moc_==nil) {
-		moc_ = [appDelegate_ managedObjectContext];
+		//moc_ = [appDelegate_ managedObjectContext];
+		moc_ = [[MocFunctions sharedMocFunctions] getMoc];
 	}
 	
 	// CoreData 読み込み
@@ -1047,9 +1054,9 @@
 #ifdef AzMAKE_SPLASHFACE
     return 0;
 #else
-	if (appDelegate_.ppPaid_SwitchAd) {
-		return 4;	// (3)iCloud Initial
-	}
+	//if (appDelegate_.ppPaid_SwitchAd) {
+	//	return 4;	// (3)iCloud Initial
+	//}
 	return 3; // (0)PackList　　(1)Import menu　　(2)Basic menu
 #endif
 }
@@ -1097,9 +1104,9 @@
 // TableView セクションフッタを応答
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section 
 {
-	if (appDelegate_.ppPaid_SwitchAd) {
-		section--;
-	}
+	//if (appDelegate_.ppPaid_SwitchAd) {
+	//	section--;
+	//}
 	if (section==2) {
 		NSString *zz = @"";  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
 		zz = [zz stringByAppendingString:@"\nAzukiSoft Project\n"  COPYRIGHT];
