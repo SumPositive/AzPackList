@@ -85,7 +85,7 @@
 	//------------------------------------------アイコン
 	imgBag_ = [[UIImageView alloc] initWithFrame:BAG_FRAME];
 	imgBag_.contentMode = UIViewContentModeBottomLeft;
-	[imgBag_ setImage:[UIImage imageNamed:@"Icon72"]];
+	[imgBag_ setImage:[UIImage imageNamed:@"Icon72bag"]];
 	//imgBag_.center = CGPointMake(self.view.bounds.size.width/2+60, 150);
 	[self.view addSubview:imgBag_]; 
 }

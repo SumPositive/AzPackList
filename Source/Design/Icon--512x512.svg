@@ -16,9 +16,9 @@
    version="1.1"
    inkscape:version="0.48.1 r9760"
    sodipodi:docname="Icon--512x512.svg"
-   inkscape:export-filename="/Users/masa/AzukiSoft/AzPackList/Source/Icon512.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90"
+   inkscape:export-filename="/Users/masa/AzukiSoft/AzPackList5/Source/Icon72bag@2x.png"
+   inkscape:export-xdpi="25.309999"
+   inkscape:export-ydpi="25.309999"
    style="display:inline">
   <defs
      id="defs4">
@@ -704,7 +704,8 @@
          result="result4"
          operator="arithmetic"
          k2="0"
-         k3="0.6" />
+         k3="0.6"
+         k4="0" />
     </filter>
     <filter
        id="filter3252"
@@ -735,7 +736,8 @@
          result="result4"
          operator="arithmetic"
          k2="0"
-         k3="0.6" />
+         k3="0.6"
+         k4="0" />
     </filter>
     <filter
        id="filter3262"
@@ -745,8 +747,8 @@
        color-interpolation-filters="sRGB"
        width="1.5"
        height="1.5"
-       x="-.25"
-       y="-.25">
+       x="-0.25"
+       y="-0.25">
       <feGaussianBlur
          id="feGaussianBlur3264"
          stdDeviation="6"
@@ -770,7 +772,8 @@
          result="fbSourceGraphic"
          operator="arithmetic"
          k2="0"
-         k3="0.6" />
+         k3="0.6"
+         k4="0" />
       <feColorMatrix
          result="fbSourceGraphicAlpha"
          in="fbSourceGraphic"
@@ -818,7 +821,7 @@
          specularExponent="25"
          specularConstant="1"
          surfaceScale="10"
-         lighting-color="rgb(255,255,255)"
+         lighting-color="#ffffff"
          result="result1"
          in="result0">
         <feDistantLight
@@ -833,7 +836,9 @@
          k2="1"
          operator="arithmetic"
          result="result4"
-         in="SourceGraphic" />
+         in="SourceGraphic"
+         k1="0"
+         k4="0" />
       <feComposite
          id="feComposite3390"
          in2="SourceAlpha"
@@ -857,7 +862,7 @@
          specularExponent="25"
          specularConstant="1"
          surfaceScale="10"
-         lighting-color="rgb(255,255,255)"
+         lighting-color="#ffffff"
          result="result1"
          in="result0">
         <feDistantLight
@@ -872,7 +877,9 @@
          k2="1"
          operator="arithmetic"
          result="result4"
-         in="SourceGraphic" />
+         in="SourceGraphic"
+         k1="0"
+         k4="0" />
       <feComposite
          id="feComposite3402"
          in2="SourceAlpha"
@@ -885,8 +892,9 @@
        inkscape:label="Drop shadow"
        width="1.5"
        height="1.5"
-       x="-.25"
-       y="-.25">
+       x="-0.25"
+       y="-0.25"
+       color-interpolation-filters="sRGB">
       <feGaussianBlur
          id="feGaussianBlur4287"
          in="SourceAlpha"
@@ -980,8 +988,9 @@
        inkscape:label="Drop shadow"
        width="1.5"
        height="1.5"
-       x="-.25"
-       y="-.25">
+       x="-0.25"
+       y="-0.25"
+       color-interpolation-filters="sRGB">
       <feGaussianBlur
          id="feGaussianBlur4363"
          in="SourceAlpha"
@@ -1075,8 +1084,9 @@
        inkscape:label="Drop shadow"
        width="1.5"
        height="1.5"
-       x="-.25"
-       y="-.25">
+       x="-0.25"
+       y="-0.25"
+       color-interpolation-filters="sRGB">
       <feGaussianBlur
          id="feGaussianBlur4405"
          in="SourceAlpha"
@@ -1119,7 +1129,7 @@
          specularExponent="25"
          specularConstant="1"
          surfaceScale="10"
-         lighting-color="rgb(255,255,255)"
+         lighting-color="#ffffff"
          result="result1"
          in="result0">
         <feDistantLight
@@ -1134,7 +1144,9 @@
          k2="1"
          operator="arithmetic"
          result="result4"
-         in="SourceGraphic" />
+         in="SourceGraphic"
+         k1="0"
+         k4="0" />
       <feComposite
          id="feComposite4453"
          in2="SourceAlpha"
@@ -1147,8 +1159,8 @@
        inkscape:label="Glow"
        width="1.5"
        height="1.5"
-       x="-.25"
-       y="-.25"
+       x="-0.25"
+       y="-0.25"
        inkscape:menu="Shadows and Glows"
        inkscape:menu-tooltip="Glow of object's own color at the edges"
        color-interpolation-filters="sRGB">
@@ -1194,6 +1206,38 @@
          in="fbSourceGraphic"
          operator="over" />
     </filter>
+    <filter
+       id="filter8031"
+       inkscape:label="Diffuse light"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Basic diffuse bevel to use for building textures"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur8033"
+         stdDeviation="6"
+         in="SourceGraphic"
+         result="result0" />
+      <feDiffuseLighting
+         id="feDiffuseLighting8035"
+         diffuseConstant="1"
+         surfaceScale="10"
+         result="result5">
+        <feDistantLight
+           id="feDistantLight8037"
+           elevation="25"
+           azimuth="235" />
+      </feDiffuseLighting>
+      <feComposite
+         k4="0"
+         id="feComposite8039"
+         in2="SourceGraphic"
+         k1="1"
+         in="result5"
+         result="result4"
+         operator="arithmetic"
+         k2="0"
+         k3="0.6" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -1202,11 +1246,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.1523851"
-     inkscape:cx="256.71034"
-     inkscape:cy="253.64794"
+     inkscape:zoom="0.83972969"
+     inkscape:cx="101.78371"
+     inkscape:cy="256"
      inkscape:document-units="px"
-     inkscape:current-layer="layer4"
+     inkscape:current-layer="layer5"
      showgrid="false"
      inkscape:window-width="1522"
      inkscape:window-height="1010"
@@ -1225,22 +1269,6 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <g
-     style="display:none"
-     inkscape:label="Backgraund Azure"
-     id="g3952"
-     inkscape:groupmode="layer"
-     sodipodi:insensitive="true">
-    <rect
-       rx="92.619003"
-       ry="92.619003"
-       y="-3.5527137e-15"
-       x="0"
-       height="512"
-       width="512"
-       id="rect3954"
-       style="fill:#007fff;fill-opacity:1;fill-rule:evenodd;stroke:none" />
-  </g>
   <g
      style="display:none"
      inkscape:label="S1 Bag deepskyblue"
@@ -1288,17 +1316,18 @@
      inkscape:groupmode="layer"
      id="layer6"
      inkscape:label="Backgraund Azuki"
-     style="display:inline"
+     style="display:none"
      sodipodi:insensitive="true">
     <rect
-       style="fill:#97504d;fill-opacity:1;fill-rule:evenodd;stroke:none"
-       id="rect4551"
-       width="512"
-       height="512"
+       rx="93.161728"
+       ry="93.232796"
+       y="0"
        x="0"
-       y="-3.5527137e-15"
-       ry="92.619003"
-       rx="92.619003" />
+       height="512"
+       width="512"
+       id="rect7909"
+       style="fill:#97504d;fill-opacity:1;fill-rule:evenodd;stroke:none;display:inline;filter:url(#filter8031)"
+       transform="matrix(0.99417429,0,0,0.99341659,1.4913818,1.685353)" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -1681,7 +1710,7 @@
     <g
        id="g4244"
        style="filter:url(#filter4473)"
-       transform="matrix(0.65333219,0.5986803,-0.5961293,0.65612797,248.63258,-73.546238)">
+       transform="matrix(0.70647814,0.65756617,-0.64462203,0.72066436,220.60316,-88.578176)">
       <path
          id="path2768"
          d="m 227.83281,65.80246 c -16.19848,0 -29.80301,9.35781 -29.80301,24.08764 l 0,40.49833 -58.22807,0 0,282.33829 238.42419,0 0,-282.33829 -58.70874,0 0,-40.49833 c 0,-14.72983 -13.38023,-24.08764 -29.57871,-24.08764 l -62.10566,0 z m -8.39612,22.81333 77.93651,0 0,41.77264 -77.93651,0 0,-41.77264 z"
