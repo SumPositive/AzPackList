@@ -105,6 +105,8 @@
 #ifdef AzMAKE_SPLASHFACE
 	__OptShowAd = NO;
 #endif
+	//__OptShowAd = NO;	//AppStore用 画面撮影のため
+
 	
 	//-------------------------------------------------初期化
 	__Changed = NO;
