@@ -787,7 +787,7 @@
 		//NG//sharePlanList_ = NO;  ＜＜＜常にNOになってしまう。
 		
 		// 背景テクスチャ・タイルペイント
-		if (appDelegate_.ppIsPad  OR  IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ) {
+	/*	if (appDelegate_.ppIsPad  OR  IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ) {
 			//self.view.backgroundColor = //iPad1では無効
 			UIView* view = self.tableView.backgroundView;
 			if (view) {
@@ -801,7 +801,11 @@
 		} 
 		else {
 			self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
-		}
+		}*/
+		
+		[self setContentSizeForViewInPopover:GD_POPOVER_SIZE_PadMenu]; //配下全てFormSheetスタイルにしたことにより自由になったので最大化
+		[self.tableView setBackgroundView:nil];	//iOS6//これで次行が有効になる。
+		self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 	}
 	return self;
 }

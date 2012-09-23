@@ -21,17 +21,13 @@
 
 
 @implementation PadRootVC
-{
-	AppDelegate		*appDelegate_;
-	UIImageView		*imgBag_;
-}
-@synthesize popoverButtonItem = popoverButtonItem_;
+
 
 - (void)unloadRelease	// dealloc, viewDidUnload から呼び出される
 {
 	NSLog(@"--- unloadRelease --- PadRootVC");
    //[popoverButtonItem_ release], 
-	popoverButtonItem_ = nil;
+	//popoverButtonItem_ = nil;
 }
 
 - (void)dealloc
@@ -46,7 +42,7 @@
 	[super viewDidUnload];  // TableCell破棄される
 	[self unloadRelease];		// その後、AdMob破棄する
 	//self.splitViewController = nil;
-	popoverButtonItem_ = nil;
+	//popoverButtonItem_ = nil;
 	// この後に loadView ⇒ viewDidLoad ⇒ viewWillAppear がコールされる
 }
 
@@ -156,54 +152,9 @@
 
 
 #pragma mark - Rotation support
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
 	return YES;	//iPad// FormSheet窓対応
-}
-
-//[Index]Popoverが開いたときに呼び出される
-- (void)splitViewController:(UISplitViewController*)svc 
-		  popoverController:(UIPopoverController*)pc 
-  willPresentViewController:(UIViewController *)aViewController
-{
-	//NSLog(@"aViewController=%@", aViewController);
-	UINavigationController* nc = (UINavigationController*)aViewController;
-	E2viewController* vc = (E2viewController*)nc.visibleViewController;
-	if ([vc respondsToSelector:@selector(setPopover:)]) {
-		[vc setPopover:pc];	//内側から閉じるため
-	}
-	return;
-}
-
-//タテになって左ペインが隠れる前に呼び出される
-- (void)splitViewController:(UISplitViewController*)svc
-	 willHideViewController:(UIViewController *)aViewController 
-		  withBarButtonItem:(UIBarButtonItem*)barButtonItem 
-	   forPopoverController:(UIPopoverController*)pc		//左ペインが内包されるPopover
-{
-	barButtonItem.title = NSLocalizedString(@"Index button", nil);
-	//self.popoverController = pc;
-    popoverButtonItem_ = barButtonItem;
-	UINavigationController *navi = [svc.viewControllers objectAtIndex:1];
-	UIViewController <DetailViewController> *detailVC = (UIViewController <DetailViewController> *)navi.visibleViewController;
-	if ([detailVC respondsToSelector:@selector(showPopoverButtonItem:)]) {
-		[detailVC showPopoverButtonItem:popoverButtonItem_];
-	}
-}
-
-//ヨコになって左ペインが現れる前に呼び出される
-- (void)splitViewController:(UISplitViewController*)svc 
-	 willShowViewController:(UIViewController *)aViewController
-  invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem 
-{
-	UINavigationController *navi = [svc.viewControllers objectAtIndex:1];
-	UIViewController <DetailViewController> *detailVC = (UIViewController <DetailViewController> *)navi.visibleViewController;
-	if ([detailVC respondsToSelector:@selector(hidePopoverButtonItem:)]) {
-		[detailVC hidePopoverButtonItem:popoverButtonItem_];
-	}
-    //self.popoverController = nil;
-	popoverButtonItem_ = nil;
 }
 
 @end

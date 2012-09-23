@@ -29,7 +29,7 @@ static MocFunctions	*staticMocFunctions= nil;
 
 
 #pragma mark - ー インスタンスメソッド
-- (void)start
+- (void)initialize
 {
 	GA_TRACK_METHOD
 	//[EntityRelation setMoc:[self managedObjectContext]];

@@ -16,6 +16,20 @@
 #import "E1viewController.h"
 
 
+//iOS6以降、回転対応のためサブクラス化が必要になった。
+@implementation AzNavigationController
+- (NSUInteger)supportedInterfaceOrientations
+{	//iOS6以降
+	//トップビューの向きを返す
+	return self.topViewController.supportedInterfaceOrientations;
+}
+- (BOOL)shouldAutorotate
+{	//iOS6以降
+    return YES;
+}
+@end
+
+
 @interface AppDelegate (PrivateMethods) // メソッドのみ記述：ここに変数を書くとグローバルになる。他に同じ名称があると不具合発生する
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator;
 
@@ -42,6 +56,7 @@
 @synthesize ppPaid_SwitchAd = __Paid_SwitchAd;		//Store購入済フラグ
 @synthesize ppBagSwing = __BagSwing;		//YES=PadRootVC:が表示されたとき、バッグを振る。
 @synthesize ppEnabled_iCloud = __Enabled_iCloud;		// persistentStoreCoordinator:にて設定
+@synthesize popoverButtonItem = popoverButtonItem_;
 
 #pragma mark - Application lifecycle
 
@@ -126,30 +141,36 @@
 	__IsPad = iS_iPAD;
 	NSLog(@"__IsPad=%d,  app_is_Ad_=%d,  app_pid_AdOff_=%d", __IsPad, __OptShowAd, __Paid_SwitchAd);
 	
+	//-------------------------------------------------Moc初期化
+	[[MocFunctions sharedMocFunctions] initialize];
+	
+
 	//-------------------------------------------------
 	if (__IsPad) {
 		__padRootVC = [[PadRootVC alloc] init]; // retainされる
-		UINavigationController* naviLeft = [[UINavigationController alloc]
+		AzNavigationController* naviLeft = [[AzNavigationController alloc]
 											initWithRootViewController:__padRootVC];
 		
 		E1viewController *e1viewCon = [[E1viewController alloc] init];
-		UINavigationController* naviRight = [[UINavigationController alloc] initWithRootViewController:e1viewCon];
+		AzNavigationController* naviRight = [[AzNavigationController alloc] initWithRootViewController:e1viewCon];
 		
 		// e1viewCon を splitViewCon へ登録
 		//mainVC = [[PadSplitVC alloc] init]; タテ2分割のための実装だったがRejectされたので没
 		__mainSVC = [[UISplitViewController alloc] init];
 		__mainSVC.viewControllers = [NSArray arrayWithObjects:naviLeft, naviRight, nil];
-		__mainSVC.delegate = __padRootVC;
+		__mainSVC.delegate = self; //<UISplitViewControllerDelegate>
 		// mainVC を window へ登録
-		[__window addSubview:__mainSVC.view];
+		//[__window addSubview:__mainSVC.view];
+		[__window setRootViewController: __mainSVC];	//iOS6以降、こうしなければ回転しない。
 	}
 	else {
 		E1viewController *e1viewCon = [[E1viewController alloc] init];
 		//e1viewCon.Rmoc = self.managedObjectContext; ＜＜待ちを減らすため、E1viewController:内で生成するように改めた。
 		// e1viewCon を naviCon へ登録
-		__mainNC = [[UINavigationController alloc] initWithRootViewController:e1viewCon];
+		__mainNC = [[AzNavigationController alloc] initWithRootViewController:e1viewCon];
 		// mainVC を window へ登録
-		[__window addSubview:__mainNC.view];
+		//[__window addSubview:__mainNC.view];
+		[__window setRootViewController: __mainNC];	//iOS6以降、こうしなければ回転しない。
 	}
 	
 	//Pad// iOS4以降を前提としてバックグランド機能に任せて前回復帰処理しないことにした。
@@ -162,24 +183,6 @@
 							root:kDBRootAppFolder]; // either kDBRootAppFolder or kDBRootDropbox
 	[DBSession setSharedSession:dbSession];
 
-/**
-	// iCloud完全クリアする　＜＜＜同期矛盾が生じたときや構造変更時に使用
-	static BOOL cleanUbiquitousFolder__ = YES;  //インストール後、1度だけ処理するため
-	if (cleanUbiquitousFolder__) {
-		cleanUbiquitousFolder__ = NO;
-		NSFileManager *fileManager = [NSFileManager defaultManager];
-		NSURL *cloudURL = [fileManager URLForUbiquityContainerIdentifier:nil];
-		NSString *file = nil;
-		NSDirectoryEnumerator *enumerator = [fileManager enumeratorAtPath:[cloudURL path]];
-		while (file = [enumerator nextObject]) {
-			[fileManager removeItemAtPath:file error:nil];
-			NSLog(@"Removed %@", file);
-		}
-	}*/
-	// MOC 初期生成
-	//[EntityRelation setMoc:[self managedObjectContext]];
-	[[MocFunctions sharedMocFunctions] start];
-	
 	// Photo Picasa
 	//picasaBox_ = [[AZPicasa alloc] init];
 	
@@ -340,8 +343,55 @@
 	__mainNC.delegate = nil;		__mainNC = nil;
 	__mainSVC.delegate = nil;	__mainSVC = nil;
 	__padRootVC = nil;
+	popoverButtonItem_ = nil;
 }
 
+
+
+#pragma mark - <UISplitViewControllerDelegate>
+//[Index]Popoverが開いたときに呼び出される
+- (void)splitViewController:(UISplitViewController*)svc
+		  popoverController:(UIPopoverController*)pc
+  willPresentViewController:(UIViewController *)aViewController
+{
+	//NSLog(@"aViewController=%@", aViewController);
+	AzNavigationController* nc = (AzNavigationController*)aViewController;
+	E2viewController* vc = (E2viewController*)nc.visibleViewController;
+	if ([vc respondsToSelector:@selector(setPopover:)]) {
+		[vc setPopover:pc];	//内側から閉じるため
+	}
+	return;
+}
+
+//タテになって左ペインが隠れる前に呼び出される
+- (void)splitViewController:(UISplitViewController*)svc
+	 willHideViewController:(UIViewController *)aViewController
+		  withBarButtonItem:(UIBarButtonItem*)barButtonItem
+	   forPopoverController:(UIPopoverController*)pc		//左ペインが内包されるPopover
+{
+	barButtonItem.title = NSLocalizedString(@"Index button", nil);
+	//self.popoverController = pc;
+    popoverButtonItem_ = barButtonItem;
+	AzNavigationController *navi = [svc.viewControllers objectAtIndex:1];
+	UIViewController <DetailViewController> *detailVC = (UIViewController <DetailViewController> *)navi.visibleViewController;
+	if ([detailVC respondsToSelector:@selector(showPopoverButtonItem:)]) {
+		[detailVC showPopoverButtonItem:popoverButtonItem_];
+	}
+}
+
+//ヨコになって左ペインが現れる前に呼び出される
+- (void)splitViewController:(UISplitViewController*)svc
+	 willShowViewController:(UIViewController *)aViewController
+  invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
+{
+	AzNavigationController *navi = [svc.viewControllers objectAtIndex:1];
+	UIViewController <DetailViewController> *detailVC = (UIViewController <DetailViewController> *)navi.visibleViewController;
+	if ([detailVC respondsToSelector:@selector(hidePopoverButtonItem:)]) {
+		[detailVC hidePopoverButtonItem:popoverButtonItem_];
+	}
+    //self.popoverController = nil;
+	popoverButtonItem_ = nil;
+}
 
 
 #pragma mark - <AZDropboxDelegate>
@@ -408,7 +458,7 @@
 		} else {
 			mAdMobView.adUnitID = AdMobID_PackList;	//iPhone//
 			//mAdMobView.frame = CGRectMake( 0, 500, GAD_SIZE_320x50.width, GAD_SIZE_320x50.height);
-			mAdMobView.frame = CGRectMake( 0, self.window.frame.size.height-GAD_SIZE_320x50.height,
+			mAdMobView.frame = CGRectMake( 0, self.window.frame.size.height+GAD_SIZE_320x50.height,
 										  GAD_SIZE_320x50.width, GAD_SIZE_320x50.height);
 			mAdMobView.rootViewController = __mainNC;
 			[__mainNC.view addSubview:mAdMobView];

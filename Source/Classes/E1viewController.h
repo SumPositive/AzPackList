@@ -35,11 +35,11 @@
 	<NSFetchedResultsControllerDelegate, UIActionSheetDelegate	,UIPopoverControllerDelegate, AZStoreDelegate>
 {
 @private
-	NSManagedObjectContext		*moc_;
-	NSFetchedResultsController	*fetchedE1_;
-	HTTPServer								*httpServer_;
-	UIAlertView								*alertHttpServer_;
-	NSDictionary							*dicAddresses_;
+	NSManagedObjectContext		*mMoc;
+	NSFetchedResultsController	*mFetchedE1;
+	HTTPServer								*mHttpServer;
+	UIAlertView								*mHttpServerAlert;
+	NSDictionary							*mAddressDic;
 	
 	E1edit							*e1editView_;	
 	//InformationView			*informationView_;

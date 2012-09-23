@@ -29,7 +29,7 @@
 + (MocFunctions *)sharedMocFunctions;
 
 // − インスタンスメソッド
-- (void)start;
+- (void)initialize;
 //- (void)setMoc:(NSManagedObjectContext *)moc;
 - (NSManagedObjectContext*)getMoc;
 - (id)insertAutoEntity:(NSString *)zEntityName;

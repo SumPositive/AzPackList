@@ -51,42 +51,44 @@
 - (void)refetcheAllData
 {
 	@try {
-		if (fetchedE1_ == nil) 
+		if (mFetchedE1 == nil) 
 		{
 			// Create and configure a fetch request with the Book entity.
 			NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 			NSEntityDescription *entity = [NSEntityDescription entityForName:@"E1" 
-													  inManagedObjectContext:moc_];
+													  inManagedObjectContext:mMoc];
 			[fetchRequest setEntity:entity];
 			// Sorting
 			NSSortDescriptor *sortRow = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
 			NSArray *sortArray = [[NSArray alloc] initWithObjects:sortRow, nil];
 			[fetchRequest setSortDescriptors:sortArray];
 			// Create and initialize the fetch results controller.
-			fetchedE1_ = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest 
-															 managedObjectContext:moc_ 
+			mFetchedE1 = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest 
+															 managedObjectContext:mMoc 
 															   sectionNameKeyPath:nil cacheName:@"E1nodes"];
 		}
 		
 		NSError *error = nil;
 		// 読み込み
-		if (![fetchedE1_ performFetch:&error]) {
+		if (![mFetchedE1 performFetch:&error]) {
 			// Update to handle the error appropriately.
-			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+			//NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+			GA_TRACK_ERROR([error description]);
 			return; //exit(-1);  // Fail
 		}
-		NSLog(@"refetcheAllData: fetchedE1_=%@", fetchedE1_);
+		NSLog(@"refetcheAllData: fetchedE1_=%@", mFetchedE1);
 		
 		// 高速化のため、ここでE1レコード数（行数）を求めてしまう
 		section0Rows_ = 0;
-		if (0 < [[fetchedE1_ sections] count]) {
-			id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedE1_ sections] objectAtIndex:0];
+		if (0 < [[mFetchedE1 sections] count]) {
+			id <NSFetchedResultsSectionInfo> sectionInfo = [[mFetchedE1 sections] objectAtIndex:0];
 			section0Rows_ = [sectionInfo numberOfObjects];
 		}
 		[self.tableView reloadData];
 	}
 	@catch (NSException *exception) {
-		NSLog(@"refetcheAllData: ERROR: exception: %@:%@", [exception name], [exception reason]);
+		//NSLog(@"refetcheAllData: ERROR: exception: %@:%@", [exception name], [exception reason]);
+		GA_TRACK_ERROR([exception description]);
 	}
 }
 
@@ -104,7 +106,7 @@
 	}
 	
 	//moc_ = [EntityRelation getMoc]; //購入後、再生成された場合のため
-	moc_ = [[MocFunctions sharedMocFunctions] getMoc];
+	mMoc = [[MocFunctions sharedMocFunctions] getMoc];
 	contentOffsetDidSelect_.y = 0;  // 直前のdidSelectRowAtIndexPath位置に戻らないようにクリアしておく
 	[self viewWillAppear:YES];	//この中で、refetcheAllData:が呼ばれる
 	[appDelegate_ AdViewWillRotate:self.interfaceOrientation];	// AdOFF-->ONのとき回転補正が必要
@@ -112,7 +114,7 @@
 
 - (void)deleteBlankData
 {	//[1.0.1]末尾の「新しい・・」空レコードがあれば削除する
-	id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedE1_ sections] objectAtIndex:0];
+	id <NSFetchedResultsSectionInfo> sectionInfo = [[mFetchedE1 sections] objectAtIndex:0];
 	BOOL bRefetch = NO;
 	NSArray *arE1 = [sectionInfo objects];
 	if (0 < [arE1 count]) {
@@ -132,7 +134,7 @@
 							) {
 							// 「新しいアイテム」かつ「未編集」 なので削除する
 							e3.parent = nil; // e2とのリンクを切る
-							[moc_ deleteObject:e3];
+							[mMoc deleteObject:e3];
 							bRefetch = YES;
 						}
 					}
@@ -141,27 +143,27 @@
 				if ([e2.name length]<=0 && [e2.childs count]<=0) {
 					//配下E3なし & 「新しいグループ」 なので削除する
 					e2.parent = nil; // e1とのリンクを切る
-					[moc_ deleteObject:e2];
+					[mMoc deleteObject:e2];
 					bRefetch = YES;
 				}
 			}
 		}
 		if ([e1last.name length]<=0 && [e1last.childs count]<=0) {
 			//配下E2なし & 「新しいプラン」 なので削除する
-			[moc_ deleteObject:e1last];
+			[mMoc deleteObject:e1last];
 			bRefetch = YES;
 		}
 		if (bRefetch) {
 			NSError *error = nil;
-			if (![moc_ save:&error]) {
+			if (![mMoc save:&error]) {
 				NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 			}
 			error = nil;
-			if (![fetchedE1_ performFetch:&error]) {
+			if (![mFetchedE1 performFetch:&error]) {
 				NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 				return; //exit(-1);  // Fail
 			}
-			id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedE1_ sections] objectAtIndex:0];
+			id <NSFetchedResultsSectionInfo> sectionInfo = [[mFetchedE1 sections] objectAtIndex:0];
 			section0Rows_ = [sectionInfo numberOfObjects];
 			// 再描画
 			[self.tableView reloadData];
@@ -179,44 +181,44 @@
 	//         そのため、pppIndexPathActionDelete を使っている。
 	// ＜注意＞ CoreDataモデルは、エンティティ間の削除ルールは双方「無効にする」を指定。（他にするとフリーズ）
 	// 削除対象の ManagedObject をチョイス
-	NSLog(@"actionE1deleteCell: fetchedE1_=%@", fetchedE1_);
+	NSLog(@"actionE1deleteCell: fetchedE1_=%@", mFetchedE1);
 	NSLog(@"uiRow=%ld", (long)uiRow);
 	NSIndexPath *ixp = [NSIndexPath indexPathForRow:uiRow inSection:0];
-	E1 *e1objDelete = [fetchedE1_ objectAtIndexPath:ixp];
+	E1 *e1objDelete = [mFetchedE1 objectAtIndexPath:ixp];
 	// CoreDataモデル：削除ルール「無効にする」につき末端ノードより独自に削除する
 	for (E2 *e2obj in [e1objDelete.childs allObjects]) {
 		for (E3 *e3obj in [e2obj.childs allObjects]) {
-			[moc_ deleteObject:e3obj];
+			[mMoc deleteObject:e3obj];
 		}
-		[moc_ deleteObject:e2obj];
+		[mMoc deleteObject:e2obj];
 	}
 	// 注意！performFetchするまで RrFetchedE1 は不変、削除もされていない！
 	// 削除行の次の行以下 E1.row 更新
 	for (NSUInteger i= uiRow + 1 ; i < section0Rows_ ; i++) {  // .row + 1 削除行の次から
 		ixp = [NSIndexPath indexPathForRow:i inSection:0];
-		E1 *e1obj = [fetchedE1_ objectAtIndexPath:ixp];
+		E1 *e1obj = [mFetchedE1 objectAtIndexPath:ixp];
 		e1obj.row = [NSNumber numberWithInteger:i-1];     // .row--; とする
 	}
 	// E1 削除
-	[moc_ deleteObject:e1objDelete];
+	[mMoc deleteObject:e1objDelete];
 	section0Rows_--; // この削除により1つ減
 	// SAVE　＜＜万一システム障害で落ちてもデータが残るようにコマメに保存する方針＞＞
 	NSError *error = nil;
-	if (![moc_ save:&error]) {
+	if (![mMoc save:&error]) {
 		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 		exit(-1);  // Fail
 	}
 	// 上で並び替えられた結果を再フィッチする（performFetch）  コンテキスト変更したときは再抽出する
 	//NSError *error = nil;
-	if (![fetchedE1_ performFetch:&error]) {
+	if (![mFetchedE1 performFetch:&error]) {
 		NSLog(@"%@", error);
 		exit(-1);  // Fail
 	}
 	// テーブルビューから選択した行を削除します。
 	// ＜高速化＞　改めて削除後のE1レコード数（行数）を求める
 	section0Rows_ = 0;
-	if (0 < [[fetchedE1_ sections] count]) {
-		id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedE1_ sections] objectAtIndex:0];
+	if (0 < [[mFetchedE1 sections] count]) {
+		id <NSFetchedResultsSectionInfo> sectionInfo = [[mFetchedE1 sections] objectAtIndex:0];
 		section0Rows_ = [sectionInfo numberOfObjects];
 	}
 	[self.tableView reloadData];
@@ -589,24 +591,22 @@
 - (void)e1add 
 {
 	// ContextにE1ノードを追加する　E1edit内でCANCELならば削除している
-	E1 *e1newObj = [NSEntityDescription insertNewObjectForEntityForName:@"E1" inManagedObjectContext:moc_];
+	//E1 *e1newObj = [NSEntityDescription insertNewObjectForEntityForName:@"E1" inManagedObjectContext:moc_];
+	E1 *e1newObj = [[MocFunctions sharedMocFunctions] insertAutoEntity:@"E1"];
 	//[1.0.1]「新しい・・方式」として名称未定のまま先に進めるようにした
 	e1newObj.name = nil; //(未定)  NSLocalizedString(@"New Pack",nil);
 	e1newObj.row = [NSNumber numberWithInteger:section0Rows_]; // 末尾に追加：行番号(row) ＝ 現在の行数 ＝ 現在の最大行番号＋1
 	
 	//[1.0.3]E1新規追加と同時にE2にも1レコード追加する。空のまま戻れば、viewWillAppearにて削除される
 	//[1.0.3]特にPADの場合、タテにするとE1の次にE3が表示されるので、新しい目次が少なくとも1つ必要になる。
-	E2 *e2newObj = [NSEntityDescription insertNewObjectForEntityForName:@"E2" inManagedObjectContext:moc_];
+	//E2 *e2newObj = [NSEntityDescription insertNewObjectForEntityForName:@"E2" inManagedObjectContext:moc_];
+	E2 *e2newObj = [[MocFunctions sharedMocFunctions] insertAutoEntity:@"E2"];
 	e2newObj.row = [NSNumber numberWithInt:0];
 	e2newObj.name = nil; //(未定)
 	e2newObj.parent = e1newObj; // 親子リンク
 	
 	// SAVE
-	NSError *err = nil;
-	if (![moc_ save:&err]) {
-		NSLog(@"Unresolved error %@, %@", err, [err userInfo]);
-		return;
-	}
+	if ([[MocFunctions sharedMocFunctions] commit]==NO) return;
 	// E2:Groupへ
 	NSIndexPath* ip = [NSIndexPath indexPathForRow:[e1newObj.row integerValue]  inSection:0];
 	[self toE2fromE1:e1newObj withIndex:ip]; // 次回の画面復帰のための状態記録をしてからＥ２へドリルダウンする
@@ -623,7 +623,7 @@
 	}
 	
 	// E1 : NSManagedObject
-	E1 *e1obj = [fetchedE1_ objectAtIndexPath:indexPath];
+	E1 *e1obj = [mFetchedE1 objectAtIndexPath:indexPath];
 	
 	e1editView_ = [[E1edit alloc] init]; // popViewで戻れば解放されているため、毎回alloc必要。
 	e1editView_.title = NSLocalizedString(@"Edit Plan",nil);
@@ -660,9 +660,9 @@
 {
 	switch (alertView.tag) {
 		case ALERT_TAG_HTTPServerStop:
-			[httpServer_ stop];
+			[mHttpServer stop];
 			//[RhttpServer release];
-			httpServer_ = nil;
+			mHttpServer = nil;
 			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LocalhostAdressesResolved" object:nil];
 			// 再表示
 			//[self.tableView reloadData]; これだけではダメ
@@ -732,24 +732,24 @@
 	if(notification)
 	{
 		//[MdicAddresses release], 
-		dicAddresses_ = nil;
-		dicAddresses_ = [[notification object] copy];
-		NSLog(@"MdicAddresses: %@", dicAddresses_);
+		mAddressDic = nil;
+		mAddressDic = [[notification object] copy];
+		NSLog(@"MdicAddresses: %@", mAddressDic);
 	}
 	
-	if(dicAddresses_ == nil)
+	if(mAddressDic == nil)
 	{
 		return;
 	}
 	
 	NSString *info;
-	UInt16 port = [httpServer_ port];
+	UInt16 port = [mHttpServer port];
 	
 	NSString *localIP = nil;
-	localIP = [dicAddresses_ objectForKey:@"en0"];
+	localIP = [mAddressDic objectForKey:@"en0"];
 	if (!localIP)
 	{
-		localIP = [dicAddresses_ objectForKey:@"en1"];
+		localIP = [mAddressDic objectForKey:@"en1"];
 	}
 	
 	if (!localIP)
@@ -765,9 +765,9 @@
 	 info = [info stringByAppendingString:@"Web: Unable to determine external IP\n"]; */
 	
 	//displayInfo.text = info;
-	if (alertHttpServer_) {
-		alertHttpServer_.message = info;
-		[alertHttpServer_ show];
+	if (mHttpServerAlert) {
+		mHttpServerAlert.message = info;
+		[mHttpServerAlert show];
 	}
 }
 
@@ -785,8 +785,8 @@
 		//informationView_ = nil; // azInformationViewで生成 [self.view.window addSubview:]
 		
 		// 背景テクスチャ・タイルペイント
-		if (appDelegate_.ppIsPad  OR  IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ) {
-			//self.view.backgroundColor = //iPadや iOS6.0以降 では無効になったため
+	/*	if (appDelegate_.ppIsPad){
+			//self.view.backgroundColor = //iPadでは無効になったため
 			UIView* view = self.tableView.backgroundView;
 			if (view) {
 				PatternImageView *tv = [[PatternImageView alloc] initWithFrame:view.frame
@@ -795,7 +795,10 @@
 			}
 		} else {
 			self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
-		}
+		}*/
+		
+		[self.tableView setBackgroundView:nil];	//iOS6//これで次行が有効になる。
+		self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 
 		// インストールやアップデート後、1度だけ処理する
 		NSString *zNew = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]; //（リリース バージョン）は、ユーザーに公開した時のレベルを表現したバージョン表記
@@ -877,9 +880,8 @@
 	
 	self.title = NSLocalizedString(@"Product Title",nil);
 	
-	if (moc_==nil) {
-		//moc_ = [appDelegate_ managedObjectContext];
-		moc_ = [[MocFunctions sharedMocFunctions] getMoc];
+	if (mMoc==nil) {
+		mMoc = [[MocFunctions sharedMocFunctions] getMoc];
 	}
 	
 	// CoreData 読み込み
@@ -1000,17 +1002,17 @@
 	
 	//[activityIndicator_ release], activityIndicator_ = nil;
 	
-	if (httpServer_) {
-		[httpServer_ stop];
+	if (mHttpServer) {
+		[mHttpServer stop];
 		//[RhttpServer release], 
-		httpServer_ = nil;
+		mHttpServer = nil;
 	}
 	//[RalertHttpServer release], 
-	alertHttpServer_ = nil;
+	mHttpServerAlert = nil;
 	//[MdicAddresses release], 
-	dicAddresses_ = nil;
+	mAddressDic = nil;
 	//[RfetchedE1 release],		
-	fetchedE1_ = nil;
+	mFetchedE1 = nil;
 	
 /*	if (informationView_) {
 		[informationView_ hide]; // 正面でなければhide
@@ -1151,7 +1153,7 @@
 						 reuseIdentifier:zCellSubtitle];
 			}
 			// E1 : NSManagedObject
-			E1 *e1obj = [fetchedE1_ objectAtIndexPath:indexPath];
+			E1 *e1obj = [mFetchedE1 objectAtIndexPath:indexPath];
 			
 #ifdef DEBUG
 			if ([e1obj.name length] <= 0) 
@@ -1390,7 +1392,7 @@
 				[self e1editView:indexPath];
 			} else {
 				// E1 : NSManagedObject
-				E1 *e1obj = [fetchedE1_ objectAtIndexPath:indexPath];
+				E1 *e1obj = [mFetchedE1 objectAtIndexPath:indexPath];
 				[self toE2fromE1:e1obj withIndex:indexPath]; // 次回の画面復帰のための状態記録をしてからＥ２へドリルダウンする
 			}
 		}
@@ -1536,7 +1538,7 @@
 
 	// e1だけNSFetchedResultsControllerを使っているので、e2,e3とは異なる
 	// E1 : NSManagedObject
-	E1 *e1obj = [fetchedE1_ objectAtIndexPath:oldPath];
+	E1 *e1obj = [mFetchedE1 objectAtIndexPath:oldPath];
 	e1obj.row = [NSNumber numberWithInteger:newPath.row];  // 指定セルを先に移動
 	// 移動行間のE1エンティティ属性(row)を書き換える
 	NSInteger i;
@@ -1545,26 +1547,26 @@
 		// 後(下)へ移動
 		for ( i=oldPath.row ; i < newPath.row ; i++) {
 			ip = [NSIndexPath indexPathForRow:(NSUInteger)i+1 inSection:newPath.section];
-			e1obj = [fetchedE1_ objectAtIndexPath:ip];
+			e1obj = [mFetchedE1 objectAtIndexPath:ip];
 			e1obj.row = [NSNumber numberWithInteger:i];
 		}
 	} else {
 		// 前(上)へ移動
 		for (i = newPath.row ; i < oldPath.row ; i++) {
 			ip = [NSIndexPath indexPathForRow:(NSUInteger)i inSection:newPath.section];
-			e1obj = [fetchedE1_ objectAtIndexPath:ip];
+			e1obj = [mFetchedE1 objectAtIndexPath:ip];
 			e1obj.row = [NSNumber numberWithInteger:i+1];
 		}
 	}
 	// SAVE　＜＜万一システム障害で落ちてもデータが残るようにコマメに保存する方針である＞＞
 	NSError *error = nil;
-	if (![moc_ save:&error]) {
+	if (![mMoc save:&error]) {
 		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 		exit(-1);  // Fail
 	}
 	// 上で並び替えられた結果を再フィッチする（performFetch）  コンテキスト変更したときは再抽出する
 	//NSError *error = nil;
-	if (![fetchedE1_ performFetch:&error]) {
+	if (![mFetchedE1 performFetch:&error]) {
 		NSLog(@"%@", error);
 		exit(-1);  // Fail
 	}
@@ -1584,7 +1586,7 @@
 			return NO; 
 		}
 	}
-	[moc_ rollback]; // 前回のSAVE以降を取り消す。＜＜サンプルの一時取込をクリアするために必要
+	[mMoc rollback]; // 前回のSAVE以降を取り消す。＜＜サンプルの一時取込をクリアするために必要
 	return YES; // 閉じることを許可
 }
 

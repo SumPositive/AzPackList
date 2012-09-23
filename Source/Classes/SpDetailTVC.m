@@ -147,7 +147,7 @@
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
 		// 背景テクスチャ・タイルペイント
-		if (appDelegate_.ppIsPad) {
+	/*	if (appDelegate_.ppIsPad) {
 			//self.view.backgroundColor = //iPadでは無効
 			UIView* view = self.tableView.backgroundView;
 			if (view) {
@@ -157,7 +157,9 @@
 			}
 		} else {
 			self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
-		}
+		}*/
+		[self.tableView setBackgroundView:nil];	//iOS6//これで次行が有効になる。
+		self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 	}
 	return self;
 }

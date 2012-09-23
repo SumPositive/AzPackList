@@ -9,12 +9,17 @@
 #import "GADBannerView.h"
 #import "AZDropboxVC.h"		//<AZDropboxDelegate>
 
+
+//iOS6以降、回転対応のためサブクラス化が必要になった。
+@interface AzNavigationController : UINavigationController
+@end
+
+
 @class PadRootVC;
 @class E1;
-
-
-@interface AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate
-						,ADBannerViewDelegate ,GADBannerViewDelegate, AZDropboxDelegate> 
+@interface AppDelegate : NSObject
+					<UIApplicationDelegate, UITabBarControllerDelegate, UISplitViewControllerDelegate,
+						ADBannerViewDelegate ,GADBannerViewDelegate, AZDropboxDelegate>
 {
 @private	// 自クラス内からだけ参照できる
 	ADBannerView				*miAdView;
@@ -54,5 +59,15 @@
 - (void)AdViewWillRotate:(UIInterfaceOrientation)toInterfaceOrientation;
 
 
+@property (nonatomic, retain) UIBarButtonItem			*popoverButtonItem;
+
 @end
+
+
+//右ペインに実装されるViewControllerが備えるべきメソッド　　＜＜即ちプロトコル＞＞
+@protocol DetailViewController
+- (void)showPopoverButtonItem:(UIBarButtonItem *)barButtonItem;
+- (void)hidePopoverButtonItem:(UIBarButtonItem *)barButtonItem;
+@end
+
 

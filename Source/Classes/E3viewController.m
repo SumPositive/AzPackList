@@ -157,7 +157,6 @@
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		e3array_ = nil;
 		sharePlanList_ = NO;
-		
 	}
 	return self;
 }
@@ -226,11 +225,11 @@
 			NSMutableArray* buttons = [[NSMutableArray alloc] initWithObjects:
 									   buFixed, buFlexible, buTitle, buFlexible, buGray, buFixed, nil];
 			
-			if (appDelegate_.padRootVC.popoverButtonItem) {
-				appDelegate_.padRootVC.popoverButtonItem.title = NSLocalizedString(@"Index button", nil);
-				[buttons insertObject:appDelegate_.padRootVC.popoverButtonItem atIndex:1]; //この位置は、showPopoverButtonItemなどと一致させること
+			if (appDelegate_.popoverButtonItem) {
+				appDelegate_.popoverButtonItem.title = NSLocalizedString(@"Index button", nil);
+				[buttons insertObject:appDelegate_.popoverButtonItem atIndex:1]; //この位置は、showPopoverButtonItemなどと一致させること
 			}
-			
+			// buttons の個数に変更あれば、showPopoverButtonItem: [items count] に影響あるため修正すること。
 			e2toolbar_.barStyle = UIBarStyleDefault;
 			[e2toolbar_ setItems:buttons animated:NO];
 			[e2toolbar_ sizeToFit];
@@ -1761,12 +1760,13 @@
 }
 
 
-#pragma mark - <PadRootVC delegate>
+#pragma mark - DetailViewController プロトコル
 // タテになり左が非表示になる前に呼ばれる  <willHideViewController>
 - (void)showPopoverButtonItem:(UIBarButtonItem *)barButtonItem
 {
     NSMutableArray *items = [[e2toolbar_ items] mutableCopy];
-	if ([items count]==4) {
+	NSLog(@"showPopoverButtonItem: [items count]=%d \n items={%@}", [items count], items);
+	if ([items count]==6) {
 		barButtonItem.title = NSLocalizedString(@"Index button", nil);
 		[items insertObject:barButtonItem atIndex:1]; //この位置は、loadView:にある初期定義と一致させること
 	}
@@ -1778,7 +1778,8 @@
 - (void)hidePopoverButtonItem:(UIBarButtonItem *)barButtonItem
 {
 	NSMutableArray *items = [[e2toolbar_ items] mutableCopy];
-	if ([items count]==5) {
+	NSLog(@"hidePopoverButtonItem: [items count]=%d \n items={%@}", [items count], items);
+	if ([items count]==7) {
 		[items removeObjectAtIndex:1]; //この位置は、loadView:にある初期定義と一致させること
 	}
     [e2toolbar_ setItems:items animated:YES];

@@ -108,7 +108,7 @@
 		mTableViewContentY = -1;
 
 		// 背景テクスチャ・タイルペイント
-		if (mAppDelegate.ppIsPad  OR  IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ) {
+	/*	if (mAppDelegate.ppIsPad  OR  IOS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ) {
 			UIView* view = self.tableView.backgroundView;
 			if (view) {
 				PatternImageView *tv = [[PatternImageView alloc] initWithFrame:view.frame
@@ -120,7 +120,11 @@
 		}
 		else {
 			self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
-		}
+		}*/
+		
+		[self setContentSizeForViewInPopover:GD_POPOVER_SIZE_E3edit];
+		[self.tableView setBackgroundView:nil];	//iOS6//これで次行が有効になる。
+		self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 	}
 	return self;
 }

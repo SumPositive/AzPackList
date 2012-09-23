@@ -12,12 +12,8 @@
 
 @class E1;
 @class E2;
-//@class E3edit;
-//@class ItemTouchView;
-//@class E2viewController;
 
-@interface E3viewController : UITableViewController <UISearchBarDelegate
-	,UIPopoverControllerDelegate>
+@interface E3viewController : UITableViewController <UISearchBarDelegate, UIPopoverControllerDelegate>
 
 @property (nonatomic, retain) E1					*e1selected;	//grandParent;
 @property (nonatomic, assign) NSInteger	firstSection;
