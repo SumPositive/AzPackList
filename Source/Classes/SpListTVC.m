@@ -253,13 +253,13 @@
 			} else {
 				cell.textLabel.text = NSLocalizedString(@"No PLAN",nil);
 			}
-			cell.textLabel.textAlignment = UITextAlignmentCenter;
+			cell.textLabel.textAlignment = NSTextAlignmentCenter;
 		} else if (MbSearchOver) {
 			cell.textLabel.text = NSLocalizedString(@"Over",nil);
-			cell.textLabel.textAlignment = UITextAlignmentCenter;
+			cell.textLabel.textAlignment = NSTextAlignmentCenter;
 		} else {
 			cell.textLabel.text = NSLocalizedString(@"More",nil);
-			cell.textLabel.textAlignment = UITextAlignmentRight;
+			cell.textLabel.textAlignment = NSTextAlignmentRight;
 		} 
 		return cell;
 	}
@@ -274,7 +274,7 @@
 		//
 		lb = [[UILabel alloc] init];
 		lb.font = [UIFont systemFontOfSize:16];
-		lb.textAlignment = UITextAlignmentLeft;
+		lb.textAlignment = NSTextAlignmentLeft;
 		lb.textColor = [UIColor blackColor];
 		//lb.backgroundColor = [UIColor lightGrayColor]; // DEBUG
 		lb.tag = CELL_TAG_NAME;
@@ -282,7 +282,7 @@
 		//
 		lb = [[UILabel alloc] init];
 		lb.font = [UIFont systemFontOfSize:12];
-		lb.textAlignment = UITextAlignmentLeft;
+		lb.textAlignment = NSTextAlignmentLeft;
 		lb.numberOfLines = 2;
 		lb.textColor = [UIColor blackColor];
 		//lb.backgroundColor = [UIColor lightGrayColor]; // DEBUG
@@ -291,7 +291,7 @@
 		//
 		lb = [[UILabel alloc] init];
 		lb.font = [UIFont systemFontOfSize:12];
-		lb.textAlignment = UITextAlignmentRight;
+		lb.textAlignment = NSTextAlignmentRight;
 		lb.textColor = [UIColor blackColor];
 		lb.backgroundColor = [UIColor lightGrayColor];
 		lb.tag = CELL_TAG_INFO;

@@ -82,7 +82,8 @@
 
 - (void)actionBack:(id)sender
 {
-	[self dismissModalViewControllerAnimated:YES];
+	//[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 // 他のViewやキーボードが隠れて、現れる都度、呼び出される

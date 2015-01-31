@@ -168,7 +168,7 @@
 
 	if (appDelegate_.ppIsPad) {
 		if (sharePlanList_) {
-			self.contentSizeForViewInPopover = GD_POPOVER_SIZE_Share;
+			self.preferredContentSize = GD_POPOVER_SIZE_Share;
 			//self.navigationController.toolbarHidden = YES;	// ツールバー不要
 			optItemsGrayShow_ = YES; //グレー全表示
 			return;  // 以下不要
@@ -326,7 +326,7 @@
 	else {
 		[self requreyMe3array];
 	}
-	siSortType = sortType_;
+	siSortType = (int)sortType_;
 	
 	// 指定位置までテーブルビューの行をスクロールさせる初期処理　＜＜レコードセット後でなければならないので、この位置になった＞＞
 	if (0<=firstSection_ && firstSection_ < [e3array_ count]) 
@@ -1394,7 +1394,7 @@
 			} else {
 				cell.textLabel.font = [UIFont systemFontOfSize:14];
 			}
-			cell.textLabel.textAlignment = UITextAlignmentCenter; // 中央寄せ
+			cell.textLabel.textAlignment = NSTextAlignmentCenter; // 中央寄せ
 			cell.textLabel.textColor = [UIColor grayColor];
 			cell.imageView.image = [UIImage imageNamed:@"Icon24-GreenPlus.png"];
 			//Clip表示//cell.accessoryType = UITableViewCellEditingStyleInsert; // (+)
@@ -1428,9 +1428,9 @@
 				cell.textLabel.font = [UIFont systemFontOfSize:16];
 				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
 			}
-			cell.textLabel.textAlignment = UITextAlignmentLeft;
+			cell.textLabel.textAlignment = NSTextAlignmentLeft;
 			cell.textLabel.textColor = [UIColor blackColor];
-			cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
+			cell.detailTextLabel.textAlignment = NSTextAlignmentLeft;
 			cell.detailTextLabel.textColor = [UIColor brownColor];
 		}
 
@@ -1765,7 +1765,7 @@
 - (void)showPopoverButtonItem:(UIBarButtonItem *)barButtonItem
 {
     NSMutableArray *items = [[e2toolbar_ items] mutableCopy];
-	NSLog(@"showPopoverButtonItem: [items count]=%d \n items={%@}", [items count], items);
+	NSLog(@"showPopoverButtonItem: [items count]=%lu \n items={%@}", (unsigned long)[items count], items);
 	if ([items count]==6) {
 		barButtonItem.title = NSLocalizedString(@"Index button", nil);
 		[items insertObject:barButtonItem atIndex:1]; //この位置は、loadView:にある初期定義と一致させること
@@ -1778,7 +1778,7 @@
 - (void)hidePopoverButtonItem:(UIBarButtonItem *)barButtonItem
 {
 	NSMutableArray *items = [[e2toolbar_ items] mutableCopy];
-	NSLog(@"hidePopoverButtonItem: [items count]=%d \n items={%@}", [items count], items);
+	NSLog(@"hidePopoverButtonItem: [items count]=%lu \n items={%@}", (unsigned long)[items count], items);
 	if ([items count]==7) {
 		[items removeObjectAtIndex:1]; //この位置は、loadView:にある初期定義と一致させること
 	}

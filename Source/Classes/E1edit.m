@@ -56,7 +56,7 @@
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		appDelegate_.ppChanged = NO;
 		if (appDelegate_.ppIsPad) {
-			self.contentSizeForViewInPopover = GD_POPOVER_SIZE_E1edit;
+			self.preferredContentSize = GD_POPOVER_SIZE_E1edit;
 		}
 		// 背景テクスチャ・タイルペイント
 		self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];

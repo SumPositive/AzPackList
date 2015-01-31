@@ -56,7 +56,8 @@
 		sharePlanList_ = NO;
 
 		if (appDelegate_.ppIsPad) {
-			self.contentSizeForViewInPopover = GD_POPOVER_SIZE_E2edit;
+			//self.contentSizeForViewInPopover = GD_POPOVER_SIZE_E2edit;
+			self.preferredContentSize = GD_POPOVER_SIZE_E2edit;
 		}
 		// 背景テクスチャ・タイルペイント
 		self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];

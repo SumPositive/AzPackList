@@ -267,7 +267,7 @@
 			} else {
 				self.contentSizeForViewInPopover = CGSizeMake(640, 480);
 			}*/
-			self.contentSizeForViewInPopover = GD_POPOVER_SIZE_Camera;
+			self.preferredContentSize = GD_POPOVER_SIZE_Camera;
 		}
     }
     return self;
@@ -381,19 +381,17 @@
 {
 	for (AVCaptureConnection *connection in captureOutput_.connections) {
 		if (connection.supportsVideoOrientation) {
-			switch (orientation) {
-				case UIInterfaceOrientationPortrait:
-					connection.videoOrientation = AVCaptureVideoOrientationPortrait;
-					break;
-				case UIInterfaceOrientationPortraitUpsideDown:
-					connection.videoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
-					break;
-				case UIInterfaceOrientationLandscapeLeft:
-					connection.videoOrientation = AVCaptureVideoOrientationLandscapeLeft;
-					break;
-				case UIInterfaceOrientationLandscapeRight:
-					connection.videoOrientation = AVCaptureVideoOrientationLandscapeRight;
-					break;
+			if (orientation==UIInterfaceOrientationPortrait) {
+				connection.videoOrientation = AVCaptureVideoOrientationPortrait;
+			}
+			else if (orientation==UIInterfaceOrientationPortraitUpsideDown) {
+				connection.videoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
+			}
+			else if (orientation==UIInterfaceOrientationLandscapeLeft) {
+				connection.videoOrientation = AVCaptureVideoOrientationLandscapeLeft;
+			}
+			else if (orientation==UIInterfaceOrientationLandscapeRight) {
+				connection.videoOrientation = AVCaptureVideoOrientationLandscapeRight;
 			}
 		}
 	}

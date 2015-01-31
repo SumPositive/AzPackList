@@ -261,7 +261,7 @@
 	MlbNickname.font = [UIFont systemFontOfSize:12];
 	MlbNickname.text = NSLocalizedString(@"Nickname info",nil);
 	MlbNickname.numberOfLines = 7;
-	MlbNickname.textAlignment = UITextAlignmentCenter;
+	MlbNickname.textAlignment = NSTextAlignmentCenter;
 	MlbNickname.backgroundColor = [UIColor clearColor];
 	[self.view addSubview:MlbNickname]; //[MlbNickname release];
 	//------------------------------------------------------
@@ -297,7 +297,7 @@
 
 - (void)actionBack:(id)sender
 {
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 

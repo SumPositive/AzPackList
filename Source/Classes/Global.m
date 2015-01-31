@@ -30,7 +30,7 @@ UIColor *GcolorBlue(float percent)
 UIImage *GimageFromString(float Pfx, float Pfy, float PfSize, NSString* str)
 {
     UIFont* font = [UIFont systemFontOfSize:PfSize]; //12.0; [0.4.17]Retina対応
-    CGSize size = [str sizeWithFont:font];
+    CGSize size = [str sizeWithAttributes:@{NSFontAttributeName:font}];
     int width = 64; //32; [0.4.17]Retina対応
     int height = 64; //32;
     int pitch = width * 4;
@@ -47,7 +47,8 @@ UIImage *GimageFromString(float Pfx, float Pfy, float PfSize, NSString* str)
     UIGraphicsPushContext(context);
     
 	CGContextSetRGBFillColor(context, 255, 0, 0, 1.0f);
-	[str drawAtPoint:CGPointMake(Pfx - (size.width / 2.0f), Pfy - 38.5) withFont:font];
+	//[str drawAtPoint:CGPointMake(Pfx - (size.width / 2.0f), Pfy - 38.5) withFont:font];
+	[str drawAtPoint:CGPointMake(Pfx - (size.width / 2.0f), Pfy - 38.5) withAttributes:@{NSFontAttributeName:font}];
 	
 	// 描画終了
 	UIGraphicsPopContext();

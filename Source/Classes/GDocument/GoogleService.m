@@ -430,8 +430,9 @@ static BOOL staticDocUploading = NO;
 		NSLog(@"downloadURL=%@", [downloadURL absoluteString]);
 		// read the document's contents asynchronously from the network
 		NSURLRequest *request = [service requestForURL:downloadURL  ETag:nil httpMethod:nil];
-		GTMHTTPFetcher *fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+		//GDataHTTPFetcher *fetcher = [GDataHTTPFetcher httpFetcherWithRequest:request];
 		//[fetcher setUserData:savePath];
+		GTMHTTPFetcher * fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
 		[fetcher beginFetchWithCompletionHandler:^(NSData *data, NSError *error) {
 			if (error) {
 				[GoogleService docDownloadErrorNo:100 description:error.localizedDescription];
@@ -731,7 +732,8 @@ static BOOL staticPhotoUploading = NO;
 		request = [service requestForURL:[NSURL URLWithString: e3target.photoUrl]  ETag:nil   httpMethod:nil];
 	}
 	// fetch the request
-	GTMHTTPFetcher *fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+	//GDataHTTPFetcher *fetcher = [GDataHTTPFetcher httpFetcherWithRequest:request];
+	GTMHTTPFetcher * fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
 	[fetcher setAuthorizer:[service authorizer]];
 	
 	// http logs are easier to read when fetchers have comments

@@ -32,7 +32,7 @@
 		// 初期化成功
 		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		if (appDelegate_.ppIsPad) {
-			self.contentSizeForViewInPopover = GD_POPOVER_SIZE_E3edit;
+			self.preferredContentSize = GD_POPOVER_SIZE_E3edit;
 		}
     }
     return self;
@@ -143,7 +143,7 @@
 	} else {
 		cell.textLabel.font = [UIFont systemFontOfSize:16];
 	}
-	cell.textLabel.textAlignment = UITextAlignmentLeft;
+	cell.textLabel.textAlignment = NSTextAlignmentLeft;
 	cell.textLabel.textColor = [UIColor blackColor];
 	
 	if (RlbGroup.tag == indexPath.row) {

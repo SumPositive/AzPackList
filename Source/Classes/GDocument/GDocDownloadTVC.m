@@ -67,7 +67,7 @@
 - (void)actionBack:(id)sender
 {
 	//[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)viewDidUnload
@@ -166,9 +166,9 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
 		//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // > revision
-		//cell.textLabel.textAlignment = UITextAlignmentLeft;
+		//cell.textLabel.textAlignment = NSTextAlignmentLeft;
 		//cell.detailTextLabel.font = [UIFont systemFontOfSize:10];
-		cell.detailTextLabel.textAlignment = UITextAlignmentRight;
+		cell.detailTextLabel.textAlignment = NSTextAlignmentRight;
     }
     return cell;
 }

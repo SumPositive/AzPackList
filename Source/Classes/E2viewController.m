@@ -266,7 +266,8 @@
 			} else {
 				//[appDelegate_.mainNC presentModalViewController:picker animated:YES];
 			}
-			[self presentModalViewController:picker animated:YES];
+			//[self presentModalViewController:picker animated:YES];
+			[self presentViewController:picker animated:YES completion:nil];
 		});
 	});
 }
@@ -281,7 +282,7 @@
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentModalViewController:nc animated:YES];
+		[self presentViewController:nc animated:YES completion:nil];
 	} else {
 		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 		[self.navigationController pushViewController:vc animated:YES];
@@ -307,8 +308,8 @@
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentModalViewController:nc animated:YES];
-	} 
+		[self presentViewController:nc animated:YES completion:nil];
+	}
 	else {
 		if (appDelegate_.ppOptShowAd) {
 			[appDelegate_ AdRefresh:NO];	//広告禁止
@@ -349,7 +350,7 @@
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentModalViewController:nc animated:YES];
+		[self presentViewController:nc animated:YES completion:nil];
 		// Upload成功後の再描画は不要
 	} else {
 		[self.navigationController pushViewController:vc animated:YES];
@@ -489,7 +490,7 @@
 	//} else {
 	//	[appDelegate_.mainNC dismissModalViewControllerAnimated:YES];
 	//}
-	[controller dismissModalViewControllerAnimated:YES];
+	[controller dismissViewControllerAnimated:YES completion:nil];
 }
 
 
@@ -705,7 +706,7 @@
 		e2obj = [NSEntityDescription insertNewObjectForEntityForName:@"E2"
 											  inManagedObjectContext:e1selected_.managedObjectContext];
 		
-		[e2obj setValue:[NSString stringWithFormat:@"Group %d",ie2Row] forKey:@"name"];
+		[e2obj setValue:[NSString stringWithFormat:@"Group %ld",(long)ie2Row] forKey:@"name"];
 		[e2obj setValue:[NSNumber numberWithInteger:ie2Row] forKey:@"row"];
 		section0Rows_ = ie2Row;
 		
@@ -719,8 +720,8 @@
 			e3obj = [NSEntityDescription insertNewObjectForEntityForName:@"E3"
 												  inManagedObjectContext:e1selected_.managedObjectContext];
 			
-			[e3obj setValue:[NSString stringWithFormat:@"Item %d-%d",ie2Row,ie3Row] forKey:@"name"];
-			[e3obj setValue:[NSString stringWithFormat:@"Item %d-%d Note",ie2Row,ie3Row] forKey:@"note"];
+			[e3obj setValue:[NSString stringWithFormat:@"Item %ld-%ld",(long)ie2Row,(long)ie3Row] forKey:@"name"];
+			[e3obj setValue:[NSString stringWithFormat:@"Item %ld-%ld Note",(long)ie2Row,(long)ie3Row] forKey:@"note"];
 			
 			iStock = ie3;
 			iNeed = 9 - ie3;
@@ -803,7 +804,7 @@
 			self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 		}*/
 		
-		[self setContentSizeForViewInPopover:GD_POPOVER_SIZE_PadMenu]; //配下全てFormSheetスタイルにしたことにより自由になったので最大化
+		[self setPreferredContentSize:GD_POPOVER_SIZE_PadMenu]; //配下全てFormSheetスタイルにしたことにより自由になったので最大化
 		[self.tableView setBackgroundView:nil];	//iOS6//これで次行が有効になる。
 		self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 	}
@@ -1227,10 +1228,10 @@
 					cell.textLabel.font = [UIFont systemFontOfSize:18];
 					cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
 				}
-				cell.textLabel.textAlignment = UITextAlignmentLeft;
+				cell.textLabel.textAlignment = NSTextAlignmentLeft;
 				cell.textLabel.textColor = [UIColor blackColor];
 
-				cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
+				cell.detailTextLabel.textAlignment = NSTextAlignmentLeft;
 				cell.detailTextLabel.textColor = [UIColor brownColor];
 				
 				NSInteger lNoGray = [e2obj.sumNoGray integerValue];
@@ -1336,7 +1337,7 @@
 				} else {
 					cell.textLabel.font = [UIFont systemFontOfSize:14];
 				}
-				cell.textLabel.textAlignment = UITextAlignmentCenter; // 中央寄せ
+				cell.textLabel.textAlignment = NSTextAlignmentCenter; // 中央寄せ
 				cell.textLabel.textColor = [UIColor darkGrayColor];
 				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
 				cell.showsReorderControl = NO;
@@ -1357,10 +1358,10 @@
 				cell.textLabel.font = [UIFont systemFontOfSize:16];
 				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
 			}
-			cell.textLabel.textAlignment = UITextAlignmentLeft;
+			cell.textLabel.textAlignment = NSTextAlignmentLeft;
 			cell.textLabel.textColor = [UIColor blackColor];
 
-			cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
+			cell.detailTextLabel.textAlignment = NSTextAlignmentLeft;
 			cell.detailTextLabel.textColor = [UIColor grayColor];
 
 			cell.imageView.image = nil;
@@ -1400,10 +1401,10 @@
 				cell.textLabel.font = [UIFont systemFontOfSize:16];
 				cell.detailTextLabel.font = [UIFont systemFontOfSize:10];
 			}
-			cell.textLabel.textAlignment = UITextAlignmentLeft;
+			cell.textLabel.textAlignment = NSTextAlignmentLeft;
 			cell.textLabel.textColor = [UIColor darkGrayColor];
 			
-			cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
+			cell.detailTextLabel.textAlignment = NSTextAlignmentLeft;
 			cell.detailTextLabel.textColor = [UIColor grayColor];
 
 			cell.imageView.image = nil;
@@ -1463,10 +1464,10 @@
 				cell.textLabel.font = [UIFont systemFontOfSize:16];
 				cell.detailTextLabel.font = [UIFont systemFontOfSize:10];
 			}
-			cell.textLabel.textAlignment = UITextAlignmentLeft;
+			cell.textLabel.textAlignment = NSTextAlignmentLeft;
 			cell.textLabel.textColor = [UIColor darkGrayColor];
 			
-			cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
+			cell.detailTextLabel.textAlignment = NSTextAlignmentLeft;
 			cell.detailTextLabel.textColor = [UIColor grayColor];
 			
 			cell.imageView.image = nil;

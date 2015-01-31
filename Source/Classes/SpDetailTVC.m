@@ -69,7 +69,7 @@
 	[picker setMessageBody:zBody isHTML:NO];
 	
 	picker.modalPresentationStyle = UIModalPresentationFormSheet;
-	[self presentModalViewController:picker animated:YES];
+	[self presentViewController:picker animated:YES completion:nil];
 }
 
 #pragma mark  <MFMailComposeViewControllerDelegate>
@@ -96,7 +96,7 @@
             break;
     }
 	// Close
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
@@ -407,11 +407,11 @@
 							cell.textLabel.text = e1obj.name;
 						
 						cell.textLabel.font = [UIFont systemFontOfSize:18];
-						cell.textLabel.textAlignment = UITextAlignmentLeft;
+						cell.textLabel.textAlignment = NSTextAlignmentLeft;
 						cell.textLabel.textColor = [UIColor blackColor];
 						
 						cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
-						cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
+						cell.detailTextLabel.textAlignment = NSTextAlignmentLeft;
 						cell.detailTextLabel.textColor = [UIColor grayColor];
 						
 						// ＜高速化＞ E3(Item)更新時、その親E2のsum属性、さらにその親E1のsum属性を更新することで整合および参照時の高速化を実現した。
@@ -493,7 +493,7 @@
 						// E1 読み込み中であることを表示する
 						cell.textLabel.text = NSLocalizedString(@"Communicating",nil);
 						cell.textLabel.font = [UIFont systemFontOfSize:18];
-						cell.textLabel.textAlignment = UITextAlignmentCenter;
+						cell.textLabel.textAlignment = NSTextAlignmentCenter;
 						cell.textLabel.textColor = [UIColor blueColor];
 						cell.accessoryType = UITableViewCellAccessoryNone;
 						cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
@@ -541,7 +541,7 @@
 			switch (indexPath.row) {
 				case 0: // Add this PLAN
 					cell.textLabel.font = [UIFont systemFontOfSize:16];
-					cell.textLabel.textAlignment = UITextAlignmentCenter; // 中央寄せ
+					cell.textLabel.textAlignment = NSTextAlignmentCenter; // 中央寄せ
 					cell.textLabel.textColor = [UIColor blueColor];
 					cell.imageView.image = [UIImage imageNamed:@"Icon24-GreenPlus.png"];
 					cell.accessoryType = UITableViewCellAccessoryNone;  // なし
@@ -550,7 +550,7 @@
 					break;
 				case 1: // Delete this PLAN
 					cell.textLabel.font = [UIFont systemFontOfSize:14];
-					cell.textLabel.textAlignment = UITextAlignmentCenter; // 中央寄せ
+					cell.textLabel.textAlignment = NSTextAlignmentCenter; // 中央寄せ
 					cell.textLabel.textColor = [UIColor redColor];
 					cell.imageView.image = [UIImage imageNamed:@"Icon24-RedMinus.png"];
 					cell.accessoryType = UITableViewCellAccessoryNone;  // なし
@@ -570,7 +570,7 @@
 											  reuseIdentifier:zCellFunc];
 			}
 			cell.textLabel.font = [UIFont systemFontOfSize:16];
-			cell.textLabel.textAlignment = UITextAlignmentCenter; // 中央寄せ
+			cell.textLabel.textAlignment = NSTextAlignmentCenter; // 中央寄せ
 			cell.textLabel.textColor = [UIColor blackColor];
 			cell.imageView.image = [UIImage imageNamed:@"Icon32-MailNew.png"];
 			cell.accessoryType = UITableViewCellAccessoryNone;  // なし

@@ -1,0 +1,17 @@
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '7.1'
+
+pod 'CocoaHTTPServer'
+pod 'GData'
+pod 'Google-AdMob-Ads-SDK'
+pod 'GoogleAnalytics-iOS-SDK',  '~> 3.0'
+pod 'GTMHTTPFetcher'
+pod 'SFHFKeychainUtils'
+pod 'TestFlightSDK', '~> 3.0'
+
+
+# pod 'Google-API-Client'
+# pod 'OpenSSL-Universal'
+# pod 'Reachability', '~> 3.0'
+
+

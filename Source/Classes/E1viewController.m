@@ -248,7 +248,7 @@
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;  //UIModalTransitionStyleCrossDissolve;
-		[self presentModalViewController:nc animated:YES];
+		[self presentViewController:nc animated:YES completion:nil];
 	}
 	else {
 		if (appDelegate_.ppOptShowAd) {
@@ -273,8 +273,8 @@
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentModalViewController:nc animated:YES];
-	} 
+		[self presentViewController:nc animated:YES completion:nil];
+	}
 	else {
 		if (appDelegate_.ppOptShowAd) {
 			[appDelegate_ AdRefresh:NO];	//広告禁止
@@ -305,7 +305,7 @@
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentModalViewController:nc animated:YES];
+		[self presentViewController:nc animated:YES completion:nil];
 		// Download成功後の再描画は、NFM_REFRESH_ALL_VIEWS 通知により処理される
 	} 
 	else {
@@ -419,7 +419,7 @@
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentModalViewController:nc animated:YES];
+		[self presentViewController:nc animated:YES completion:nil];
 	}
 	else {
 		if (appDelegate_.app_opt_Ad) {
@@ -444,7 +444,7 @@
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet; // iPad画面1/4サイズ
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentModalViewController:nc animated:YES];
+		[self presentViewController:nc animated:YES completion:nil];
 	} else {
 		if (appDelegate_.ppOptShowAd) {	// 各viewDidAppear:にて「許可/禁止」を設定する
 			[appDelegate_ AdRefresh:NO];	//広告禁止
@@ -462,7 +462,7 @@
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentModalViewController:nc animated:YES];
+		[self presentViewController:nc animated:YES completion:nil];
 	}
 	else {
 		if (appDelegate_.ppOptShowAd) {
@@ -493,7 +493,7 @@
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentModalViewController:nc animated:YES];
+		[self presentViewController:nc animated:YES completion:nil];
 	}
 	else {
 		if (appDelegate_.ppOptShowAd) {
@@ -1175,10 +1175,10 @@
 				cell.textLabel.font = [UIFont systemFontOfSize:18];
 				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
 			}
-			cell.textLabel.textAlignment = UITextAlignmentLeft;
+			cell.textLabel.textAlignment = NSTextAlignmentLeft;
 			cell.textLabel.textColor = [UIColor blackColor];
 			
-			cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
+			cell.detailTextLabel.textAlignment = NSTextAlignmentLeft;
 			cell.detailTextLabel.textColor = [UIColor brownColor];
 			
 			// ＜高速化＞ E3(Item)更新時、その親E2のsum属性、さらにその親E1のsum属性を更新することで整合および参照時の高速化を実現した。
@@ -1271,7 +1271,7 @@
 			} else {
 				cell.textLabel.font = [UIFont systemFontOfSize:14];
 			}
-			cell.textLabel.textAlignment = UITextAlignmentCenter; // 中央寄せ
+			cell.textLabel.textAlignment = NSTextAlignmentCenter; // 中央寄せ
 			cell.textLabel.textColor = [UIColor darkGrayColor];
 			
 			switch (rows) {
@@ -1300,9 +1300,9 @@
 			cell.detailTextLabel.font = [UIFont systemFontOfSize:10];
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
 		}
-		cell.textLabel.textAlignment = UITextAlignmentLeft; 
+		cell.textLabel.textAlignment = NSTextAlignmentLeft; 
 		cell.textLabel.textColor = [UIColor darkGrayColor];
-		cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
+		cell.detailTextLabel.textAlignment = NSTextAlignmentLeft;
 		cell.detailTextLabel.textColor = [UIColor grayColor];
 		cell.showsReorderControl = NO;
 

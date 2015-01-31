@@ -16,6 +16,7 @@
 #import "GData.h"
 #import "GDataDocs.h"
 #import "GDataPhotos.h"
+#import "GTMHTTPFetcher.h"
 
 
 // KeyChain Name リリース後、変更禁止

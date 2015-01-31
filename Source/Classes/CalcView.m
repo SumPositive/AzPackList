@@ -129,7 +129,7 @@
 	MtextField.backgroundColor = [UIColor brownColor];
 	MtextField.textColor = [UIColor whiteColor];
 	MtextField.text = @"";
-  	MtextField.textAlignment = UITextAlignmentLeft;		// 演算子が入と、左寄書式なし2行表示
+  	MtextField.textAlignment = NSTextAlignmentLeft;		// 演算子が入と、左寄書式なし2行表示
 	MtextField.font = [UIFont boldSystemFontOfSize:22];
 	MtextField.hidden = YES;
 	MtextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;

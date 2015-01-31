@@ -662,11 +662,11 @@
 	if (miAdView==nil) return;
 
 	// iOS4.2以降の仕様であるが、以前のOSでは落ちる！！！
-	if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-		miAdView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierLandscape;
-	} else {
-		miAdView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
-	}
+	//if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+	//	miAdView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierLandscape;
+	//} else {
+	//	miAdView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
+	//}
 	//常にタテ用（幅768）にする。
 	//miAdView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
 

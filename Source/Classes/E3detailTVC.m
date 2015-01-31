@@ -122,7 +122,7 @@
 			self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 		}*/
 		
-		[self setContentSizeForViewInPopover:GD_POPOVER_SIZE_E3edit];
+		[self setPreferredContentSize:GD_POPOVER_SIZE_E3edit];
 		[self.tableView setBackgroundView:nil];	//iOS6//これで次行が有効になる。
 		self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 	}
@@ -201,7 +201,7 @@
 	CGRect rcPhoto;
 	if (mAppDelegate.ppIsPad) { // iPad  TableView(Grouped)両端の余白:-20
 		//rcPhoto = CGRectMake(8, 44-4, self.tableView.bounds.size.width-16-60, 480);
-		rcPhoto = CGRectMake(4, 44-4, self.contentSizeForViewInPopover.width-8-60, 400);
+		rcPhoto = CGRectMake(4, 44-4, self.preferredContentSize.width-8-60, 400);
 	}
 	else if (self.tableView.frame.size.width < 400) {	// iPhone縦
 		rcPhoto = CGRectMake(4, 40, 320-8-20, 320);
@@ -458,7 +458,7 @@
 	// PICKER 指定したコンポーネントで選択された行のインデックスを返す。
 	NSInteger newSection = mLbGroup.tag;
 	if ([pE2array count]<=newSection) {
-		NSLog(@"*** OVER newSection=%d", newSection);
+		NSLog(@"*** OVER newSection=%ld", (long)newSection);
 		return;
 	}
 	E2 *e2objNew = [pE2array objectAtIndex:newSection];
@@ -689,7 +689,8 @@
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:wv];
 		nc.modalPresentationStyle = UIModalPresentationPageSheet;  // 背景Viewが保持される
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;//	UIModalTransitionStyleFlipHorizontal
-		[mAppDelegate.mainSVC presentModalViewController:nc animated:YES];  //回転する
+		//[mAppDelegate.mainSVC presentModalViewController:nc animated:YES];  //回転する
+		[mAppDelegate.mainSVC presentViewController:nc animated:YES completion:nil];  //回転する
 	} else {
 		[self.navigationController pushViewController:wv animated:YES];
 	}
@@ -1173,7 +1174,7 @@
 								   CGRectMake(20,15, self.tableView.frame.size.width-60,95)];
 						mTvNote.font = [UIFont systemFontOfSize:16];
 					}
-					mTvNote.textAlignment = UITextAlignmentLeft;
+					mTvNote.textAlignment = NSTextAlignmentLeft;
 					mTvNote.keyboardType = UIKeyboardTypeDefault;
 					mTvNote.returnKeyType = UIReturnKeyDefault;  //改行有効にする
 					mTvNote.backgroundColor = [UIColor clearColor];
@@ -1195,7 +1196,7 @@
 #endif
 					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(120,2, 90,20)];
 					label.text = NSLocalizedString(@"StockQty", nil);
-					label.textAlignment = UITextAlignmentLeft;
+					label.textAlignment = NSTextAlignmentLeft;
 					label.textColor = [UIColor grayColor];
 					label.backgroundColor = [UIColor clearColor];
 					label.font = [UIFont systemFontOfSize:14];
@@ -1204,7 +1205,7 @@
 					lbStock_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
 					//CGRectMake(self.tableView.frame.size.width-30-90,1, 90,20)];
 					lbStock_.backgroundColor = [UIColor clearColor];
-					lbStock_.textAlignment = UITextAlignmentCenter;
+					lbStock_.textAlignment = NSTextAlignmentCenter;
 					lbStock_.font = [UIFont systemFontOfSize:24];
 					[cell.contentView addSubview:lbStock_];
 					
@@ -1218,7 +1219,7 @@
 				if (lbNeed_==nil) {
 					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(120,2, 90,20)];
 					label.text = NSLocalizedString(@"Need Qty", nil);
-					label.textAlignment = UITextAlignmentLeft;
+					label.textAlignment = NSTextAlignmentLeft;
 					label.textColor = [UIColor grayColor];
 					label.backgroundColor = [UIColor clearColor];
 					label.font = [UIFont systemFontOfSize:14];
@@ -1227,7 +1228,7 @@
 					lbNeed_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
 					//CGRectMake(self.tableView.frame.size.width/2-OFSX2,1, 90,20)];
 					lbNeed_.backgroundColor = [UIColor clearColor];
-					lbNeed_.textAlignment = UITextAlignmentCenter;
+					lbNeed_.textAlignment = NSTextAlignmentCenter;
 					lbNeed_.font = [UIFont systemFontOfSize:24];
 					[cell.contentView addSubview:lbNeed_];
 					
@@ -1242,19 +1243,19 @@
 				if (lbWeight_==nil) {
 					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(120,2, 90,20)];
 					label.text = NSLocalizedString(@"One Weight", nil);
-					label.textAlignment = UITextAlignmentLeft;
+					label.textAlignment = NSTextAlignmentLeft;
 					label.textColor = [UIColor grayColor];
 					label.backgroundColor = [UIColor clearColor];
 					label.font = [UIFont systemFontOfSize:14];
 					label.adjustsFontSizeToFitWidth = YES;
-					label.minimumFontSize = 8;
+					label.minimumScaleFactor = 0.5f;
 					label.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
 					[cell.contentView addSubview:label];
 					
 					lbWeight_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 94, 20)];
 					//CGRectMake(self.tableView.frame.size.width/2-OFSX2,1, 90,20)];
 					lbWeight_.backgroundColor = [UIColor clearColor];
-					lbWeight_.textAlignment = UITextAlignmentCenter;
+					lbWeight_.textAlignment = NSTextAlignmentCenter;
 					lbWeight_.font = [UIFont systemFontOfSize:24];
 					[cell.contentView addSubview:lbWeight_];
 					
@@ -1378,7 +1379,7 @@
 					//[mActivityIndicator_on_IconShop stopAnimating]; webViewDidStartLoad:にて開始
 					cell.textLabel.font = [UIFont systemFontOfSize:12];
 					cell.textLabel.numberOfLines = 10;
-					cell.textLabel.lineBreakMode = UILineBreakModeCharacterWrap; //単語の途中でも改行する
+					cell.textLabel.lineBreakMode = NSLineBreakByCharWrapping; //単語の途中でも改行する
 					cell.textLabel.text = [NSString stringWithFormat:@"%@\nURL{%@}", 
 										   NSLocalizedString(@"Product Bookmark URL", nil), pE3target.shopUrl];
 					//cell.textLabel.text = nil;
@@ -1445,7 +1446,7 @@
 				if (cell.imageView.image==nil) {
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 					cell.selectionStyle = UITableViewCellSelectionStyleBlue; // 選択時ハイライト
-					int iShop = indexPath.row - 2;
+					int iShop = (int)(indexPath.row - 2);
 					NSString *language = [[NSLocale preferredLanguages] objectAtIndex:0]; // ja, en, zh-Hans
 					
 					if ([language hasPrefix:@"ja"]) {
