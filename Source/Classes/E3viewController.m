@@ -17,7 +17,7 @@
 
 #import "PadRootVC.h"
 #import "E2viewController.h"
-#import "GoogleService.h"
+//#import "GoogleService.h"
 
 
 //#define ACTIONSEET_TAG_DELETEITEM		101
@@ -133,16 +133,16 @@
 
 - (void)photoUploadBatch
 {	// Photo E3detail保存時にアップできなかった場合など、未アップがあれば順次アップする
-	for (NSArray *e3section in e3array_) {
-		for (E3 *e3row in e3section) {
-			E4photo *e4 = e3row.e4photo;
-			if (e4  &&  e4.photoData  &&  [e3row.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {
-				// 写真DATAあるがＵＲＬ:UUIDにつき、Picasaアップする
-				[GoogleService photoUploadE3:e3row];
-				return;	// 1つづつアップさせるため。 通常は、保存直後にアップされる。
-			}
-		}
-	}
+//	for (NSArray *e3section in e3array_) {
+//		for (E3 *e3row in e3section) {
+//			E4photo *e4 = e3row.e4photo;
+//			if (e4  &&  e4.photoData  &&  [e3row.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {
+//				// 写真DATAあるがＵＲＬ:UUIDにつき、Picasaアップする
+//				[GoogleService photoUploadE3:e3row];
+//				return;	// 1つづつアップさせるため。 通常は、保存直後にアップされる。
+//			}
+//		}
+//	}
 }
 
 

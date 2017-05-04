@@ -461,11 +461,7 @@
 								imageView1.image = [UIImage imageNamed:@"Icon32-BagYellow.png"];
 								imageView2.image = GimageFromString(20,-20,24,[NSString stringWithFormat:@"%ld", (long)lNoCheck]);
 
-								if (UIGraphicsBeginImageContextWithOptions != NULL) { // iOS4.0以上
-									UIGraphicsBeginImageContextWithOptions(imageView1.image.size, NO, 0.0); //[0.4.18]Retina対応
-								} else { // Old
-									UIGraphicsBeginImageContext(imageView1.image.size);
-								}
+                                UIGraphicsBeginImageContextWithOptions(imageView1.image.size, NO, 0.0); //[0.4.18]Retina対応
 
 								CGRect rect = CGRectMake(0, 0, imageView1.image.size.width, imageView1.image.size.height);
 								[imageView1.image drawInRect:rect];  

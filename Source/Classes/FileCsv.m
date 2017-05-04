@@ -13,7 +13,7 @@
 #import "Elements.h"
 #import "MocFunctions.h"
 #import "FileCsv.h"
-#import "GoogleService.h"
+//#import "GoogleService.h"
 
 
 @implementation FileCsv
@@ -182,11 +182,11 @@ static NSString *csvToStr( NSString *inCsv ) {
 					AzLOG(@"E3> %@", str);
 					[PzCsv appendString:str];
 					//
-					if (e3node.photoUrl  &&  [e3node.photoUrl  hasPrefix:GS_PHOTO_UUID_PREFIX]) {
-						// 写真あるが未アップのため警告する
-						//止めない//@throw NSLocalizedString(@"(New Index)", nil);
-						iPhotoNoUpCount++;
-					}
+//					if (e3node.photoUrl  &&  [e3node.photoUrl  hasPrefix:GS_PHOTO_UUID_PREFIX]) {
+//						// 写真あるが未アップのため警告する
+//						//止めない//@throw NSLocalizedString(@"(New Index)", nil);
+//						iPhotoNoUpCount++;
+//					}
 				}
 			}
 			e3list = nil;
@@ -479,7 +479,7 @@ static long csvLineSplit(NSString *zBoard, NSMutableArray *aStrings)
 		while (1) { 
 			iErrLine++;
 			if (csvLineSplit(PzCsv, aSplit) < 0 OR 10 < iErrLine) { // 10行以内に無ければ中断
-				@throw [NSString stringWithFormat:@"Load error (30) %d", iErrLine];
+				@throw [NSString stringWithFormat:@"Load error (30) %ld", (long)iErrLine];
 			}
 			if ([[aSplit objectAtIndex:0] isEqualToString:@""] && ![[aSplit objectAtIndex:1] isEqualToString:@""]) {
 				break; // OK                                                             ↑notです！

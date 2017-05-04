@@ -23,7 +23,7 @@
 #import "FileCsv.h"
 #import "SpSearchVC.h"
 #import "PatternImageView.h"
-#import "GDocDownloadTVC.h"
+//#import "GDocDownloadTVC.h"
 
 @class E1edit;
 @class AppDelegate;

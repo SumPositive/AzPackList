@@ -299,23 +299,23 @@
 
 - (void)actionImportGoogle
 {
-	GDocDownloadTVC *vc = [[GDocDownloadTVC alloc] init];
-
-	if (appDelegate_.ppIsPad) {
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
-		nc.modalPresentationStyle = UIModalPresentationFormSheet;
-		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentViewController:nc animated:YES completion:nil];
-		// Download成功後の再描画は、NFM_REFRESH_ALL_VIEWS 通知により処理される
-	} 
-	else {
-		if (appDelegate_.ppOptShowAd) {
-			[appDelegate_ AdRefresh:NO];	//広告禁止
-		}
-		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-		vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self.navigationController pushViewController:vc animated:YES];
-	}
+//	GDocDownloadTVC *vc = [[GDocDownloadTVC alloc] init];
+//
+//	if (appDelegate_.ppIsPad) {
+//		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+//		nc.modalPresentationStyle = UIModalPresentationFormSheet;
+//		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+//		[self presentViewController:nc animated:YES completion:nil];
+//		// Download成功後の再描画は、NFM_REFRESH_ALL_VIEWS 通知により処理される
+//	} 
+//	else {
+//		if (appDelegate_.ppOptShowAd) {
+//			[appDelegate_ AdRefresh:NO];	//広告禁止
+//		}
+//		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+//		vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+//		[self.navigationController pushViewController:vc animated:YES];
+//	}
 }
 
 /*[2.0]廃止
@@ -1233,11 +1233,7 @@
 				imageView1.image = [UIImage imageNamed:@"Icon32-BagYellow.png"];
 				imageView2.image = GimageFromString(20,-20,24,[NSString stringWithFormat:@"%ld", (long)lNoCheck]);
 
-				if (UIGraphicsBeginImageContextWithOptions != NULL) { // iOS4.0以上
-					UIGraphicsBeginImageContextWithOptions(imageView1.image.size, NO, 0.0); //[0.4.18]Retina対応
-				} else { // Old
-					UIGraphicsBeginImageContext(imageView1.image.size);
-				}
+                UIGraphicsBeginImageContextWithOptions(imageView1.image.size, NO, 0.0); //[0.4.18]Retina対応
 
 				CGRect rect = CGRectMake(0, 0, imageView1.image.size.width, imageView1.image.size.height);
 				[imageView1.image drawInRect:rect];  

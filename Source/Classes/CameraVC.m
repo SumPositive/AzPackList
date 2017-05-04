@@ -11,7 +11,7 @@
 #import "Elements.h"
 #import "CameraVC.h"
 #import <AVFoundation/AVFoundation.h>	//Camera
-#import "GoogleService.h"
+//#import "GoogleService.h"
 
 
 
@@ -243,7 +243,7 @@
 			e3target_.e4photo = e4; //LINK
 		}
 		e4.photoData = [NSData dataWithData:captureData_];
-		e3target_.photoUrl = [NSString stringWithFormat:GS_PHOTO_UUID_PREFIX @"%@", uuidString()];
+//		e3target_.photoUrl = [NSString stringWithFormat:GS_PHOTO_UUID_PREFIX @"%@", uuidString()];
 		//Moc[保存]時にする// [picasa_ uploadData:e3target_.photoData photoTitle:e3target_.name];
 		//E3detailTVC:にてアップ状況をアイコン表示。 未アップならば自動的にアップリトライする ＜＜失敗やオフラインに対応するため
 	}

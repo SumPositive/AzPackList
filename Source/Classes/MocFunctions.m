@@ -188,7 +188,7 @@ static MocFunctions	*staticMocFunctions= nil;
 			[mContext deleteObject:object];
 		}
 	}
-	NSLog(@"deleteAllCoreData: count=%d", count);
+	NSLog(@"deleteAllCoreData: count=%lu", (unsigned long)count);
 	[self commit];
 }
 

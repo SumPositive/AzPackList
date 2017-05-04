@@ -440,7 +440,7 @@
 //- (void)AdShowApple:(BOOL)bApple AdMob:(BOOL)bMob
 - (void)AdRefresh
 {
-	if (__OptShowAd==NO && mAdMobView==nil && miAdView==nil) return;
+	if (__OptShowAd==NO && mAdMobView==nil) return;
 	
 	//----------------------------------------------------- AdMob  ＜＜loadView:に入れると起動時に生成失敗すると、以後非表示が続いてしまう。
 	if (__OptShowAd && mAdMobView==nil) {
@@ -472,39 +472,35 @@
 		[mAdMobView loadRequest:request];	
 	}
 	
-	//----------------------------------------------------- iAd: AdMobの上層になるように後からaddSubviewする
-	if (__OptShowAd && miAdView==nil
-		&& [[[UIDevice currentDevice] systemVersion] compare:@"4.0"]!=NSOrderedAscending) { // !<  (>=) "4.0"
-		assert(NSClassFromString(@"ADBannerView"));
-		miAdView = [[ADBannerView alloc] init];		//WithFrame:CGRectZero 
-		// Adパラメータ初期化
-		miAdView.alpha = 0;		// 現在状況、(0)非表示  (1)表示中
-		miAdView.tag = 0;		// 広告受信状況  (0)なし (1)あり
-		miAdView.delegate = self;
-		if (__IsPad) {
-			[__mainSVC.view addSubview:miAdView];
-		} else {
-			[__mainNC.view addSubview:miAdView];
-		}
-		//【Tips】初期配置は、常にタテ位置にすること。　ヨコのときだけwillRotateToInterfaceOrientation：などの回転通知が届く。
-		[self iAdWillRotate:UIInterfaceOrientationPortrait]; 
-	}
+//	//----------------------------------------------------- iAd: AdMobの上層になるように後からaddSubviewする
+//	if (__OptShowAd && miAdView==nil
+//		&& [[[UIDevice currentDevice] systemVersion] compare:@"4.0"]!=NSOrderedAscending) { // !<  (>=) "4.0"
+//		assert(NSClassFromString(@"ADBannerView"));
+//		miAdView = [[ADBannerView alloc] init];		//WithFrame:CGRectZero 
+//		// Adパラメータ初期化
+//		miAdView.alpha = 0;		// 現在状況、(0)非表示  (1)表示中
+//		miAdView.tag = 0;		// 広告受信状況  (0)なし (1)あり
+//		miAdView.delegate = self;
+//		if (__IsPad) {
+//			[__mainSVC.view addSubview:miAdView];
+//		} else {
+//			[__mainNC.view addSubview:miAdView];
+//		}
+//		//【Tips】初期配置は、常にタテ位置にすること。　ヨコのときだけwillRotateToInterfaceOrientation：などの回転通知が届く。
+//		[self iAdWillRotate:UIInterfaceOrientationPortrait]; 
+//	}
 	
 	if (__OptShowAd) {
 		//NSLog(@"=== AdRefresh: Can[%d] iAd[%d⇒%d] AdMob[%d⇒%d]", adCanVisible_, (int)iAdView_.tag, (int)iAdView_.alpha, 
 		//	  (int)adMobView_.tag, (int)adMobView_.alpha);
 		//if (MbAdCanVisible && MbannerView.alpha==MbannerView.tag && RoAdMobView.alpha==RoAdMobView.tag) {
 		if (mAdCanVisible) {
-			if (miAdView.alpha==miAdView.tag && mAdMobView.alpha==mAdMobView.tag) {
+			if (mAdMobView.alpha==mAdMobView.tag) {
 				//NSLog(@"   = 変化なし =");
 				return; // 変化なし
 			}
-			if (miAdView.alpha==1 && miAdView.alpha==miAdView.tag) {
-				//NSLog(@"   = iAd 優先ON = 変化なし =");
-				return; // 変化なし
-			}
 		} else {
-			if (miAdView.alpha==0 && mAdMobView.alpha==0) {
+			if (mAdMobView.alpha==0) {
 				//NSLog(@"   = OFF = 変化なし =");
 				return; // 変化なし
 			}
@@ -524,22 +520,22 @@
 	}
 
 	if (__IsPad) {
-		if (miAdView) {
-			//CGRect rc = miAdView.frame;
-			if (mAdCanVisible && miAdView.tag==1) {
-				if (miAdView.alpha==0) {
-					//rc.origin.y += FREE_AD_OFFSET_Y;
-					//miAdView.frame = rc;
-					miAdView.alpha = 1;
-				}
-			} else {
-				if (miAdView.alpha==1) {
-					//rc.origin.y -= FREE_AD_OFFSET_Y;	//(-)上に隠す
-					//miAdView.frame = rc;
-					miAdView.alpha = 0;
-				}
-			}
-		}
+//		if (miAdView) {
+//			//CGRect rc = miAdView.frame;
+//			if (mAdCanVisible && miAdView.tag==1) {
+//				if (miAdView.alpha==0) {
+//					//rc.origin.y += FREE_AD_OFFSET_Y;
+//					//miAdView.frame = rc;
+//					miAdView.alpha = 1;
+//				}
+//			} else {
+//				if (miAdView.alpha==1) {
+//					//rc.origin.y -= FREE_AD_OFFSET_Y;	//(-)上に隠す
+//					//miAdView.frame = rc;
+//					miAdView.alpha = 0;
+//				}
+//			}
+//		}
 		
 		if (mAdMobView) {
 			if (UIInterfaceOrientationIsPortrait(__mainSVC.interfaceOrientation)) {
@@ -561,26 +557,26 @@
 		}
 	}
 	else {
-		if (miAdView) {
-			//CGRect rc = miAdView.frame;
-			if (mAdCanVisible && miAdView.tag==1) {
-				if (miAdView.alpha==0) {
-					//rc.origin.y -= FREE_AD_OFFSET_Y;
-					//miAdView.frame = rc;
-					miAdView.alpha = 1;
-				}
-			} else {
-				if (miAdView.alpha==1) {
-					//rc.origin.y += FREE_AD_OFFSET_Y;	//(+)下へ隠す
-					//miAdView.frame = rc;
-					miAdView.alpha = 0;
-				}
-			}
-		}
+//		if (miAdView) {
+//			//CGRect rc = miAdView.frame;
+//			if (mAdCanVisible && miAdView.tag==1) {
+//				if (miAdView.alpha==0) {
+//					//rc.origin.y -= FREE_AD_OFFSET_Y;
+//					//miAdView.frame = rc;
+//					miAdView.alpha = 1;
+//				}
+//			} else {
+//				if (miAdView.alpha==1) {
+//					//rc.origin.y += FREE_AD_OFFSET_Y;	//(+)下へ隠す
+//					//miAdView.frame = rc;
+//					miAdView.alpha = 0;
+//				}
+//			}
+//		}
 		
 		if (mAdMobView) {
 			//CGRect rc = mAdMobView.frame;
-			if (mAdCanVisible && mAdMobView.tag==1 && miAdView.alpha==0) { //iAdが非表示のときだけAdMob表示
+			if (mAdCanVisible && mAdMobView.tag==1) { //iAdが非表示のときだけAdMob表示
 				if (mAdMobView.alpha==0) {
 					//rc.origin.y = 480 - 50;		//AdMobはヨコ向き常に非表示 ＜＜これはタテの配置なのでヨコだと何もしなくても範囲外で非表示になる
 					//mAdMobView.frame = rc;
@@ -610,12 +606,12 @@
 		[mAdMobView removeFromSuperview];
 		mAdMobView = nil;
 	}
-	if (miAdView) {
-		[miAdView cancelBannerViewAction];	// 停止
-		miAdView.delegate = nil;
-		[miAdView removeFromSuperview];
-		miAdView = nil;
-	}
+//	if (miAdView) {
+//		[miAdView cancelBannerViewAction];	// 停止
+//		miAdView.delegate = nil;
+//		[miAdView removeFromSuperview];
+//		miAdView = nil;
+//	}
 }
 
 - (void)AdRefreshAfter  // 非表示アニメ終了後に呼び出される
@@ -657,48 +653,48 @@
 	}
 }
 
-- (void)iAdWillRotate:(UIInterfaceOrientation)toInterfaceOrientation
-{	// 非表示中でも回転対応すること。表示するときの出発位置のため
-	if (miAdView==nil) return;
-
-	// iOS4.2以降の仕様であるが、以前のOSでは落ちる！！！
-	//if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-	//	miAdView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierLandscape;
-	//} else {
-	//	miAdView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
-	//}
-	//常にタテ用（幅768）にする。
-	//miAdView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
-
-	if (__IsPad) {
-		if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {	//ヨコ
-			miAdView.frame = CGRectMake(0, self.window.frame.size.width-20-66,  0,0);	// 20=ステータスバー高さ
-		} else {	//タテ
-			miAdView.frame = CGRectMake(0, self.window.frame.size.height-20-66,  0,0);
-		}
-	} else {
-		if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-			miAdView.frame = CGRectMake(0, 320-32,  0,0);	//ヨコ：下部に表示
-		} else {
-			//miAdView.frame = CGRectMake(0, 480-50,  0,0);	//タテ：下部に表示
-			miAdView.frame = CGRectMake(0, self.window.frame.size.height-50,  0,0);	//タテ：下部に表示
-		}
-	/*.alpha=0 だけにし、隠さない
-		if (mAdCanVisible && miAdView.alpha==1) {	// 表示
-			if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-				miAdView.frame = CGRectMake(0, 320-32,  0,0);	//ヨコ：下部に表示
-			} else {
-				miAdView.frame = CGRectMake(0, 480-50,  0,0);	//タテ：下部に表示
-			}
-		} else {
-			if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-				miAdView.frame = CGRectMake(0, 320-32 + FREE_AD_OFFSET_Y,  0,0);		//ヨコ：下へ隠す
-			} else {
-				miAdView.frame = CGRectMake(0, 480-50 + FREE_AD_OFFSET_Y,  0,0);	//タテ：下へ隠す
-			}
-		}*/
-	}
-}
+//- (void)iAdWillRotate:(UIInterfaceOrientation)toInterfaceOrientation
+//{	// 非表示中でも回転対応すること。表示するときの出発位置のため
+//	if (miAdView==nil) return;
+//
+//	// iOS4.2以降の仕様であるが、以前のOSでは落ちる！！！
+//	//if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+//	//	miAdView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierLandscape;
+//	//} else {
+//	//	miAdView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
+//	//}
+//	//常にタテ用（幅768）にする。
+//	//miAdView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
+//
+//	if (__IsPad) {
+//		if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {	//ヨコ
+//			miAdView.frame = CGRectMake(0, self.window.frame.size.width-20-66,  0,0);	// 20=ステータスバー高さ
+//		} else {	//タテ
+//			miAdView.frame = CGRectMake(0, self.window.frame.size.height-20-66,  0,0);
+//		}
+//	} else {
+//		if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+//			miAdView.frame = CGRectMake(0, 320-32,  0,0);	//ヨコ：下部に表示
+//		} else {
+//			//miAdView.frame = CGRectMake(0, 480-50,  0,0);	//タテ：下部に表示
+//			miAdView.frame = CGRectMake(0, self.window.frame.size.height-50,  0,0);	//タテ：下部に表示
+//		}
+//	/*.alpha=0 だけにし、隠さない
+//		if (mAdCanVisible && miAdView.alpha==1) {	// 表示
+//			if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+//				miAdView.frame = CGRectMake(0, 320-32,  0,0);	//ヨコ：下部に表示
+//			} else {
+//				miAdView.frame = CGRectMake(0, 480-50,  0,0);	//タテ：下部に表示
+//			}
+//		} else {
+//			if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+//				miAdView.frame = CGRectMake(0, 320-32 + FREE_AD_OFFSET_Y,  0,0);		//ヨコ：下へ隠す
+//			} else {
+//				miAdView.frame = CGRectMake(0, 480-50 + FREE_AD_OFFSET_Y,  0,0);	//タテ：下へ隠す
+//			}
+//		}*/
+//	}
+//}
 
 - (void)adViewDidReceiveAd:(GADBannerView *)bannerView 
 {	// AdMob 広告あり
@@ -714,32 +710,32 @@
 	[self AdRefresh];
 }
 
-- (void)bannerViewDidLoadAd:(ADBannerView *)banner
-{	// iAd取得できたときに呼ばれる　⇒　表示する
-	//NSLog(@"iAd - bannerViewDidLoadAd ===");
-	banner.tag = 1;	// 広告受信状況  (0)なし (1)あり
-	[self AdRefresh];
-}
+//- (void)bannerViewDidLoadAd:(ADBannerView *)banner
+//{	// iAd取得できたときに呼ばれる　⇒　表示する
+//	//NSLog(@"iAd - bannerViewDidLoadAd ===");
+//	banner.tag = 1;	// 広告受信状況  (0)なし (1)あり
+//	[self AdRefresh];
+//}
 
-- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
-{	// iAd取得できなかったときに呼ばれる　⇒　非表示にする
-	//NSLog(@"iAd - didFailToReceiveAdWithError");
-	banner.tag = 0;	// 広告受信状況  (0)なし (1)あり
-
-	// AdMob 破棄する ＜＜通信途絶してから復帰した場合、再生成するまで受信できないため。再生成する機会を増やす。
-	if (mAdMobView) {
-		// リクエスト
-		GADRequest *request = [GADRequest request];
-		[mAdMobView loadRequest:request];	
-/*		//[1.1.0]ネット切断から復帰したとき、このように破棄⇒生成が必要。
-		RoAdMobView.alpha = 0; //これが無いと残骸が表示されたままになる。
-		RoAdMobView.delegate = nil;								//受信STOP  ＜＜これが無いと破棄後に呼び出されて落ちる
-		[RoAdMobView release], RoAdMobView = nil;	// 破棄
-		//[1.1.0]この後、AdRefresh:にて生成再開される。
- */
-	}
-	[self AdRefresh];
-}
+//- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
+//{	// iAd取得できなかったときに呼ばれる　⇒　非表示にする
+//	//NSLog(@"iAd - didFailToReceiveAdWithError");
+//	banner.tag = 0;	// 広告受信状況  (0)なし (1)あり
+//
+//	// AdMob 破棄する ＜＜通信途絶してから復帰した場合、再生成するまで受信できないため。再生成する機会を増やす。
+//	if (mAdMobView) {
+//		// リクエスト
+//		GADRequest *request = [GADRequest request];
+//		[mAdMobView loadRequest:request];	
+///*		//[1.1.0]ネット切断から復帰したとき、このように破棄⇒生成が必要。
+//		RoAdMobView.alpha = 0; //これが無いと残骸が表示されたままになる。
+//		RoAdMobView.delegate = nil;								//受信STOP  ＜＜これが無いと破棄後に呼び出されて落ちる
+//		[RoAdMobView release], RoAdMobView = nil;	// 破棄
+//		//[1.1.0]この後、AdRefresh:にて生成再開される。
+// */
+//	}
+//	[self AdRefresh];
+//}
 
 
 @end

@@ -5,8 +5,9 @@
 //  Created by 松山 和正 on 09/12/03.
 //  Copyright __MyCompanyName__ 2009. All rights reserved.
 //
-#import <iAd/iAd.h>
-#import "GADBannerView.h"
+//#import <iAd/iAd.h>
+//#import "GADBannerView.h"
+#import <GoogleMobileAds/GoogleMobileAds.h>
 #import "AZDropboxVC.h"		//<AZDropboxDelegate>
 
 
@@ -19,10 +20,10 @@
 @class E1;
 @interface AppDelegate : NSObject
 					<UIApplicationDelegate, UITabBarControllerDelegate, UISplitViewControllerDelegate,
-						ADBannerViewDelegate ,GADBannerViewDelegate, AZDropboxDelegate>
+                        GADBannerViewDelegate, AZDropboxDelegate>
 {
 @private	// 自クラス内からだけ参照できる
-	ADBannerView				*miAdView;
+	//ADBannerView				*miAdView;
 	GADBannerView				*mAdMobView;
 	BOOL								mAdCanVisible;		//YES:表示可能な状況　 NO:表示してはいけない状況
 	

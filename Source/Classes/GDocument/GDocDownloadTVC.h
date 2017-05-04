@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GData.h"
-#import "GDataDocs.h"
+//#import "GData.h"
+//#import "GDataDocs.h"
 
 @interface GDocDownloadTVC : UITableViewController <UIActionSheetDelegate>
 

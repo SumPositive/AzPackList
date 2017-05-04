@@ -18,7 +18,7 @@
 //#import "WebSiteVC.h"
 #import "PatternImageView.h"
 
-#import "GoogleService.h"
+//#import "GoogleService.h"
 #import "CameraVC.h"
 
 
@@ -612,14 +612,14 @@
 		}
 	}
 
-	// Photo
-	if ([pE3target.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
-		E4photo *e4 = pE3target.e4photo;
-		if (e4.photoData) {
-			// 写真DATAあるがＵＲＬ:UUIDにつき、Picasaアップする
-			[GoogleService photoUploadE3:pE3target];
-		}
-	}
+//	// Photo
+//	if ([pE3target.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
+//		E4photo *e4 = pE3target.e4photo;
+//		if (e4.photoData) {
+//			// 写真DATAあるがＵＲＬ:UUIDにつき、Picasaアップする
+//			[GoogleService photoUploadE3:pE3target];
+//		}
+//	}
 	
 	if (mAppDelegate.ppIsPad) {
 		//[(PadNaviCon*)self.navigationController dismissPopoverSaved];  // SAVE: PadNaviCon拡張メソッド
@@ -1336,28 +1336,28 @@
 				}
 				else {	// e3target_.photoUrl==nil; 写真データなし
 					mIvPhoto.image = nil;
-					if ([pE3target.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み  ダウンロード待ち
-						//cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-						[mActivityIndicator_on_IconPicasa startAnimating];
-						mLbPhotoMsg.text = NSLocalizedString(@"Google Downloading", nil);
-						// 写真キャッシュに無いのでダウンロードする
-						if ([GoogleService photoService]==nil) {	// Google未Login
-							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo NoLogin", nil);
-							[mActivityIndicator_on_IconPicasa stopAnimating];
-						} else {
-							[GoogleService photoDownloadE3:pE3target errorLabel:mLbPhotoMsg]; //非同期処理
-							// スクロールして繰り返して呼び出された場合、処理中ならば拒否するようになっている。
-						}
-					}
-					else if ([pE3target.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
-						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo NoUpload", nil);
-					}
-					else {	// Picasaアップなし　撮影してください
-						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
-						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo", nil);
-					} 
+//					if ([pE3target.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み  ダウンロード待ち
+//						//cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+//						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+//						[mActivityIndicator_on_IconPicasa startAnimating];
+//						mLbPhotoMsg.text = NSLocalizedString(@"Google Downloading", nil);
+//						// 写真キャッシュに無いのでダウンロードする
+//						if ([GoogleService photoService]==nil) {	// Google未Login
+//							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo NoLogin", nil);
+//							[mActivityIndicator_on_IconPicasa stopAnimating];
+//						} else {
+//							[GoogleService photoDownloadE3:pE3target errorLabel:mLbPhotoMsg]; //非同期処理
+//							// スクロールして繰り返して呼び出された場合、処理中ならば拒否するようになっている。
+//						}
+//					}
+//					else if ([pE3target.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
+//						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+//						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo NoUpload", nil);
+//					}
+//					else {	// Picasaアップなし　撮影してください
+//						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
+//						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo", nil);
+//					} 
 				}
 				// この時点では、cell.contentView.frameが無効である。willDisplayCell:にて有効になっている。
 				// よって、viewDesignPhoto:による配置は、willDisplayCell:へ

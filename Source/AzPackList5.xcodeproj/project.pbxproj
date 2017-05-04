@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		155A6D03B2997C7011C8EA3E /* libPods-AzPackList5.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 85991DF3B948C3C1E0C3A8A9 /* libPods-AzPackList5.a */; };
 		440B5B2E14B44E13006BEA96 /* Tx-Back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 440B5B2C14B44E13006BEA96 /* Tx-Back@2x.png */; };
 		440B5B2F14B44E13006BEA96 /* Tx-Back.png in Resources */ = {isa = PBXBuildFile; fileRef = 440B5B2D14B44E13006BEA96 /* Tx-Back.png */; };
 		440DD3F314B2FD9C00C9B40C /* Icon72.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EC383814A4DEF300127B41 /* Icon72.png */; };
-		440DD96614B315F300C9B40C /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44CB242211E04E49002A9331 /* iAd.framework */; };
 		440DD96D14B316D800C9B40C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 440DD96C14B316D800C9B40C /* StoreKit.framework */; };
 		4410F79816055F60007C7A19 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4410F79616055F60007C7A19 /* Default-568h@2x.png */; };
 		4416337615F25D1B009CD324 /* MocFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4416337415F25D1B009CD324 /* MocFunctions.m */; };
@@ -120,8 +120,6 @@
 		4499D9C7134DB1D300342648 /* Icon57@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C0134DB1D300342648 /* Icon57@2x.png */; };
 		4499D9C9134DB1D300342648 /* Icon57.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C1134DB1D300342648 /* Icon57.png */; };
 		449D12BE151817B700F68B6E /* Icon72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 449D12BD151817B700F68B6E /* Icon72@2x.png */; };
-		449D12C315181C4900F68B6E /* GoogleService.m in Sources */ = {isa = PBXBuildFile; fileRef = 449D12C115181C4900F68B6E /* GoogleService.m */; };
-		449D12C415181C4900F68B6E /* GoogleService.h in Headers */ = {isa = PBXBuildFile; fileRef = 449D12C215181C4900F68B6E /* GoogleService.h */; };
 		44A595BA1416602E00F9B612 /* Icon32-PasteAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B11416602E00F9B612 /* Icon32-PasteAdd@2x.png */; };
 		44A595BE1416602E00F9B612 /* Icon32-PasteAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B21416602E00F9B612 /* Icon32-PasteAdd.png */; };
 		44A595C21416602E00F9B612 /* Icon32-PasteCopy.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B31416602E00F9B612 /* Icon32-PasteCopy.png */; };
@@ -144,12 +142,6 @@
 		44A596261416718E00F9B612 /* Icon32-Amazon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A596201416718E00F9B612 /* Icon32-Amazon@2x.png */; };
 		44A7DB2E14DE6A7A00DB72E2 /* NSDataAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 44A7DB2C14DE6A7A00DB72E2 /* NSDataAddition.h */; };
 		44A7DB2F14DE6A7A00DB72E2 /* NSDataAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 44A7DB2D14DE6A7A00DB72E2 /* NSDataAddition.m */; };
-		44ABA5FE14EF304100189234 /* GDocDownloadTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44ABA5FB14EF304100189234 /* GDocDownloadTVC.h */; };
-		44ABA5FF14EF304100189234 /* GDocDownloadTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ABA5FC14EF304100189234 /* GDocDownloadTVC.m */; };
-		44ABA60014EF304100189234 /* GDocDownloadTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44ABA5FD14EF304100189234 /* GDocDownloadTVC.xib */; };
-		44ABA61814EF8BF200189234 /* GDocUploadVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44ABA61514EF8BF200189234 /* GDocUploadVC.h */; };
-		44ABA61914EF8BF200189234 /* GDocUploadVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ABA61614EF8BF200189234 /* GDocUploadVC.m */; };
-		44ABA61B14EF8D7800189234 /* GDocUploadVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44ABA61D14EF8D7800189234 /* GDocUploadVC.xib */; };
 		44AC159114E806590007229F /* Icon32-Picasa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC158F14E806590007229F /* Icon32-Picasa@2x.png */; };
 		44AC159214E806590007229F /* Icon32-Picasa.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159014E806590007229F /* Icon32-Picasa.png */; };
 		44AC159514E8093B0007229F /* Icon32-PicasaBlack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159314E8093A0007229F /* Icon32-PicasaBlack@2x.png */; };
@@ -189,7 +181,6 @@
 		44D9B2CA15F1027C00F5045C /* Icon57-PayNote.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2AF15F1027C00F5045C /* Icon57-PayNote.png */; };
 		44D9B2CB15F1027C00F5045C /* Icon57-PayNote@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2B015F1027C00F5045C /* Icon57-PayNote@2x.png */; };
 		44D9B2CC15F1027C00F5045C /* Icon57-SplitPay.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2B115F1027C00F5045C /* Icon57-SplitPay.png */; };
-		44D9B2CD15F1027C00F5045C /* Icon57-SplitPay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2B215F1027C00F5045C /* Icon57-SplitPay@2x.png */; };
 		44D9B2CE15F1027C00F5045C /* NSDataBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 44D9B2B315F1027C00F5045C /* NSDataBase64.h */; };
 		44D9B2CF15F1027C00F5045C /* NSDataBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D9B2B415F1027C00F5045C /* NSDataBase64.m */; };
 		44D9B2D015F1027C00F5045C /* VerificationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 44D9B2B515F1027C00F5045C /* VerificationController.h */; };
@@ -241,6 +232,7 @@
 		44EFD08F14C17CAF003FF260 /* Icon-Setting-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD07F14C17CAF003FF260 /* Icon-Setting-32.png */; };
 		44EFD09814C17CAF003FF260 /* Icon-Store-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD08814C17CAF003FF260 /* Icon-Store-40@2x.png */; };
 		44EFD09914C17CAF003FF260 /* Icon-Store-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD08914C17CAF003FF260 /* Icon-Store-40.png */; };
+		44F195741EBB4C4900F5FF93 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44F195731EBB4C4900F5FF93 /* Images.xcassets */; };
 		44F5921314E38E1A00B875A9 /* CameraVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F5921014E38E1A00B875A9 /* CameraVC.m */; };
 		44F5921414E38E1A00B875A9 /* CameraVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F5921114E38E1A00B875A9 /* CameraVC.xib */; };
 		44F5921614E39DCA00B875A9 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44F5921514E39DC900B875A9 /* AVFoundation.framework */; };
@@ -257,6 +249,7 @@
 		28C286DF0D94DF7D0034E888 /* E1viewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = E1viewController.h; sourceTree = "<group>"; };
 		28C286E00D94DF7D0034E888 /* E1viewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = E1viewController.m; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ../main.m; sourceTree = "<group>"; };
+		36C01A7E946CDD76333EC8C2 /* Pods-AzPackList5.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AzPackList5.release.xcconfig"; path = "Pods/Target Support Files/Pods-AzPackList5/Pods-AzPackList5.release.xcconfig"; sourceTree = "<group>"; };
 		3C8D84A665B338F8D8F5A858 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		4400E1FB110F493A000DFC3B /* SpListTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpListTVC.h; sourceTree = "<group>"; };
 		4400E1FC110F493A000DFC3B /* SpListTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpListTVC.m; sourceTree = "<group>"; };
@@ -376,8 +369,6 @@
 		4499D9C0134DB1D300342648 /* Icon57@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57@2x.png"; sourceTree = "<group>"; };
 		4499D9C1134DB1D300342648 /* Icon57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon57.png; sourceTree = "<group>"; };
 		449D12BD151817B700F68B6E /* Icon72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon72@2x.png"; sourceTree = "<group>"; };
-		449D12C115181C4900F68B6E /* GoogleService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GoogleService.m; path = GDocument/GoogleService.m; sourceTree = "<group>"; };
-		449D12C215181C4900F68B6E /* GoogleService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GoogleService.h; path = GDocument/GoogleService.h; sourceTree = "<group>"; };
 		449D67CB10C80DCB00691BF4 /* E2viewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = E2viewController.h; sourceTree = "<group>"; };
 		449D67CC10C80DCB00691BF4 /* E2viewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = E2viewController.m; sourceTree = "<group>"; };
 		44A2C09D131BC98700256C08 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -407,13 +398,6 @@
 		44A596201416718E00F9B612 /* Icon32-Amazon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon32-Amazon@2x.png"; path = "Design/Icon32-Amazon@2x.png"; sourceTree = "<group>"; };
 		44A7DB2C14DE6A7A00DB72E2 /* NSDataAddition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDataAddition.h; sourceTree = "<group>"; };
 		44A7DB2D14DE6A7A00DB72E2 /* NSDataAddition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDataAddition.m; sourceTree = "<group>"; };
-		44ABA5FB14EF304100189234 /* GDocDownloadTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GDocDownloadTVC.h; path = GDocument/GDocDownloadTVC.h; sourceTree = "<group>"; };
-		44ABA5FC14EF304100189234 /* GDocDownloadTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GDocDownloadTVC.m; path = GDocument/GDocDownloadTVC.m; sourceTree = "<group>"; };
-		44ABA5FD14EF304100189234 /* GDocDownloadTVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GDocDownloadTVC.xib; path = GDocument/GDocDownloadTVC.xib; sourceTree = "<group>"; };
-		44ABA61514EF8BF200189234 /* GDocUploadVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GDocUploadVC.h; path = GDocument/GDocUploadVC.h; sourceTree = "<group>"; };
-		44ABA61614EF8BF200189234 /* GDocUploadVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GDocUploadVC.m; path = GDocument/GDocUploadVC.m; sourceTree = "<group>"; };
-		44ABA61C14EF8D7800189234 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/GDocUploadVC.xib; sourceTree = "<group>"; };
-		44ABA61E14EF8D8E00189234 /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ja; path = ja.lproj/GDocUploadVC.xib; sourceTree = "<group>"; };
 		44AC158F14E806590007229F /* Icon32-Picasa@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon32-Picasa@2x.png"; path = "Design/Icon32-Picasa@2x.png"; sourceTree = "<group>"; };
 		44AC159014E806590007229F /* Icon32-Picasa.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon32-Picasa.png"; path = "Design/Icon32-Picasa.png"; sourceTree = "<group>"; };
 		44AC159314E8093A0007229F /* Icon32-PicasaBlack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon32-PicasaBlack@2x.png"; path = "Design/Icon32-PicasaBlack@2x.png"; sourceTree = "<group>"; };
@@ -460,7 +444,6 @@
 		44D9B2AF15F1027C00F5045C /* Icon57-PayNote.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-PayNote.png"; sourceTree = "<group>"; };
 		44D9B2B015F1027C00F5045C /* Icon57-PayNote@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-PayNote@2x.png"; sourceTree = "<group>"; };
 		44D9B2B115F1027C00F5045C /* Icon57-SplitPay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-SplitPay.png"; sourceTree = "<group>"; };
-		44D9B2B215F1027C00F5045C /* Icon57-SplitPay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-SplitPay@2x.png"; sourceTree = "<group>"; };
 		44D9B2B315F1027C00F5045C /* NSDataBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDataBase64.h; sourceTree = "<group>"; };
 		44D9B2B415F1027C00F5045C /* NSDataBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDataBase64.m; sourceTree = "<group>"; };
 		44D9B2B515F1027C00F5045C /* VerificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerificationController.h; sourceTree = "<group>"; };
@@ -528,12 +511,16 @@
 		44EFD08914C17CAF003FF260 /* Icon-Store-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Store-40.png"; path = "Design/Icon-Store-40.png"; sourceTree = "<group>"; };
 		44F07DB9119AFE69007D8863 /* FileCsv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileCsv.h; sourceTree = "<group>"; };
 		44F07DBA119AFE69007D8863 /* FileCsv.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileCsv.m; sourceTree = "<group>"; };
+		44F195731EBB4C4900F5FF93 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = AzPackList5/Images.xcassets; sourceTree = "<group>"; };
 		44F5921014E38E1A00B875A9 /* CameraVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraVC.m; sourceTree = "<group>"; };
 		44F5921114E38E1A00B875A9 /* CameraVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CameraVC.xib; sourceTree = "<group>"; };
 		44F5921514E39DC900B875A9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		5F7F17612D3DEC085887E635 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		85991DF3B948C3C1E0C3A8A9 /* libPods-AzPackList5.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AzPackList5.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8EF0573F10AC7CA64B578EC0 /* Pods-AzPackList5.distribution.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AzPackList5.distribution.xcconfig"; path = "Pods/Target Support Files/Pods-AzPackList5/Pods-AzPackList5.distribution.xcconfig"; sourceTree = "<group>"; };
 		9B962C28F722FA71E260F9A3 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD3E43560F85BBEAC8C2A724 /* Pods.distribution.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.distribution.xcconfig; path = "Pods/Target Support Files/Pods/Pods.distribution.xcconfig"; sourceTree = "<group>"; };
+		F1A486ECD29231735DF814EB /* Pods-AzPackList5.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AzPackList5.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AzPackList5/Pods-AzPackList5.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -544,7 +531,6 @@
 				44D7CE6C153660F900AE6920 /* libsqlite3.0.dylib in Frameworks */,
 				44F5921614E39DCA00B875A9 /* AVFoundation.framework in Frameworks */,
 				440DD96D14B316D800C9B40C /* StoreKit.framework in Frameworks */,
-				440DD96614B315F300C9B40C /* iAd.framework in Frameworks */,
 				4499D834134DA60600342648 /* QuartzCore.framework in Frameworks */,
 				4499D836134DA60600342648 /* MediaPlayer.framework in Frameworks */,
 				4499D837134DA60600342648 /* CoreGraphics.framework in Frameworks */,
@@ -558,6 +544,7 @@
 				44BC130E14B40E0600202411 /* SystemConfiguration.framework in Frameworks */,
 				44DF7784156A760700386E89 /* DropboxSDK.framework in Frameworks */,
 				A9A60064E5DA883C42FC8015 /* libPods.a in Frameworks */,
+				155A6D03B2997C7011C8EA3E /* libPods-AzPackList5.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -571,7 +558,6 @@
 				446B73F31A7D14EC0051693F /* localhostAddresses.m */,
 				446B73EF1A7D12F20051693F /* MyHTTPConnection.h */,
 				446B73EE1A7D12F20051693F /* MyHTTPConnection.m */,
-				44ABA5FA14EF2FB800189234 /* GDocument */,
 				44CB23E911E03AD3002A9331 /* Main */,
 				44CB23E811E039DC002A9331 /* Sub */,
 			);
@@ -604,6 +590,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				44F195731EBB4C4900F5FF93 /* Images.xcassets */,
 				44425192146FF66D004B26A8 /* Localizable.strings */,
 				4499D9C0134DB1D300342648 /* Icon57@2x.png */,
 				4499D9C1134DB1D300342648 /* Icon57.png */,
@@ -647,6 +634,7 @@
 				44EEBEDA1185E20000EA26AB /* CFNetwork.framework */,
 				44CB242211E04E49002A9331 /* iAd.framework */,
 				9B962C28F722FA71E260F9A3 /* libPods.a */,
+				85991DF3B948C3C1E0C3A8A9 /* libPods-AzPackList5.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -672,21 +660,6 @@
 			);
 			name = "UIDevice-Hardware.release";
 			path = "../../../OpenCode/UIDevice-Hardware/UIDevice-Hardware.release";
-			sourceTree = "<group>";
-		};
-		44ABA5FA14EF2FB800189234 /* GDocument */ = {
-			isa = PBXGroup;
-			children = (
-				449D12C215181C4900F68B6E /* GoogleService.h */,
-				449D12C115181C4900F68B6E /* GoogleService.m */,
-				44ABA61514EF8BF200189234 /* GDocUploadVC.h */,
-				44ABA61614EF8BF200189234 /* GDocUploadVC.m */,
-				44ABA61D14EF8D7800189234 /* GDocUploadVC.xib */,
-				44ABA5FB14EF304100189234 /* GDocDownloadTVC.h */,
-				44ABA5FC14EF304100189234 /* GDocDownloadTVC.m */,
-				44ABA5FD14EF304100189234 /* GDocDownloadTVC.xib */,
-			);
-			name = GDocument;
 			sourceTree = "<group>";
 		};
 		44CB23E711E039AF002A9331 /* OpenCode */ = {
@@ -785,7 +758,6 @@
 				44D9B2AF15F1027C00F5045C /* Icon57-PayNote.png */,
 				44D9B2B015F1027C00F5045C /* Icon57-PayNote@2x.png */,
 				44D9B2B115F1027C00F5045C /* Icon57-SplitPay.png */,
-				44D9B2B215F1027C00F5045C /* Icon57-SplitPay@2x.png */,
 				44D9B2B315F1027C00F5045C /* NSDataBase64.h */,
 				44D9B2B415F1027C00F5045C /* NSDataBase64.m */,
 				44D9B2B515F1027C00F5045C /* VerificationController.h */,
@@ -989,6 +961,9 @@
 				5F7F17612D3DEC085887E635 /* Pods.debug.xcconfig */,
 				3C8D84A665B338F8D8F5A858 /* Pods.release.xcconfig */,
 				DD3E43560F85BBEAC8C2A724 /* Pods.distribution.xcconfig */,
+				F1A486ECD29231735DF814EB /* Pods-AzPackList5.debug.xcconfig */,
+				36C01A7E946CDD76333EC8C2 /* Pods-AzPackList5.release.xcconfig */,
+				8EF0573F10AC7CA64B578EC0 /* Pods-AzPackList5.distribution.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1015,9 +990,6 @@
 				441962E814B87DEE0047E1C3 /* PatternImageView.h in Headers */,
 				44A7DB2E14DE6A7A00DB72E2 /* NSDataAddition.h in Headers */,
 				44B2E95E14ED046000B45B62 /* CameraVC.h in Headers */,
-				44ABA5FE14EF304100189234 /* GDocDownloadTVC.h in Headers */,
-				44ABA61814EF8BF200189234 /* GDocUploadVC.h in Headers */,
-				449D12C415181C4900F68B6E /* GoogleService.h in Headers */,
 				44DF7766156A760700386E89 /* AZWebView.h in Headers */,
 				44DF7782156A760700386E89 /* AZDropboxVC.h in Headers */,
 				44DF7785156A760700386E89 /* AZDial.h in Headers */,
@@ -1040,12 +1012,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4499D9B8134DA60700342648 /* Build configuration list for PBXNativeTarget "AzPackList5" */;
 			buildPhases = (
-				5908EC83E03987C27E16F028 /* Check Pods Manifest.lock */,
+				5908EC83E03987C27E16F028 /* [CP] Check Pods Manifest.lock */,
 				4499D7CE134DA60600342648 /* Resources */,
 				4499D802134DA60600342648 /* Sources */,
 				4499D832134DA60600342648 /* Frameworks */,
 				4499D841134DA60600342648 /* Headers */,
-				3B8262FD70133801F6045C6D /* Copy Pods Resources */,
+				3B8262FD70133801F6045C6D /* [CP] Copy Pods Resources */,
+				FFBC0198CC68D622E2713F65 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1062,10 +1035,16 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0830;
 				TargetAttributes = {
 					4499D7CD134DA60600342648 = {
 						DevelopmentTeam = 5C2UYK6F45;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -1082,6 +1061,7 @@
 				ja,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
+			productRefGroup = 19C28FACFE9D520D11CA2CBB /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -1193,8 +1173,6 @@
 				44C167EF14E9505000F54B55 /* Icon24-Camera@2x.png in Resources */,
 				44B2E96114ED58D000B45B62 /* Icon64-DownloadNG@2x.png in Resources */,
 				44B2E96214ED58D000B45B62 /* Icon64-DownloadNG.png in Resources */,
-				44ABA60014EF304100189234 /* GDocDownloadTVC.xib in Resources */,
-				44ABA61B14EF8D7800189234 /* GDocUploadVC.xib in Resources */,
 				44DF7762156A760700386E89 /* AZWeb-Back-16.png in Resources */,
 				44DF7763156A760700386E89 /* AZWeb-Back-16@2x.png in Resources */,
 				44DF7764156A760700386E89 /* AZWeb-Forward-16.png in Resources */,
@@ -1233,6 +1211,7 @@
 				44D9B2BE15F1027C00F5045C /* AZStore-Stop-32@2x.png in Resources */,
 				44D9B2C115F1027C00F5045C /* AZStoreCell.xib in Resources */,
 				44D9B2C415F1027C00F5045C /* Icon57-CalcRoll.png in Resources */,
+				44F195741EBB4C4900F5FF93 /* Images.xcassets in Resources */,
 				44D9B2C515F1027C00F5045C /* Icon57-CalcRoll@2x.png in Resources */,
 				44D9B2C615F1027C00F5045C /* Icon57-Condition.png in Resources */,
 				44D9B2C715F1027C00F5045C /* Icon57-Condition@2x.png in Resources */,
@@ -1241,7 +1220,6 @@
 				44D9B2CA15F1027C00F5045C /* Icon57-PayNote.png in Resources */,
 				44D9B2CB15F1027C00F5045C /* Icon57-PayNote@2x.png in Resources */,
 				44D9B2CC15F1027C00F5045C /* Icon57-SplitPay.png in Resources */,
-				44D9B2CD15F1027C00F5045C /* Icon57-SplitPay@2x.png in Resources */,
 				44218452160392BB0097FF63 /* Icon72bag.png in Resources */,
 				44218453160392BB0097FF63 /* Icon72bag@2x.png in Resources */,
 				4410F79816055F60007C7A19 /* Default-568h@2x.png in Resources */,
@@ -1251,34 +1229,49 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3B8262FD70133801F6045C6D /* Copy Pods Resources */ = {
+		3B8262FD70133801F6045C6D /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AzPackList5/Pods-AzPackList5-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5908EC83E03987C27E16F028 /* Check Pods Manifest.lock */ = {
+		5908EC83E03987C27E16F028 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		FFBC0198CC68D622E2713F65 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AzPackList5/Pods-AzPackList5-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1315,9 +1308,6 @@
 				441962E914B87DEE0047E1C3 /* PatternImageView.m in Sources */,
 				44A7DB2F14DE6A7A00DB72E2 /* NSDataAddition.m in Sources */,
 				44F5921314E38E1A00B875A9 /* CameraVC.m in Sources */,
-				44ABA5FF14EF304100189234 /* GDocDownloadTVC.m in Sources */,
-				44ABA61914EF8BF200189234 /* GDocUploadVC.m in Sources */,
-				449D12C315181C4900F68B6E /* GoogleService.m in Sources */,
 				44DF7767156A760700386E89 /* AZWebView.m in Sources */,
 				44DF7783156A760700386E89 /* AZDropboxVC.m in Sources */,
 				44DF7786156A760700386E89 /* AZDial.m in Sources */,
@@ -1407,16 +1397,6 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		44ABA61D14EF8D7800189234 /* GDocUploadVC.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				44ABA61C14EF8D7800189234 /* en */,
-				44ABA61E14EF8D8E00189234 /* ja */,
-			);
-			name = GDocUploadVC.xib;
-			path = GDocument;
-			sourceTree = "<group>";
-		};
 		44DF7759156A760700386E89 /* AZAbout_Agree.txt */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1440,21 +1420,22 @@
 /* Begin XCBuildConfiguration section */
 		4499D9B9134DA60700342648 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5F7F17612D3DEC085887E635 /* Pods.debug.xcconfig */;
+			baseConfigurationReference = F1A486ECD29231735DF814EB /* Pods-AzPackList5.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_OBJCPP_ARC_ABI = NO;
 				CODE_SIGN_ENTITLEMENTS = AzPackList5.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Masakazu Matsuyama (RL5WRC28AG)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 5C2UYK6F45;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
 					"\"$(SRCROOT)/../../AZClass/AZDropbox/AZDropbox.relese\"",
-					"\"$(SRCROOT)/../../OpenCode/GData/GData.release\"",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1466,7 +1447,7 @@
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESSOR_DEFINITIONS = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -1483,36 +1464,40 @@
 					"\"$(SRCROOT)/../../OpenCode/OpenSSL/OpenSSL.release/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lxml2",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.azukid.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = AzPackList5;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8D9D86D3-B52A-45D0-81AA-1E3ADCF17F1E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 arm64";
+				VALID_ARCHS = "arm64 armv7s armv7";
 			};
 			name = Debug;
 		};
 		4499D9BA134DA60700342648 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3C8D84A665B338F8D8F5A858 /* Pods.release.xcconfig */;
+			baseConfigurationReference = 36C01A7E946CDD76333EC8C2 /* Pods-AzPackList5.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_OBJCPP_ARC_ABI = NO;
 				CODE_SIGN_ENTITLEMENTS = AzPackList5.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Masakazu Matsuyama (RL5WRC28AG)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEVELOPMENT_TEAM = 5C2UYK6F45;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
 					"\"$(SRCROOT)/../../AZClass/AZDropbox/AZDropbox.relese\"",
-					"\"$(SRCROOT)/../../OpenCode/GData/GData.release\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = AzPackList5_Prefix.pch;
@@ -1520,7 +1505,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -1537,37 +1522,41 @@
 					"\"$(SRCROOT)/../../OpenCode/OpenSSL/OpenSSL.release/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lxml2",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.azukid.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = AzPackList5;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8D9D86D3-B52A-45D0-81AA-1E3ADCF17F1E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 arm64";
+				VALID_ARCHS = "arm64 armv7s armv7";
 			};
 			name = Release;
 		};
 		4499D9BB134DA60700342648 /* Distribution */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD3E43560F85BBEAC8C2A724 /* Pods.distribution.xcconfig */;
+			baseConfigurationReference = 8EF0573F10AC7CA64B578EC0 /* Pods-AzPackList5.distribution.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_OBJCPP_ARC_ABI = NO;
 				CODE_SIGN_ENTITLEMENTS = AzPackList5.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Masakazu Matsuyama";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEVELOPMENT_TEAM = 5C2UYK6F45;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
 					"\"$(SRCROOT)/../../AZClass/AZDropbox/AZDropbox.relese\"",
-					"\"$(SRCROOT)/../../OpenCode/GData/GData.release\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = AzPackList5_Prefix.pch;
@@ -1575,7 +1564,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -1592,17 +1581,20 @@
 					"\"$(SRCROOT)/../../OpenCode/OpenSSL/OpenSSL.release/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lxml2",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.azukid.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = AzPackList5;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B569D04D-BD54-4E4E-ACAC-54351D9C42CF";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 arm64";
+				VALID_ARCHS = "arm64 armv7s armv7";
 			};
 			name = Distribution;
 		};
@@ -1610,23 +1602,39 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ADDITIONAL_SDKS = "";
-				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"/Developer/SDKs/MacOSX10.6.sdk/usr/include/libxml2\"";
 				INFOPLIST_FILE = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = (
 					"-all_load",
@@ -1636,7 +1644,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 arm64";
+				VALID_ARCHS = "arm64 armv7s armv7";
 			};
 			name = Distribution;
 		};
@@ -1644,24 +1652,41 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ADDITIONAL_SDKS = "";
-				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"/Developer/SDKs/MacOSX10.6.sdk/usr/include/libxml2\"";
 				INFOPLIST_FILE = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-all_load",
@@ -1671,7 +1696,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 arm64";
+				VALID_ARCHS = "arm64 armv7s armv7";
 			};
 			name = Debug;
 		};
@@ -1679,25 +1704,41 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ADDITIONAL_SDKS = "";
-				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"/Developer/SDKs/MacOSX10.6.sdk/usr/include/libxml2\"";
 				INFOPLIST_FILE = "";
 				INFOPLIST_PREPROCESS = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = (
 					"-all_load",
@@ -1707,7 +1748,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 arm64";
+				VALID_ARCHS = "arm64 armv7s armv7";
 			};
 			name = Release;
 		};

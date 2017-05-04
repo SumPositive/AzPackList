@@ -23,7 +23,7 @@
 #import "FileCsv.h"
 #import "SpAppendVC.h"
 #import "PatternImageView.h"
-#import "GDocUploadVC.h"
+//#import "GDocUploadVC.h"
 
 
 #define ACTIONSEET_TAG_DELETEGROUP	901 // 適当な重複しない識別数値を割り当てている
@@ -338,23 +338,23 @@
 
 - (void)actionBackupGoogle:(NSIndexPath*)indexPath
 {
-	if (section0Rows_ <=0) return;
-/*	if (appDelegate_.app_is_iPad) {
-		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-	}*/
-	
-	GDocUploadVC *vc = [[GDocUploadVC alloc] init];
-	vc.Re1selected = e1selected_;
-
-	if (appDelegate_.ppIsPad) {
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
-		nc.modalPresentationStyle = UIModalPresentationFormSheet;
-		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentViewController:nc animated:YES completion:nil];
-		// Upload成功後の再描画は不要
-	} else {
-		[self.navigationController pushViewController:vc animated:YES];
-	}
+//	if (section0Rows_ <=0) return;
+///*	if (appDelegate_.app_is_iPad) {
+//		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+//	}*/
+//	
+//	GDocUploadVC *vc = [[GDocUploadVC alloc] init];
+//	vc.Re1selected = e1selected_;
+//
+//	if (appDelegate_.ppIsPad) {
+//		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+//		nc.modalPresentationStyle = UIModalPresentationFormSheet;
+//		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+//		[self presentViewController:nc animated:YES completion:nil];
+//		// Upload成功後の再描画は不要
+//	} else {
+//		[self.navigationController pushViewController:vc animated:YES];
+//	}
 }
 
 /*[2.0]廃止
@@ -1286,11 +1286,7 @@
 					imageView1.image = [UIImage imageNamed:@"Icon32-Circle.png"];
 					imageView2.image = GimageFromString(32,-11,30,[NSString stringWithFormat:@"%ld", (long)lNoCheck]);
 					
-					if (UIGraphicsBeginImageContextWithOptions != NULL) { // iOS4.0以上
-						UIGraphicsBeginImageContextWithOptions(imageView1.image.size, NO, 0.0); //[0.4.18]Retina対応
-					} else { // Old
-						UIGraphicsBeginImageContext(imageView1.image.size);
-					}
+                    UIGraphicsBeginImageContextWithOptions(imageView1.image.size, NO, 0.0); //[0.4.18]Retina対応
 
 					CGRect rect = CGRectMake(0, 0, imageView1.image.size.width, imageView1.image.size.height);
 					[imageView1.image drawInRect:rect];  
