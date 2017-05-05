@@ -16,8 +16,8 @@ target 'AzPackList5' do
 #pod 'Firebase/Core'
 #pod 'Firebase/AdMob'
 
-pod 'CocoaHTTPServer'
-pod 'GTMHTTPFetcher'
-pod 'SFHFKeychainUtils'
+#pod 'CocoaHTTPServer'
+#pod 'GTMHTTPFetcher'
+#pod 'SFHFKeychainUtils'
 
 end

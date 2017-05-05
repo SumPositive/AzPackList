@@ -1452,22 +1452,8 @@
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESSOR_DEFINITIONS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/AdMob.release\"",
-					"\"$(SRCROOT)/../../OpenCode/GoogleAnalytics/GoogleAnalytics.release\"",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/GoogleAdMobAdsSDK-6.0.3\"",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/GoogleAdMobAdsSdkiOS-6.1.4/Add-ons/GoogleAnalyticsiOS_2.0beta3/Library\"",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/GoogleAdMobAdsSdkiOS-6.1.4\"",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/GoogleAdMobAdsSdkiOS-6.2.1/Add-ons/GoogleAnalyticsiOS_2.0beta3/Library\"",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/GoogleAdMobAdsSdkiOS-6.2.1\"",
-					"\"$(SRCROOT)/../../OpenCode/GoogleAnalytics/Google Analytics SDK 1.5.1/Library\"",
-					"\"$(SRCROOT)/../../OpenCode/GoogleAnalytics/GoogleAnalyticsiOS_1.4\"",
-					"\"$(SRCROOT)/../../OpenCode/OpenSSL/ios-openssl/hatemogi-ios-openssl-d3ddd98/lib\"",
-					"\"$(SRCROOT)/../../OpenCode/OpenSSL/OpenSSL.release/lib\"",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1480,7 +1466,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64 armv7s armv7";
+				VALID_ARCHS = "arm64 armv7s";
 			};
 			name = Debug;
 		};
@@ -1513,19 +1499,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/AdMob.release\"",
-					"\"$(SRCROOT)/../../OpenCode/GoogleAnalytics/GoogleAnalytics.release\"",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/GoogleAdMobAdsSDK-6.0.3\"",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/GoogleAdMobAdsSdkiOS-6.1.4/Add-ons/GoogleAnalyticsiOS_2.0beta3/Library\"",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/GoogleAdMobAdsSdkiOS-6.1.4\"",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/GoogleAdMobAdsSdkiOS-6.2.1/Add-ons/GoogleAnalyticsiOS_2.0beta3/Library\"",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/GoogleAdMobAdsSdkiOS-6.2.1\"",
-					"\"$(SRCROOT)/../../OpenCode/GoogleAnalytics/Google Analytics SDK 1.5.1/Library\"",
-					"\"$(SRCROOT)/../../OpenCode/GoogleAnalytics/GoogleAnalyticsiOS_1.4\"",
-					"\"$(SRCROOT)/../../OpenCode/OpenSSL/ios-openssl/hatemogi-ios-openssl-d3ddd98/lib\"",
-					"\"$(SRCROOT)/../../OpenCode/OpenSSL/OpenSSL.release/lib\"",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1539,7 +1514,7 @@
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64 armv7s armv7";
+				VALID_ARCHS = "arm64 armv7s";
 			};
 			name = Release;
 		};
@@ -1572,19 +1547,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/AdMob.release\"",
-					"\"$(SRCROOT)/../../OpenCode/GoogleAnalytics/GoogleAnalytics.release\"",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/GoogleAdMobAdsSDK-6.0.3\"",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/GoogleAdMobAdsSdkiOS-6.1.4/Add-ons/GoogleAnalyticsiOS_2.0beta3/Library\"",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/GoogleAdMobAdsSdkiOS-6.1.4\"",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/GoogleAdMobAdsSdkiOS-6.2.1/Add-ons/GoogleAnalyticsiOS_2.0beta3/Library\"",
-					"\"$(SRCROOT)/../../OpenCode/AdMob/GoogleAdMobAdsSdkiOS-6.2.1\"",
-					"\"$(SRCROOT)/../../OpenCode/GoogleAnalytics/Google Analytics SDK 1.5.1/Library\"",
-					"\"$(SRCROOT)/../../OpenCode/GoogleAnalytics/GoogleAnalyticsiOS_1.4\"",
-					"\"$(SRCROOT)/../../OpenCode/OpenSSL/ios-openssl/hatemogi-ios-openssl-d3ddd98/lib\"",
-					"\"$(SRCROOT)/../../OpenCode/OpenSSL/OpenSSL.release/lib\"",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1598,7 +1562,7 @@
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64 armv7s armv7";
+				VALID_ARCHS = "arm64 armv7s";
 			};
 			name = Distribution;
 		};
@@ -1637,7 +1601,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = (
@@ -1648,7 +1612,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64 armv7s armv7";
+				VALID_ARCHS = "arm64 armv7s";
 			};
 			name = Distribution;
 		};
@@ -1689,7 +1653,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
@@ -1700,7 +1664,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64 armv7s armv7";
+				VALID_ARCHS = "arm64 armv7s";
 			};
 			name = Debug;
 		};
@@ -1741,7 +1705,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = (
@@ -1752,7 +1716,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64 armv7s armv7";
+				VALID_ARCHS = "arm64 armv7s";
 			};
 			name = Release;
 		};

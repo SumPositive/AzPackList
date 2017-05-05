@@ -4,32 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>CocoaAsyncSocket.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>CocoaHTTPServer.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>CocoaLumberjack.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>GTMHTTPFetcher.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods-AzPackList5.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>SFHFKeychainUtils.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -37,32 +12,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>070577D882DCE5152AE2CA92F1715D91</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>4175095E25747396FFCDA10E4A86FD19</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>9F924D801818988246FBC7A39CD453FA</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>D8447587A2C997FBD61956C692794AB9</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>DC2557D8546F00C0D7E174ACCF6B80C7</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>F75B4975C345071BB45C44E56A05F57F</key>
+		<key>91644DC31FE38A230358F66696A63D2B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
