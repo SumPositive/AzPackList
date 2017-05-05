@@ -24,11 +24,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>GoogleToolboxForMac.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods-AzPackList5.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -47,17 +42,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>65543E2D9A19FDF8439498722720E344</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>925642EAF385A7676BB93CDEEDA72BEC</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>9C1AFCCA81A4D23A457580ECBA7FC4BE</key>
+		<key>4175095E25747396FFCDA10E4A86FD19</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -68,6 +53,11 @@
 			<true/>
 		</dict>
 		<key>D8447587A2C997FBD61956C692794AB9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DC2557D8546F00C0D7E174ACCF6B80C7</key>
 		<dict>
 			<key>primary</key>
 			<true/>

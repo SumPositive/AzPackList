@@ -440,37 +440,37 @@
 //- (void)AdShowApple:(BOOL)bApple AdMob:(BOOL)bMob
 - (void)AdRefresh
 {
-	if (__OptShowAd==NO && mAdMobView==nil) return;
-	
-	//----------------------------------------------------- AdMob  ＜＜loadView:に入れると起動時に生成失敗すると、以後非表示が続いてしまう。
-	if (__OptShowAd && mAdMobView==nil) {
-		// iPhone タテ下部に表示固定、ヨコ非表示
-		mAdMobView = [[GADBannerView alloc] init];
-		// Adパラメータ初期化
-		mAdMobView.alpha = 0;	// 現在状況、(0)非表示  (1)表示中
-		mAdMobView.tag = 0;		// 広告受信状況  (0)なし (1)あり
-		mAdMobView.delegate = self;
-		if (__IsPad) {
-			mAdMobView.adUnitID = AdMobID_PackPAD;	//iPad//
-			mAdMobView.frame = CGRectMake( 0, 800,  GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);
-			mAdMobView.rootViewController = __mainSVC;
-			[__mainSVC.view addSubview:mAdMobView];
-		} else {
-			mAdMobView.adUnitID = AdMobID_PackList;	//iPhone//
-			//mAdMobView.frame = CGRectMake( 0, 500, GAD_SIZE_320x50.width, GAD_SIZE_320x50.height);
-			mAdMobView.frame = CGRectMake( 0, self.window.frame.size.height+GAD_SIZE_320x50.height,
-										  GAD_SIZE_320x50.width, GAD_SIZE_320x50.height);
-			mAdMobView.rootViewController = __mainNC;
-			[__mainNC.view addSubview:mAdMobView];
-		}
-		//【Tips】初期配置は、常にタテ位置にすること。　ヨコのときだけwillRotateToInterfaceOrientation：などの回転通知が届く。
-		[self AdMobWillRotate:UIInterfaceOrientationPortrait]; 
-
-		// リクエスト
-		GADRequest *request = [GADRequest request];
-		//[request setTesting:YES];
-		[mAdMobView loadRequest:request];	
-	}
+//	if (__OptShowAd==NO && mAdMobView==nil) return;
+//	
+//	//----------------------------------------------------- AdMob  ＜＜loadView:に入れると起動時に生成失敗すると、以後非表示が続いてしまう。
+//	if (__OptShowAd && mAdMobView==nil) {
+//		// iPhone タテ下部に表示固定、ヨコ非表示
+//		mAdMobView = [[GADBannerView alloc] init];
+//		// Adパラメータ初期化
+//		mAdMobView.alpha = 0;	// 現在状況、(0)非表示  (1)表示中
+//		mAdMobView.tag = 0;		// 広告受信状況  (0)なし (1)あり
+//		mAdMobView.delegate = self;
+//		if (__IsPad) {
+//			mAdMobView.adUnitID = AdMobID_PackPAD;	//iPad//
+//			mAdMobView.frame = CGRectMake( 0, 800,  GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);
+//			mAdMobView.rootViewController = __mainSVC;
+//			[__mainSVC.view addSubview:mAdMobView];
+//		} else {
+//			mAdMobView.adUnitID = AdMobID_PackList;	//iPhone//
+//			//mAdMobView.frame = CGRectMake( 0, 500, GAD_SIZE_320x50.width, GAD_SIZE_320x50.height);
+//			mAdMobView.frame = CGRectMake( 0, self.window.frame.size.height+GAD_SIZE_320x50.height,
+//										  GAD_SIZE_320x50.width, GAD_SIZE_320x50.height);
+//			mAdMobView.rootViewController = __mainNC;
+//			[__mainNC.view addSubview:mAdMobView];
+//		}
+//		//【Tips】初期配置は、常にタテ位置にすること。　ヨコのときだけwillRotateToInterfaceOrientation：などの回転通知が届く。
+//		[self AdMobWillRotate:UIInterfaceOrientationPortrait]; 
+//
+//		// リクエスト
+//		GADRequest *request = [GADRequest request];
+//		//[request setTesting:YES];
+//		[mAdMobView loadRequest:request];	
+//	}
 	
 //	//----------------------------------------------------- iAd: AdMobの上層になるように後からaddSubviewする
 //	if (__OptShowAd && miAdView==nil
@@ -490,34 +490,34 @@
 //		[self iAdWillRotate:UIInterfaceOrientationPortrait]; 
 //	}
 	
-	if (__OptShowAd) {
-		//NSLog(@"=== AdRefresh: Can[%d] iAd[%d⇒%d] AdMob[%d⇒%d]", adCanVisible_, (int)iAdView_.tag, (int)iAdView_.alpha, 
-		//	  (int)adMobView_.tag, (int)adMobView_.alpha);
-		//if (MbAdCanVisible && MbannerView.alpha==MbannerView.tag && RoAdMobView.alpha==RoAdMobView.tag) {
-		if (mAdCanVisible) {
-			if (mAdMobView.alpha==mAdMobView.tag) {
-				//NSLog(@"   = 変化なし =");
-				return; // 変化なし
-			}
-		} else {
-			if (mAdMobView.alpha==0) {
-				//NSLog(@"   = OFF = 変化なし =");
-				return; // 変化なし
-			}
-		}
-	} 
-	else {
-		mAdCanVisible = NO;	// __OptShowAd==NO につき、Ad非表示にしてから破棄する。
-	}
-	
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-	[UIView setAnimationDuration:1.2];
-	
-	if (__OptShowAd==NO) {		// AdOffのとき、非表示アニメの後、破棄する
-		[UIView setAnimationDelegate:self];
-		[UIView setAnimationDidStopSelector:@selector(AdRefreshAfter)];
-	}
+//	if (__OptShowAd) {
+//		//NSLog(@"=== AdRefresh: Can[%d] iAd[%d⇒%d] AdMob[%d⇒%d]", adCanVisible_, (int)iAdView_.tag, (int)iAdView_.alpha, 
+//		//	  (int)adMobView_.tag, (int)adMobView_.alpha);
+//		//if (MbAdCanVisible && MbannerView.alpha==MbannerView.tag && RoAdMobView.alpha==RoAdMobView.tag) {
+//		if (mAdCanVisible) {
+//			if (mAdMobView.alpha==mAdMobView.tag) {
+//				//NSLog(@"   = 変化なし =");
+//				return; // 変化なし
+//			}
+//		} else {
+//			if (mAdMobView.alpha==0) {
+//				//NSLog(@"   = OFF = 変化なし =");
+//				return; // 変化なし
+//			}
+//		}
+//	} 
+//	else {
+//		mAdCanVisible = NO;	// __OptShowAd==NO につき、Ad非表示にしてから破棄する。
+//	}
+//	
+//	[UIView beginAnimations:nil context:NULL];
+//	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+//	[UIView setAnimationDuration:1.2];
+//	
+//	if (__OptShowAd==NO) {		// AdOffのとき、非表示アニメの後、破棄する
+//		[UIView setAnimationDelegate:self];
+//		[UIView setAnimationDidStopSelector:@selector(AdRefreshAfter)];
+//	}
 
 	if (__IsPad) {
 //		if (miAdView) {
@@ -537,24 +537,24 @@
 //			}
 //		}
 		
-		if (mAdMobView) {
-			if (UIInterfaceOrientationIsPortrait(__mainSVC.interfaceOrientation)) {
-				mAdMobView.alpha = 0;	//iPadのみ、タテのとき消す
-			} else {
-				if (mAdCanVisible && mAdMobView.tag==1) {
-					if (mAdMobView.alpha==0) {
-						mAdMobView.alpha = 1;
-					}
-				} else {
-					if (__IsPad && __OptShowAd) {
-						mAdMobView.alpha = 1;		// iPadは常時表示
-					}
-					else if (mAdMobView.alpha==1) {
-						mAdMobView.alpha = 0;
-					}
-				}
-			}
-		}
+//		if (mAdMobView) {
+//			if (UIInterfaceOrientationIsPortrait(__mainSVC.interfaceOrientation)) {
+//				mAdMobView.alpha = 0;	//iPadのみ、タテのとき消す
+//			} else {
+//				if (mAdCanVisible && mAdMobView.tag==1) {
+//					if (mAdMobView.alpha==0) {
+//						mAdMobView.alpha = 1;
+//					}
+//				} else {
+//					if (__IsPad && __OptShowAd) {
+//						mAdMobView.alpha = 1;		// iPadは常時表示
+//					}
+//					else if (mAdMobView.alpha==1) {
+//						mAdMobView.alpha = 0;
+//					}
+//				}
+//			}
+//		}
 	}
 	else {
 //		if (miAdView) {
@@ -574,25 +574,25 @@
 //			}
 //		}
 		
-		if (mAdMobView) {
-			//CGRect rc = mAdMobView.frame;
-			if (mAdCanVisible && mAdMobView.tag==1) { //iAdが非表示のときだけAdMob表示
-				if (mAdMobView.alpha==0) {
-					//rc.origin.y = 480 - 50;		//AdMobはヨコ向き常に非表示 ＜＜これはタテの配置なのでヨコだと何もしなくても範囲外で非表示になる
-					//mAdMobView.frame = rc;
-					mAdMobView.alpha = 1;
-				}
-			} else {
-				if (mAdMobView.alpha==1) {
-					//rc.origin.y = 480 + 10; // 下部へ隠す
-					//mAdMobView.frame = rc;
-					mAdMobView.alpha = 0;	//[1.0.1]3GS-4.3.3においてAdで電卓キーが押せない不具合報告あり。未確認だがこれにて対応
-				}
-				// リクエスト
-				GADRequest *request = [GADRequest request];
-				[mAdMobView loadRequest:request];	
-			}
-		}
+//		if (mAdMobView) {
+//			//CGRect rc = mAdMobView.frame;
+//			if (mAdCanVisible && mAdMobView.tag==1) { //iAdが非表示のときだけAdMob表示
+//				if (mAdMobView.alpha==0) {
+//					//rc.origin.y = 480 - 50;		//AdMobはヨコ向き常に非表示 ＜＜これはタテの配置なのでヨコだと何もしなくても範囲外で非表示になる
+//					//mAdMobView.frame = rc;
+//					mAdMobView.alpha = 1;
+//				}
+//			} else {
+//				if (mAdMobView.alpha==1) {
+//					//rc.origin.y = 480 + 10; // 下部へ隠す
+//					//mAdMobView.frame = rc;
+//					mAdMobView.alpha = 0;	//[1.0.1]3GS-4.3.3においてAdで電卓キーが押せない不具合報告あり。未確認だがこれにて対応
+//				}
+//				// リクエスト
+//				GADRequest *request = [GADRequest request];
+//				[mAdMobView loadRequest:request];	
+//			}
+//		}
 	}
 	// アニメ開始
 	[UIView commitAnimations];
@@ -600,12 +600,12 @@
 
 - (void)AdRemove
 {	// dealloc:からも呼び出される
-	if (mAdMobView) {
-		mAdMobView.delegate = nil;
-		mAdMobView.rootViewController = nil;
-		[mAdMobView removeFromSuperview];
-		mAdMobView = nil;
-	}
+//	if (mAdMobView) {
+//		mAdMobView.delegate = nil;
+//		mAdMobView.rootViewController = nil;
+//		[mAdMobView removeFromSuperview];
+//		mAdMobView = nil;
+//	}
 //	if (miAdView) {
 //		[miAdView cancelBannerViewAction];	// 停止
 //		miAdView.delegate = nil;
@@ -629,28 +629,28 @@
 
 - (void)AdMobWillRotate:(UIInterfaceOrientation)toInterfaceOrientation
 {
-	if (mAdMobView==nil) return;
-
-	if (__IsPad) {
-		if (mAdMobView) {
-			CGFloat fyOfs = GAD_SIZE_300x250.height+20+66;  // 20=ステータスバー高さ　　66=iAd高さ
-			if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) {	// タテ
-				/*mAdMobView.frame = CGRectMake(
-											   768-45-GAD_SIZE_300x250.width,
-											   1024-fyOfs,
-											   GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);*/
-				mAdMobView.alpha = 0;	//[2.0.2]タテ非表示にした。iAdを常時表示にしたため。
-			} else {	// ヨコ
-				mAdMobView.alpha = 1;
-				mAdMobView.frame = CGRectMake(
-											   10,
-											   768-fyOfs,
-											   GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);
-			}
-		}
-	} else {
-		//iPhoneでは、タテ配置固定のみ。これによりヨコでは常に範囲外で非表示にしている。
-	}
+//	if (mAdMobView==nil) return;
+//
+//	if (__IsPad) {
+//		if (mAdMobView) {
+//			CGFloat fyOfs = GAD_SIZE_300x250.height+20+66;  // 20=ステータスバー高さ　　66=iAd高さ
+//			if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) {	// タテ
+//				/*mAdMobView.frame = CGRectMake(
+//											   768-45-GAD_SIZE_300x250.width,
+//											   1024-fyOfs,
+//											   GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);*/
+//				mAdMobView.alpha = 0;	//[2.0.2]タテ非表示にした。iAdを常時表示にしたため。
+//			} else {	// ヨコ
+//				mAdMobView.alpha = 1;
+//				mAdMobView.frame = CGRectMake(
+//											   10,
+//											   768-fyOfs,
+//											   GAD_SIZE_300x250.width, GAD_SIZE_300x250.height);
+//			}
+//		}
+//	} else {
+//		//iPhoneでは、タテ配置固定のみ。これによりヨコでは常に範囲外で非表示にしている。
+//	}
 }
 
 //- (void)iAdWillRotate:(UIInterfaceOrientation)toInterfaceOrientation
@@ -696,19 +696,19 @@
 //	}
 //}
 
-- (void)adViewDidReceiveAd:(GADBannerView *)bannerView 
-{	// AdMob 広告あり
-	//NSLog(@"AdMob - adViewDidReceiveAd");
-	bannerView.tag = 1;	// 広告受信状況  (0)なし (1)あり
-	[self AdRefresh];
-}
-
-- (void)adView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(GADRequestError *)error 
-{	// AdMob 広告なし
-	//NSLog(@"AdMob - adView:didFailToReceiveAdWithError:%@", [error localizedDescription]);
-	bannerView.tag = 0;	// 広告受信状況  (0)なし (1)あり
-	[self AdRefresh];
-}
+//- (void)adViewDidReceiveAd:(GADBannerView *)bannerView 
+//{	// AdMob 広告あり
+//	//NSLog(@"AdMob - adViewDidReceiveAd");
+//	bannerView.tag = 1;	// 広告受信状況  (0)なし (1)あり
+//	[self AdRefresh];
+//}
+//
+//- (void)adView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(GADRequestError *)error 
+//{	// AdMob 広告なし
+//	//NSLog(@"AdMob - adView:didFailToReceiveAdWithError:%@", [error localizedDescription]);
+//	bannerView.tag = 0;	// 広告受信状況  (0)なし (1)あり
+//	[self AdRefresh];
+//}
 
 //- (void)bannerViewDidLoadAd:(ADBannerView *)banner
 //{	// iAd取得できたときに呼ばれる　⇒　表示する

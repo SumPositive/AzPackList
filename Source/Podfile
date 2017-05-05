@@ -12,8 +12,9 @@ target 'AzPackList5' do
 #pod 'Google-AdMob-Ads-SDK'
 #pod 'GoogleAnalytics-iOS-SDK',  '~> 3.0'
 #pod 'GoogleMobileAds'
-pod 'Firebase/Core'
-pod 'Firebase/AdMob'
+
+#pod 'Firebase/Core'
+#pod 'Firebase/AdMob'
 
 pod 'CocoaHTTPServer'
 pod 'GTMHTTPFetcher'

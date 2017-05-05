@@ -7,7 +7,7 @@
 //
 //#import <iAd/iAd.h>
 //#import "GADBannerView.h"
-#import <GoogleMobileAds/GoogleMobileAds.h>
+//#import <GoogleMobileAds/GoogleMobileAds.h>
 #import "AZDropboxVC.h"		//<AZDropboxDelegate>
 
 
@@ -20,11 +20,11 @@
 @class E1;
 @interface AppDelegate : NSObject
 					<UIApplicationDelegate, UITabBarControllerDelegate, UISplitViewControllerDelegate,
-                        GADBannerViewDelegate, AZDropboxDelegate>
+                        AZDropboxDelegate>
 {
 @private	// 自クラス内からだけ参照できる
 	//ADBannerView				*miAdView;
-	GADBannerView				*mAdMobView;
+//	GADBannerView				*mAdMobView;
 	BOOL								mAdCanVisible;		//YES:表示可能な状況　 NO:表示してはいけない状況
 	
 	// Clip Borad
