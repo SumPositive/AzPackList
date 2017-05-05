@@ -512,6 +512,8 @@
 		44F07DB9119AFE69007D8863 /* FileCsv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileCsv.h; sourceTree = "<group>"; };
 		44F07DBA119AFE69007D8863 /* FileCsv.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileCsv.m; sourceTree = "<group>"; };
 		44F195731EBB4C4900F5FF93 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = AzPackList5/Images.xcassets; sourceTree = "<group>"; };
+		44F195751EBC2D3D00F5FF93 /* Readme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Readme.h; sourceTree = "<group>"; };
+		44F195761EBC2D5300F5FF93 /* History.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = History.h; sourceTree = "<group>"; };
 		44F5921014E38E1A00B875A9 /* CameraVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraVC.m; sourceTree = "<group>"; };
 		44F5921114E38E1A00B875A9 /* CameraVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CameraVC.xib; sourceTree = "<group>"; };
 		44F5921514E39DC900B875A9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -575,6 +577,8 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				44F195751EBC2D3D00F5FF93 /* Readme.h */,
+				44F195761EBC2D5300F5FF93 /* History.h */,
 				44CB23E711E039AF002A9331 /* OpenCode */,
 				44240A8215364ECB000981A2 /* AZClass */,
 				080E96DDFE201D6D7F000001 /* Classes */,
