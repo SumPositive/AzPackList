@@ -9,7 +9,7 @@
 
 #import "Global.h"
 #import "AppDelegate.h"
-#import "padRootVC.h"
+#import "PadRootVC.h"
 #import "Elements.h"
 #import "MocFunctions.h"
 #import "FileCsv.h"
@@ -36,8 +36,8 @@
 #define FREE_AD_OFFSET_Y			200.0	// iAdを上に隠すため
 - (void)AdRefresh;
 - (void)AdRemove;
-- (void)AdMobWillRotate:(UIInterfaceOrientation)toInterfaceOrientation;
-- (void)iAdWillRotate:(UIInterfaceOrientation)toInterfaceOrientation;
+//- (void)AdMobWillRotate:(UIInterfaceOrientation)toInterfaceOrientation;
+//- (void)iAdWillRotate:(UIInterfaceOrientation)toInterfaceOrientation;
 @end
 
 
@@ -131,12 +131,12 @@
 	}
 
 	//-------------------------------------------------デバイス、ＯＳ確認
-	if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0"]==NSOrderedAscending) { // ＜ "5.0"
-		// iOS5.0より前
-		azAlertBox(@"! STOP !", @"Need more iOS 5.0", nil);
-		GA_TRACK_EVENT_ERROR(@"STOP < iOS 5.0",0);
-		exit(0);
-	}
+//	if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0"]==NSOrderedAscending) { // ＜ "5.0"
+//		// iOS5.0より前
+//		azAlertBox(@"! STOP !", @"Need more iOS 5.0", nil);
+//		GA_TRACK_EVENT_ERROR(@"STOP < iOS 5.0",0);
+//		exit(0);
+//	}
 	//__IsPad = [[[UIDevice currentDevice] model] hasPrefix:@"iPad"];	// iPad
 	__IsPad = iS_iPAD;
 	NSLog(@"__IsPad=%d,  app_is_Ad_=%d,  app_pid_AdOff_=%d", __IsPad, __OptShowAd, __Paid_SwitchAd);
@@ -176,12 +176,12 @@
 	//Pad// iOS4以降を前提としてバックグランド機能に任せて前回復帰処理しないことにした。
 	[__window makeKeyAndVisible];	// 表示開始
 	
-	// Dropbox 標準装備
-	DBSession* dbSession = [[DBSession alloc]
-							 initWithAppKey:DBOX_APPKEY
-							 appSecret:DBOX_SECRET
-							root:kDBRootAppFolder]; // either kDBRootAppFolder or kDBRootDropbox
-	[DBSession setSharedSession:dbSession];
+//	// Dropbox 標準装備
+//	DBSession* dbSession = [[DBSession alloc]
+//							 initWithAppKey:DBOX_APPKEY
+//							 appSecret:DBOX_SECRET
+//							root:kDBRootAppFolder]; // either kDBRootAppFolder or kDBRootDropbox
+//	[DBSession setSharedSession:dbSession];
 
 	// Photo Picasa
 	//picasaBox_ = [[AZPicasa alloc] init];
@@ -269,9 +269,9 @@
 			[alv	show];
 		}
 	}
-	else if ([[DBSession sharedSession] handleOpenURL:url]) { //OAuth結果：urlに認証キーが含まれる
-        return YES;
-    }
+//	else if ([[DBSession sharedSession] handleOpenURL:url]) { //OAuth結果：urlに認証キーが含まれる
+//        return YES;
+//    }
     return NO;
 }
 
@@ -623,8 +623,8 @@
 
 - (void)AdViewWillRotate:(UIInterfaceOrientation)toInterfaceOrientation
 {
-	[self AdMobWillRotate:toInterfaceOrientation];	//AdMob
-	[self iAdWillRotate:toInterfaceOrientation];			//iAd
+//	[self AdMobWillRotate:toInterfaceOrientation];	//AdMob
+//	[self iAdWillRotate:toInterfaceOrientation];			//iAd
 }
 
 - (void)AdMobWillRotate:(UIInterfaceOrientation)toInterfaceOrientation

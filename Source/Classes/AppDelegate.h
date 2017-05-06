@@ -8,7 +8,7 @@
 //#import <iAd/iAd.h>
 //#import "GADBannerView.h"
 //#import <GoogleMobileAds/GoogleMobileAds.h>
-#import "AZDropboxVC.h"		//<AZDropboxDelegate>
+//#import "AZDropboxVC.h"		//<AZDropboxDelegate>
 
 
 //iOS6以降、回転対応のためサブクラス化が必要になった。
@@ -19,8 +19,7 @@
 @class PadRootVC;
 @class E1;
 @interface AppDelegate : NSObject
-					<UIApplicationDelegate, UITabBarControllerDelegate, UISplitViewControllerDelegate,
-                        AZDropboxDelegate>
+					<UIApplicationDelegate, UITabBarControllerDelegate, UISplitViewControllerDelegate>
 {
 @private	// 自クラス内からだけ参照できる
 	//ADBannerView				*miAdView;

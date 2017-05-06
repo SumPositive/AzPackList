@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		155A6D03B2997C7011C8EA3E /* libPods-AzPackList5.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 85991DF3B948C3C1E0C3A8A9 /* libPods-AzPackList5.a */; };
 		440B5B2E14B44E13006BEA96 /* Tx-Back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 440B5B2C14B44E13006BEA96 /* Tx-Back@2x.png */; };
 		440B5B2F14B44E13006BEA96 /* Tx-Back.png in Resources */ = {isa = PBXBuildFile; fileRef = 440B5B2D14B44E13006BEA96 /* Tx-Back.png */; };
 		440DD3F314B2FD9C00C9B40C /* Icon72.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EC383814A4DEF300127B41 /* Icon72.png */; };
@@ -34,10 +33,6 @@
 		445998D6141383730005F706 /* Icon32-MailNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CE141383730005F706 /* Icon32-MailNew.png */; };
 		445998DA141383730005F706 /* Icon32-CircleCheckClear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CF141383730005F706 /* Icon32-CircleCheckClear@2x.png */; };
 		445998DE141383730005F706 /* Icon32-CircleCheckClear.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998D0141383730005F706 /* Icon32-CircleCheckClear.png */; };
-		446B73F01A7D12F20051693F /* MyHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 446B73EE1A7D12F20051693F /* MyHTTPConnection.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		446B73F11A7D12F20051693F /* MyHTTPConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 446B73EF1A7D12F20051693F /* MyHTTPConnection.h */; };
-		446B73F41A7D14EC0051693F /* localhostAddresses.h in Headers */ = {isa = PBXBuildFile; fileRef = 446B73F21A7D14EC0051693F /* localhostAddresses.h */; };
-		446B73F51A7D14EC0051693F /* localhostAddresses.m in Sources */ = {isa = PBXBuildFile; fileRef = 446B73F31A7D14EC0051693F /* localhostAddresses.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		44835AD0156BDC1E00A83167 /* UIDevice-Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 44835ABD156BDC1E00A83167 /* UIDevice-Hardware.h */; };
 		44835AD1156BDC1E00A83167 /* UIDevice-Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 44835ABE156BDC1E00A83167 /* UIDevice-Hardware.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4499D7D7134DA60600342648 /* Icon16-ItemGrayHide.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68A113196CC100012FB5 /* Icon16-ItemGrayHide.png */; };
@@ -191,15 +186,6 @@
 		44DF7765156A760700386E89 /* AZWeb-Forward-16@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF7721156A760700386E89 /* AZWeb-Forward-16@2x.png */; };
 		44DF7766156A760700386E89 /* AZWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 44DF7722156A760700386E89 /* AZWebView.h */; };
 		44DF7767156A760700386E89 /* AZWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 44DF7723156A760700386E89 /* AZWebView.m */; };
-		44DF777C156A760700386E89 /* AZDropbox-130x44.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF773A156A760700386E89 /* AZDropbox-130x44.png */; };
-		44DF777D156A760700386E89 /* AZDropbox-130x44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF773B156A760700386E89 /* AZDropbox-130x44@2x.png */; };
-		44DF777E156A760700386E89 /* AZDropbox-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF773C156A760700386E89 /* AZDropbox-32.png */; };
-		44DF777F156A760700386E89 /* AZDropbox-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF773D156A760700386E89 /* AZDropbox-32@2x.png */; };
-		44DF7780156A760700386E89 /* AZDropboxDown.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44DF773E156A760700386E89 /* AZDropboxDown.xib */; };
-		44DF7781156A760700386E89 /* AZDropboxUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44DF773F156A760700386E89 /* AZDropboxUp.xib */; };
-		44DF7782156A760700386E89 /* AZDropboxVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44DF7740156A760700386E89 /* AZDropboxVC.h */; };
-		44DF7783156A760700386E89 /* AZDropboxVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44DF7741156A760700386E89 /* AZDropboxVC.m */; };
-		44DF7784156A760700386E89 /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DF7742156A760700386E89 /* DropboxSDK.framework */; };
 		44DF7785156A760700386E89 /* AZDial.h in Headers */ = {isa = PBXBuildFile; fileRef = 44DF7744156A760700386E89 /* AZDial.h */; };
 		44DF7786156A760700386E89 /* AZDial.m in Sources */ = {isa = PBXBuildFile; fileRef = 44DF7745156A760700386E89 /* AZDial.m */; };
 		44DF7787156A760700386E89 /* AZDialBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF7746156A760700386E89 /* AZDialBack.png */; };
@@ -233,10 +219,11 @@
 		44EFD09814C17CAF003FF260 /* Icon-Store-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD08814C17CAF003FF260 /* Icon-Store-40@2x.png */; };
 		44EFD09914C17CAF003FF260 /* Icon-Store-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD08914C17CAF003FF260 /* Icon-Store-40.png */; };
 		44F195741EBB4C4900F5FF93 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44F195731EBB4C4900F5FF93 /* Images.xcassets */; };
+		44F1957C1EBDB66000F5FF93 /* SFHFKeychainUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 44F1957A1EBDB66000F5FF93 /* SFHFKeychainUtils.h */; };
+		44F1957D1EBDB66000F5FF93 /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F1957B1EBDB66000F5FF93 /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		44F5921314E38E1A00B875A9 /* CameraVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F5921014E38E1A00B875A9 /* CameraVC.m */; };
 		44F5921414E38E1A00B875A9 /* CameraVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F5921114E38E1A00B875A9 /* CameraVC.xib */; };
 		44F5921614E39DCA00B875A9 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44F5921514E39DC900B875A9 /* AVFoundation.framework */; };
-		A9A60064E5DA883C42FC8015 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B962C28F722FA71E260F9A3 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -249,8 +236,6 @@
 		28C286DF0D94DF7D0034E888 /* E1viewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = E1viewController.h; sourceTree = "<group>"; };
 		28C286E00D94DF7D0034E888 /* E1viewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = E1viewController.m; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ../main.m; sourceTree = "<group>"; };
-		36C01A7E946CDD76333EC8C2 /* Pods-AzPackList5.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AzPackList5.release.xcconfig"; path = "Pods/Target Support Files/Pods-AzPackList5/Pods-AzPackList5.release.xcconfig"; sourceTree = "<group>"; };
-		3C8D84A665B338F8D8F5A858 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		4400E1FB110F493A000DFC3B /* SpListTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpListTVC.h; sourceTree = "<group>"; };
 		4400E1FC110F493A000DFC3B /* SpListTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpListTVC.m; sourceTree = "<group>"; };
 		440B5B2C14B44E13006BEA96 /* Tx-Back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Tx-Back@2x.png"; path = "Design/Tx-Back@2x.png"; sourceTree = "<group>"; };
@@ -319,10 +304,6 @@
 		44601C9D126187BA005E189A /* SpAppendVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpAppendVC.h; sourceTree = "<group>"; };
 		446AAE241111F0250077BF89 /* E3detailTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = E3detailTVC.h; sourceTree = "<group>"; };
 		446AAE251111F0250077BF89 /* E3detailTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = E3detailTVC.m; sourceTree = "<group>"; };
-		446B73EE1A7D12F20051693F /* MyHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyHTTPConnection.m; path = "HTTP Server/MyHTTPConnection.m"; sourceTree = SOURCE_ROOT; };
-		446B73EF1A7D12F20051693F /* MyHTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyHTTPConnection.h; path = "HTTP Server/MyHTTPConnection.h"; sourceTree = SOURCE_ROOT; };
-		446B73F21A7D14EC0051693F /* localhostAddresses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = localhostAddresses.h; path = "HTTP Server/localhostAddresses.h"; sourceTree = SOURCE_ROOT; };
-		446B73F31A7D14EC0051693F /* localhostAddresses.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = localhostAddresses.m; path = "HTTP Server/localhostAddresses.m"; sourceTree = SOURCE_ROOT; };
 		446D68A113196CC100012FB5 /* Icon16-ItemGrayHide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon16-ItemGrayHide.png"; path = "Design/Icon16-ItemGrayHide.png"; sourceTree = "<group>"; };
 		446D68A213196CC100012FB5 /* Icon16-ItemGrayHide@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon16-ItemGrayHide@2x.png"; path = "Design/Icon16-ItemGrayHide@2x.png"; sourceTree = "<group>"; };
 		446D68A313196CC100012FB5 /* Icon16-ItemGrayShow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon16-ItemGrayShow.png"; path = "Design/Icon16-ItemGrayShow.png"; sourceTree = "<group>"; };
@@ -454,15 +435,6 @@
 		44DF7721156A760700386E89 /* AZWeb-Forward-16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZWeb-Forward-16@2x.png"; sourceTree = "<group>"; };
 		44DF7722156A760700386E89 /* AZWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZWebView.h; sourceTree = "<group>"; };
 		44DF7723156A760700386E89 /* AZWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZWebView.m; sourceTree = "<group>"; };
-		44DF773A156A760700386E89 /* AZDropbox-130x44.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDropbox-130x44.png"; sourceTree = "<group>"; };
-		44DF773B156A760700386E89 /* AZDropbox-130x44@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDropbox-130x44@2x.png"; sourceTree = "<group>"; };
-		44DF773C156A760700386E89 /* AZDropbox-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDropbox-32.png"; sourceTree = "<group>"; };
-		44DF773D156A760700386E89 /* AZDropbox-32@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDropbox-32@2x.png"; sourceTree = "<group>"; };
-		44DF773E156A760700386E89 /* AZDropboxDown.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AZDropboxDown.xib; sourceTree = "<group>"; };
-		44DF773F156A760700386E89 /* AZDropboxUp.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AZDropboxUp.xib; sourceTree = "<group>"; };
-		44DF7740156A760700386E89 /* AZDropboxVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZDropboxVC.h; sourceTree = "<group>"; };
-		44DF7741156A760700386E89 /* AZDropboxVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZDropboxVC.m; sourceTree = "<group>"; };
-		44DF7742156A760700386E89 /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxSDK.framework; sourceTree = "<group>"; };
 		44DF7744156A760700386E89 /* AZDial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZDial.h; sourceTree = "<group>"; };
 		44DF7745156A760700386E89 /* AZDial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZDial.m; sourceTree = "<group>"; };
 		44DF7746156A760700386E89 /* AZDialBack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZDialBack.png; sourceTree = "<group>"; };
@@ -514,15 +486,11 @@
 		44F195731EBB4C4900F5FF93 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = AzPackList5/Images.xcassets; sourceTree = "<group>"; };
 		44F195751EBC2D3D00F5FF93 /* Readme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Readme.h; sourceTree = "<group>"; };
 		44F195761EBC2D5300F5FF93 /* History.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = History.h; sourceTree = "<group>"; };
+		44F1957A1EBDB66000F5FF93 /* SFHFKeychainUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFHFKeychainUtils.h; sourceTree = "<group>"; };
+		44F1957B1EBDB66000F5FF93 /* SFHFKeychainUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHFKeychainUtils.m; sourceTree = "<group>"; };
 		44F5921014E38E1A00B875A9 /* CameraVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraVC.m; sourceTree = "<group>"; };
 		44F5921114E38E1A00B875A9 /* CameraVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CameraVC.xib; sourceTree = "<group>"; };
 		44F5921514E39DC900B875A9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		5F7F17612D3DEC085887E635 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		85991DF3B948C3C1E0C3A8A9 /* libPods-AzPackList5.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AzPackList5.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8EF0573F10AC7CA64B578EC0 /* Pods-AzPackList5.distribution.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AzPackList5.distribution.xcconfig"; path = "Pods/Target Support Files/Pods-AzPackList5/Pods-AzPackList5.distribution.xcconfig"; sourceTree = "<group>"; };
-		9B962C28F722FA71E260F9A3 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		DD3E43560F85BBEAC8C2A724 /* Pods.distribution.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.distribution.xcconfig; path = "Pods/Target Support Files/Pods/Pods.distribution.xcconfig"; sourceTree = "<group>"; };
-		F1A486ECD29231735DF814EB /* Pods-AzPackList5.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AzPackList5.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AzPackList5/Pods-AzPackList5.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -544,9 +512,6 @@
 				4499D83D134DA60600342648 /* CFNetwork.framework in Frameworks */,
 				44BBBA26149493CD00A85BFF /* MessageUI.framework in Frameworks */,
 				44BC130E14B40E0600202411 /* SystemConfiguration.framework in Frameworks */,
-				44DF7784156A760700386E89 /* DropboxSDK.framework in Frameworks */,
-				A9A60064E5DA883C42FC8015 /* libPods.a in Frameworks */,
-				155A6D03B2997C7011C8EA3E /* libPods-AzPackList5.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -556,10 +521,6 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				446B73F21A7D14EC0051693F /* localhostAddresses.h */,
-				446B73F31A7D14EC0051693F /* localhostAddresses.m */,
-				446B73EF1A7D12F20051693F /* MyHTTPConnection.h */,
-				446B73EE1A7D12F20051693F /* MyHTTPConnection.m */,
 				44CB23E911E03AD3002A9331 /* Main */,
 				44CB23E811E039DC002A9331 /* Sub */,
 			);
@@ -586,7 +547,6 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				D42776BF43BA308A2309214D /* Pods */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -637,8 +597,6 @@
 				28860BE40F44EE6400985440 /* CoreData.framework */,
 				44EEBEDA1185E20000EA26AB /* CFNetwork.framework */,
 				44CB242211E04E49002A9331 /* iAd.framework */,
-				9B962C28F722FA71E260F9A3 /* libPods.a */,
-				85991DF3B948C3C1E0C3A8A9 /* libPods-AzPackList5.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -648,7 +606,6 @@
 			children = (
 				44D9B29B15F1027C00F5045C /* AZStore.relese */,
 				44DF771D156A760700386E89 /* AZWebView.relese */,
-				44DF7739156A760700386E89 /* AZDropbox.relese */,
 				44DF7743156A760700386E89 /* AZDial.relese */,
 				44DF7752156A760700386E89 /* AZAbout.relese */,
 				44DF775C156A760700386E89 /* AZClass.relese */,
@@ -669,6 +626,7 @@
 		44CB23E711E039AF002A9331 /* OpenCode */ = {
 			isa = PBXGroup;
 			children = (
+				44F195791EBDB66000F5FF93 /* SFHFKeychainUtils.release */,
 				44835ABC156BDC1E00A83167 /* UIDevice-Hardware.release */,
 			);
 			name = OpenCode;
@@ -783,23 +741,6 @@
 			);
 			name = AZWebView.relese;
 			path = ../../AZClass/AZWebView/AZWebView.relese;
-			sourceTree = "<group>";
-		};
-		44DF7739156A760700386E89 /* AZDropbox.relese */ = {
-			isa = PBXGroup;
-			children = (
-				44DF773A156A760700386E89 /* AZDropbox-130x44.png */,
-				44DF773B156A760700386E89 /* AZDropbox-130x44@2x.png */,
-				44DF773C156A760700386E89 /* AZDropbox-32.png */,
-				44DF773D156A760700386E89 /* AZDropbox-32@2x.png */,
-				44DF773E156A760700386E89 /* AZDropboxDown.xib */,
-				44DF773F156A760700386E89 /* AZDropboxUp.xib */,
-				44DF7740156A760700386E89 /* AZDropboxVC.h */,
-				44DF7741156A760700386E89 /* AZDropboxVC.m */,
-				44DF7742156A760700386E89 /* DropboxSDK.framework */,
-			);
-			name = AZDropbox.relese;
-			path = ../../AZClass/AZDropbox/AZDropbox.relese;
 			sourceTree = "<group>";
 		};
 		44DF7743156A760700386E89 /* AZDial.relese */ = {
@@ -959,17 +900,14 @@
 			name = Images;
 			sourceTree = "<group>";
 		};
-		D42776BF43BA308A2309214D /* Pods */ = {
+		44F195791EBDB66000F5FF93 /* SFHFKeychainUtils.release */ = {
 			isa = PBXGroup;
 			children = (
-				5F7F17612D3DEC085887E635 /* Pods.debug.xcconfig */,
-				3C8D84A665B338F8D8F5A858 /* Pods.release.xcconfig */,
-				DD3E43560F85BBEAC8C2A724 /* Pods.distribution.xcconfig */,
-				F1A486ECD29231735DF814EB /* Pods-AzPackList5.debug.xcconfig */,
-				36C01A7E946CDD76333EC8C2 /* Pods-AzPackList5.release.xcconfig */,
-				8EF0573F10AC7CA64B578EC0 /* Pods-AzPackList5.distribution.xcconfig */,
+				44F1957A1EBDB66000F5FF93 /* SFHFKeychainUtils.h */,
+				44F1957B1EBDB66000F5FF93 /* SFHFKeychainUtils.m */,
 			);
-			name = Pods;
+			name = SFHFKeychainUtils.release;
+			path = ../../../OpenCode/SFHFKeychainUtils/SFHFKeychainUtils.release;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -982,12 +920,12 @@
 				4499D842134DA60600342648 /* AzPackList5_Prefix.pch in Headers */,
 				4499D844134DA60600342648 /* SpListTVC.h in Headers */,
 				4499D845134DA60600342648 /* E3detailTVC.h in Headers */,
-				446B73F41A7D14EC0051693F /* localhostAddresses.h in Headers */,
 				4499D847134DA60600342648 /* SettingTVC.h in Headers */,
 				4499D848134DA60600342648 /* selectGroupTVC.h in Headers */,
 				4499D855134DA60600342648 /* FileCsv.h in Headers */,
 				4499D856134DA60600342648 /* SpSearchVC.h in Headers */,
 				4499D857134DA60600342648 /* SpAppendVC.h in Headers */,
+				44F1957C1EBDB66000F5FF93 /* SFHFKeychainUtils.h in Headers */,
 				4499D858134DA60600342648 /* SpPOST.h in Headers */,
 				4499D859134DA60600342648 /* SpDetailTVC.h in Headers */,
 				4499D9A9134DA60700342648 /* CalcView.h in Headers */,
@@ -995,7 +933,6 @@
 				44A7DB2E14DE6A7A00DB72E2 /* NSDataAddition.h in Headers */,
 				44B2E95E14ED046000B45B62 /* CameraVC.h in Headers */,
 				44DF7766156A760700386E89 /* AZWebView.h in Headers */,
-				44DF7782156A760700386E89 /* AZDropboxVC.h in Headers */,
 				44DF7785156A760700386E89 /* AZDial.h in Headers */,
 				44DF7797156A760700386E89 /* AZAboutVC.h in Headers */,
 				44DF779A156A760700386E89 /* AZClass.h in Headers */,
@@ -1004,7 +941,6 @@
 				44D9B2C215F1027C00F5045C /* AZStoreTVC.h in Headers */,
 				44D9B2CE15F1027C00F5045C /* NSDataBase64.h in Headers */,
 				44D9B2D015F1027C00F5045C /* VerificationController.h in Headers */,
-				446B73F11A7D12F20051693F /* MyHTTPConnection.h in Headers */,
 				4416337715F25D1B009CD324 /* MocFunctions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1016,13 +952,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4499D9B8134DA60700342648 /* Build configuration list for PBXNativeTarget "AzPackList5" */;
 			buildPhases = (
-				5908EC83E03987C27E16F028 /* [CP] Check Pods Manifest.lock */,
 				4499D7CE134DA60600342648 /* Resources */,
 				4499D802134DA60600342648 /* Sources */,
 				4499D832134DA60600342648 /* Frameworks */,
 				4499D841134DA60600342648 /* Headers */,
-				3B8262FD70133801F6045C6D /* [CP] Copy Pods Resources */,
-				FFBC0198CC68D622E2713F65 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1181,12 +1114,6 @@
 				44DF7763156A760700386E89 /* AZWeb-Back-16@2x.png in Resources */,
 				44DF7764156A760700386E89 /* AZWeb-Forward-16.png in Resources */,
 				44DF7765156A760700386E89 /* AZWeb-Forward-16@2x.png in Resources */,
-				44DF777C156A760700386E89 /* AZDropbox-130x44.png in Resources */,
-				44DF777D156A760700386E89 /* AZDropbox-130x44@2x.png in Resources */,
-				44DF777E156A760700386E89 /* AZDropbox-32.png in Resources */,
-				44DF777F156A760700386E89 /* AZDropbox-32@2x.png in Resources */,
-				44DF7780156A760700386E89 /* AZDropboxDown.xib in Resources */,
-				44DF7781156A760700386E89 /* AZDropboxUp.xib in Resources */,
 				44DF7787156A760700386E89 /* AZDialBack.png in Resources */,
 				44DF7788156A760700386E89 /* AZDialBack@2x.png in Resources */,
 				44DF7789156A760700386E89 /* AZDialStepperMinus.png in Resources */,
@@ -1232,54 +1159,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		3B8262FD70133801F6045C6D /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AzPackList5/Pods-AzPackList5-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		5908EC83E03987C27E16F028 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		FFBC0198CC68D622E2713F65 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AzPackList5/Pods-AzPackList5-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		4499D802134DA60600342648 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -1287,6 +1166,7 @@
 			files = (
 				4499D803134DA60600342648 /* main.m in Sources */,
 				4499D804134DA60600342648 /* AppDelegate.m in Sources */,
+				44F1957D1EBDB66000F5FF93 /* SFHFKeychainUtils.m in Sources */,
 				4499D805134DA60600342648 /* E1viewController.m in Sources */,
 				4499D807134DA60600342648 /* Elements.m in Sources */,
 				4499D808134DA60600342648 /* E1edit.m in Sources */,
@@ -1296,7 +1176,6 @@
 				4499D810134DA60600342648 /* SpListTVC.m in Sources */,
 				4499D811134DA60600342648 /* E3detailTVC.m in Sources */,
 				4499D813134DA60600342648 /* SettingTVC.m in Sources */,
-				446B73F01A7D12F20051693F /* MyHTTPConnection.m in Sources */,
 				4499D814134DA60600342648 /* selectGroupTVC.m in Sources */,
 				4499D817134DA60600342648 /* Global.m in Sources */,
 				4499D822134DA60600342648 /* FileCsv.m in Sources */,
@@ -1304,7 +1183,6 @@
 				4499D824134DA60600342648 /* SpAppendVC.m in Sources */,
 				4499D825134DA60600342648 /* SpPOST.m in Sources */,
 				4499D826134DA60600342648 /* SpDetailTVC.m in Sources */,
-				446B73F51A7D14EC0051693F /* localhostAddresses.m in Sources */,
 				4499D827134DA60600342648 /* CalcView.m in Sources */,
 				445998C61413757E0005F706 /* AzPackList.xcdatamodeld in Sources */,
 				445998CA1413757E0005F706 /* Mapping3-4.xcmappingmodel in Sources */,
@@ -1313,7 +1191,6 @@
 				44A7DB2F14DE6A7A00DB72E2 /* NSDataAddition.m in Sources */,
 				44F5921314E38E1A00B875A9 /* CameraVC.m in Sources */,
 				44DF7767156A760700386E89 /* AZWebView.m in Sources */,
-				44DF7783156A760700386E89 /* AZDropboxVC.m in Sources */,
 				44DF7786156A760700386E89 /* AZDial.m in Sources */,
 				44DF7798156A760700386E89 /* AZAboutVC.m in Sources */,
 				44DF779B156A760700386E89 /* AZClass.m in Sources */,
@@ -1424,11 +1301,9 @@
 /* Begin XCBuildConfiguration section */
 		4499D9B9134DA60700342648 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F1A486ECD29231735DF814EB /* Pods-AzPackList5.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_OBJCPP_ARC_ABI = NO;
 				CODE_SIGN_ENTITLEMENTS = AzPackList5.entitlements;
@@ -1452,7 +1327,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESSOR_DEFINITIONS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -1472,11 +1347,9 @@
 		};
 		4499D9BA134DA60700342648 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 36C01A7E946CDD76333EC8C2 /* Pods-AzPackList5.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_OBJCPP_ARC_ABI = NO;
 				CODE_SIGN_ENTITLEMENTS = AzPackList5.entitlements;
@@ -1496,10 +1369,7 @@
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -1517,104 +1387,6 @@
 				VALID_ARCHS = "arm64 armv7s";
 			};
 			name = Release;
-		};
-		4499D9BB134DA60700342648 /* Distribution */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8EF0573F10AC7CA64B578EC0 /* Pods-AzPackList5.distribution.xcconfig */;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_OBJCPP_ARC_ABI = NO;
-				CODE_SIGN_ENTITLEMENTS = AzPackList5.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = YES;
-				DEVELOPMENT_TEAM = 5C2UYK6F45;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)",
-					"\"$(SRCROOT)/../../AZClass/AZDropbox/AZDropbox.relese\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = AzPackList5_Prefix.pch;
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				HEADER_SEARCH_PATHS = /usr/include/libxml2;
-				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lxml2",
-					"-all_load",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.azukid.${PRODUCT_NAME:identifier}";
-				PRODUCT_NAME = AzPackList5;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos;
-				STRIP_INSTALLED_PRODUCT = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64 armv7s";
-			};
-			name = Distribution;
-		};
-		44D6024F111EF2F3004F27CC /* Distribution */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ADDITIONAL_SDKS = "";
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "";
-				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = "";
-				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "\"/Developer/SDKs/MacOSX10.6.sdk/usr/include/libxml2\"";
-				INFOPLIST_FILE = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)\"",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				OTHER_LDFLAGS = (
-					"-all_load",
-					"-ObjC",
-					"-lxml2",
-				);
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64 armv7s";
-			};
-			name = Distribution;
 		};
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1728,20 +1500,18 @@
 			buildConfigurations = (
 				4499D9B9134DA60700342648 /* Debug */,
 				4499D9BA134DA60700342648 /* Release */,
-				4499D9BB134DA60700342648 /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "AzPackList5" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
-				44D6024F111EF2F3004F27CC /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 

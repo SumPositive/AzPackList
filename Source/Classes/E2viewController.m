@@ -7,7 +7,7 @@
 //
 
 #import "Global.h"
-#import "AZDropboxVC.h"
+//#import "AZDropboxVC.h"
 
 #import "AppDelegate.h"
 #import "PadRootVC.h"
@@ -17,9 +17,9 @@
 #import "E2edit.h"
 #import "SettingTVC.h"
 #import "ExportServerVC.h"
-#import "HTTPServer.h"
-#import "MyHTTPConnection.h"
-#import "localhostAddresses.h"
+//#import "HTTPServer.h"
+//#import "MyHTTPConnection.h"
+//#import "localhostAddresses.h"
 #import "FileCsv.h"
 #import "SpAppendVC.h"
 #import "PatternImageView.h"
@@ -296,30 +296,30 @@
 	}*/
 	
 	appDelegate_.dropboxSaveE1selected = e1selected_; //Up対象E1
-	AZDropboxVC *vc = [[AZDropboxVC alloc] initWithAppKey:DBOX_APPKEY 
-												appSecret: DBOX_SECRET
-													 root: kDBRootAppFolder
-												 rootPath: @"/" 
-													 mode: AZDropboxUpload 
-												extension: GD_EXTENSION 
-												 delegate: appDelegate_];
-	assert(vc);
-	if (appDelegate_.ppIsPad) {
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
-		nc.modalPresentationStyle = UIModalPresentationFormSheet;
-		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentViewController:nc animated:YES completion:nil];
-	}
-	else {
-		if (appDelegate_.ppOptShowAd) {
-			[appDelegate_ AdRefresh:NO];	//広告禁止
-		}
-		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-		[self.navigationController pushViewController:vc animated:YES];
-	}
-	//表示後にセットすること
-	[vc setUpFileName:e1selected_.name];
-	[vc setCryptHidden:NO Enabled:appDelegate_.ppPaid_SwitchAd];
+//	AZDropboxVC *vc = [[AZDropboxVC alloc] initWithAppKey:DBOX_APPKEY 
+//												appSecret: DBOX_SECRET
+//													 root: kDBRootAppFolder
+//												 rootPath: @"/" 
+//													 mode: AZDropboxUpload 
+//												extension: GD_EXTENSION 
+//												 delegate: appDelegate_];
+//	assert(vc);
+//	if (appDelegate_.ppIsPad) {
+//		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+//		nc.modalPresentationStyle = UIModalPresentationFormSheet;
+//		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+//		[self presentViewController:nc animated:YES completion:nil];
+//	}
+//	else {
+//		if (appDelegate_.ppOptShowAd) {
+//			[appDelegate_ AdRefresh:NO];	//広告禁止
+//		}
+//		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+//		[self.navigationController pushViewController:vc animated:YES];
+//	}
+//	//表示後にセットすること
+//	[vc setUpFileName:e1selected_.name];
+//	[vc setCryptHidden:NO Enabled:appDelegate_.ppPaid_SwitchAd];
 
 /*	// 未認証の場合、認証処理後、AppDelegate:handleOpenURL:から呼び出される
 	if ([[DBSession sharedSession] isLinked]) 
@@ -522,10 +522,10 @@
 			break;
 			
 		case ALERT_TAG_HTTPServerStop:
-			[httpServer_ stop];
-			//[RhttpServer release];
-			httpServer_ = nil;
-			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LocalhostAdressesResolved" object:nil];
+//			[httpServer_ stop];
+//			//[RhttpServer release];
+//			httpServer_ = nil;
+//			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LocalhostAdressesResolved" object:nil];
 			break;
 			
 		case ALERT_TAG_ALLZERO:
@@ -1010,11 +1010,11 @@
 	//【Tips】デリゲートなどで参照される可能性のあるデータなどは破棄してはいけない。
 	// ただし、他オブジェクトからの参照無く、viewWillAppearにて生成されるものは破棄可能
 	
-	if (httpServer_) {
-		[httpServer_ stop];
-		//[RhttpServer release], 
-		httpServer_ = nil;
-	}
+//	if (httpServer_) {
+//		[httpServer_ stop];
+//		//[RhttpServer release], 
+//		httpServer_ = nil;
+//	}
 	//[RalertHttpServer release], 
 	alertHttpServer_ = nil;
 	//[MdicAddresses release], 

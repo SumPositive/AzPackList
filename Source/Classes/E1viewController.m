@@ -8,9 +8,9 @@
 
 #import "E1viewController.h"
 
-#import "HTTPServer.h"
-#import "MyHTTPConnection.h"
-#import "localhostAddresses.h"
+//#import "HTTPServer.h"
+//#import "MyHTTPConnection.h"
+//#import "localhostAddresses.h"
 
 
 #define ACTIONSEET_TAG_DELETEPACK		901
@@ -261,27 +261,27 @@
 
 - (void)actionImportDropbox
 {
-	AZDropboxVC *vc = [[AZDropboxVC alloc] initWithAppKey:DBOX_APPKEY 
-												appSecret: DBOX_SECRET
-													 root: kDBRootAppFolder
-												 rootPath: @"/" 
-													 mode: AZDropboxDownload 
-												extension: GD_EXTENSION 
-												 delegate: appDelegate_];
-	assert(vc);
-	if (appDelegate_.ppIsPad) {
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
-		nc.modalPresentationStyle = UIModalPresentationFormSheet;
-		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentViewController:nc animated:YES completion:nil];
-	}
-	else {
-		if (appDelegate_.ppOptShowAd) {
-			[appDelegate_ AdRefresh:NO];	//広告禁止
-		}
-		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-		[self.navigationController pushViewController:vc animated:YES];
-	}
+//	AZDropboxVC *vc = [[AZDropboxVC alloc] initWithAppKey:DBOX_APPKEY 
+//												appSecret: DBOX_SECRET
+//													 root: kDBRootAppFolder
+//												 rootPath: @"/" 
+//													 mode: AZDropboxDownload 
+//												extension: GD_EXTENSION 
+//												 delegate: appDelegate_];
+//	assert(vc);
+//	if (appDelegate_.ppIsPad) {
+//		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+//		nc.modalPresentationStyle = UIModalPresentationFormSheet;
+//		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+//		[self presentViewController:nc animated:YES completion:nil];
+//	}
+//	else {
+//		if (appDelegate_.ppOptShowAd) {
+//			[appDelegate_ AdRefresh:NO];	//広告禁止
+//		}
+//		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+//		[self.navigationController pushViewController:vc animated:YES];
+//	}
 
 /*	// 未認証の場合、認証処理後、AppDelegate:handleOpenURL:から呼び出される
 	if ([[DBSession sharedSession] isLinked]) 
@@ -660,13 +660,13 @@
 {
 	switch (alertView.tag) {
 		case ALERT_TAG_HTTPServerStop:
-			[mHttpServer stop];
-			//[RhttpServer release];
-			mHttpServer = nil;
-			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LocalhostAdressesResolved" object:nil];
-			// 再表示
-			//[self.tableView reloadData]; これだけではダメ
-			[self viewWillAppear:YES]; // Fech データセットさせるため
+//			[mHttpServer stop];
+//			//[RhttpServer release];
+//			mHttpServer = nil;
+//			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LocalhostAdressesResolved" object:nil];
+//			// 再表示
+//			//[self.tableView reloadData]; これだけではダメ
+//			[self viewWillAppear:YES]; // Fech データセットさせるため
 			break;
 			
 		case ALERT_TAG_SupportSite:
@@ -742,33 +742,33 @@
 		return;
 	}
 	
-	NSString *info;
-	UInt16 port = [mHttpServer port];
-	
-	NSString *localIP = nil;
-	localIP = [mAddressDic objectForKey:@"en0"];
-	if (!localIP)
-	{
-		localIP = [mAddressDic objectForKey:@"en1"];
-	}
-	
-	if (!localIP)
-		info = NSLocalizedString(@"HttpSv NoConnection", nil);
-	else
-		info = [NSString stringWithFormat:@"%@\n\nhttp://%@:%d", 
-				NSLocalizedString(@"HttpSv Addr", nil), localIP, port];
-	
-	/*	NSString *wwwIP = [addresses objectForKey:@"www"];
-	 if (wwwIP)
-	 info = [info stringByAppendingFormat:@"Web: %@:%d\n", wwwIP, port];
-	 else
-	 info = [info stringByAppendingString:@"Web: Unable to determine external IP\n"]; */
-	
-	//displayInfo.text = info;
-	if (mHttpServerAlert) {
-		mHttpServerAlert.message = info;
-		[mHttpServerAlert show];
-	}
+//	NSString *info;
+//	UInt16 port = [mHttpServer port];
+//	
+//	NSString *localIP = nil;
+//	localIP = [mAddressDic objectForKey:@"en0"];
+//	if (!localIP)
+//	{
+//		localIP = [mAddressDic objectForKey:@"en1"];
+//	}
+//	
+//	if (!localIP)
+//		info = NSLocalizedString(@"HttpSv NoConnection", nil);
+//	else
+//		info = [NSString stringWithFormat:@"%@\n\nhttp://%@:%d", 
+//				NSLocalizedString(@"HttpSv Addr", nil), localIP, port];
+//	
+//	/*	NSString *wwwIP = [addresses objectForKey:@"www"];
+//	 if (wwwIP)
+//	 info = [info stringByAppendingFormat:@"Web: %@:%d\n", wwwIP, port];
+//	 else
+//	 info = [info stringByAppendingString:@"Web: Unable to determine external IP\n"]; */
+//	
+//	//displayInfo.text = info;
+//	if (mHttpServerAlert) {
+//		mHttpServerAlert.message = info;
+//		[mHttpServerAlert show];
+//	}
 }
 
 
@@ -1002,11 +1002,11 @@
 	
 	//[activityIndicator_ release], activityIndicator_ = nil;
 	
-	if (mHttpServer) {
-		[mHttpServer stop];
-		//[RhttpServer release], 
-		mHttpServer = nil;
-	}
+//	if (mHttpServer) {
+//		[mHttpServer stop];
+//		//[RhttpServer release], 
+//		mHttpServer = nil;
+//	}
 	//[RalertHttpServer release], 
 	mHttpServerAlert = nil;
 	//[MdicAddresses release], 
