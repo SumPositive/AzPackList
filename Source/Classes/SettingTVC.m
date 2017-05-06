@@ -190,9 +190,9 @@
 	switch (section) {
 		case 0: // 
 			if (mAppDelegate.ppIsPad) {
-				return 8;	// (0)回転は不要
+				return 6;	// (0)回転は不要
 			} else {
-				return 9;
+				return 7;
 			}
 			break;
 	}
@@ -205,8 +205,8 @@
 	int iRaw = indexPath.row;
 	if (mAppDelegate.ppIsPad) iRaw++;
 	switch (iRaw) {
-		case 6: // Google+
-		case 8: // Crypt
+//		case 6: // Google+
+		case 6: // Crypt
 			return 75;
 	}
 	return 60; // デフォルト：44ピクセル
@@ -354,7 +354,7 @@
 			[sw setOn:[kvs boolForKey:KV_OptSearchItemsNote] animated:YES];
 		}	break;
 
-		case 6:
+//		case 6:
 //		{ // Google+ Picasa
 //			if (mTfGoogleID==nil) {
 //				mTfGoogleID = [[UITextField alloc] init];
@@ -410,36 +410,36 @@
 //			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // >
 // */
 //		}
-            break;
+//            break;
 
-		case 7:
-		{ // KV_OptAdvertising
-			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptAdvertising];
-			if (sw==nil) {
-				// add UISwitch
-				sw = [[UISwitch alloc] init];
-				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
-				sw.tag = TAG_OptAdvertising;
-				sw.backgroundColor = [UIColor clearColor]; //背景透明
-				//sw.hidden = !(appDelegate_.app_pid_AdOff); // AdOff支払により可視化 ＜＜NG 購入後の状態が解るように見せることにする
-				sw.enabled = mAppDelegate.ppPaid_SwitchAd; // AdOff支払により有効化
-				[cell.contentView  addSubview:sw]; //[sw release];
-				cell.textLabel.text = NSLocalizedString(@"Advertising",nil);
-			}
-			if (mAppDelegate.ppPaid_SwitchAd) {
-				cell.textLabel.enabled = YES;
-				cell.detailTextLabel.text = NSLocalizedString(@"Advertising enable",nil);
-				cell.detailTextLabel.textColor = [UIColor grayColor];
-			} else {
-				cell.textLabel.enabled = NO;
-				cell.detailTextLabel.text = NSLocalizedString(@"Advertising disable",nil);
-				cell.detailTextLabel.textColor = [UIColor blueColor];
-			}
-			sw.frame = CGRectMake(fX, 5, 120, 25); // 回転対応
-			[sw setOn:[kvs boolForKey:KV_OptAdvertising] animated:YES];
-		}	break;
+//		case 7:
+//		{ // KV_OptAdvertising
+//			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptAdvertising];
+//			if (sw==nil) {
+//				// add UISwitch
+//				sw = [[UISwitch alloc] init];
+//				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+//				sw.tag = TAG_OptAdvertising;
+//				sw.backgroundColor = [UIColor clearColor]; //背景透明
+//				//sw.hidden = !(appDelegate_.app_pid_AdOff); // AdOff支払により可視化 ＜＜NG 購入後の状態が解るように見せることにする
+//				sw.enabled = mAppDelegate.ppPaid_SwitchAd; // AdOff支払により有効化
+//				[cell.contentView  addSubview:sw]; //[sw release];
+//				cell.textLabel.text = NSLocalizedString(@"Advertising",nil);
+//			}
+//			if (mAppDelegate.ppPaid_SwitchAd) {
+//				cell.textLabel.enabled = YES;
+//				cell.detailTextLabel.text = NSLocalizedString(@"Advertising enable",nil);
+//				cell.detailTextLabel.textColor = [UIColor grayColor];
+//			} else {
+//				cell.textLabel.enabled = NO;
+//				cell.detailTextLabel.text = NSLocalizedString(@"Advertising disable",nil);
+//				cell.detailTextLabel.textColor = [UIColor blueColor];
+//			}
+//			sw.frame = CGRectMake(fX, 5, 120, 25); // 回転対応
+//			[sw setOn:[kvs boolForKey:KV_OptAdvertising] animated:YES];
+//		}	break;
 
-		case 8:
+		case 6:
 		{ // KV_OptCrypt
 			// add UITextField1
 			if (mTfPass1==nil) {

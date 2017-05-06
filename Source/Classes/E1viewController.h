@@ -32,32 +32,6 @@
 
 
 @interface E1viewController : UITableViewController 
-	<NSFetchedResultsControllerDelegate, UIActionSheetDelegate	,UIPopoverControllerDelegate, AZStoreDelegate>
-{
-@private
-	NSManagedObjectContext		*mMoc;
-	NSFetchedResultsController	*mFetchedE1;
-	HTTPServer								*mHttpServer;
-	UIAlertView								*mHttpServerAlert;
-	NSDictionary							*mAddressDic;
-	
-	E1edit							*e1editView_;	
-	//InformationView			*informationView_;
-	
-	UIPopoverController	*popOver_;
-	NSIndexPath*				indexPathEdit_;	//[1.1]ポインタ代入注意！copyするように改善した。
-	
-	AppDelegate		*appDelegate_;
-
-	BOOL					bInformationOpen_;	//[1.0.2]InformationViewを初回自動表示するため
-	NSUInteger			actionDeleteRow_;		//[1.1]削除するRow
-	BOOL					bOptWeightRound_;
-	BOOL					bOptShowTotalWeight_;
-	BOOL					bOptShowTotalWeightReq_;
-	NSInteger			section0Rows_; // E1レコード数　＜高速化＞
-	CGPoint				contentOffsetDidSelect_; // didSelect時のScrollView位置を記録
-	//SKProduct			*productUnlock_;
-}
 
 //- (void)refreshE1view;
 

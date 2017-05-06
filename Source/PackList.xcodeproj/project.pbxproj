@@ -101,7 +101,7 @@
 		4499D83B134DA60600342648 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28860BE40F44EE6400985440 /* CoreData.framework */; };
 		4499D83C134DA60600342648 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C2A7D41108AD3C006445DC /* Security.framework */; };
 		4499D83D134DA60600342648 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44EEBEDA1185E20000EA26AB /* CFNetwork.framework */; };
-		4499D842134DA60600342648 /* AzPackList5_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 4486955F10F5ABCC00AD02D8 /* AzPackList5_Prefix.pch */; };
+		4499D842134DA60600342648 /* PackList_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 4486955F10F5ABCC00AD02D8 /* PackList_Prefix.pch */; };
 		4499D844134DA60600342648 /* SpListTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 4400E1FB110F493A000DFC3B /* SpListTVC.h */; };
 		4499D845134DA60600342648 /* E3detailTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 446AAE241111F0250077BF89 /* E3detailTVC.h */; };
 		4499D847134DA60600342648 /* SettingTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 448549031115726F00D10CC8 /* SettingTVC.h */; };
@@ -221,6 +221,7 @@
 		44F195741EBB4C4900F5FF93 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44F195731EBB4C4900F5FF93 /* Images.xcassets */; };
 		44F1957C1EBDB66000F5FF93 /* SFHFKeychainUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 44F1957A1EBDB66000F5FF93 /* SFHFKeychainUtils.h */; };
 		44F1957D1EBDB66000F5FF93 /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F1957B1EBDB66000F5FF93 /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		44F195851EBDD8F400F5FF93 /* E1viewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F195821EBDD8F300F5FF93 /* E1viewController.xib */; };
 		44F5921314E38E1A00B875A9 /* CameraVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F5921014E38E1A00B875A9 /* CameraVC.m */; };
 		44F5921414E38E1A00B875A9 /* CameraVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F5921114E38E1A00B875A9 /* CameraVC.xib */; };
 		44F5921614E39DCA00B875A9 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44F5921514E39DC900B875A9 /* AVFoundation.framework */; };
@@ -341,12 +342,12 @@
 		44835ABE156BDC1E00A83167 /* UIDevice-Hardware.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice-Hardware.m"; sourceTree = "<group>"; };
 		448549021115726F00D10CC8 /* SettingTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingTVC.m; sourceTree = "<group>"; };
 		448549031115726F00D10CC8 /* SettingTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingTVC.h; sourceTree = "<group>"; };
-		4486955F10F5ABCC00AD02D8 /* AzPackList5_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AzPackList5_Prefix.pch; sourceTree = "<group>"; };
+		4486955F10F5ABCC00AD02D8 /* PackList_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackList_Prefix.pch; sourceTree = "<group>"; };
 		4491C7B411186531005955FD /* selectGroupTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = selectGroupTVC.h; sourceTree = "<group>"; };
 		4491C7B511186531005955FD /* selectGroupTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = selectGroupTVC.m; sourceTree = "<group>"; };
 		449312B410F0D5A700C6C8E5 /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
 		4499D7C9134D9D8900342648 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4499D9BC134DA60700342648 /* AzPackList5.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AzPackList5.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4499D9BC134DA60700342648 /* PackList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PackList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4499D9C0134DB1D300342648 /* Icon57@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57@2x.png"; sourceTree = "<group>"; };
 		4499D9C1134DB1D300342648 /* Icon57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon57.png; sourceTree = "<group>"; };
 		449D12BD151817B700F68B6E /* Icon72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon72@2x.png"; sourceTree = "<group>"; };
@@ -488,6 +489,7 @@
 		44F195761EBC2D5300F5FF93 /* History.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = History.h; sourceTree = "<group>"; };
 		44F1957A1EBDB66000F5FF93 /* SFHFKeychainUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFHFKeychainUtils.h; sourceTree = "<group>"; };
 		44F1957B1EBDB66000F5FF93 /* SFHFKeychainUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHFKeychainUtils.m; sourceTree = "<group>"; };
+		44F195821EBDD8F300F5FF93 /* E1viewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = E1viewController.xib; sourceTree = "<group>"; };
 		44F5921014E38E1A00B875A9 /* CameraVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraVC.m; sourceTree = "<group>"; };
 		44F5921114E38E1A00B875A9 /* CameraVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CameraVC.xib; sourceTree = "<group>"; };
 		44F5921514E39DC900B875A9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -530,7 +532,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4499D9BC134DA60700342648 /* AzPackList5.app */,
+				4499D9BC134DA60700342648 /* PackList.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -564,7 +566,7 @@
 				445998BE1413757E0005F706 /* AzPackList.xcdatamodeld */,
 				445998C41413757E0005F706 /* Mapping3-4.xcmappingmodel */,
 				4499D7C9134D9D8900342648 /* Info.plist */,
-				4486955F10F5ABCC00AD02D8 /* AzPackList5_Prefix.pch */,
+				4486955F10F5ABCC00AD02D8 /* PackList_Prefix.pch */,
 				444251CC146FF6F0004B26A8 /* InfoPlist.strings */,
 				444251C1146FF6DB004B26A8 /* SharePlanTag.plist */,
 				4410F79616055F60007C7A19 /* Default-568h@2x.png */,
@@ -681,6 +683,7 @@
 				447990FB137582A2003F437A /* PadRootVC.m */,
 				28C286DF0D94DF7D0034E888 /* E1viewController.h */,
 				28C286E00D94DF7D0034E888 /* E1viewController.m */,
+				44F195821EBDD8F300F5FF93 /* E1viewController.xib */,
 				4457518910C7A9E700419205 /* E1edit.h */,
 				4457518A10C7A9E700419205 /* E1edit.m */,
 				449D67CB10C80DCB00691BF4 /* E2viewController.h */,
@@ -917,7 +920,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4499D842134DA60600342648 /* AzPackList5_Prefix.pch in Headers */,
+				4499D842134DA60600342648 /* PackList_Prefix.pch in Headers */,
 				4499D844134DA60600342648 /* SpListTVC.h in Headers */,
 				4499D845134DA60600342648 /* E3detailTVC.h in Headers */,
 				4499D847134DA60600342648 /* SettingTVC.h in Headers */,
@@ -948,9 +951,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		4499D7CD134DA60600342648 /* AzPackList5 */ = {
+		4499D7CD134DA60600342648 /* PackList */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4499D9B8134DA60700342648 /* Build configuration list for PBXNativeTarget "AzPackList5" */;
+			buildConfigurationList = 4499D9B8134DA60700342648 /* Build configuration list for PBXNativeTarget "PackList" */;
 			buildPhases = (
 				4499D7CE134DA60600342648 /* Resources */,
 				4499D802134DA60600342648 /* Sources */,
@@ -961,9 +964,9 @@
 			);
 			dependencies = (
 			);
-			name = AzPackList5;
+			name = PackList;
 			productName = iPack;
-			productReference = 4499D9BC134DA60700342648 /* AzPackList5.app */;
+			productReference = 4499D9BC134DA60700342648 /* PackList.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -985,7 +988,7 @@
 					};
 				};
 			};
-			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "AzPackList5" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "PackList" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -1002,7 +1005,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4499D7CD134DA60600342648 /* AzPackList5 */,
+				4499D7CD134DA60600342648 /* PackList */,
 			);
 		};
 /* End PBXProject section */
@@ -1027,6 +1030,7 @@
 				4499D7DF134DA60600342648 /* Icon16-Return3.png in Resources */,
 				4499D7E0134DA60600342648 /* Icon16-Return3@2x.png in Resources */,
 				4499D7E3134DA60600342648 /* Icon24-GreenPlus.png in Resources */,
+				44F195851EBDD8F400F5FF93 /* E1viewController.xib in Resources */,
 				4499D7E4134DA60600342648 /* Icon24-GreenPlus@2x.png in Resources */,
 				4499D7E5134DA60600342648 /* Icon24-RedMinus.png in Resources */,
 				4499D7E6134DA60600342648 /* Icon24-RedMinus@2x.png in Resources */,
@@ -1319,7 +1323,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = AzPackList5_Prefix.pch;
+				GCC_PREFIX_HEADER = PackList_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -1335,8 +1339,8 @@
 					"-lxml2",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.azukid.${PRODUCT_NAME:identifier}";
-				PRODUCT_NAME = AzPackList5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.azukid.AzPackList5;
+				PRODUCT_NAME = PackList;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -1363,7 +1367,7 @@
 					"\"$(SRCROOT)/../../AZClass/AZDropbox/AZDropbox.relese\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = AzPackList5_Prefix.pch;
+				GCC_PREFIX_HEADER = PackList_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
@@ -1377,8 +1381,8 @@
 					"-lxml2",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.azukid.${PRODUCT_NAME:identifier}";
-				PRODUCT_NAME = AzPackList5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.azukid.AzPackList5;
+				PRODUCT_NAME = PackList;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -1495,7 +1499,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4499D9B8134DA60700342648 /* Build configuration list for PBXNativeTarget "AzPackList5" */ = {
+		4499D9B8134DA60700342648 /* Build configuration list for PBXNativeTarget "PackList" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4499D9B9134DA60700342648 /* Debug */,
@@ -1504,7 +1508,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "AzPackList5" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "PackList" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,

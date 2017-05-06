@@ -170,7 +170,9 @@
 		__mainNC = [[AzNavigationController alloc] initWithRootViewController:e1viewCon];
 		// mainVC を window へ登録
 		//[__window addSubview:__mainNC.view];
-		[__window setRootViewController: __mainNC];	//iOS6以降、こうしなければ回転しない。
+		//[__window setRootViewController: __mainNC];	//iOS6以降、こうしなければ回転しない。
+        NSLog(@"height=%lf", [[UIScreen mainScreen] bounds].size.height);
+        self.window.rootViewController = __mainNC;  //[UIViewController new];
 	}
 	
 	//Pad// iOS4以降を前提としてバックグランド機能に任せて前回復帰処理しないことにした。

@@ -23,7 +23,35 @@
 #define ALERT_TAG_CloudReset			136
 
 
-@interface E1viewController (PrivateMethods)
+@interface E1viewController ()
+<NSFetchedResultsControllerDelegate, UIActionSheetDelegate	,UIPopoverControllerDelegate, AZStoreDelegate>
+{
+    //__weak IBOutlet UITableView*    _tableView;      self.tableView
+
+    NSManagedObjectContext		*mMoc;
+    NSFetchedResultsController	*mFetchedE1;
+    HTTPServer								*mHttpServer;
+    UIAlertView								*mHttpServerAlert;
+    NSDictionary							*mAddressDic;
+    
+    E1edit							*e1editView_;
+    //InformationView			*informationView_;
+    
+    UIPopoverController	*popOver_;
+    NSIndexPath*				indexPathEdit_;	//[1.1]ポインタ代入注意！copyするように改善した。
+    
+    AppDelegate		*appDelegate_;
+    
+    BOOL					bInformationOpen_;	//[1.0.2]InformationViewを初回自動表示するため
+    NSUInteger			actionDeleteRow_;		//[1.1]削除するRow
+    BOOL					bOptWeightRound_;
+    BOOL					bOptShowTotalWeight_;
+    BOOL					bOptShowTotalWeightReq_;
+    NSInteger			section0Rows_; // E1レコード数　＜高速化＞
+    CGPoint				contentOffsetDidSelect_; // didSelect時のScrollView位置を記録
+    //SKProduct			*productUnlock_;
+}
+
 //- (void)actionInformation;
 //- (void)actionSetting;
 - (void)azAction;
@@ -774,84 +802,107 @@
 
 #pragma mark - View lifestyle
 
-// UITableViewインスタンス生成時のイニシャライザ　viewDidLoadより先に1度だけ通る
-- (id)initWithStyle:(UITableViewStyle)style 
-{
-	self = [super initWithStyle:UITableViewStyleGrouped];  // セクションあり
-	if (self) {
-		// 初期化成功
-		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		e1editView_ = nil;		// e1addで生成 [self.navigationController pushViewController:]
-		//informationView_ = nil; // azInformationViewで生成 [self.view.window addSubview:]
-		
-		// 背景テクスチャ・タイルペイント
-	/*	if (appDelegate_.ppIsPad){
-			//self.view.backgroundColor = //iPadでは無効になったため
-			UIView* view = self.tableView.backgroundView;
-			if (view) {
-				PatternImageView *tv = [[PatternImageView alloc] initWithFrame:view.frame
-																  patternImage:[UIImage imageNamed:@"Tx-Back"]]; // タイルパターン生成
-				[view addSubview:tv];
-			}
-		} else {
-			self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
-		}*/
-		
-		[self.tableView setBackgroundView:nil];	//iOS6//これで次行が有効になる。
-		self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
-
-		// インストールやアップデート後、1度だけ処理する
-		NSString *zNew = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]; //（リリース バージョン）は、ユーザーに公開した時のレベルを表現したバージョン表記
-		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-		NSString* zDef = [defaults valueForKey:UD_CurrentVersion];
-		if (zDef==nil || ![zDef isEqualToString:zNew]) {
-			[defaults setValue:zNew forKey:UD_CurrentVersion];
-			bInformationOpen_ = YES; // Informationを自動オープンする
-		} else {
-			bInformationOpen_ = NO;
-		}
-	}
-	return self;
-}
-
-// IBを使わずにviewオブジェクトをプログラム上でcreateするときに使う
-//（viewDidLoadは、nibファイルでロードされたオブジェクトを初期化するために使う）
-- (void)loadView
-{	//【Tips】ここでaddSubviewするオブジェクトは全てautoreleaseにすること。メモリ不足時には自動的に解放後、改めてここを通るので、初回同様に生成するだけ。
-	[super loadView];
-	
-	// Set up NEXT Left [Back] buttons.
-	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
-											  initWithTitle:@"Top"   //NSLocalizedString(@"Back", nil)
-											  style:UIBarButtonItemStylePlain
-											  target:nil  action:nil];
-	
-	// Set up Right [Edit] buttons.
-#ifdef AzMAKE_SPLASHFACE
-	// No Button 国別で文字が変わるため
-	UIActivityIndicatorView *actInd = [[UIActivityIndicatorView alloc]
-										initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-	CGRect rc = self.navigationController.view.frame;
-	actInd.frame = CGRectMake((rc.size.width-50)/2, (rc.size.height-50)/2, 50, 50);
-	[self.navigationController.view addSubview:actInd];
-	[actInd startAnimating];
-#else
-	self.navigationItem.rightBarButtonItem = self.editButtonItem;
-	self.tableView.allowsSelectionDuringEditing = YES; // 編集モードに入ってる間にユーザがセルを選択できる
-#endif	
-	
-//	if (appDelegate_.ppOptShowAd) {
-//		UIImageView* iv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Icon24-Free.png"]];
-//		UIBarButtonItem* bui = [[UIBarButtonItem alloc] initWithCustomView:iv];
-//		self.navigationItem.leftBarButtonItem	= bui;
+//// UITableViewインスタンス生成時のイニシャライザ　viewDidLoadより先に1度だけ通る
+//- (id)initWithStyle:(UITableViewStyle)style 
+//{
+//	self = [super initWithStyle:UITableViewStyleGrouped];  // セクションあり
+//	if (self) {
+//		// 初期化成功
+//		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//		e1editView_ = nil;		// e1addで生成 [self.navigationController pushViewController:]
+//		//informationView_ = nil; // azInformationViewで生成 [self.view.window addSubview:]
+//		
+//		// 背景テクスチャ・タイルペイント
+//	/*	if (appDelegate_.ppIsPad){
+//			//self.view.backgroundColor = //iPadでは無効になったため
+//			UIView* view = self.tableView.backgroundView;
+//			if (view) {
+//				PatternImageView *tv = [[PatternImageView alloc] initWithFrame:view.frame
+//																  patternImage:[UIImage imageNamed:@"Tx-Back"]]; // タイルパターン生成
+//				[view addSubview:tv];
+//			}
+//		} else {
+//			self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+//		}*/
+//		
+//		[self.tableView setBackgroundView:nil];	//iOS6//これで次行が有効になる。
+//		self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+//
+////		// インストールやアップデート後、1度だけ処理する
+////		NSString *zNew = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]; //（リリース バージョン）は、ユーザーに公開した時のレベルを表現したバージョン表記
+////		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+////		NSString* zDef = [defaults valueForKey:UD_CurrentVersion];
+////		if (zDef==nil || ![zDef isEqualToString:zNew]) {
+////			[defaults setValue:zNew forKey:UD_CurrentVersion];
+////			bInformationOpen_ = YES; // Informationを自動オープンする
+////		} else {
+////			bInformationOpen_ = NO;
+////		}
 //	}
+//	return self;
+//}
 
-	// ToolBar表示は、viewWillAppearにて回転方向により制御している。
-}
+//// IBを使わずにviewオブジェクトをプログラム上でcreateするときに使う
+////（viewDidLoadは、nibファイルでロードされたオブジェクトを初期化するために使う）
+//- (void)loadView
+//{	//【Tips】ここでaddSubviewするオブジェクトは全てautoreleaseにすること。メモリ不足時には自動的に解放後、改めてここを通るので、初回同様に生成するだけ。
+//	[super loadView];
+//	
+//	// Set up NEXT Left [Back] buttons.
+//	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
+//											  initWithTitle:@"Top"   //NSLocalizedString(@"Back", nil)
+//											  style:UIBarButtonItemStylePlain
+//											  target:nil  action:nil];
+//	
+//	// Set up Right [Edit] buttons.
+//#ifdef AzMAKE_SPLASHFACE
+//	// No Button 国別で文字が変わるため
+//	UIActivityIndicatorView *actInd = [[UIActivityIndicatorView alloc]
+//										initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+//	CGRect rc = self.navigationController.view.frame;
+//	actInd.frame = CGRectMake((rc.size.width-50)/2, (rc.size.height-50)/2, 50, 50);
+//	[self.navigationController.view addSubview:actInd];
+//	[actInd startAnimating];
+//#else
+//	self.navigationItem.rightBarButtonItem = self.editButtonItem;
+//	self.tableView.allowsSelectionDuringEditing = YES; // 編集モードに入ってる間にユーザがセルを選択できる
+//#endif	
+//	
+////	if (appDelegate_.ppOptShowAd) {
+////		UIImageView* iv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Icon24-Free.png"]];
+////		UIBarButtonItem* bui = [[UIBarButtonItem alloc] initWithCustomView:iv];
+////		self.navigationItem.leftBarButtonItem	= bui;
+////	}
+//
+//	// ToolBar表示は、viewWillAppearにて回転方向により制御している。
+//}
 
 - (void)viewDidLoad 
 { //iCloud
 	[super viewDidLoad];
+
+    [self.tableView setBackgroundView:nil];	//iOS6//これで次行が有効になる。
+    self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+
+    // Set up NEXT Left [Back] buttons.
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
+                                             initWithTitle:@"Top"   //NSLocalizedString(@"Back", nil)
+                                             style:UIBarButtonItemStylePlain
+                                             target:nil  action:nil];
+
+    // Set up Right [Edit] buttons.
+#ifdef AzMAKE_SPLASHFACE
+    // No Button 国別で文字が変わるため
+    UIActivityIndicatorView *actInd = [[UIActivityIndicatorView alloc]
+                                       initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    CGRect rc = self.navigationController.view.frame;
+    actInd.frame = CGRectMake((rc.size.width-50)/2, (rc.size.height-50)/2, 50, 50);
+    [self.navigationController.view addSubview:actInd];
+    [actInd startAnimating];
+#else
+    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.tableView.allowsSelectionDuringEditing = YES; // 編集モードに入ってる間にユーザがセルを選択できる
+#endif
 
 	/*** NFM_REFRESH_ALL_VIEWS に一元化
 	// observe the app delegate telling us when it's finished asynchronously setting up the persistent store
@@ -1069,39 +1120,39 @@
 		case 0:
 			return section0Rows_ + 1; // +1:Add行
 		case 1:
-			return 3;	//Download menu
+			return 1;	// Action menu
 		case 2:
-			return 3;	//menu
+			return 3;	// menu
 		case 3:
-			return 1;	//iCloud Initial
+			return 1;	// iCloud Initial
 	}
 	return 0;
 }
 
-// TableView セクションタイトルを応答
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section 
-{
-	switch (section) {
-		case 0:
-//			if (appDelegate_.ppIsPad  &&  appDelegate_.ppOptShowAd) {
+//// TableView セクションタイトルを応答
+//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section 
+//{
+//	switch (section) {
+//		case 0:
+////			if (appDelegate_.ppIsPad  &&  appDelegate_.ppOptShowAd) {
+////				if (section0Rows_ <= 0) {
+////					return NSLocalizedString(@"Plan Nothing",nil);
+////				}
+////				return nil;  // @"\n\n";	// iAd上部スペース
+////			} else {
 //				if (section0Rows_ <= 0) {
 //					return NSLocalizedString(@"Plan Nothing",nil);
 //				}
-//				return nil;  // @"\n\n";	// iAd上部スペース
-//			} else {
-				if (section0Rows_ <= 0) {
-					return NSLocalizedString(@"Plan Nothing",nil);
-				}
-				//[1.0.1]//return NSLocalizedString(@"Plan",nil);
-//			}
-			break;
-			
-		case 1:
-			return NSLocalizedString(@"menu Action",nil);
-			break;
-	}
-	return nil;
-}
+//				//[1.0.1]//return NSLocalizedString(@"Plan",nil);
+////			}
+//			break;
+//			
+//		case 1:
+//			return NSLocalizedString(@"menu Action",nil);
+//			break;
+//	}
+//	return nil;
+//}
 
 // TableView セクションフッタを応答
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section 
@@ -1111,7 +1162,7 @@
 	//}
 	if (section==2) {
 		NSString *zz = @"";  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
-		zz = [zz stringByAppendingString:@"\nAzukiSoft Project\n"  COPYRIGHT];
+		zz = [zz stringByAppendingString:@"\nAzukiSoft "  COPYRIGHT];
 //		if (appDelegate_.ppOptShowAd) {
 //			if (appDelegate_.ppIsPad) {
 //				zz = [zz stringByAppendingString:@"\n\n\n\n\n\n\n\n\n\n\n\n\n\n"];
@@ -1310,17 +1361,17 @@
 					cell.detailTextLabel.text = NSLocalizedString(@"Import SharePlan msg",nil);
 					break;
 					
-				case 1:
-					cell.imageView.image = [UIImage imageNamed:@"Icon32-GoogleAdd"];
-					cell.textLabel.text = NSLocalizedString(@"Import Google",nil);
-					cell.detailTextLabel.text = NSLocalizedString(@"Import Google msg",nil);
-					break;
-					
-				case 2:
-					cell.imageView.image = [UIImage imageNamed:@"AZDropbox-32"];
-					cell.textLabel.text = NSLocalizedString(@"Import Dropbox",nil);
-					cell.detailTextLabel.text = NSLocalizedString(@"Import Dropbox msg",nil);
-					break;
+//				case 1:
+//					cell.imageView.image = [UIImage imageNamed:@"Icon32-GoogleAdd"];
+//					cell.textLabel.text = NSLocalizedString(@"Import Google",nil);
+//					cell.detailTextLabel.text = NSLocalizedString(@"Import Google msg",nil);
+//					break;
+//					
+//				case 2:
+//					cell.imageView.image = [UIImage imageNamed:@"AZDropbox-32"];
+//					cell.textLabel.text = NSLocalizedString(@"Import Dropbox",nil);
+//					cell.detailTextLabel.text = NSLocalizedString(@"Import Dropbox msg",nil);
+//					break;
 			}
 		}
 		else if (indexPath.section == 2) { //-----------------------------------------------------------Section 2
