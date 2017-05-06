@@ -50,10 +50,10 @@
 @synthesize clipE3objects = __clipE3objects;		// [Cut][Copy]されたE3をPUSHスタックする。[Paste]でPOPする
 @synthesize dropboxSaveE1selected = __dropboxSaveE1selected;
 @synthesize ppOptAutorotate = __OptAutorotate;
-@synthesize ppOptShowAd = __OptShowAd;				//Setting選択フラグ
+//@synthesize ppOptShowAd = __OptShowAd;				//Setting選択フラグ
 @synthesize ppIsPad = __IsPad;
 @synthesize ppChanged = __Changed;
-@synthesize ppPaid_SwitchAd = __Paid_SwitchAd;		//Store購入済フラグ
+//@synthesize ppPaid_SwitchAd = __Paid_SwitchAd;		//Store購入済フラグ
 @synthesize ppBagSwing = __BagSwing;		//YES=PadRootVC:が表示されたとき、バッグを振る。
 @synthesize ppEnabled_iCloud = __Enabled_iCloud;		// persistentStoreCoordinator:にて設定
 @synthesize popoverButtonItem = popoverButtonItem_;
@@ -108,17 +108,17 @@
 	}
 	[kvs synchronize]; // 最新同期
 	
-	__OptShowAd = [kvs boolForKey:KV_OptAdvertising];
-	__Paid_SwitchAd = [kvs boolForKey:STORE_PRODUCTID_AdOff];
-	NSLog(@"__Paid_SwitchAd=%d", __Paid_SwitchAd);
-	
-	if (__Paid_SwitchAd==NO && [userDefaults boolForKey:UD_OptCrypt]) {
-		[userDefaults setBool:NO forKey:UD_Crypt_Switch];
-	}
-	[userDefaults setBool:__Paid_SwitchAd forKey:UD_OptCrypt];
+//	__OptShowAd = [kvs boolForKey:KV_OptAdvertising];
+//	__Paid_SwitchAd = [kvs boolForKey:STORE_PRODUCTID_AdOff];
+//	NSLog(@"__Paid_SwitchAd=%d", __Paid_SwitchAd);
+//	
+//	if (__Paid_SwitchAd==NO && [userDefaults boolForKey:UD_OptCrypt]) {
+//		[userDefaults setBool:NO forKey:UD_Crypt_Switch];
+//	}
+//	[userDefaults setBool:__Paid_SwitchAd forKey:UD_OptCrypt];
 	
 #ifdef AzMAKE_SPLASHFACE
-	__OptShowAd = NO;
+//	__OptShowAd = NO;
 #endif
 	//__OptShowAd = NO;	//AppStore用 画面撮影のため
 
@@ -139,7 +139,7 @@
 //	}
 	//__IsPad = [[[UIDevice currentDevice] model] hasPrefix:@"iPad"];	// iPad
 	__IsPad = iS_iPAD;
-	NSLog(@"__IsPad=%d,  app_is_Ad_=%d,  app_pid_AdOff_=%d", __IsPad, __OptShowAd, __Paid_SwitchAd);
+//	NSLog(@"__IsPad=%d,  app_is_Ad_=%d,  app_pid_AdOff_=%d", __IsPad, __OptShowAd, __Paid_SwitchAd);
 	
 	//-------------------------------------------------Moc初期化
 	[[MocFunctions sharedMocFunctions] initialize];
@@ -198,9 +198,9 @@
 		
 		// 別デバイスで設定変更したとき、表示に影響ある設定について再描画する
 		
-		// 広告表示に変化があれば、広告スペースを調整する
-		__OptShowAd = [kvs boolForKey:KV_OptAdvertising];
-		[self AdRefresh:__OptShowAd];
+//		// 広告表示に変化があれば、広告スペースを調整する
+//		__OptShowAd = [kvs boolForKey:KV_OptAdvertising];
+//		[self AdRefresh:__OptShowAd];
 
 		// 再フィッチ＆画面リフレッシュ通知  ＜＜＜＜ E1viewController:refreshAllViews: にて iCloud OFF --> ON している。
 		[[NSNotificationCenter defaultCenter] postNotificationName: NFM_REFRESH_ALL_VIEWS
@@ -616,9 +616,9 @@
 
 - (void)AdRefreshAfter  // 非表示アニメ終了後に呼び出される
 {
-	if (__OptShowAd==NO) {		// AdOffのとき、非表示アニメの後、破棄する
-		[self AdRemove];
-	}
+//	if (__OptShowAd==NO) {		// AdOffのとき、非表示アニメの後、破棄する
+//		[self AdRemove];
+//	}
 }
 
 - (void)AdViewWillRotate:(UIInterfaceOrientation)toInterfaceOrientation

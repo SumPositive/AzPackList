@@ -369,13 +369,13 @@
 	
 	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 
-	if (appDelegate_.ppOptShowAd) {
-		// 各viewDidAppear:にて「許可/禁止」を設定する
-		[appDelegate_ AdRefresh:YES];
-		
-		// 広告の下部スペースを空ける
-		[self viewDesign];
-	}
+//	if (appDelegate_.ppOptShowAd) {
+//		// 各viewDidAppear:にて「許可/禁止」を設定する
+//		[appDelegate_ AdRefresh:YES];
+//		
+//		// 広告の下部スペースを空ける
+//		[self viewDesign];
+//	}
 	
 	// Photo E3detail保存時にアップできなかった場合など、未アップがあれば順次アップする
 	[self photoUploadBatch];
@@ -667,20 +667,20 @@
 
 - (void)viewDesign
 {	// 回転によるリサイズ
-	if (appDelegate_.ppOptShowAd) {
-		// 広告の下部スペースを空ける
-		CGRect rc = self.tableView.frame;
-		if (iS_iPAD) {
-			rc.size.height -= 66;
-		} else {
-			if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
-				rc.size.height -= 50;	//タテ
-			} else {
-				rc.size.height -= 32;	// ヨコ
-			}
-		}
-		self.tableView.frame = rc;
-	}
+//	if (appDelegate_.ppOptShowAd) {
+//		// 広告の下部スペースを空ける
+//		CGRect rc = self.tableView.frame;
+//		if (iS_iPAD) {
+//			rc.size.height -= 66;
+//		} else {
+//			if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+//				rc.size.height -= 50;	//タテ
+//			} else {
+//				rc.size.height -= 32;	// ヨコ
+//			}
+//		}
+//		self.tableView.frame = rc;
+//	}
 	// Search Bar
 	[self.tableView.tableHeaderView sizeToFit];
 }

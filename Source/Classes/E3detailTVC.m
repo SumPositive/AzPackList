@@ -296,10 +296,10 @@
 	//[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
 	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 	
-	if (mAppDelegate.ppOptShowAd) {
-		// 各viewDidAppear:にて「許可/禁止」を設定する
-		[mAppDelegate AdRefresh:YES];  //iPhoneは消すことにした。
-	}
+//	if (mAppDelegate.ppOptShowAd) {
+//		// 各viewDidAppear:にて「許可/禁止」を設定する
+//		[mAppDelegate AdRefresh:YES];  //iPhoneは消すことにした。
+//	}
 	
 	//この時点で MtfName は未生成だから、0.5秒後に処理する
 	[self performSelector:@selector(performNameFirstResponder) withObject:nil afterDelay:0.5f]; // 0.5秒後に呼び出す
@@ -871,13 +871,13 @@
 			// 縦
 			//fTableTopY = 65 + (iRow-3)*60;
 			//rect.origin.y = 65;
-			if (mAppDelegate.ppOptShowAd) {	//広告表示中
-				fTableTopY = (500 - self.tableView.bounds.size.height) + 50 + (iRow-3)*60;
-				rect.origin.y = self.tableView.bounds.size.height - 401;
-			} else {
+//			if (mAppDelegate.ppOptShowAd) {	//広告表示中
+//				fTableTopY = (500 - self.tableView.bounds.size.height) + 50 + (iRow-3)*60;
+//				rect.origin.y = self.tableView.bounds.size.height - 401;
+//			} else {
 				fTableTopY = (500 - self.tableView.bounds.size.height) + (iRow-3)*60;
 				rect.origin.y = self.tableView.bounds.size.height - 401 + 50;
-			}
+//			}
 		}
 	}
 	// テーブルを少し上げてテンキーで隠れないようにする

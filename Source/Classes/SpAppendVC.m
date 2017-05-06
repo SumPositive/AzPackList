@@ -322,10 +322,10 @@
 	[super viewDidAppear:animated];
 	GA_TRACK_METHOD
 	
-	if (appDelegate_.ppOptShowAd) {
-		// 各viewDidAppear:にて「許可/禁止」を設定する
-		[appDelegate_ AdRefresh:NO];	//広告禁止
-	}
+//	if (appDelegate_.ppOptShowAd) {
+//		// 各viewDidAppear:にて「許可/禁止」を設定する
+//		[appDelegate_ AdRefresh:NO];	//広告禁止
+//	}
 
 	//viewWillAppearでキーを表示すると画面表示が無いまま待たされてしまうので、viewDidAppearでキー表示するように改良した。
 //	[MtfAmount becomeFirstResponder];  // キーボード表示

@@ -109,12 +109,12 @@
 	GA_TRACK_METHOD
 	//[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 
-	// 広告表示に変化があれば、広告スペースを調整するための処理
-	BOOL bAd = [[NSUbiquitousKeyValueStore defaultStore] boolForKey:KV_OptAdvertising];
-	if (mAppDelegate.ppOptShowAd != bAd) {
-		mAppDelegate.ppOptShowAd = bAd;
-		// viewWillDisappear:にて再描画する
-	}
+//	// 広告表示に変化があれば、広告スペースを調整するための処理
+//	BOOL bAd = [[NSUbiquitousKeyValueStore defaultStore] boolForKey:KV_OptAdvertising];
+//	if (mAppDelegate.ppOptShowAd != bAd) {
+//		mAppDelegate.ppOptShowAd = bAd;
+//		// viewWillDisappear:にて再描画する
+//	}
 }
 
 
@@ -150,7 +150,7 @@
 	[[NSUbiquitousKeyValueStore defaultStore] synchronize];
 
 	if (mAppDelegate.ppIsPad) {
-		[mAppDelegate AdRefresh:mAppDelegate.ppOptShowAd];
+//		[mAppDelegate AdRefresh:mAppDelegate.ppOptShowAd];
 		// 再描画　　重量表示やAdスペースを変化させるため
 		[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS 
 															object:self userInfo:nil];
@@ -533,8 +533,8 @@
 			[kvs setBool:[sender isOn] forKey:KV_OptSearchItemsNote];
 			break;
 		case TAG_OptAdvertising:
-			[kvs setBool:[sender isOn] forKey:KV_OptAdvertising];
-			mAppDelegate.ppOptShowAd = [sender isOn];
+//			[kvs setBool:[sender isOn] forKey:KV_OptAdvertising];
+//			mAppDelegate.ppOptShowAd = [sender isOn];
 			// viewWillDisappear:にて再描画する
 			break;
 	}

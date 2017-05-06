@@ -925,20 +925,20 @@
 {
     [super viewDidAppear:animated];
 
-	if (appDelegate_.ppOptShowAd) {
-		// E3で回転してから戻った場合に対応するため ＜＜E3以下全てに回転対応するのが面倒だから
-		//[apd AdViewWillRotate:self.interfaceOrientation];
-		// 各viewDidAppear:にて「許可/禁止」を設定する
-		if (appDelegate_.ppIsPad) {
-			[appDelegate_ AdRefresh:YES];
-		} else {
-			if (sharePlanList_) {
-				[appDelegate_ AdRefresh:NO];	//広告禁止 Fix[1.1.0]
-			} else {
-				[appDelegate_ AdRefresh:YES];	//広告許可
-			}
-		}
-	}
+//	if (appDelegate_.ppOptShowAd) {
+//		// E3で回転してから戻った場合に対応するため ＜＜E3以下全てに回転対応するのが面倒だから
+//		//[apd AdViewWillRotate:self.interfaceOrientation];
+//		// 各viewDidAppear:にて「許可/禁止」を設定する
+//		if (appDelegate_.ppIsPad) {
+//			[appDelegate_ AdRefresh:YES];
+//		} else {
+//			if (sharePlanList_) {
+//				[appDelegate_ AdRefresh:NO];	//広告禁止 Fix[1.1.0]
+//			} else {
+//				[appDelegate_ AdRefresh:YES];	//広告許可
+//			}
+//		}
+//	}
 }
 
 // この画面が非表示になる直前に呼ばれる
@@ -1162,13 +1162,13 @@
 			if (sharePlanList_) {
 				return NSLocalizedString(@"SharePLAN PreView",nil);
 			}
-			if (appDelegate_.ppOptShowAd) {
-				if (appDelegate_.ppIsPad) {
-					return @"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";	// 大型AdMobスペースのための下部余白
-				} else {
-					return @"\n\n\n";	// 広告スペースのための下部余白
-				}
-			}
+//			if (appDelegate_.ppOptShowAd) {
+//				if (appDelegate_.ppIsPad) {
+//					return @"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";	// 大型AdMobスペースのための下部余白
+//				} else {
+//					return @"\n\n\n";	// 広告スペースのための下部余白
+//				}
+//			}
 			return @"";
 			break;
 	}

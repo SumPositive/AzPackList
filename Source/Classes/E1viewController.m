@@ -100,7 +100,7 @@
 	{	// iCloud OFF --> ON
 		appDelegate_.ppPaid_SwitchAd = YES;
 		//[appDelegate_ managedObjectContextReset]; // iCloud対応の moc再生成する。
-		appDelegate_.ppOptShowAd = NO;
+//		appDelegate_.ppOptShowAd = NO;
 		[kvs setBool:NO forKey:KV_OptAdvertising];
 		[appDelegate_ AdRefresh:NO];
 	}
@@ -251,9 +251,9 @@
 		[self presentViewController:nc animated:YES completion:nil];
 	}
 	else {
-		if (appDelegate_.ppOptShowAd) {
-			[appDelegate_ AdRefresh:NO];	//広告禁止
-		}
+//		if (appDelegate_.ppOptShowAd) {
+//			[appDelegate_ AdRefresh:NO];	//広告禁止
+//		}
 		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 		[self.navigationController pushViewController:vc animated:YES];
 	}
@@ -446,9 +446,9 @@
 		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 		[self presentViewController:nc animated:YES completion:nil];
 	} else {
-		if (appDelegate_.ppOptShowAd) {	// 各viewDidAppear:にて「許可/禁止」を設定する
-			[appDelegate_ AdRefresh:NO];	//広告禁止
-		}
+//		if (appDelegate_.ppOptShowAd) {	// 各viewDidAppear:にて「許可/禁止」を設定する
+//			[appDelegate_ AdRefresh:NO];	//広告禁止
+//		}
 		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 		[self.navigationController pushViewController:vc animated:YES];
 	}
@@ -465,10 +465,10 @@
 		[self presentViewController:nc animated:YES completion:nil];
 	}
 	else {
-		if (appDelegate_.ppOptShowAd) {
-			// 各viewDidAppear:にて「許可/禁止」を設定する
-			[appDelegate_ AdRefresh:NO];	//広告禁止
-		}
+//		if (appDelegate_.ppOptShowAd) {
+//			// 各viewDidAppear:にて「許可/禁止」を設定する
+//			[appDelegate_ AdRefresh:NO];	//広告禁止
+//		}
 		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 		[self.navigationController pushViewController:vc animated:YES];
 	}
@@ -496,10 +496,10 @@
 		[self presentViewController:nc animated:YES completion:nil];
 	}
 	else {
-		if (appDelegate_.ppOptShowAd) {
-			// 各viewDidAppear:にて「許可/禁止」を設定する
-			[appDelegate_ AdRefresh:NO];	//広告禁止
-		}
+//		if (appDelegate_.ppOptShowAd) {
+//			// 各viewDidAppear:にて「許可/禁止」を設定する
+//			[appDelegate_ AdRefresh:NO];	//広告禁止
+//		}
 		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 		[self.navigationController pushViewController:vc animated:YES];
 	}
@@ -840,11 +840,11 @@
 	self.tableView.allowsSelectionDuringEditing = YES; // 編集モードに入ってる間にユーザがセルを選択できる
 #endif	
 	
-	if (appDelegate_.ppOptShowAd) {
-		UIImageView* iv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Icon24-Free.png"]];
-		UIBarButtonItem* bui = [[UIBarButtonItem alloc] initWithCustomView:iv];
-		self.navigationItem.leftBarButtonItem	= bui;
-	}
+//	if (appDelegate_.ppOptShowAd) {
+//		UIImageView* iv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Icon24-Free.png"]];
+//		UIBarButtonItem* bui = [[UIBarButtonItem alloc] initWithCustomView:iv];
+//		self.navigationItem.leftBarButtonItem	= bui;
+//	}
 
 	// ToolBar表示は、viewWillAppearにて回転方向により制御している。
 }
@@ -911,8 +911,8 @@
 	
 	//【Tips】タテから始まるとき、willRotateToInterfaceOrientation:を通らずに、ここを通る　⇒ AdRefresh：にて初期タテ配置となる
 	//【Tips】ヨコから始まるとき、ここよりもloadView：よりも先に willRotateToInterfaceOrientation: を通る ⇒ willRotateにてヨコ配置となる
-	[appDelegate_ AdRefresh:appDelegate_.ppOptShowAd];	//広告
-	[appDelegate_ AdViewWillRotate:self.interfaceOrientation];
+//	[appDelegate_ AdRefresh:appDelegate_.ppOptShowAd];	//広告
+//	[appDelegate_ AdViewWillRotate:self.interfaceOrientation];
 
 	// アップデート直後、1回だけInformation表示する
 	if (bInformationOpen_) {	//initWithStyleにて判定処理している
@@ -1083,17 +1083,17 @@
 {
 	switch (section) {
 		case 0:
-			if (appDelegate_.ppIsPad  &&  appDelegate_.ppOptShowAd) {
-				if (section0Rows_ <= 0) {
-					return NSLocalizedString(@"Plan Nothing",nil);
-				}
-				return nil;  // @"\n\n";	// iAd上部スペース
-			} else {
+//			if (appDelegate_.ppIsPad  &&  appDelegate_.ppOptShowAd) {
+//				if (section0Rows_ <= 0) {
+//					return NSLocalizedString(@"Plan Nothing",nil);
+//				}
+//				return nil;  // @"\n\n";	// iAd上部スペース
+//			} else {
 				if (section0Rows_ <= 0) {
 					return NSLocalizedString(@"Plan Nothing",nil);
 				}
 				//[1.0.1]//return NSLocalizedString(@"Plan",nil);
-			}
+//			}
 			break;
 			
 		case 1:
@@ -1112,13 +1112,13 @@
 	if (section==2) {
 		NSString *zz = @"";  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
 		zz = [zz stringByAppendingString:@"\nAzukiSoft Project\n"  COPYRIGHT];
-		if (appDelegate_.ppOptShowAd) {
-			if (appDelegate_.ppIsPad) {
-				zz = [zz stringByAppendingString:@"\n\n\n\n\n\n\n\n\n\n\n\n\n\n"];
-			} else {
-				zz = [zz stringByAppendingString:@"\n\n\n\n"];
-			}
-		}
+//		if (appDelegate_.ppOptShowAd) {
+//			if (appDelegate_.ppIsPad) {
+//				zz = [zz stringByAppendingString:@"\n\n\n\n\n\n\n\n\n\n\n\n\n\n"];
+//			} else {
+//				zz = [zz stringByAppendingString:@"\n\n\n\n"];
+//			}
+//		}
 		return zz;
 	}
 	return nil;
