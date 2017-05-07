@@ -223,13 +223,13 @@
 		
 		CGRect rect;
 		rect.origin.x = 10;
-		rect.origin.y = 5;
+		rect.origin.y = 64 + 5;
 		rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
 		rect.size.height = 25 + fHeightOfsset;
 		MtfName.frame = rect;
 		
 		rect.origin.x = 15;
-		rect.origin.y = 33 + fHeightOfsset;
+		rect.origin.y = 64 + 33 + fHeightOfsset;
 		rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
 		rect.size.height = self.view.frame.size.height - rect.origin.y - 5 - fKeyHeight;
 		MtvNote.frame = rect;

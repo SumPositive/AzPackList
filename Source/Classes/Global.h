@@ -67,8 +67,8 @@
 #define KV_OptAdvertising						@"KV_OptAdvertising"			// YES=広告あり／NO=なし
 
 
-#define GD_KeyboardHeightPortrait	216.0f	// タテ向きのときのキーボード高さ
-#define GD_KeyboardHeightLandscape	160.0f	// ヨコ向きのときのキーボード高さ
+#define GD_KeyboardHeightPortrait	256.0f	// タテ向きのときのキーボード高さ
+#define GD_KeyboardHeightLandscape	200.0f	// ヨコ向きのときのキーボード高さ
 
 //#define GD_POPOVER_SIZE_INIT		CGSizeMake(480-1, 500-1)	//init初期化時に使用　＜＜＜変化ありにするため1廻り小さくする
 //#define GD_POPOVER_iPhoneSIZE_INIT	CGSizeMake(320-1, 480-1)	//init初期化時に使用　＜＜＜変化ありにするため1廻り小さくする

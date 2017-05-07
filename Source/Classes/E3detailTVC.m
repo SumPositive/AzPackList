@@ -967,7 +967,7 @@
 #pragma mark  <UITableViewDelegate>
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 1;
 }
 
 
@@ -977,35 +977,35 @@
 {
 	switch (section) {
 		case 0:
-			return 7;
-		case 1:	
 			return 6;
+//		case 1:	
+//			return 6;
 	}
 	return 0;
 }
 
 // TableView セクションタイトルを応答
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section 
-{
-	switch (section) {
-		case 1:	
-			return NSLocalizedString(@"Product Bookmark", nil);
-	}
-	return nil;
-}
+//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section 
+//{
+//	switch (section) {
+//		case 1:	
+//			return NSLocalizedString(@"Product Bookmark", nil);
+//	}
+//	return nil;
+//}
 
 // TableView セクションフッタを応答
-- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section 
-{
-	if (section==1) {
-		NSString *zz = NSLocalizedString(@"Product Bookmark Footer", nil);
-		return [zz stringByAppendingString:	@"\n\n"
-																	@"AzukiSoft Project\n"
-																	COPYRIGHT
-																	@"\n\n\n\n\n"];
-	}
-	return nil;
-}
+//- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section 
+//{
+//	if (section==1) {
+//		NSString *zz = NSLocalizedString(@"Product Bookmark Footer", nil);
+//		return [zz stringByAppendingString:	@"\n\n"
+//																	@"AzukiSoft Project\n"
+//																	COPYRIGHT
+//																	@"\n\n\n\n\n"];
+//	}
+//	return nil;
+//}
 
 // セルの高さを指示する
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
@@ -1022,31 +1022,31 @@
 			case 4:
 			case 5:
 				return 58;
-			case 6:	// Picasa
-				if (pE3target.e4photo) { //＜＜E4photo ロードで待たされる！
-					//if (e3target_.photoUrl) {
-					if (mAppDelegate.ppIsPad) {
-						return 40+400+8;
-					} else {
-						return 40+320+8;
-					}
-				}
-				break;
+//			case 6:	// Picasa
+//				if (pE3target.e4photo) { //＜＜E4photo ロードで待たされる！
+//					//if (e3target_.photoUrl) {
+//					if (mAppDelegate.ppIsPad) {
+//						return 40+400+8;
+//					} else {
+//						return 40+320+8;
+//					}
+//				}
+//				break;
 		}
 	} 
-	else if (indexPath.section==1) {
-		switch (indexPath.row) {
-			case 0:	// Shop Bookmark
-				if (10<[pE3target.shopUrl length]) {
-					if (mAppDelegate.ppIsPad) {
-						return 4+400+4;
-					} else {
-						return 4+320+4;
-					}
-				}
-				break;
-		}
-	}
+//	else if (indexPath.section==1) {
+//		switch (indexPath.row) {
+//			case 0:	// Shop Bookmark
+//				if (10<[pE3target.shopUrl length]) {
+//					if (mAppDelegate.ppIsPad) {
+//						return 4+400+4;
+//					} else {
+//						return 4+320+4;
+//					}
+//				}
+//				break;
+//		}
+//	}
 	
 	if (mAppDelegate.ppIsPad) {
 		return 50;
@@ -1266,253 +1266,253 @@
 					[cell.contentView addSubview:dialWeight_];
 				}
 				break;
-			case 6: // Picasa Photo
-				if (mLbPhotoMsg==nil) {
-					// Status Label
-					mLbPhotoMsg = [[UILabel alloc] initWithFrame:CGRectMake(5+24+5,2, 100,30)];
-					mLbPhotoMsg.font = [UIFont systemFontOfSize:12];
-					mLbPhotoMsg.textColor = [UIColor grayColor];
-					mLbPhotoMsg.numberOfLines = 2;
-					mLbPhotoMsg.backgroundColor = [UIColor clearColor];
-					[cell.contentView addSubview:mLbPhotoMsg];
-					// IconPicasa 
-					mIvIconPicasa = [[UIImageView alloc] init];
-					mIvIconPicasa.contentMode = UIViewContentModeScaleAspectFit;
-					mIvIconPicasa.frame = CGRectMake(4, 6, 32, 32);
-					[cell.contentView addSubview:mIvIconPicasa];
-					mActivityIndicator_on_IconPicasa = [[UIActivityIndicatorView alloc]
-														initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-					mActivityIndicator_on_IconPicasa.frame = mIvIconPicasa.bounds;
-					[mIvIconPicasa addSubview:mActivityIndicator_on_IconPicasa];
-					// Camera ボタン
-					mBuCamera = [UIButton buttonWithType:UIButtonTypeCustom];
-					mBuCamera.frame = CGRectMake(0,0, 44,44);
-					[mBuCamera setImage:[UIImage imageNamed:@"Icon24-Camera"] forState:UIControlStateNormal];
-					[mBuCamera setImage:[UIImage imageNamed:@"Icon32-Picasa"] forState:UIControlStateHighlighted];
-					[mBuCamera addTarget:self action:@selector(actionCamera) forControlEvents:UIControlEventTouchUpInside];
-					cell.accessoryType = UITableViewCellAccessoryNone;
-					cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
-					[cell.contentView addSubview:mBuCamera];  //cell.accessoryView = bu;
-					// Image 640x480
-					mIvPhoto = [[UIImageView alloc] init];
-					mIvPhoto.contentMode = UIViewContentModeScaleAspectFit;
-					mIvPhoto.frame = CGRectMake(0, 0, 640, 640); // 固定
-					mIvPhoto.clipsToBounds = YES;
-					// Scroll
-					mSvPhoto = [[UIScrollView alloc] init];
-					mSvPhoto.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-					[mSvPhoto addSubview:mIvPhoto];
-					mSvPhoto.delegate = self;
-					mSvPhoto.contentSize = mIvPhoto.frame.size; // 固定
-					mSvPhoto.zoomScale = 1.0;
-					mSvPhoto.minimumZoomScale = 1.0;
-					mSvPhoto.maximumZoomScale = 4.0;
-					[cell.contentView addSubview:mSvPhoto];
-					// 写真ズーム：　ピンチアウト操作
-					UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]
-															  initWithTarget:self action:@selector(handlePinchGesture:)];
-					[cell.contentView addGestureRecognizer:pinchGesture];
-					
-					//cell.imageView.image = nil;
-					//cell.textLabel.text = nil;
-				}
-				//DEBUG_LOG_RECT(cell.contentView.frame, @"willDisplayCell: cell.contentView.frame");
-				//[mActivityIndicator_on_IconPicasa stopAnimating];
-				E4photo *e4 = pE3target.e4photo;
-				if (e4.photoData) {		// 写真データあり
-					mIvPhoto.image = [UIImage imageWithData: e4.photoData];
-					if ([pE3target.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み
-						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
-						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo Uploaded", nil);
-					} else {		// アップ待ち　リトライ
-						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-						if (mAppDelegate.ppChanged) {
-							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo UploadWait", nil);
-						} else {
-							[mActivityIndicator_on_IconPicasa startAnimating];
-							mLbPhotoMsg.text = NSLocalizedString(@"Google Uploading", nil);
-						}
-					}
-				}
-				else {	// e3target_.photoUrl==nil; 写真データなし
-					mIvPhoto.image = nil;
-//					if ([pE3target.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み  ダウンロード待ち
-//						//cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+//			case 6: // Picasa Photo
+//				if (mLbPhotoMsg==nil) {
+//					// Status Label
+//					mLbPhotoMsg = [[UILabel alloc] initWithFrame:CGRectMake(5+24+5,2, 100,30)];
+//					mLbPhotoMsg.font = [UIFont systemFontOfSize:12];
+//					mLbPhotoMsg.textColor = [UIColor grayColor];
+//					mLbPhotoMsg.numberOfLines = 2;
+//					mLbPhotoMsg.backgroundColor = [UIColor clearColor];
+//					[cell.contentView addSubview:mLbPhotoMsg];
+//					// IconPicasa 
+//					mIvIconPicasa = [[UIImageView alloc] init];
+//					mIvIconPicasa.contentMode = UIViewContentModeScaleAspectFit;
+//					mIvIconPicasa.frame = CGRectMake(4, 6, 32, 32);
+//					[cell.contentView addSubview:mIvIconPicasa];
+//					mActivityIndicator_on_IconPicasa = [[UIActivityIndicatorView alloc]
+//														initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+//					mActivityIndicator_on_IconPicasa.frame = mIvIconPicasa.bounds;
+//					[mIvIconPicasa addSubview:mActivityIndicator_on_IconPicasa];
+//					// Camera ボタン
+//					mBuCamera = [UIButton buttonWithType:UIButtonTypeCustom];
+//					mBuCamera.frame = CGRectMake(0,0, 44,44);
+//					[mBuCamera setImage:[UIImage imageNamed:@"Icon24-Camera"] forState:UIControlStateNormal];
+//					[mBuCamera setImage:[UIImage imageNamed:@"Icon32-Picasa"] forState:UIControlStateHighlighted];
+//					[mBuCamera addTarget:self action:@selector(actionCamera) forControlEvents:UIControlEventTouchUpInside];
+//					cell.accessoryType = UITableViewCellAccessoryNone;
+//					cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
+//					[cell.contentView addSubview:mBuCamera];  //cell.accessoryView = bu;
+//					// Image 640x480
+//					mIvPhoto = [[UIImageView alloc] init];
+//					mIvPhoto.contentMode = UIViewContentModeScaleAspectFit;
+//					mIvPhoto.frame = CGRectMake(0, 0, 640, 640); // 固定
+//					mIvPhoto.clipsToBounds = YES;
+//					// Scroll
+//					mSvPhoto = [[UIScrollView alloc] init];
+//					mSvPhoto.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//					[mSvPhoto addSubview:mIvPhoto];
+//					mSvPhoto.delegate = self;
+//					mSvPhoto.contentSize = mIvPhoto.frame.size; // 固定
+//					mSvPhoto.zoomScale = 1.0;
+//					mSvPhoto.minimumZoomScale = 1.0;
+//					mSvPhoto.maximumZoomScale = 4.0;
+//					[cell.contentView addSubview:mSvPhoto];
+//					// 写真ズーム：　ピンチアウト操作
+//					UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]
+//															  initWithTarget:self action:@selector(handlePinchGesture:)];
+//					[cell.contentView addGestureRecognizer:pinchGesture];
+//					
+//					//cell.imageView.image = nil;
+//					//cell.textLabel.text = nil;
+//				}
+//				//DEBUG_LOG_RECT(cell.contentView.frame, @"willDisplayCell: cell.contentView.frame");
+//				//[mActivityIndicator_on_IconPicasa stopAnimating];
+//				E4photo *e4 = pE3target.e4photo;
+//				if (e4.photoData) {		// 写真データあり
+//					mIvPhoto.image = [UIImage imageWithData: e4.photoData];
+//					if ([pE3target.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み
+//						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
+//						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo Uploaded", nil);
+//					} else {		// アップ待ち　リトライ
 //						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-//						[mActivityIndicator_on_IconPicasa startAnimating];
-//						mLbPhotoMsg.text = NSLocalizedString(@"Google Downloading", nil);
-//						// 写真キャッシュに無いのでダウンロードする
-//						if ([GoogleService photoService]==nil) {	// Google未Login
-//							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo NoLogin", nil);
-//							[mActivityIndicator_on_IconPicasa stopAnimating];
+//						if (mAppDelegate.ppChanged) {
+//							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo UploadWait", nil);
 //						} else {
-//							[GoogleService photoDownloadE3:pE3target errorLabel:mLbPhotoMsg]; //非同期処理
-//							// スクロールして繰り返して呼び出された場合、処理中ならば拒否するようになっている。
+//							[mActivityIndicator_on_IconPicasa startAnimating];
+//							mLbPhotoMsg.text = NSLocalizedString(@"Google Uploading", nil);
 //						}
 //					}
-//					else if ([pE3target.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
-//						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
-//						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo NoUpload", nil);
+//				}
+//				else {	// e3target_.photoUrl==nil; 写真データなし
+//					mIvPhoto.image = nil;
+////					if ([pE3target.photoUrl hasPrefix:@"http"]) {	// Picasaアップ済み  ダウンロード待ち
+////						//cell.imageView.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+////						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+////						[mActivityIndicator_on_IconPicasa startAnimating];
+////						mLbPhotoMsg.text = NSLocalizedString(@"Google Downloading", nil);
+////						// 写真キャッシュに無いのでダウンロードする
+////						if ([GoogleService photoService]==nil) {	// Google未Login
+////							mLbPhotoMsg.text = NSLocalizedString(@"Google Photo NoLogin", nil);
+////							[mActivityIndicator_on_IconPicasa stopAnimating];
+////						} else {
+////							[GoogleService photoDownloadE3:pE3target errorLabel:mLbPhotoMsg]; //非同期処理
+////							// スクロールして繰り返して呼び出された場合、処理中ならば拒否するようになっている。
+////						}
+////					}
+////					else if ([pE3target.photoUrl hasPrefix:PHOTO_URL_UUID_PRIFIX]) {	// 写真あるがアップされていません
+////						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-PicasaBlack"];
+////						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo NoUpload", nil);
+////					}
+////					else {	// Picasaアップなし　撮影してください
+////						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
+////						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo", nil);
+////					} 
+//				}
+//				// この時点では、cell.contentView.frameが無効である。willDisplayCell:にて有効になっている。
+//				// よって、viewDesignPhoto:による配置は、willDisplayCell:へ
+//				// [self viewDesignPhoto];
+//				break;
+		}
+	}
+//	else if (indexPath.section==1) {		//------------------------------------------------------- Product information
+//		switch (indexPath.row) {
+//			case 0: // Shop Photo
+//				if (mActivityIndicator_on_IconShop==nil) {
+//					// Icon Shop 
+//					cell.imageView.image = [UIImage imageNamed:@"Icon-Store-32"];
+//					mActivityIndicator_on_IconShop = [[UIActivityIndicatorView alloc]
+//														initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+//					[cell.imageView  addSubview:mActivityIndicator_on_IconShop];
+//				}
+//				if (10<[pE3target.shopUrl length]) {
+//					//[mActivityIndicator_on_IconShop stopAnimating]; webViewDidStartLoad:にて開始
+//					cell.textLabel.font = [UIFont systemFontOfSize:12];
+//					cell.textLabel.numberOfLines = 10;
+//					cell.textLabel.lineBreakMode = NSLineBreakByCharWrapping; //単語の途中でも改行する
+//					cell.textLabel.text = [NSString stringWithFormat:@"%@\nURL{%@}", 
+//										   NSLocalizedString(@"Product Bookmark URL", nil), pE3target.shopUrl];
+//					//cell.textLabel.text = nil;
+//					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+//					// WebView
+//					if (mWebViewShop==nil) {
+//						mWebViewShop = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 640)]; // 固定
+//						mWebViewShop.scalesPageToFit = YES;  //.frameに収める ＜＜iPhoneサイトには効果なしだが、PCサイトは縮小される
+//						mWebViewShop.delegate = self;	// 読み込み終了にて[mActivityIndicator_on_IconShop stopAnimating];するため
+//						mWebViewShop.userInteractionEnabled = NO;		// 操作禁止
+//						mWebViewShop.hidden = YES; //非表示にしてURLを見せる、読み込み成功時に表示する
+//						[cell.contentView addSubview:mWebViewShop];
+//						// 「URLから読み込む」
+//						NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:pE3target.shopUrl]];
+//						[mWebViewShop loadRequest:request];
 //					}
-//					else {	// Picasaアップなし　撮影してください
-//						mIvIconPicasa.image = [UIImage imageNamed:@"Icon32-Picasa"];
-//						mLbPhotoMsg.text = NSLocalizedString(@"Google Photo", nil);
+//					// 配置は、willDisplayCell: にて
+//				} else {
+//					cell.textLabel.font = [UIFont systemFontOfSize:12];
+//					cell.textLabel.numberOfLines = 2;
+//					cell.textLabel.text = NSLocalizedString(@"Product Bookmark msg", nil);
+//					cell.textLabel.textColor = [UIColor grayColor];
+//					cell.accessoryType = UITableViewCellAccessoryNone;
+//					cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
+//				}
+//				break;
+//				
+//			case 1: // Shop Search keyword
+//				if (mTfKeyword==nil) {
+//					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 300,12)];
+//					label.font = [UIFont systemFontOfSize:12];
+//					label.text = NSLocalizedString(@"Shop Keyword", nil);
+//					label.textColor = [UIColor grayColor];
+//					label.backgroundColor = [UIColor clearColor];
+//					[cell.contentView addSubview:label];
+//					
+//					if (mAppDelegate.ppIsPad) {
+//						mTfKeyword = [[UITextField alloc] initWithFrame:
+//									  CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
+//						mTfKeyword.font = [UIFont systemFontOfSize:20];
+//					} else {
+//						mTfKeyword = [[UITextField alloc] initWithFrame:
+//									  CGRectMake(20,18, self.tableView.frame.size.width-60,20)];
+//						mTfKeyword.font = [UIFont systemFontOfSize:16];
+//					}
+//					mTfKeyword.placeholder = NSLocalizedString(@"Shop Keyword placeholder", nil);
+//					mTfKeyword.keyboardType = UIKeyboardTypeDefault;
+//					mTfKeyword.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+//					mTfKeyword.returnKeyType = UIReturnKeyDone; // ReturnキーをDoneに変える
+//					mTfKeyword.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
+//					mTfKeyword.delegate = self; // textFieldShouldReturn:を呼び出すため
+//					[cell.contentView addSubview:mTfKeyword]; //[MtfKeyword release];
+//					mTfKeyword.text = pE3target.shopKeyword; // (未定)表示しない。Editへ持って行かれるため
+//					cell.accessoryType = UITableViewCellAccessoryNone; // なし
+//					cell.tag = 00;
+//				}
+//				break;
+//				
+//			case 2:
+//			case 3:
+//			case 4:
+//			case 5:
+//				if (cell.imageView.image==nil) {
+//					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//					cell.selectionStyle = UITableViewCellSelectionStyleBlue; // 選択時ハイライト
+//					int iShop = (int)(indexPath.row - 2);
+//					NSString *language = [[NSLocale preferredLanguages] objectAtIndex:0]; // ja, en, zh-Hans
+//					
+//					if ([language hasPrefix:@"ja"]) {
+//						switch (iShop) {
+//							case 0: 
+//								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+//								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.co.jp", nil);	
+//								cell.tag = 01;		break;
+//							case 1: 
+//								cell.imageView.image = [UIImage imageNamed:@"Icon32-Rakuten"];
+//								cell.textLabel.text = NSLocalizedString(@"Shop Rakuten", nil);				
+//								cell.tag = 11;		break;
+//							case 2: 
+//								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+//								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.com", nil);	
+//								cell.tag = 02;		break;
+//							case 3: 
+//								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+//								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.cn", nil);	
+//								cell.tag = 03;		break;
+//						}
 //					} 
-				}
-				// この時点では、cell.contentView.frameが無効である。willDisplayCell:にて有効になっている。
-				// よって、viewDesignPhoto:による配置は、willDisplayCell:へ
-				// [self viewDesignPhoto];
-				break;
-		}
-	}
-	else if (indexPath.section==1) {		//------------------------------------------------------- Product information
-		switch (indexPath.row) {
-			case 0: // Shop Photo
-				if (mActivityIndicator_on_IconShop==nil) {
-					// Icon Shop 
-					cell.imageView.image = [UIImage imageNamed:@"Icon-Store-32"];
-					mActivityIndicator_on_IconShop = [[UIActivityIndicatorView alloc]
-														initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-					[cell.imageView  addSubview:mActivityIndicator_on_IconShop];
-				}
-				if (10<[pE3target.shopUrl length]) {
-					//[mActivityIndicator_on_IconShop stopAnimating]; webViewDidStartLoad:にて開始
-					cell.textLabel.font = [UIFont systemFontOfSize:12];
-					cell.textLabel.numberOfLines = 10;
-					cell.textLabel.lineBreakMode = NSLineBreakByCharWrapping; //単語の途中でも改行する
-					cell.textLabel.text = [NSString stringWithFormat:@"%@\nURL{%@}", 
-										   NSLocalizedString(@"Product Bookmark URL", nil), pE3target.shopUrl];
-					//cell.textLabel.text = nil;
-					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-					// WebView
-					if (mWebViewShop==nil) {
-						mWebViewShop = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 640)]; // 固定
-						mWebViewShop.scalesPageToFit = YES;  //.frameに収める ＜＜iPhoneサイトには効果なしだが、PCサイトは縮小される
-						mWebViewShop.delegate = self;	// 読み込み終了にて[mActivityIndicator_on_IconShop stopAnimating];するため
-						mWebViewShop.userInteractionEnabled = NO;		// 操作禁止
-						mWebViewShop.hidden = YES; //非表示にしてURLを見せる、読み込み成功時に表示する
-						[cell.contentView addSubview:mWebViewShop];
-						// 「URLから読み込む」
-						NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:pE3target.shopUrl]];
-						[mWebViewShop loadRequest:request];
-					}
-					// 配置は、willDisplayCell: にて
-				} else {
-					cell.textLabel.font = [UIFont systemFontOfSize:12];
-					cell.textLabel.numberOfLines = 2;
-					cell.textLabel.text = NSLocalizedString(@"Product Bookmark msg", nil);
-					cell.textLabel.textColor = [UIColor grayColor];
-					cell.accessoryType = UITableViewCellAccessoryNone;
-					cell.selectionStyle = UITableViewCellSelectionStyleNone; // 選択時ハイライトなし
-				}
-				break;
-				
-			case 1: // Shop Search keyword
-				if (mTfKeyword==nil) {
-					UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5,3, 300,12)];
-					label.font = [UIFont systemFontOfSize:12];
-					label.text = NSLocalizedString(@"Shop Keyword", nil);
-					label.textColor = [UIColor grayColor];
-					label.backgroundColor = [UIColor clearColor];
-					[cell.contentView addSubview:label];
-					
-					if (mAppDelegate.ppIsPad) {
-						mTfKeyword = [[UITextField alloc] initWithFrame:
-									  CGRectMake(20,18, self.tableView.frame.size.width-60,24)];
-						mTfKeyword.font = [UIFont systemFontOfSize:20];
-					} else {
-						mTfKeyword = [[UITextField alloc] initWithFrame:
-									  CGRectMake(20,18, self.tableView.frame.size.width-60,20)];
-						mTfKeyword.font = [UIFont systemFontOfSize:16];
-					}
-					mTfKeyword.placeholder = NSLocalizedString(@"Shop Keyword placeholder", nil);
-					mTfKeyword.keyboardType = UIKeyboardTypeDefault;
-					mTfKeyword.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-					mTfKeyword.returnKeyType = UIReturnKeyDone; // ReturnキーをDoneに変える
-					mTfKeyword.backgroundColor = [UIColor clearColor]; //[UIColor grayColor]; //範囲チェック用
-					mTfKeyword.delegate = self; // textFieldShouldReturn:を呼び出すため
-					[cell.contentView addSubview:mTfKeyword]; //[MtfKeyword release];
-					mTfKeyword.text = pE3target.shopKeyword; // (未定)表示しない。Editへ持って行かれるため
-					cell.accessoryType = UITableViewCellAccessoryNone; // なし
-					cell.tag = 00;
-				}
-				break;
-				
-			case 2:
-			case 3:
-			case 4:
-			case 5:
-				if (cell.imageView.image==nil) {
-					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-					cell.selectionStyle = UITableViewCellSelectionStyleBlue; // 選択時ハイライト
-					int iShop = (int)(indexPath.row - 2);
-					NSString *language = [[NSLocale preferredLanguages] objectAtIndex:0]; // ja, en, zh-Hans
-					
-					if ([language hasPrefix:@"ja"]) {
-						switch (iShop) {
-							case 0: 
-								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
-								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.co.jp", nil);	
-								cell.tag = 01;		break;
-							case 1: 
-								cell.imageView.image = [UIImage imageNamed:@"Icon32-Rakuten"];
-								cell.textLabel.text = NSLocalizedString(@"Shop Rakuten", nil);				
-								cell.tag = 11;		break;
-							case 2: 
-								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
-								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.com", nil);	
-								cell.tag = 02;		break;
-							case 3: 
-								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
-								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.cn", nil);	
-								cell.tag = 03;		break;
-						}
-					} 
-					else if ([language hasPrefix:@"zh"]) {  // zh-Hans or zh-H
-						switch (iShop) {
-							case 0: 
-								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
-								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.cn", nil);	
-								cell.tag = 03;		break;
-							case 1: 
-								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
-								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.com", nil);	
-								cell.tag = 02;		break;
-							case 2: 
-								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
-								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.co.jp", nil);	
-								cell.tag = 01;		break;
-							case 3: 
-								cell.imageView.image = [UIImage imageNamed:@"Icon32-Rakuten"];
-								cell.textLabel.text = NSLocalizedString(@"Shop Rakuten", nil);				
-								cell.tag = 11;		break;
-						}
-					} 
-					else {							// en, other
-						switch (iShop) {
-							case 0: 
-								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
-								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.com", nil);	
-								cell.tag = 02;		break;
-							case 1: 
-								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
-								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.cn", nil);	
-								cell.tag = 03;		break;
-							case 2: 
-								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
-								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.co.jp", nil);	
-								cell.tag = 01;		break;
-							case 3: 
-								cell.imageView.image = [UIImage imageNamed:@"Icon32-Rakuten"];
-								cell.textLabel.text = NSLocalizedString(@"Shop Rakuten", nil);				
-								cell.tag = 11;		break;
-						}
-					}
-				}
-				break;
-		}
-	}
+//					else if ([language hasPrefix:@"zh"]) {  // zh-Hans or zh-H
+//						switch (iShop) {
+//							case 0: 
+//								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+//								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.cn", nil);	
+//								cell.tag = 03;		break;
+//							case 1: 
+//								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+//								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.com", nil);	
+//								cell.tag = 02;		break;
+//							case 2: 
+//								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+//								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.co.jp", nil);	
+//								cell.tag = 01;		break;
+//							case 3: 
+//								cell.imageView.image = [UIImage imageNamed:@"Icon32-Rakuten"];
+//								cell.textLabel.text = NSLocalizedString(@"Shop Rakuten", nil);				
+//								cell.tag = 11;		break;
+//						}
+//					} 
+//					else {							// en, other
+//						switch (iShop) {
+//							case 0: 
+//								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+//								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.com", nil);	
+//								cell.tag = 02;		break;
+//							case 1: 
+//								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+//								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.cn", nil);	
+//								cell.tag = 03;		break;
+//							case 2: 
+//								cell.imageView.image = [UIImage imageNamed:@"Icon32-Amazon"];
+//								cell.textLabel.text = NSLocalizedString(@"Shop Amazon.co.jp", nil);	
+//								cell.tag = 01;		break;
+//							case 3: 
+//								cell.imageView.image = [UIImage imageNamed:@"Icon32-Rakuten"];
+//								cell.textLabel.text = NSLocalizedString(@"Shop Rakuten", nil);				
+//								cell.tag = 11;		break;
+//						}
+//					}
+//				}
+//				break;
+//		}
+//	}
     return cell;
 }
 
@@ -1549,16 +1549,16 @@
 				}
 			} break;
 				
-			case 6: {
-				// この時点では、cell.contentView.frameが有効になっている。
-				[self viewDesignPhoto];	// mIvPhoto:配置
-			} break;
+//			case 6: {
+//				// この時点では、cell.contentView.frameが有効になっている。
+//				[self viewDesignPhoto];	// mIvPhoto:配置
+//			} break;
 		}
 	}
-	else if (indexPath.section==1 && indexPath.row==0) {
-		// この時点では、cell.contentView.frameが有効になっている。
-		[self viewDesignPhoto];		// mWebViewShop:配置
-	}
+//	else if (indexPath.section==1 && indexPath.row==0) {
+//		// この時点では、cell.contentView.frameが有効になっている。
+//		[self viewDesignPhoto];		// mWebViewShop:配置
+//	}
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
@@ -1587,106 +1587,106 @@
 				[mTvNote becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
 			} break;
 				
-			case 6: // Picasa Photo
-				//右ボタンにした//[self actionCamera];
-				break;
+//			case 6: // Picasa Photo
+//				//右ボタンにした//[self actionCamera];
+//				break;
 		}
 	}
-	else if (indexPath.section==1) {
-		switch (indexPath.row) {
-			case 0: // Shop Photo
-				if (10<[pE3target.shopUrl length]) {
-					// WebViewを開ける
-					[self actionWebTitle: nil  Url: pE3target.shopUrl];
-				}
-				break;
-				
-			case 1: // Shop Search keyword
-				[mTfKeyword becomeFirstResponder];
-				break;
-				
-			case 2: // Shop
-			case 3: // Shop
-			case 4: // Shop
-			case 5: { // Shop
-				UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-				switch (cell.tag) {
-					case 00: // Name
-					{
-						[mTfKeyword becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
-					} break;
-					
-					// アフェリエイトTAGは、WebSiteVC:stringAddTagUrl: にて付加している。
-					case 01: // Amazon.co.jp
-					{
-						NSString *zUrl;
-						if (mAppDelegate.ppIsPad) {
-							// PCサイト　　　　URL表示するようになったので長くする＜＜TAGが見えないように
-							// アソシエイトリンク作成方法⇒ https://affiliate.amazon.co.jp/gp/associates/help/t121/a1
-							//サーチ（全商品）
-							//ttp://www.amazon.co.jp/gp/search?ie=UTF8&keywords=[SEARCH_PARAMETERS]&tag=[ASSOCIATE_TAG]&index=blended&linkCode=ure&creative=6339	
-							zUrl = @"http://www.amazon.co.jp/gp/search?ie=UTF8&index=blended&linkCode=ure&creative=6339&keywords=";
-						} else {
-							// モバイルサイト　　　　　"ie=UTF8" が無いと日本語キーワードが化ける
-							//www.amazon.co.jp/gp/aw/s/ref=is_s_?__mk_ja_JP=%83J%83%5E%83J%83i&k=[SEARCH_PARAMETERS]&url=search-alias%3Daps
-							zUrl = @"http://www.amazon.co.jp/gp/aw/s/ref=is_s_?ie=UTF8&__mk_ja_JP=%83J%83%5E%83J%83i&url=search-alias%3Daps&k=";
-						}
-						[self actionWebSearchTitle:NSLocalizedString(@"Shop Amazon.co.jp", nil) URL:zUrl];
-					} break;
-					
-					case 02: // Amazon.com
-					{
-						NSString *zUrl;
-						if (mAppDelegate.ppIsPad) {
-							// PCサイト
-							//ttp://www.amazon.com/s/?tag=azuk-20&creative=392009&campaign=212361&link_code=wsw&_encoding=UTF-8&search-alias=aps&field-keywords=LEGO&Submit.x=16&Submit.y=14&Submit=Go
-							zUrl = @"http://www.amazon.com/s/?_encoding=UTF-8&link_code=wsw&search-alias=aps&creative=392009&field-keywords=";
-						} else {
-							// モバイルサイト
-							//www.amazon.com/gp/aw/s/ref=is_box_?k=LEGO
-							zUrl = @"http://www.amazon.com/gp/aw/s/ref=is_box_?_encoding=UTF-8&link_code=wsw&search-alias=aps&k=";
-						}
-						[self actionWebSearchTitle:NSLocalizedString(@"Shop Amazon.com", nil) URL:zUrl];
-					} break;
-					
-					case 03: // Amazon.cn
-					{
-						NSString *zUrl;
-						if (mAppDelegate.ppIsPad) {
-							// PCサイト
-							//ttp://www.amazon.cn/s/ref=nb_sb_noss/?tag=azukid-23&link_code=wsw&_encoding=UTF-8&search-alias=aps&field-keywords=TEST&Submit.x=13&Submit.y=7&Submit=Go
-							zUrl = @"http://www.amazon.cn/s/?_encoding=UTF-8&link_code=wsw&search-alias=aps&field-keywords=";
-						} else {
-							// モバイルサイト
-							//www.amazon.cn/gp/aw/s/ref=is_box_?k=LEGO
-							zUrl = @"http://www.amazon.cn/gp/aw/s/ref=is_box_?_encoding=UTF-8&link_code=wsw&search-alias=aps&k=";
-						}
-						[self actionWebSearchTitle:NSLocalizedString(@"Shop Amazon.cn", nil) URL:zUrl];
-					} break;
-
-					case 11: // 楽天 Search
-					{			// アフィリエイトID(β版): &afid=0e4c9297.0f29bc13.0e4c9298.6adf8529
-						NSString *zUrl;
-						if (mAppDelegate.ppIsPad) {
-							// PCサイト
-							zUrl = @"http://search.rakuten.co.jp/search/mall/?sv=2&p=0&sitem=";
-						} else {
-							// モバイルサイト
-							//http://search.rakuten.co.jp/search/spmall?sv=2&p=0&sitem=SG7&submit=商品検索&scid=af_ich_link_search&scid=af_ich_link_search
-							zUrl = @"http://search.rakuten.co.jp/search/spmall/?sv=2&p=0&sitem=";
-						}
-						[self actionWebSearchTitle:NSLocalizedString(@"Shop Rakuten", nil) URL:zUrl];
-					} break;
-					
-					case 21: // ケンコーコム Search
-					{			// アフィリエイトID
-						NSString *zUrl = @"http://sp.kenko.com/";
-						[self actionWebSearchTitle:NSLocalizedString(@"Shop Kenko.com", nil) URL:zUrl];
-					} break;
-				}
-			} break;
-		}
-	}
+//	else if (indexPath.section==1) {
+//		switch (indexPath.row) {
+//			case 0: // Shop Photo
+//				if (10<[pE3target.shopUrl length]) {
+//					// WebViewを開ける
+//					[self actionWebTitle: nil  Url: pE3target.shopUrl];
+//				}
+//				break;
+//				
+//			case 1: // Shop Search keyword
+//				[mTfKeyword becomeFirstResponder];
+//				break;
+//				
+//			case 2: // Shop
+//			case 3: // Shop
+//			case 4: // Shop
+//			case 5: { // Shop
+//				UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+//				switch (cell.tag) {
+//					case 00: // Name
+//					{
+//						[mTfKeyword becomeFirstResponder]; // ファーストレスポンダにする ⇒ キーボード表示
+//					} break;
+//					
+//					// アフェリエイトTAGは、WebSiteVC:stringAddTagUrl: にて付加している。
+//					case 01: // Amazon.co.jp
+//					{
+//						NSString *zUrl;
+//						if (mAppDelegate.ppIsPad) {
+//							// PCサイト　　　　URL表示するようになったので長くする＜＜TAGが見えないように
+//							// アソシエイトリンク作成方法⇒ https://affiliate.amazon.co.jp/gp/associates/help/t121/a1
+//							//サーチ（全商品）
+//							//ttp://www.amazon.co.jp/gp/search?ie=UTF8&keywords=[SEARCH_PARAMETERS]&tag=[ASSOCIATE_TAG]&index=blended&linkCode=ure&creative=6339	
+//							zUrl = @"http://www.amazon.co.jp/gp/search?ie=UTF8&index=blended&linkCode=ure&creative=6339&keywords=";
+//						} else {
+//							// モバイルサイト　　　　　"ie=UTF8" が無いと日本語キーワードが化ける
+//							//www.amazon.co.jp/gp/aw/s/ref=is_s_?__mk_ja_JP=%83J%83%5E%83J%83i&k=[SEARCH_PARAMETERS]&url=search-alias%3Daps
+//							zUrl = @"http://www.amazon.co.jp/gp/aw/s/ref=is_s_?ie=UTF8&__mk_ja_JP=%83J%83%5E%83J%83i&url=search-alias%3Daps&k=";
+//						}
+//						[self actionWebSearchTitle:NSLocalizedString(@"Shop Amazon.co.jp", nil) URL:zUrl];
+//					} break;
+//					
+//					case 02: // Amazon.com
+//					{
+//						NSString *zUrl;
+//						if (mAppDelegate.ppIsPad) {
+//							// PCサイト
+//							//ttp://www.amazon.com/s/?tag=azuk-20&creative=392009&campaign=212361&link_code=wsw&_encoding=UTF-8&search-alias=aps&field-keywords=LEGO&Submit.x=16&Submit.y=14&Submit=Go
+//							zUrl = @"http://www.amazon.com/s/?_encoding=UTF-8&link_code=wsw&search-alias=aps&creative=392009&field-keywords=";
+//						} else {
+//							// モバイルサイト
+//							//www.amazon.com/gp/aw/s/ref=is_box_?k=LEGO
+//							zUrl = @"http://www.amazon.com/gp/aw/s/ref=is_box_?_encoding=UTF-8&link_code=wsw&search-alias=aps&k=";
+//						}
+//						[self actionWebSearchTitle:NSLocalizedString(@"Shop Amazon.com", nil) URL:zUrl];
+//					} break;
+//					
+//					case 03: // Amazon.cn
+//					{
+//						NSString *zUrl;
+//						if (mAppDelegate.ppIsPad) {
+//							// PCサイト
+//							//ttp://www.amazon.cn/s/ref=nb_sb_noss/?tag=azukid-23&link_code=wsw&_encoding=UTF-8&search-alias=aps&field-keywords=TEST&Submit.x=13&Submit.y=7&Submit=Go
+//							zUrl = @"http://www.amazon.cn/s/?_encoding=UTF-8&link_code=wsw&search-alias=aps&field-keywords=";
+//						} else {
+//							// モバイルサイト
+//							//www.amazon.cn/gp/aw/s/ref=is_box_?k=LEGO
+//							zUrl = @"http://www.amazon.cn/gp/aw/s/ref=is_box_?_encoding=UTF-8&link_code=wsw&search-alias=aps&k=";
+//						}
+//						[self actionWebSearchTitle:NSLocalizedString(@"Shop Amazon.cn", nil) URL:zUrl];
+//					} break;
+//
+//					case 11: // 楽天 Search
+//					{			// アフィリエイトID(β版): &afid=0e4c9297.0f29bc13.0e4c9298.6adf8529
+//						NSString *zUrl;
+//						if (mAppDelegate.ppIsPad) {
+//							// PCサイト
+//							zUrl = @"http://search.rakuten.co.jp/search/mall/?sv=2&p=0&sitem=";
+//						} else {
+//							// モバイルサイト
+//							//http://search.rakuten.co.jp/search/spmall?sv=2&p=0&sitem=SG7&submit=商品検索&scid=af_ich_link_search&scid=af_ich_link_search
+//							zUrl = @"http://search.rakuten.co.jp/search/spmall/?sv=2&p=0&sitem=";
+//						}
+//						[self actionWebSearchTitle:NSLocalizedString(@"Shop Rakuten", nil) URL:zUrl];
+//					} break;
+//					
+//					case 21: // ケンコーコム Search
+//					{			// アフィリエイトID
+//						NSString *zUrl = @"http://sp.kenko.com/";
+//						[self actionWebSearchTitle:NSLocalizedString(@"Shop Kenko.com", nil) URL:zUrl];
+//					} break;
+//				}
+//			} break;
+//		}
+//	}
 }
 
 
@@ -1706,8 +1706,8 @@
 // TableView Editボタンスタイル
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (indexPath.section==0 && indexPath.row==6) return UITableViewCellEditingStyleDelete; // Picasa
-	if (indexPath.section==1 && indexPath.row==0) return UITableViewCellEditingStyleDelete; // Shop
+//	if (indexPath.section==0 && indexPath.row==6) return UITableViewCellEditingStyleDelete; // Picasa
+//	if (indexPath.section==1 && indexPath.row==0) return UITableViewCellEditingStyleDelete; // Shop
 	return UITableViewCellEditingStyleNone; // なし
 }
 
@@ -1716,38 +1716,38 @@
 								forRowAtIndexPath:(NSIndexPath *)indexPath 
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-		if (indexPath.section==0 && indexPath.row==6) { // Picasa
-			E4photo *e4 = pE3target.e4photo;
-			if (e4) {
-				e4.photoData = nil;
-				// [e3target_.managedObjectContext deleteObject:e4]; リンクを切るだけで削除されるハズ ＜＜未確認
-			}
-			pE3target.e4photo = nil;
-			pE3target.photoUrl = nil;
-			mAppDelegate.ppChanged = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
-			[self.tableView reloadData];
-		}
-		else if (indexPath.section==1 && indexPath.row==0) { // Shop
-			if (mWebViewShop) {
-				mWebViewShop.hidden = YES;
-				[mWebViewShop stopLoading];
-				mWebViewShop.delegate = nil; // これしないと落ちます
-				mWebViewShop = nil;
-			}
-			pE3target.shopUrl = nil;
-			mAppDelegate.ppChanged = YES; // 変更あり
-			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
-			[self.tableView reloadData];
-		}
+//		if (indexPath.section==0 && indexPath.row==6) { // Picasa
+//			E4photo *e4 = pE3target.e4photo;
+//			if (e4) {
+//				e4.photoData = nil;
+//				// [e3target_.managedObjectContext deleteObject:e4]; リンクを切るだけで削除されるハズ ＜＜未確認
+//			}
+//			pE3target.e4photo = nil;
+//			pE3target.photoUrl = nil;
+//			mAppDelegate.ppChanged = YES; // 変更あり
+//			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
+//			[self.tableView reloadData];
+//		}
+//		else if (indexPath.section==1 && indexPath.row==0) { // Shop
+//			if (mWebViewShop) {
+//				mWebViewShop.hidden = YES;
+//				[mWebViewShop stopLoading];
+//				mWebViewShop.delegate = nil; // これしないと落ちます
+//				mWebViewShop = nil;
+//			}
+//			pE3target.shopUrl = nil;
+//			mAppDelegate.ppChanged = YES; // 変更あり
+//			self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
+//			[self.tableView reloadData];
+//		}
     }
 }
 
 // Editモード時の行Edit可否
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-	if (indexPath.section==0 && indexPath.row==6) return YES; // 行編集許可 // Picasa
-	if (indexPath.section==1 && indexPath.row==0) return YES; // 行編集許可 // Shop
+//	if (indexPath.section==0 && indexPath.row==6) return YES; // 行編集許可 // Picasa
+//	if (indexPath.section==1 && indexPath.row==0) return YES; // 行編集許可 // Shop
 	return NO;
 }
 

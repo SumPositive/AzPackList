@@ -1079,7 +1079,7 @@
 			break;
 		case 2: // Action menu
 			if (!sharePlanList_ && 0 < section0Rows_) {
-				rows = 5;
+				rows = 2;
 			}
 			else rows = 0;
 			break;
@@ -1419,30 +1419,30 @@
 					cell.textLabel.text = NSLocalizedString(@"Email send",nil);
 					cell.detailTextLabel.text = NSLocalizedString(@"Email send msg",nil);
 					break;
-				case 2:
-					cell.imageView.image = [UIImage imageNamed:@"Icon32-Shared"];
-					cell.textLabel.text = NSLocalizedString(@"SharePlan Append",nil);
-					cell.detailTextLabel.text = NSLocalizedString(@"SharePlan Append msg",nil);
-					if (appDelegate_.ppIsPad==NO) {
-						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
-					}
-					break;
-				case 3:
-					cell.imageView.image = [UIImage imageNamed:@"Icon32-GoogleDoc"];
-					cell.textLabel.text = NSLocalizedString(@"Backup Google",nil);
-					cell.detailTextLabel.text = NSLocalizedString(@"Backup Google msg",nil);
-					if (appDelegate_.ppIsPad==NO) {
-						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
-					}
-					break;
-				case 4:
-					cell.imageView.image = [UIImage imageNamed:@"AZDropbox-32"];
-					cell.textLabel.text = NSLocalizedString(@"Backup Dropbox",nil);
-					cell.detailTextLabel.text = NSLocalizedString(@"Backup Dropbox msg",nil);
-					if (appDelegate_.ppIsPad==NO) {
-						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
-					}
-					break;
+//				case 2:
+//					cell.imageView.image = [UIImage imageNamed:@"Icon32-Shared"];
+//					cell.textLabel.text = NSLocalizedString(@"SharePlan Append",nil);
+//					cell.detailTextLabel.text = NSLocalizedString(@"SharePlan Append msg",nil);
+//					if (appDelegate_.ppIsPad==NO) {
+//						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
+//					}
+//					break;
+//				case 3:
+//					cell.imageView.image = [UIImage imageNamed:@"Icon32-GoogleDoc"];
+//					cell.textLabel.text = NSLocalizedString(@"Backup Google",nil);
+//					cell.detailTextLabel.text = NSLocalizedString(@"Backup Google msg",nil);
+//					if (appDelegate_.ppIsPad==NO) {
+//						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
+//					}
+//					break;
+//				case 4:
+//					cell.imageView.image = [UIImage imageNamed:@"AZDropbox-32"];
+//					cell.textLabel.text = NSLocalizedString(@"Backup Dropbox",nil);
+//					cell.detailTextLabel.text = NSLocalizedString(@"Backup Dropbox msg",nil);
+//					if (appDelegate_.ppIsPad==NO) {
+//						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
+//					}
+//					break;
 			}
 			break;
 			

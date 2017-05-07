@@ -1110,7 +1110,7 @@
 	//if (appDelegate_.ppPaid_SwitchAd) {
 	//	return 4;	// (3)iCloud Initial
 	//}
-	return 3; // (0)PackList　　(1)Import menu　　(2)Basic menu
+	return 2;
 #endif
 }
 
@@ -1119,11 +1119,11 @@
 	switch (section) {
 		case 0:
 			return section0Rows_ + 1; // +1:Add行
+//		case 1:
+//			return 1;	// Action menu
 		case 1:
-			return 1;	// Action menu
-		case 2:
 			return 3;	// menu
-		case 3:
+		case 2:
 			return 1;	// iCloud Initial
 	}
 	return 0;
@@ -1160,7 +1160,7 @@
 	//if (appDelegate_.ppPaid_SwitchAd) {
 	//	section--;
 	//}
-	if (section==2) {
+	if (section==1) {
 		NSString *zz = @"";  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
 		zz = [zz stringByAppendingString:@"\nAzukiSoft "  COPYRIGHT];
 //		if (appDelegate_.ppOptShowAd) {
@@ -1353,14 +1353,14 @@
 		cell.detailTextLabel.textColor = [UIColor grayColor];
 		cell.showsReorderControl = NO;
 
-		if (indexPath.section == 1) { //-----------------------------------------------------------Section 1:行位置変更したなら、Popover矢印位置も変更すること。
-			switch (indexPath.row) {
-				case 0:
-					cell.imageView.image = [UIImage imageNamed:@"Icon32-SharedAdd"];
-					cell.textLabel.text = NSLocalizedString(@"Import SharePlan",nil);
-					cell.detailTextLabel.text = NSLocalizedString(@"Import SharePlan msg",nil);
-					break;
-					
+//		if (indexPath.section == 1) { //-----------------------------------------------------------Section 1:行位置変更したなら、Popover矢印位置も変更すること。
+//			switch (indexPath.row) {
+//				case 0:
+//					cell.imageView.image = [UIImage imageNamed:@"Icon32-SharedAdd"];
+//					cell.textLabel.text = NSLocalizedString(@"Import SharePlan",nil);
+//					cell.detailTextLabel.text = NSLocalizedString(@"Import SharePlan msg",nil);
+//					break;
+//					
 //				case 1:
 //					cell.imageView.image = [UIImage imageNamed:@"Icon32-GoogleAdd"];
 //					cell.textLabel.text = NSLocalizedString(@"Import Google",nil);
@@ -1372,9 +1372,9 @@
 //					cell.textLabel.text = NSLocalizedString(@"Import Dropbox",nil);
 //					cell.detailTextLabel.text = NSLocalizedString(@"Import Dropbox msg",nil);
 //					break;
-			}
-		}
-		else if (indexPath.section == 2) { //-----------------------------------------------------------Section 2
+//			}
+//		}
+		if (indexPath.section == 1) { //-----------------------------------------------------------Section 2
 			switch (indexPath.row) {
 				case 0:
 					cell.imageView.image = [UIImage imageNamed:@"Icon-Setting-32"];
@@ -1395,7 +1395,7 @@
 					break;
 			}
 		}
-		else if (indexPath.section == 3) { //-----------------------------------------------------------Section 3
+		else if (indexPath.section == 2) { //-----------------------------------------------------------Section 3
 			// iCloud
 			cell.imageView.image = [UIImage imageNamed:@"Icon32-iCloud"];
 			cell.textLabel.text = NSLocalizedString(@"iCloud Reset",nil);
@@ -1451,22 +1451,22 @@
 			}
 		}
 	}
+//	else if (indexPath.section == 1) {
+//		switch (indexPath.row) {
+//			case 0: // SharePlan Search
+//				[self	actionImportSharedPackList];
+//				break;
+//				
+//			case 1: // Google
+//				[self actionImportGoogle];
+//				break;
+//
+//			case 2: // Dropbox
+//				[self actionImportDropbox];
+//				break;
+//		}
+//	}
 	else if (indexPath.section == 1) {
-		switch (indexPath.row) {
-			case 0: // SharePlan Search
-				[self	actionImportSharedPackList];
-				break;
-				
-			case 1: // Google
-				[self actionImportGoogle];
-				break;
-
-			case 2: // Dropbox
-				[self actionImportDropbox];
-				break;
-		}
-	}
-	else if (indexPath.section == 2) {
 		switch (indexPath.row) {
 			case 0: // Setting
 				[self actionSetting];
@@ -1481,16 +1481,16 @@
 				break;
 		}
 	}
-	else if (indexPath.section == 3) {
-		// iCloud Reset
-		UIAlertView *av = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"iCloud Reset", nil)
-													 message: NSLocalizedString(@"iCloud Reset msg", nil)
-													delegate:self
-										   cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-										   otherButtonTitles:NSLocalizedString(@"RESET", nil), nil];
-		av.tag = ALERT_TAG_CloudReset;
-		[av show];
-	}
+//	else if (indexPath.section == 3) {
+//		// iCloud Reset
+//		UIAlertView *av = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"iCloud Reset", nil)
+//													 message: NSLocalizedString(@"iCloud Reset msg", nil)
+//													delegate:self
+//										   cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+//										   otherButtonTitles:NSLocalizedString(@"RESET", nil), nil];
+//		av.tag = ALERT_TAG_CloudReset;
+//		[av show];
+//	}
 }
 
 #pragma mark  TableView - Edit Move
