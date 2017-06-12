@@ -15,7 +15,7 @@
 #import "E2viewController.h"
 #import "PatternImageView.h"
 
-#import  <YAJLiOS/YAJL.h>
+//#import  <YAJLiOS/YAJL.h>
 //#import <DropboxSDK/JSON.h>  SBJSONでは、読み取りエラー発生した。（多分、CSV部）
 
 
@@ -232,108 +232,108 @@
 
 
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{	// データ受信時
-	if (RdaResponse==nil) {
-		RdaResponse = [NSMutableData new];
-	}
-	[RdaResponse appendData:data];
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{	// 通信終了時
-	if (RdaResponse) {
-		NSString *jsonStr = [[NSString alloc] initWithData:RdaResponse encoding:NSUTF8StringEncoding];
-		AzLOG(@"jsonStr: %@", jsonStr);
-		[RdaResponse setData:nil]; // 次回の受信に備えてクリアする
-		 
-		switch (MiConnectTag) 
-		{
-			case 3: { // Download --> SpDetailTVC --> SAVE or ROLLBACK
-				NSArray *jsonArray;
-				@try {
-					jsonArray = [jsonStr yajl_JSON]; // YAJLを使ったJSONデータのパース処理 
-				}
-				@catch (NSException *ex) {
-					// jsonStrがJSON文字列ではない
-					alertMsgBox( NSLocalizedString(@"Connection Error",nil), 
-								nil,
-								NSLocalizedString(@"Roger",nil) );
-					[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
-					break;
-				}
-				NSLog(@"jsonArray=%@", jsonArray);
-				if (0 < [jsonArray count]) {
-					NSDictionary *dic = [jsonArray objectAtIndex:0];
-					NSString *planCsv = [dic objectForKey:@"planCsv"];
-					
-					dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-					dispatch_async(queue, ^{		// 非同期マルチスレッド処理
-						FileCsv *fcsv = [[FileCsv alloc] init];
-						Re1add = [fcsv e1Load:planCsv   withSave:NO];	// NO = Moc-SAVE しない！ ゆえに、Re1add は rollback だけで取り消し可能。
-						
-						dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理
-							if (Re1add) {
-								[self.tableView reloadData];
-							} 
-							else {
-								alertMsgBox( NSLocalizedString(@"Download Err",nil), 
-											nil,
-											NSLocalizedString(@"Roger",nil) );
-								// 前Viewへ戻す
-							}
-							MiConnectTag = 0; // 通信してません
-							[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
-						});
-					});
-					return; // 非同期につき、最後の MiConnectTag = 0; を通さないようにするため
-				}
-			}	break;
-				
-			case 4: { // Delete
-				NSRange rg = [jsonStr rangeOfString:@"Delete:OK"];
-				if (rg.length <= 0) {
-					//zErr = [NSString stringWithString:str]; // strは次行で解放されるので、pool変数にして返す。
-					alertMsgBox( NSLocalizedString(@"Delete Err",nil), 
-								jsonStr,
-								NSLocalizedString(@"Roger",nil) );
-					// 前Viewへ戻す
-				}
-			}	break;
-
-			case 5: { // CountUp
-				NSRange rg = [jsonStr rangeOfString:@"CountUp:OK"];
-				if (rg.length <= 0) {
-					//alertMsgBox( NSLocalizedString(@"CountUp Err",nil), 
-					//			jsonStr,
-					//			NSLocalizedString(@"Roger",nil) );
-					//CountUpは競合エラー発生の可能性が高い。今の所、エラー発生しても無視する。
-					//確実にカウントさせるためには、「シェアードカウンタ」などの対策が必要。
-				}
-			}	break;
-
-			default:
-				break;
-		}
-	}
-	MiConnectTag = 0; // 通信してません
-	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{	// 通信中断時
-	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
-	MiConnectTag = 0; // 通信してません
-	
-	NSString *error_str = [error localizedDescription];
-	if (0<[error_str length]) {
-		alertMsgBox( NSLocalizedString(@"Connection Error",nil), 
-					error_str,
-					NSLocalizedString(@"Roger",nil) );
-	}
-	//[RdaResponse release], 
-	RdaResponse = nil;
-}
+//- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+//{	// データ受信時
+//	if (RdaResponse==nil) {
+//		RdaResponse = [NSMutableData new];
+//	}
+//	[RdaResponse appendData:data];
+//}
+//
+//- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+//{	// 通信終了時
+//	if (RdaResponse) {
+//		NSString *jsonStr = [[NSString alloc] initWithData:RdaResponse encoding:NSUTF8StringEncoding];
+//		AzLOG(@"jsonStr: %@", jsonStr);
+//		[RdaResponse setData:nil]; // 次回の受信に備えてクリアする
+//		 
+//		switch (MiConnectTag) 
+//		{
+//			case 3: { // Download --> SpDetailTVC --> SAVE or ROLLBACK
+//				NSArray *jsonArray;
+//				@try {
+//					jsonArray = [jsonStr yajl_JSON]; // YAJLを使ったJSONデータのパース処理 
+//				}
+//				@catch (NSException *ex) {
+//					// jsonStrがJSON文字列ではない
+//					alertMsgBox( NSLocalizedString(@"Connection Error",nil), 
+//								nil,
+//								NSLocalizedString(@"Roger",nil) );
+//					[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
+//					break;
+//				}
+//				NSLog(@"jsonArray=%@", jsonArray);
+//				if (0 < [jsonArray count]) {
+//					NSDictionary *dic = [jsonArray objectAtIndex:0];
+//					NSString *planCsv = [dic objectForKey:@"planCsv"];
+//					
+//					dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+//					dispatch_async(queue, ^{		// 非同期マルチスレッド処理
+//						FileCsv *fcsv = [[FileCsv alloc] init];
+//						Re1add = [fcsv e1Load:planCsv   withSave:NO];	// NO = Moc-SAVE しない！ ゆえに、Re1add は rollback だけで取り消し可能。
+//						
+//						dispatch_async(dispatch_get_main_queue(), ^{	// 終了後の処理
+//							if (Re1add) {
+//								[self.tableView reloadData];
+//							} 
+//							else {
+//								alertMsgBox( NSLocalizedString(@"Download Err",nil), 
+//											nil,
+//											NSLocalizedString(@"Roger",nil) );
+//								// 前Viewへ戻す
+//							}
+//							MiConnectTag = 0; // 通信してません
+//							[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
+//						});
+//					});
+//					return; // 非同期につき、最後の MiConnectTag = 0; を通さないようにするため
+//				}
+//			}	break;
+//				
+//			case 4: { // Delete
+//				NSRange rg = [jsonStr rangeOfString:@"Delete:OK"];
+//				if (rg.length <= 0) {
+//					//zErr = [NSString stringWithString:str]; // strは次行で解放されるので、pool変数にして返す。
+//					alertMsgBox( NSLocalizedString(@"Delete Err",nil), 
+//								jsonStr,
+//								NSLocalizedString(@"Roger",nil) );
+//					// 前Viewへ戻す
+//				}
+//			}	break;
+//
+//			case 5: { // CountUp
+//				NSRange rg = [jsonStr rangeOfString:@"CountUp:OK"];
+//				if (rg.length <= 0) {
+//					//alertMsgBox( NSLocalizedString(@"CountUp Err",nil), 
+//					//			jsonStr,
+//					//			NSLocalizedString(@"Roger",nil) );
+//					//CountUpは競合エラー発生の可能性が高い。今の所、エラー発生しても無視する。
+//					//確実にカウントさせるためには、「シェアードカウンタ」などの対策が必要。
+//				}
+//			}	break;
+//
+//			default:
+//				break;
+//		}
+//	}
+//	MiConnectTag = 0; // 通信してません
+//	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
+//}
+//
+//- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+//{	// 通信中断時
+//	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
+//	MiConnectTag = 0; // 通信してません
+//	
+//	NSString *error_str = [error localizedDescription];
+//	if (0<[error_str length]) {
+//		alertMsgBox( NSLocalizedString(@"Connection Error",nil), 
+//					error_str,
+//					NSLocalizedString(@"Roger",nil) );
+//	}
+//	//[RdaResponse release], 
+//	RdaResponse = nil;
+//}
 
 
 #pragma mark Table view methods

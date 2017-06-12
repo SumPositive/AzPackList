@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "C2358E40E3D6C60ADCCB8D331003339E121B488D",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "78B0850B1D8D204C79DEFA75BED768DA2698F732" : 9223372036854775807,
+    "C2358E40E3D6C60ADCCB8D331003339E121B488D" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "D1E114BF-0862-4394-8F62-7C93C1B5D665",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "78B0850B1D8D204C79DEFA75BED768DA2698F732" : "AZClass\/",
+    "C2358E40E3D6C60ADCCB8D331003339E121B488D" : "PackList\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "PackList",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Source\/PackList.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/bitbucket.org\/azukid\/azclass.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "78B0850B1D8D204C79DEFA75BED768DA2698F732"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/bitbucket.org\/azukid\/packlist.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C2358E40E3D6C60ADCCB8D331003339E121B488D"
+    }
+  ]
+}

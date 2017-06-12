@@ -493,12 +493,29 @@ replacementString:(NSString *)text
 			fy = 170;
 			MtextField.frame = CGRectMake(5,fy, 320-10,30);	// 1行
 			fy += MtextField.frame.size.height;
-			MscrollView.frame = CGRectMake(0,fy, 320,480-20-44-fy);
+			
+            //MscrollView.frame = CGRectMake(0,fy, 320,480-20-44-fy);
+            MscrollView.frame = CGRectMake(0,
+                                           fy,
+                                           rect.size.width,
+                                           480-20-44-fy);
+            
+            
 			//fW = (320 - fxGap) / 4 - fxGap; // 1ページ4列まで表示、5列目は2ページ目へ
 			fW = (320 - fxGap) / 5 - fxGap; // 1ページ5列まで表示、6列目は2ページ目へ
-			//↓2ページ目の列数=1
+			
+            //↓2ページ目の列数=1
 			MscrollView.contentSize = CGSizeMake(320+(fW+fxGap)*1, MscrollView.frame.size.height);
-			// 以下、MscrollView座標
+
+            if (320 < rect.size.width) {
+                // iPhone6以降
+                float ff = rect.size.width - (fxGap + (fW + fxGap) * 6);
+                fx += (ff / 2.0);
+            } else {
+                // iPhone5SE以前
+            }
+            
+            // 以下、MscrollView座標
 			fyGap = 5;	// Yボタン間隔
 			fy = 0;
 			//fH = (MscrollView.frame.size.height - fyGap) / 4 - fyGap;

@@ -54,7 +54,7 @@
 
 //- (void)actionInformation;
 //- (void)actionSetting;
-- (void)azAction;
+//- (void)azAction;
 - (void)httpInfoUpdate:(NSNotification *)notification;
 - (void)e1add;
 - (void)e1editView:(NSIndexPath *)indexPath;
@@ -460,7 +460,7 @@
 	
 	// このアプリについて
 	AZAboutVC *vc = [[AZAboutVC alloc] init];
-	vc.ppImgIcon = [UIImage imageNamed:@"Icon57"];
+	vc.ppImgIcon = [UIImage imageNamed:@"About_Icon57Round"];
 	vc.ppProductTitle = NSLocalizedString(@"Product Title",nil);
 	vc.ppProductSubtitle = @"PackList  (.azp)";
 	vc.ppSupportSite = @"http://packlist.azukid.com/";
@@ -602,12 +602,17 @@
 		e3view.firstSection = 0;
 		e3view.sortType = (-1);
 		e3view.sharePlanList = NO;
-		//[1]Right
-		[[appDelegate_.mainSVC.viewControllers objectAtIndex:1] pushViewController:e3view animated:YES]; 
-		//[0]Left
-		e2view.delegateE3viewController = e3view;		// E2からE3を更新するため
-		[[appDelegate_.mainSVC.viewControllers objectAtIndex:0] pushViewController:e2view animated:YES]; 
-		
+        //[0]Left  GROUP
+        e2view.delegateE3viewController = e3view;		// E2からE3を更新するため
+        //[[appDelegate_.mainSVC.viewControllers objectAtIndex:0] pushViewController:e2view animated:YES];
+        AzNavigationController *leftNvc = appDelegate_.mainSVC.viewControllers.firstObject;
+        [leftNvc pushViewController:e2view animated:YES];
+        
+		//[1]Right  ITEM
+		//[[appDelegate_.mainSVC.viewControllers objectAtIndex:1] pushViewController:e3view animated:YES];
+        AzNavigationController *rightNvc = appDelegate_.mainSVC.viewControllers[1];
+        [rightNvc pushViewController:e3view animated:YES];
+        
 		//[e3view release];
 	} else {
 		[self.navigationController pushViewController:e2view animated:YES];
@@ -890,6 +895,14 @@
                                              style:UIBarButtonItemStylePlain
                                              target:nil  action:nil];
 
+    if (appDelegate_.ppIsPad) {
+        // CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
+                                                 initWithTitle:NSLocalizedString(@"Back", nil)
+                                                 style:UIBarButtonItemStylePlain
+                                                 target:self action:@selector(actionBack:)];
+    }
+
     // Set up Right [Edit] buttons.
 #ifdef AzMAKE_SPLASHFACE
     // No Button 国別で文字が変わるため
@@ -915,6 +928,10 @@
 											 selector:@selector(refreshAllViews:) 
 												 name:NFM_REFRESH_ALL_VIEWS
 											   object:nil];  //=nil: 全てのオブジェクトからの通知を受ける
+}
+- (void)actionBack:(id)sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated 
@@ -1157,19 +1174,10 @@
 // TableView セクションフッタを応答
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section 
 {
-	//if (appDelegate_.ppPaid_SwitchAd) {
-	//	section--;
-	//}
 	if (section==1) {
-		NSString *zz = @"";  //NSLocalizedString(@"iCloud OFF",nil);＜＜Stableリリースするまで保留。
-		zz = [zz stringByAppendingString:@"\nAzukiSoft "  COPYRIGHT];
-//		if (appDelegate_.ppOptShowAd) {
-//			if (appDelegate_.ppIsPad) {
-//				zz = [zz stringByAppendingString:@"\n\n\n\n\n\n\n\n\n\n\n\n\n\n"];
-//			} else {
-//				zz = [zz stringByAppendingString:@"\n\n\n\n"];
-//			}
-//		}
+        NSString *zz = NSLocalizedString(@"message01",nil);
+        zz = [zz stringByAppendingString:NSLocalizedString(@"message02",nil)];
+        zz = [zz stringByAppendingString:@"\n\nAzukiSoft "  COPYRIGHT];
 		return zz;
 	}
 	return nil;
@@ -1206,7 +1214,7 @@
 			// E1 : NSManagedObject
 			E1 *e1obj = [mFetchedE1 objectAtIndexPath:indexPath];
 			
-#ifdef DEBUG
+#ifdef DEBUGxxxxx
 			if ([e1obj.name length] <= 0) 
 				cell.textLabel.text = NSLocalizedString(@"(New Pack)", nil);
 			else

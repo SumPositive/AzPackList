@@ -14,7 +14,7 @@
 #import "SpListTVC.h"
 #import "SpDetailTVC.h"
 
-#import  <YAJLiOS/YAJL.h>
+//#import  <YAJLiOS/YAJL.h>
 //#import <DropboxSDK/JSON.h>  SBJSONでは、読み取りエラー発生した。（多分、CSV部）
 
 
@@ -432,90 +432,90 @@
 
 
 #pragma mark - NSURLConnection delegate
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{	// データ受信時
-	if (RdaResponse==nil) {
-		RdaResponse = [NSMutableData new];
-	}
-	[RdaResponse appendData:data];
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{	// 通信終了時
-	if (RdaResponse) {
-		NSString *jsonStr = [[NSString alloc] initWithData:RdaResponse encoding:NSUTF8StringEncoding];
-		AzLOG(@"jsonStr: %@", jsonStr);
-		[RdaResponse setData:nil]; // 次回の受信に備えてクリアする
-		
-		switch (MiConnectTag) {
-			case 1: { // Search
-				NSArray *jsonArray;
-				@try {
-					jsonArray = [jsonStr yajl_JSON]; // YAJLを使ったJSONデータのパース処理 
-				}
-				@catch (NSException *ex) {
-					// jsonStrがJSON文字列ではない
-					alertMsgBox( NSLocalizedString(@"Connection Error",nil), 
-								nil,
-								NSLocalizedString(@"Roger",nil) );
-					[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
-					break;
-				}
-				/***
-				 // JSON --> NSArray   ＜＜＜ Dropbox標準のSBJSONを使用
-				 NSError *err = nil;
-				 SBJSON	*js = [SBJSON new];
-				 NSArray *jsonArray = [js objectWithString:jsonStr error:&err];
-				 js = nil;
-				 if (err) {
-				 NSLog(@"tmpFileLoad: SBJSON: objectWithString: (err=%@) zJson=%@", [err description], jsonStr);
-				 alertMsgBox( NSLocalizedString(@"Connection Error",nil), 
-				 [err description],
-				 NSLocalizedString(@"Roger",nil) );
-				 [self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
-				 break;
-				 }***/
-#ifdef DEBUG
-				for (NSDictionary *dic in jsonArray) {
-					NSLog(@"e1key=%@", [dic objectForKey:@"e1key"]);
-					NSLog(@"name=%@", [dic objectForKey:@"name"]);
-					NSLog(@"stamp=%@", [dic objectForKey:@"stamp"]);
-					NSLog(@"downCount=%@", [dic objectForKey:@"downCount"]);
-				}	
-#endif
-				[RaSharePlans addObjectsFromArray:jsonArray];
-				MbSearchOver = ([jsonArray count] < PAGE_LIMIT);
-				[self.tableView reloadData];
-			}	break;
-				
-			default:
-				break;
-		}
-		//[jsonStr release];
-	}
-	else {
-		// 該当なし
-		[self.tableView reloadData];
-	}
-	MiConnectTag = 0; // 通信してません
-	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{	// 通信中断時
-	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
-	MiConnectTag = 0; // 通信してません
-	
-	NSString *error_str = [error localizedDescription];
-	if (0<[error_str length]) {
-		alertMsgBox( NSLocalizedString(@"Connection Error",nil), 
-					error_str,
-					NSLocalizedString(@"Roger",nil) );
-	}
-	//[RdaResponse release], 
-	RdaResponse = nil;
-}
+//
+//- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+//{	// データ受信時
+//	if (RdaResponse==nil) {
+//		RdaResponse = [NSMutableData new];
+//	}
+//	[RdaResponse appendData:data];
+//}
+//
+//- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+//{	// 通信終了時
+//	if (RdaResponse) {
+//		NSString *jsonStr = [[NSString alloc] initWithData:RdaResponse encoding:NSUTF8StringEncoding];
+//		AzLOG(@"jsonStr: %@", jsonStr);
+//		[RdaResponse setData:nil]; // 次回の受信に備えてクリアする
+//		
+//		switch (MiConnectTag) {
+//			case 1: { // Search
+//				NSArray *jsonArray;
+//				@try {
+//					jsonArray = [jsonStr yajl_JSON]; // YAJLを使ったJSONデータのパース処理 
+//				}
+//				@catch (NSException *ex) {
+//					// jsonStrがJSON文字列ではない
+//					alertMsgBox( NSLocalizedString(@"Connection Error",nil), 
+//								nil,
+//								NSLocalizedString(@"Roger",nil) );
+//					[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
+//					break;
+//				}
+//				/***
+//				 // JSON --> NSArray   ＜＜＜ Dropbox標準のSBJSONを使用
+//				 NSError *err = nil;
+//				 SBJSON	*js = [SBJSON new];
+//				 NSArray *jsonArray = [js objectWithString:jsonStr error:&err];
+//				 js = nil;
+//				 if (err) {
+//				 NSLog(@"tmpFileLoad: SBJSON: objectWithString: (err=%@) zJson=%@", [err description], jsonStr);
+//				 alertMsgBox( NSLocalizedString(@"Connection Error",nil), 
+//				 [err description],
+//				 NSLocalizedString(@"Roger",nil) );
+//				 [self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
+//				 break;
+//				 }***/
+//#ifdef DEBUG
+//				for (NSDictionary *dic in jsonArray) {
+//					NSLog(@"e1key=%@", [dic objectForKey:@"e1key"]);
+//					NSLog(@"name=%@", [dic objectForKey:@"name"]);
+//					NSLog(@"stamp=%@", [dic objectForKey:@"stamp"]);
+//					NSLog(@"downCount=%@", [dic objectForKey:@"downCount"]);
+//				}	
+//#endif
+//				[RaSharePlans addObjectsFromArray:jsonArray];
+//				MbSearchOver = ([jsonArray count] < PAGE_LIMIT);
+//				[self.tableView reloadData];
+//			}	break;
+//				
+//			default:
+//				break;
+//		}
+//		//[jsonStr release];
+//	}
+//	else {
+//		// 該当なし
+//		[self.tableView reloadData];
+//	}
+//	MiConnectTag = 0; // 通信してません
+//	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
+//}
+//
+//- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+//{	// 通信中断時
+//	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO; // NetworkアクセスサインOFF
+//	MiConnectTag = 0; // 通信してません
+//	
+//	NSString *error_str = [error localizedDescription];
+//	if (0<[error_str length]) {
+//		alertMsgBox( NSLocalizedString(@"Connection Error",nil), 
+//					error_str,
+//					NSLocalizedString(@"Roger",nil) );
+//	}
+//	//[RdaResponse release], 
+//	RdaResponse = nil;
+//}
 
 
 @end

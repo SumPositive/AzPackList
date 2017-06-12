@@ -1507,7 +1507,7 @@
 				cell.showsReorderControl = NO;	  // Move禁止
 				break;
 			default:
-#ifdef DEBUG
+#ifdef DEBUGxxxxx
 				cell.detailTextLabel.text = [NSString stringWithFormat:@"%@／%@  %@g  %@ [%d]",
 											 GstringFromNumber(e3obj.stock),
 											 GstringFromNumber(e3obj.need),

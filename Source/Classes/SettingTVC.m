@@ -75,7 +75,7 @@
 		// CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
 		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
 												 initWithTitle:NSLocalizedString(@"Back", nil)
-												 style:UIBarButtonItemStyleBordered
+												 style:UIBarButtonItemStylePlain
 												 target:self action:@selector(actionBack:)];
 	}
 }
@@ -83,7 +83,8 @@
 - (void)actionBack:(id)sender
 {
 	//[self dismissModalViewControllerAnimated:YES];
-	[self dismissViewControllerAnimated:YES completion:nil];
+	//[self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 // 他のViewやキーボードが隠れて、現れる都度、呼び出される
@@ -190,9 +191,9 @@
 	switch (section) {
 		case 0: // 
 			if (mAppDelegate.ppIsPad) {
-				return 6;	// (0)回転は不要
+				return 5;	// (0)回転は不要
 			} else {
-				return 7;
+				return 6;
 			}
 			break;
 	}
@@ -202,13 +203,13 @@
 // セルの高さを指示する
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-	int iRaw = indexPath.row;
-	if (mAppDelegate.ppIsPad) iRaw++;
-	switch (iRaw) {
-//		case 6: // Google+
-		case 6: // Crypt
-			return 75;
-	}
+//	int iRaw = indexPath.row;
+//	if (mAppDelegate.ppIsPad) iRaw++;
+//	switch (iRaw) {
+////		case 6: // Google+
+//		case 6: // Crypt
+//			return 75;
+//	}
 	return 60; // デフォルト：44ピクセル
 }
 
@@ -240,7 +241,7 @@
 	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
 	
 	float fX;
-	int  iCase;
+	long  iCase;
 	if (mAppDelegate.ppIsPad) {
 		fX = self.tableView.frame.size.width - 60 - 120;
 		 iCase = indexPath.row + 1;
@@ -439,59 +440,59 @@
 //			[sw setOn:[kvs boolForKey:KV_OptAdvertising] animated:YES];
 //		}	break;
 
-		case 6:
-		{ // KV_OptCrypt
-			// add UITextField1
-			if (mTfPass1==nil) {
-				mTfPass1 = [[UITextField alloc] init];
-				mTfPass1.borderStyle = UITextBorderStyleRoundedRect;
-				mTfPass1.placeholder = NSLocalizedString(@"PackListCrypt Key1 place",nil);
-				mTfPass1.keyboardType = UIKeyboardTypeASCIICapable;
-				mTfPass1.secureTextEntry = YES;
-				mTfPass1.returnKeyType = UIReturnKeyNext;
-				mTfPass1.enabled = mAppDelegate.ppPaid_SwitchAd; // AdOff支払により有効化
-				mTfPass1.text = @"";
-				mTfPass1.delegate = self;
-				[cell.contentView  addSubview:mTfPass1];
-			}
-			mTfPass1.frame = CGRectMake(fX-45, 8, 140, 25); // 回転対応
-			// add UITextField2
-			if (mTfPass2==nil) {
-				mTfPass2 = [[UITextField alloc] init];
-				mTfPass2.borderStyle = UITextBorderStyleRoundedRect;
-				mTfPass2.placeholder = NSLocalizedString(@"PackListCrypt Key2 place",nil);
-				mTfPass2.keyboardType = UIKeyboardTypeASCIICapable;
-				mTfPass2.secureTextEntry = YES;
-				mTfPass2.returnKeyType = UIReturnKeyDone;
-				mTfPass2.hidden = YES;  // tfPass1_入力直後にだけ表示する
-				mTfPass2.text = @"";
-				mTfPass2.delegate = self;
-				[cell.contentView  addSubview:mTfPass2];
-			}
-			mTfPass2.frame = CGRectMake(fX-45,38, 140, 25); // 回転対応
-			//
-			cell.textLabel.text = NSLocalizedString(@"PackListCrypt",nil);
-			if (mAppDelegate.ppPaid_SwitchAd) {
-				NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-				if ([defaults boolForKey:UD_OptCrypt]) {
-					// KeyChainから保存しているパスワードを取得する
-					NSError *error; // nilを渡すと異常終了するので注意
-					mTfPass1.text = [SFHFKeychainUtils getPasswordForUsername:UD_OptCrypt
-															   andServiceName:GD_PRODUCTNAME error:&error];
-					cell.detailTextLabel.text = NSLocalizedString(@"PackListCrypt enable",nil);
-				} else {
-					cell.detailTextLabel.text = NSLocalizedString(@"PackListCrypt enable NoKey",nil);
-				}
-				cell.textLabel.enabled = YES;
-				cell.detailTextLabel.textColor = [UIColor grayColor];
-				cell.detailTextLabel.numberOfLines = 2;
-			} else {
-				cell.textLabel.enabled = NO;
-				cell.detailTextLabel.text = NSLocalizedString(@"PackListCrypt disable",nil);
-				cell.detailTextLabel.textColor = [UIColor blueColor];
-				cell.detailTextLabel.numberOfLines = 1;
-			}
-		}	break;
+//		case 6:
+//		{ // KV_OptCrypt
+//			// add UITextField1
+//			if (mTfPass1==nil) {
+//				mTfPass1 = [[UITextField alloc] init];
+//				mTfPass1.borderStyle = UITextBorderStyleRoundedRect;
+//				mTfPass1.placeholder = NSLocalizedString(@"PackListCrypt Key1 place",nil);
+//				mTfPass1.keyboardType = UIKeyboardTypeASCIICapable;
+//				mTfPass1.secureTextEntry = YES;
+//				mTfPass1.returnKeyType = UIReturnKeyNext;
+//				mTfPass1.enabled = mAppDelegate.ppPaid_SwitchAd; // AdOff支払により有効化
+//				mTfPass1.text = @"";
+//				mTfPass1.delegate = self;
+//				[cell.contentView  addSubview:mTfPass1];
+//			}
+//			mTfPass1.frame = CGRectMake(fX-45, 8, 140, 25); // 回転対応
+//			// add UITextField2
+//			if (mTfPass2==nil) {
+//				mTfPass2 = [[UITextField alloc] init];
+//				mTfPass2.borderStyle = UITextBorderStyleRoundedRect;
+//				mTfPass2.placeholder = NSLocalizedString(@"PackListCrypt Key2 place",nil);
+//				mTfPass2.keyboardType = UIKeyboardTypeASCIICapable;
+//				mTfPass2.secureTextEntry = YES;
+//				mTfPass2.returnKeyType = UIReturnKeyDone;
+//				mTfPass2.hidden = YES;  // tfPass1_入力直後にだけ表示する
+//				mTfPass2.text = @"";
+//				mTfPass2.delegate = self;
+//				[cell.contentView  addSubview:mTfPass2];
+//			}
+//			mTfPass2.frame = CGRectMake(fX-45,38, 140, 25); // 回転対応
+//			//
+//			cell.textLabel.text = NSLocalizedString(@"PackListCrypt",nil);
+//			if (mAppDelegate.ppPaid_SwitchAd) {
+//				NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//				if ([defaults boolForKey:UD_OptCrypt]) {
+//					// KeyChainから保存しているパスワードを取得する
+//					NSError *error; // nilを渡すと異常終了するので注意
+//					mTfPass1.text = [SFHFKeychainUtils getPasswordForUsername:UD_OptCrypt
+//															   andServiceName:GD_PRODUCTNAME error:&error];
+//					cell.detailTextLabel.text = NSLocalizedString(@"PackListCrypt enable",nil);
+//				} else {
+//					cell.detailTextLabel.text = NSLocalizedString(@"PackListCrypt enable NoKey",nil);
+//				}
+//				cell.textLabel.enabled = YES;
+//				cell.detailTextLabel.textColor = [UIColor grayColor];
+//				cell.detailTextLabel.numberOfLines = 2;
+//			} else {
+//				cell.textLabel.enabled = NO;
+//				cell.detailTextLabel.text = NSLocalizedString(@"PackListCrypt disable",nil);
+//				cell.detailTextLabel.textColor = [UIColor blueColor];
+//				cell.detailTextLabel.numberOfLines = 1;
+//			}
+//		}	break;
 	}
     return cell;
 }

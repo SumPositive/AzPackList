@@ -43,7 +43,7 @@
 @property (nonatomic, retain) E1							*dropboxSaveE1selected;
 
 @property (nonatomic, assign) BOOL	ppOptAutorotate;
-//@property (nonatomic, assign) BOOL	ppOptShowAd;	// YES=広告表示する
+@property (nonatomic, assign) BOOL	ppOptShowAd;	// YES=広告表示する
 
 @property (nonatomic, assign, readonly) BOOL	ppIsPad;	// YES=iPad
 @property (nonatomic, assign) BOOL	ppChanged;			// YES=変更あり

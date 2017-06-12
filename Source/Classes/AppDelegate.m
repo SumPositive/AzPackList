@@ -14,11 +14,12 @@
 #import "MocFunctions.h"
 #import "FileCsv.h"
 #import "E1viewController.h"
+#import <FirebaseCore/FirebaseCore.h>
 
 
 //iOS6以降、回転対応のためサブクラス化が必要になった。
 @implementation AzNavigationController
-- (NSUInteger)supportedInterfaceOrientations
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {	//iOS6以降
 	//トップビューの向きを返す
 	return self.topViewController.supportedInterfaceOrientations;
@@ -50,7 +51,7 @@
 @synthesize clipE3objects = __clipE3objects;		// [Cut][Copy]されたE3をPUSHスタックする。[Paste]でPOPする
 @synthesize dropboxSaveE1selected = __dropboxSaveE1selected;
 @synthesize ppOptAutorotate = __OptAutorotate;
-//@synthesize ppOptShowAd = __OptShowAd;				//Setting選択フラグ
+@synthesize ppOptShowAd = __OptShowAd;				//Setting選択フラグ
 @synthesize ppIsPad = __IsPad;
 @synthesize ppChanged = __Changed;
 //@synthesize ppPaid_SwitchAd = __Paid_SwitchAd;		//Store購入済フラグ
@@ -108,7 +109,7 @@
 	}
 	[kvs synchronize]; // 最新同期
 	
-//	__OptShowAd = [kvs boolForKey:KV_OptAdvertising];
+	__OptShowAd = [kvs boolForKey:KV_OptAdvertising];
 //	__Paid_SwitchAd = [kvs boolForKey:STORE_PRODUCTID_AdOff];
 //	NSLog(@"__Paid_SwitchAd=%d", __Paid_SwitchAd);
 //	
@@ -122,6 +123,9 @@
 #endif
 	//__OptShowAd = NO;	//AppStore用 画面撮影のため
 
+//    if (__OptShowAd) {
+//        [FIRApp configure];
+//    }
 	
 	//-------------------------------------------------初期化
 	__Changed = NO;
@@ -394,6 +398,13 @@
     //self.popoverController = nil;
 	popoverButtonItem_ = nil;
 }
+
+- (BOOL)splitViewController:(UISplitViewController *)splitViewController
+        collapseSecondaryViewController:(UIViewController *)secondaryViewController
+        ontoPrimaryViewController:(UIViewController *)primaryViewController {
+    return YES;
+}
+
 
 
 #pragma mark - <AZDropboxDelegate>

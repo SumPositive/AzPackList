@@ -118,7 +118,7 @@ static NSString *csvToStr( NSString *inCsv ) {
 		//OLD str = GD_CSV_HEADER_ID  @",CSV,UTF-8,Copyright,(C)2011,Azukid,,,\n";
 		//[1.1.0]これまでLoad時には、GD_CSV_HEADER_ID だけ比較チェックしている。
 		//[1.1.0],CSV,の次に,4,を追加。 4 は、xcdatamodel 4 を示している。　　近未来JSON対応すれば、,CSV,⇒,JSON, とする。
-		str = GD_CSV_HEADER_ID  @",UTF-8,CSV,5,,,Copyright,(C)2012,Azukid,,\n";
+		str = GD_CSV_HEADER_ID  @",UTF-8,CSV,5,,,Copyright,(C)2009,M.Matsuyama,,\n";
 		[PzCsv appendString:str];
 		
 		//----------------------------------------------------------------------------Body

@@ -876,20 +876,22 @@
 //				rect.origin.y = self.tableView.bounds.size.height - 401;
 //			} else {
 				fTableTopY = (500 - self.tableView.bounds.size.height) + (iRow-3)*60;
-				rect.origin.y = self.tableView.bounds.size.height - 401 + 50;
+                rect.origin.y = self.tableView.bounds.size.height - 401 - 10; // + 50;
 //			}
 		}
 	}
 	// テーブルを少し上げてテンキーで隠れないようにする
-	// アニメ準備
-	CGContextRef context = UIGraphicsGetCurrentContext();
-	[UIView beginAnimations:nil context:context];
-	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-	[UIView setAnimationDuration:0.3]; // 出は早く
-	// アニメ終了位置
-	self.tableView.contentOffset = CGPointMake(0, fTableTopY);
-	// アニメ実行
-	[UIView commitAnimations];
+    if (self.tableView.contentOffset.y < fTableTopY) {
+        // アニメ準備
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        [UIView beginAnimations:nil context:context];
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+        [UIView setAnimationDuration:0.3]; // 出は早く
+        // アニメ終了位置
+        self.tableView.contentOffset = CGPointMake(0, fTableTopY);
+        // アニメ実行
+        [UIView commitAnimations];
+    }
 	
 	mCalcView = [[CalcView alloc] initWithFrame:rect];
 	mCalcView.Rlabel = pLabel;  // MlbAmount.tag にはCalc入力された数値(long)が記録される

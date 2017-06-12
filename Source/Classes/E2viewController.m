@@ -1208,7 +1208,7 @@
 				// e2node
 				E2 *e2obj = [e2array_ objectAtIndex:indexPath.row];
 				
-#ifdef DEBUG
+#ifdef DEBUGxxxxx
 				if ([e2obj.name length] <= 0) 
 					cell.textLabel.text = NSLocalizedString(@"(New Index)", nil);
 				else
