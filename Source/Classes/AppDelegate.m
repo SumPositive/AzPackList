@@ -150,7 +150,7 @@
 	
 
 	//-------------------------------------------------
-	if (__IsPad) {
+	if (self.ppIsPad) {
 		__padRootVC = [[PadRootVC alloc] init]; // retainされる
 		AzNavigationController* naviLeft = [[AzNavigationController alloc]
 											initWithRootViewController:__padRootVC];
@@ -159,13 +159,14 @@
 		AzNavigationController* naviRight = [[AzNavigationController alloc] initWithRootViewController:e1viewCon];
 		
 		// e1viewCon を splitViewCon へ登録
-		//mainVC = [[PadSplitVC alloc] init]; タテ2分割のための実装だったがRejectされたので没
 		__mainSVC = [[UISplitViewController alloc] init];
-		__mainSVC.viewControllers = [NSArray arrayWithObjects:naviLeft, naviRight, nil];
+		__mainSVC.viewControllers = @[naviLeft, naviRight];
 		__mainSVC.delegate = self; //<UISplitViewControllerDelegate>
+        __mainSVC.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible; // タテ2分割が可能になった
 		// mainVC を window へ登録
 		//[__window addSubview:__mainSVC.view];
-		[__window setRootViewController: __mainSVC];	//iOS6以降、こうしなければ回転しない。
+		//[__window setRootViewController: __mainSVC];	//iOS6以降、こうしなければ回転しない。
+        self.window.rootViewController = __mainSVC;
 	}
 	else {
 		E1viewController *e1viewCon = [[E1viewController alloc] init];
@@ -180,7 +181,7 @@
 	}
 	
 	//Pad// iOS4以降を前提としてバックグランド機能に任せて前回復帰処理しないことにした。
-	[__window makeKeyAndVisible];	// 表示開始
+	[self.window makeKeyAndVisible];	// 表示開始
 	
 //	// Dropbox 標準装備
 //	DBSession* dbSession = [[DBSession alloc]

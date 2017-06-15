@@ -807,115 +807,115 @@
 
 #pragma mark - View lifestyle
 
-//// UITableViewインスタンス生成時のイニシャライザ　viewDidLoadより先に1度だけ通る
-//- (id)initWithStyle:(UITableViewStyle)style 
-//{
-//	self = [super initWithStyle:UITableViewStyleGrouped];  // セクションあり
-//	if (self) {
-//		// 初期化成功
-//		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//		e1editView_ = nil;		// e1addで生成 [self.navigationController pushViewController:]
-//		//informationView_ = nil; // azInformationViewで生成 [self.view.window addSubview:]
-//		
-//		// 背景テクスチャ・タイルペイント
-//	/*	if (appDelegate_.ppIsPad){
-//			//self.view.backgroundColor = //iPadでは無効になったため
-//			UIView* view = self.tableView.backgroundView;
-//			if (view) {
-//				PatternImageView *tv = [[PatternImageView alloc] initWithFrame:view.frame
-//																  patternImage:[UIImage imageNamed:@"Tx-Back"]]; // タイルパターン生成
-//				[view addSubview:tv];
-//			}
-//		} else {
-//			self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
-//		}*/
-//		
-//		[self.tableView setBackgroundView:nil];	//iOS6//これで次行が有効になる。
-//		self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
-//
-////		// インストールやアップデート後、1度だけ処理する
-////		NSString *zNew = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]; //（リリース バージョン）は、ユーザーに公開した時のレベルを表現したバージョン表記
-////		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-////		NSString* zDef = [defaults valueForKey:UD_CurrentVersion];
-////		if (zDef==nil || ![zDef isEqualToString:zNew]) {
-////			[defaults setValue:zNew forKey:UD_CurrentVersion];
-////			bInformationOpen_ = YES; // Informationを自動オープンする
-////		} else {
-////			bInformationOpen_ = NO;
-////		}
-//	}
-//	return self;
-//}
+// UITableViewインスタンス生成時のイニシャライザ　viewDidLoadより先に1度だけ通る
+- (id)initWithStyle:(UITableViewStyle)style 
+{
+	self = [super initWithStyle:UITableViewStyleGrouped];  // セクションあり
+	if (self) {
+		// 初期化成功
+		appDelegate_ = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		e1editView_ = nil;		// e1addで生成 [self.navigationController pushViewController:]
+		//informationView_ = nil; // azInformationViewで生成 [self.view.window addSubview:]
+		
+		// 背景テクスチャ・タイルペイント
+	/*	if (appDelegate_.ppIsPad){
+			//self.view.backgroundColor = //iPadでは無効になったため
+			UIView* view = self.tableView.backgroundView;
+			if (view) {
+				PatternImageView *tv = [[PatternImageView alloc] initWithFrame:view.frame
+																  patternImage:[UIImage imageNamed:@"Tx-Back"]]; // タイルパターン生成
+				[view addSubview:tv];
+			}
+		} else {
+			self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+		}*/
+		
+		[self.tableView setBackgroundView:nil];	//iOS6//これで次行が有効になる。
+		self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 
-//// IBを使わずにviewオブジェクトをプログラム上でcreateするときに使う
-////（viewDidLoadは、nibファイルでロードされたオブジェクトを初期化するために使う）
-//- (void)loadView
-//{	//【Tips】ここでaddSubviewするオブジェクトは全てautoreleaseにすること。メモリ不足時には自動的に解放後、改めてここを通るので、初回同様に生成するだけ。
-//	[super loadView];
-//	
-//	// Set up NEXT Left [Back] buttons.
-//	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
-//											  initWithTitle:@"Top"   //NSLocalizedString(@"Back", nil)
-//											  style:UIBarButtonItemStylePlain
-//											  target:nil  action:nil];
-//	
-//	// Set up Right [Edit] buttons.
-//#ifdef AzMAKE_SPLASHFACE
-//	// No Button 国別で文字が変わるため
-//	UIActivityIndicatorView *actInd = [[UIActivityIndicatorView alloc]
-//										initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-//	CGRect rc = self.navigationController.view.frame;
-//	actInd.frame = CGRectMake((rc.size.width-50)/2, (rc.size.height-50)/2, 50, 50);
-//	[self.navigationController.view addSubview:actInd];
-//	[actInd startAnimating];
-//#else
-//	self.navigationItem.rightBarButtonItem = self.editButtonItem;
-//	self.tableView.allowsSelectionDuringEditing = YES; // 編集モードに入ってる間にユーザがセルを選択できる
-//#endif	
-//	
-////	if (appDelegate_.ppOptShowAd) {
-////		UIImageView* iv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Icon24-Free.png"]];
-////		UIBarButtonItem* bui = [[UIBarButtonItem alloc] initWithCustomView:iv];
-////		self.navigationItem.leftBarButtonItem	= bui;
-////	}
-//
-//	// ToolBar表示は、viewWillAppearにて回転方向により制御している。
-//}
+		// インストールやアップデート後、1度だけ処理する
+		NSString *zNew = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]; //（リリース バージョン）は、ユーザーに公開した時のレベルを表現したバージョン表記
+		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+		NSString* zDef = [defaults valueForKey:UD_CurrentVersion];
+		if (zDef==nil || ![zDef isEqualToString:zNew]) {
+			[defaults setValue:zNew forKey:UD_CurrentVersion];
+			bInformationOpen_ = YES; // Informationを自動オープンする
+		} else {
+			bInformationOpen_ = NO;
+		}
+	}
+	return self;
+}
+
+// IBを使わずにviewオブジェクトをプログラム上でcreateするときに使う
+//（viewDidLoadは、nibファイルでロードされたオブジェクトを初期化するために使う）
+- (void)loadView
+{	//【Tips】ここでaddSubviewするオブジェクトは全てautoreleaseにすること。メモリ不足時には自動的に解放後、改めてここを通るので、初回同様に生成するだけ。
+	[super loadView];
+	
+	// Set up NEXT Left [Back] buttons.
+	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
+											  initWithTitle:@"Top"   //NSLocalizedString(@"Back", nil)
+											  style:UIBarButtonItemStylePlain
+											  target:nil  action:nil];
+	
+	// Set up Right [Edit] buttons.
+#ifdef AzMAKE_SPLASHFACE
+	// No Button 国別で文字が変わるため
+	UIActivityIndicatorView *actInd = [[UIActivityIndicatorView alloc]
+										initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+	CGRect rc = self.navigationController.view.frame;
+	actInd.frame = CGRectMake((rc.size.width-50)/2, (rc.size.height-50)/2, 50, 50);
+	[self.navigationController.view addSubview:actInd];
+	[actInd startAnimating];
+#else
+	self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	self.tableView.allowsSelectionDuringEditing = YES; // 編集モードに入ってる間にユーザがセルを選択できる
+#endif	
+	
+//	if (appDelegate_.ppOptShowAd) {
+//		UIImageView* iv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Icon24-Free.png"]];
+//		UIBarButtonItem* bui = [[UIBarButtonItem alloc] initWithCustomView:iv];
+//		self.navigationItem.leftBarButtonItem	= bui;
+//	}
+
+	// ToolBar表示は、viewWillAppearにて回転方向により制御している。
+}
 
 - (void)viewDidLoad 
 { //iCloud
 	[super viewDidLoad];
 
-    [self.tableView setBackgroundView:nil];	//iOS6//これで次行が有効になる。
-    self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
-
-    // Set up NEXT Left [Back] buttons.
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
-                                             initWithTitle:@"Top"   //NSLocalizedString(@"Back", nil)
-                                             style:UIBarButtonItemStylePlain
-                                             target:nil  action:nil];
-
-    if (appDelegate_.ppIsPad) {
-        // CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
-                                                 initWithTitle:NSLocalizedString(@"Back", nil)
-                                                 style:UIBarButtonItemStylePlain
-                                                 target:self action:@selector(actionBack:)];
-    }
-
-    // Set up Right [Edit] buttons.
-#ifdef AzMAKE_SPLASHFACE
-    // No Button 国別で文字が変わるため
-    UIActivityIndicatorView *actInd = [[UIActivityIndicatorView alloc]
-                                       initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    CGRect rc = self.navigationController.view.frame;
-    actInd.frame = CGRectMake((rc.size.width-50)/2, (rc.size.height-50)/2, 50, 50);
-    [self.navigationController.view addSubview:actInd];
-    [actInd startAnimating];
-#else
-    self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    self.tableView.allowsSelectionDuringEditing = YES; // 編集モードに入ってる間にユーザがセルを選択できる
-#endif
+//    [self.tableView setBackgroundView:nil];	//iOS6//これで次行が有効になる。
+//    self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+//
+//    // Set up NEXT Left [Back] buttons.
+//    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
+//                                             initWithTitle:@"Top"   //NSLocalizedString(@"Back", nil)
+//                                             style:UIBarButtonItemStylePlain
+//                                             target:nil  action:nil];
+//
+//    if (appDelegate_.ppIsPad) {
+//        // CANCELボタンを左側に追加する  Navi標準の戻るボタンでは cancel:処理ができないため
+//        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
+//                                                 initWithTitle:NSLocalizedString(@"Back", nil)
+//                                                 style:UIBarButtonItemStylePlain
+//                                                 target:self action:@selector(actionBack:)];
+//    }
+//
+//    // Set up Right [Edit] buttons.
+//#ifdef AzMAKE_SPLASHFACE
+//    // No Button 国別で文字が変わるため
+//    UIActivityIndicatorView *actInd = [[UIActivityIndicatorView alloc]
+//                                       initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+//    CGRect rc = self.navigationController.view.frame;
+//    actInd.frame = CGRectMake((rc.size.width-50)/2, (rc.size.height-50)/2, 50, 50);
+//    [self.navigationController.view addSubview:actInd];
+//    [actInd startAnimating];
+//#else
+//    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+//    self.tableView.allowsSelectionDuringEditing = YES; // 編集モードに入ってる間にユーザがセルを選択できる
+//#endif
 
 	/*** NFM_REFRESH_ALL_VIEWS に一元化
 	// observe the app delegate telling us when it's finished asynchronously setting up the persistent store
