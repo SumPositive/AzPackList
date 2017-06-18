@@ -100,7 +100,7 @@
 // UITableViewインスタンス生成時のイニシャライザ　viewDidLoadより先に1度だけ通る
 - (id)initWithStyle:(UITableViewStyle)style 
 {
-	if ((self = [super initWithStyle:UITableViewStyleGrouped])) {  // セクションありテーブル
+	if ((self = [super initWithStyle:UITableViewStylePlain])) {  // セクションありテーブル
 		// 初期化成功
 		mAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		mAppDelegate.ppChanged = NO;
@@ -123,8 +123,8 @@
 		}*/
 		
 		[self setPreferredContentSize:GD_POPOVER_SIZE_E3edit];
-		[self.tableView setBackgroundView:nil];	//iOS6//これで次行が有効になる。
-		self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
+		//[self.tableView setBackgroundView:nil];	//iOS6//これで次行が有効になる。
+		//self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Tx-Back"]];
 	}
 	return self;
 }
@@ -162,6 +162,8 @@
 											 selector:@selector(refreshAllViews:) 
 												 name:NFM_REFRESH_ALL_VIEWS
 											   object:nil];  //=nil: 全てのオブジェクトからの通知を受ける
+    // 常時スクロール操作禁止にする
+    self.tableView.scrollEnabled = NO;
 }
 
 - (void)viewDidUnload 
@@ -278,7 +280,7 @@
 	[dialNeed_ setFrame:rect];
 	[dialWeight_ setFrame:rect];
 
-	[self viewDesignPhoto];
+//	[self viewDesignPhoto];
 }
 
 - (void)performNameFirstResponder
@@ -294,7 +296,8 @@
     [super viewDidAppear:animated];
 	[self.navigationController setToolbarHidden:YES animated:NO]; //[2.0.2]ツールバー廃止
 	//[self.navigationController setToolbarHidden:YES animated:animated]; // ツールバー消す
-	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
+
+//	[self.tableView flashScrollIndicators]; // Apple基準：スクロールバーを点滅させる
 	
 //	if (mAppDelegate.ppOptShowAd) {
 //		// 各viewDidAppear:にて「許可/禁止」を設定する
@@ -422,9 +425,10 @@
 	}
 
 	if (mAppDelegate.ppIsPad) {
-		if (pSelfPopover) {
-			[pSelfPopover dismissPopoverAnimated:YES];
-		}
+//		if (pSelfPopover) {
+//			[pSelfPopover dismissPopoverAnimated:YES];
+//		}
+        [self dismissViewControllerAnimated:YES completion:nil];
 	} else {
 		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
 	}
@@ -622,13 +626,17 @@
 //	}
 	
 	if (mAppDelegate.ppIsPad) {
-		//[(PadNaviCon*)self.navigationController dismissPopoverSaved];  // SAVE: PadNaviCon拡張メソッド
-		if (pSelfPopover) {
-			if ([pDelegate respondsToSelector:@selector(refreshE3view)]) {	// メソッドの存在を確認する
-				[pDelegate refreshE3view];// 親の再描画を呼び出す
-			}
-			[pSelfPopover dismissPopoverAnimated:YES];
-		}
+//		//[(PadNaviCon*)self.navigationController dismissPopoverSaved];  // SAVE: PadNaviCon拡張メソッド
+//		if (pSelfPopover) {
+//			if ([pDelegate respondsToSelector:@selector(refreshE3view)]) {	// メソッドの存在を確認する
+//				[pDelegate refreshE3view];// 親の再描画を呼び出す
+//			}
+//			[pSelfPopover dismissPopoverAnimated:YES];
+//		}
+        if ([pDelegate respondsToSelector:@selector(refreshE3view)]) {	// メソッドの存在を確認する
+            [pDelegate refreshE3view];// 親の再描画を呼び出す
+        }
+        [self dismissViewControllerAnimated:YES completion:nil];
 	} else {
 		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
 	}
@@ -859,8 +867,10 @@
 	mTableViewContentY = self.tableView.contentOffset.y; // Hide時に元の表示に戻すため
 	if (mAppDelegate.ppIsPad) {
 		//rect.origin.y = 400;  //全体が見えるようにした + (iRow-3)*60;  
-		fTableTopY = -45 + (iRow-3)*60;
-		rect.origin.y = self.tableView.bounds.size.height - 210;
+		//fTableTopY = -45 + (iRow-3)*60;
+        //rect.origin.y = self.tableView.bounds.size.height - 210;
+        fTableTopY = 20 + (iRow-3)*60;
+		rect.origin.y = self.tableView.bounds.size.height - 242;
 	} else {
 		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) {
 			// 横
@@ -914,10 +924,10 @@
 - (void)calcViewWillDisappear	// CalcViewが隠れるときに呼び出される
 {
 	[self.tableView setScrollEnabled:YES]; // スクロール許可
-	if (0 <= mTableViewContentY) {
+//	if (0 <= mTableViewContentY) {
 		// AzPacking Original 元の位置に戻す
 		self.tableView.contentOffset = CGPointMake(0, mTableViewContentY);
-	}
+//	}
 	[dialStock_ setDial:[pE3target.stock integerValue] animated:YES];
 	[dialNeed_ setDial:[pE3target.need integerValue] animated:YES];
 #ifdef WEIGHT_MAX
@@ -1782,7 +1792,7 @@
 		mCalcView = nil;
 	}
 	// スクロールして textField が隠れた状態で resignFirstResponder するとフリースするため
-	self.tableView.scrollEnabled = NO; // スクロール禁止
+	//常時スクロール操作禁止　self.tableView.scrollEnabled = NO; // スクロール禁止
 	//self.navigationItem.leftBarButtonItem.enabled = NO;
 	if (mAppDelegate.ppIsPad) {
 		//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
@@ -1820,7 +1830,7 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-	self.tableView.scrollEnabled = YES; // スクロール許可
+	//常時スクロール操作禁止　self.tableView.scrollEnabled = YES; // スクロール許可
 	//self.navigationItem.leftBarButtonItem.enabled = YES;
 	if (mAppDelegate.ppIsPad) {
 		//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
@@ -1848,7 +1858,7 @@
 		[mCalcView removeFromSuperview];  // これでCalcView.deallocされる
 		mCalcView = nil;
 	}
-	self.tableView.scrollEnabled = NO; // スクロール禁止
+	//常時スクロール操作禁止　self.tableView.scrollEnabled = NO; // スクロール禁止
 	//self.navigationItem.leftBarButtonItem.enabled = NO;
 	if (mAppDelegate.ppIsPad) {
 		//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要
@@ -1882,7 +1892,7 @@
 //- (BOOL)textViewShouldEndEditing:(UITextView *)textView
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
-	self.tableView.scrollEnabled = YES; // スクロール許可
+	//常時スクロール操作禁止　self.tableView.scrollEnabled = YES; // スクロール許可
 	//self.navigationItem.leftBarButtonItem.enabled = YES;
 	if (mAppDelegate.ppIsPad) {
 		//iPad：キー操作でキーボードを隠すことができるから[Done]ボタン不要

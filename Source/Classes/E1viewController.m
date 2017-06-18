@@ -275,7 +275,7 @@
 		
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
-		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;  //UIModalTransitionStyleCrossDissolve;
+		nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;  //UIModalTransitionStyleCrossDissolve;
 		[self presentViewController:nc animated:YES completion:nil];
 	}
 	else {
@@ -471,7 +471,7 @@
 	if (appDelegate_.ppIsPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet; // iPad画面1/4サイズ
-		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+		nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 		[self presentViewController:nc animated:YES completion:nil];
 	} else {
 //		if (appDelegate_.ppOptShowAd) {	// 各viewDidAppear:にて「許可/禁止」を設定する
@@ -489,7 +489,7 @@
 	if (appDelegate_.ppIsPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
-		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+		nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 		[self presentViewController:nc animated:YES completion:nil];
 	}
 	else {
@@ -520,7 +520,7 @@
 	if (appDelegate_.ppIsPad) {
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
 		nc.modalPresentationStyle = UIModalPresentationFormSheet;
-		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+		nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 		[self presentViewController:nc animated:YES completion:nil];
 	}
 	else {
@@ -602,13 +602,15 @@
 		e3view.firstSection = 0;
 		e3view.sortType = (-1);
 		e3view.sharePlanList = NO;
-        //[0]Left  GROUP
+        
+        //[0]Left  GROUP:e2view
         e2view.delegateE3viewController = e3view;		// E2からE3を更新するため
         //[[appDelegate_.mainSVC.viewControllers objectAtIndex:0] pushViewController:e2view animated:YES];
         AzNavigationController *leftNvc = appDelegate_.mainSVC.viewControllers.firstObject;
+        //leftNvc.modalTransitionStyle = UIModalTransitionStylePartialCurl;
         [leftNvc pushViewController:e2view animated:YES];
         
-		//[1]Right  ITEM
+		//[1]Right  ITEM:e3view
 		//[[appDelegate_.mainSVC.viewControllers objectAtIndex:1] pushViewController:e3view animated:YES];
         AzNavigationController *rightNvc = appDelegate_.mainSVC.viewControllers[1];
         [rightNvc pushViewController:e3view animated:YES];

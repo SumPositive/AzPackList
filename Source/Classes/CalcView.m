@@ -607,7 +607,7 @@ replacementString:(NSString *)text
 	// アニメ準備
 	CGContextRef context = UIGraphicsGetCurrentContext();
 	[UIView beginAnimations:nil context:context];
-	[UIView setAnimationDuration:0.8];
+	[UIView setAnimationDuration:0.3];
 	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
 	
 	// アニメ終了状態

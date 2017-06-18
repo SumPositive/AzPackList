@@ -77,7 +77,7 @@
 #define GD_POPOVER_SIZE					CGSizeMake(480, 500)
 #define GD_POPOVER_SIZE_E1edit		CGSizeMake(480, 300)
 #define GD_POPOVER_SIZE_E2edit		CGSizeMake(480, 300)
-#define GD_POPOVER_SIZE_E3edit		CGSizeMake(480, 700)
+#define GD_POPOVER_SIZE_E3edit		CGSizeMake(480, 460)    // 700
 #define GD_POPOVER_SIZE_Camera		CGSizeMake(480, 500)
 #define GD_POPOVER_SIZE_Share		CGSizeMake(480, 500)
 #define GD_POPOVER_SIZE_iPhone		CGSizeMake(320, 480)		// iPhoneタテ

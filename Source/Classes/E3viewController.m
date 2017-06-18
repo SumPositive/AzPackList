@@ -589,11 +589,12 @@
 			[popOver_ dismissPopoverAnimated:animated];
 		}
 		// 左側のＥ２を閉じる
-		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) 
-		{	// ヨコでＥ２が表示されている場合　　＜＜＜タテでＥ２が隠れているとき処理すると落ちる --> Ｅ２表示時に処理している＞＞＞
+//左ペイン常時表示になったため、
+//		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) 
+//		{	// ヨコでＥ２が表示されている場合　　＜＜＜タテでＥ２が隠れているとき処理すると落ちる --> Ｅ２表示時に処理している＞＞＞
 			UINavigationController* navLeft = [appDelegate_.mainSVC.viewControllers objectAtIndex:0]; //[0]
 			[navLeft popToRootViewControllerAnimated:animated];  // PadRootVC
-		}
+//		}
 	}
 	[super viewWillDisappear:animated];
 }
@@ -729,16 +730,24 @@
 	e3detail.sharePlanList = sharePlanList_;
 	
 	if (appDelegate_.ppIsPad) {
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:e3detail];
-		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
-		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-		indexPathEdit_ = [indexPath copy];
-		CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
-		rc.origin.x += 140;  //(rc.size.width/2 - 100);	//(-100)ヨコのとき幅が縮小されてテンキーが欠けるため
-		rc.size.width = 1;
-		[popOver_ presentPopoverFromRect:rc
-								  inView:self.tableView  permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-		e3detail.selfPopover = popOver_;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
+        
+        UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:e3detail];
+        nc.modalPresentationStyle = UIModalPresentationFormSheet;
+        nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentViewController:nc animated:YES completion:nil];
+        
+//		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:e3detail];
+//		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
+//		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
+//		indexPathEdit_ = [indexPath copy];
+//		CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
+//		rc.origin.x += 50;  //(rc.size.width/2 - 100);	//(-100)ヨコのとき幅が縮小されてテンキーが欠けるため
+//        rc.origin.y += 8;
+//        rc.size.width = 1;
+//        rc.size.height -= 16;
+//		[popOver_ presentPopoverFromRect:rc
+//								  inView:self.tableView  permittedArrowDirections:UIPopoverArrowDirectionUnknown animated:YES];
+//		e3detail.selfPopover = popOver_;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
 		e3detail.delegate = self;		// refresh callback
 	} else {
 		[e3detail setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
@@ -1249,6 +1258,15 @@
 	return rows;
 }
 
+// TableView セクションの高さ
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (appDelegate_.ppIsPad) {
+        return 60.0;
+    }
+    return 54;
+}
+
 // TableView セクション名を応答
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section 
 {
@@ -1445,12 +1463,16 @@
 		
 		// 左ボタン ------------------------------------------------------------------
 		UIButton *bu = [UIButton buttonWithType:UIButtonTypeCustom]; // autorelease
-		bu.frame = CGRectMake(0,0, 44,44);
+        if (appDelegate_.ppIsPad) {
+            bu.frame = CGRectMake(0,0, 150,50);
+        } else {
+            bu.frame = CGRectMake(0,0, 150,44);
+        }
 		bu.tag = indexPath.section * GD_SECTION_TIMES + indexPath.row;
 		[bu addTarget:self action:@selector(cellButtonCheck:) forControlEvents:UIControlEventTouchUpInside];
 		bu.backgroundColor = [UIColor clearColor]; //背景透明
 		bu.showsTouchWhenHighlighted = YES;
-		[cell.contentView addSubview:bu];  
+		[cell.contentView addSubview:bu];
 		//[bu release]; buttonWithTypeにてautoreleseされるため不要。UIButtonにinitは無い。
 
 		if (lNeed == 0) {  // 必要なし
