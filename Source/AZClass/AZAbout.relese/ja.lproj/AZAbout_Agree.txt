@@ -1,0 +1,37 @@
+【ご利用上の合意】
+作者やAzukid関係者は、このアプリにより発生した損害についていかなる責任も負いません。
+さらに、【セキュリティ警告】と【使用状況に関する匿名の統計情報】に合意してご利用ください。
+
+【セキュリティ警告】
+このアプリは、情報を暗号化しません。
+個人情報や機密情報は記入しないでください。
+（パスワードは、iOSのKeyChainへ暗号化保存します）
+
+【使用状況に関する匿名の統計情報】
+本アプリ改善のため、使用状況に関する匿名の統計情報を収集します。
+この情報は、【個人情報保護方針】に従い、「個人を特定できる情報」や「記録した文字や数値」は含まれません。
+使用状況に関する統計情報には、次の情報が含まれます。
+・エラー発生状況　（不具合修正のため）
+・各ボタンのクリック状況　（ボタンの配置や統廃合など検討のため）
+・オプション設定の状況　（オプション検討のため）
+
+【個人情報保護方針】
+このアプリの作者およびAzukid関係者は、「個人を特定できる情報」を収集しません。
+このアプリは、「個人を特定できる情報」を生成せず、通信もしません。ゆえに漏洩することもありません。
+
+このアプリには、下記各社のWebサービスが組み込まれています。
+各社の「個人情報保護方針」をご確認ください。
+・Apple - AppStore,iCloud　-　http://www.apple.com/jp/privacy/
+・Google - Analytics　-　http://www.google.com/intl/ja/policies/privacy/
+
+広告が表示される場合、
+・Apple - iAd　-　http://www.apple.com/jp/privacy/
+・Google - AdSence,AdMob　-　http://www.google.com/intl/ja/policies/privacy/
+
+下記のWebサービスは、ログイン情報が暗号通信されます。
+・Google - GData　-　http://www.google.com/intl/ja/policies/privacy/
+・Dropbox - http://www.dropbox.com/dmca#privacy
+
+Azukid
+
+

@@ -32,6 +32,62 @@
 		445F650B1EEE719300786744 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 445F65081EEE719300786744 /* Localizable.strings */; };
 		44835AD0156BDC1E00A83167 /* UIDevice-Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 44835ABD156BDC1E00A83167 /* UIDevice-Hardware.h */; };
 		44835AD1156BDC1E00A83167 /* UIDevice-Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 44835ABE156BDC1E00A83167 /* UIDevice-Hardware.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		44965B501EFFF17800350EDA /* AZAbout-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B101EFFF17700350EDA /* AZAbout-32.png */; };
+		44965B511EFFF17800350EDA /* AZAbout-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B111EFFF17700350EDA /* AZAbout-32@2x.png */; };
+		44965B521EFFF17800350EDA /* AZAbout-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B121EFFF17700350EDA /* AZAbout-iPad.xib */; };
+		44965B531EFFF17800350EDA /* AZAbout.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B131EFFF17700350EDA /* AZAbout.xib */; };
+		44965B541EFFF17800350EDA /* AZAboutVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B141EFFF17700350EDA /* AZAboutVC.h */; };
+		44965B551EFFF17800350EDA /* AZAboutVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B151EFFF17700350EDA /* AZAboutVC.m */; };
+		44965B561EFFF17800350EDA /* AZAbout_Agree.txt in Resources */ = {isa = PBXBuildFile; fileRef = 44965B161EFFF17700350EDA /* AZAbout_Agree.txt */; };
+		44965B571EFFF17800350EDA /* AZClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B1A1EFFF17700350EDA /* AZClass.h */; };
+		44965B581EFFF17800350EDA /* AZClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B1B1EFFF17700350EDA /* AZClass.m */; };
+		44965B591EFFF17800350EDA /* AZLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44965B1C1EFFF17700350EDA /* AZLocalizable.strings */; };
+		44965B5A1EFFF17800350EDA /* AZDial.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B201EFFF17700350EDA /* AZDial.h */; };
+		44965B5B1EFFF17800350EDA /* AZDial.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B211EFFF17700350EDA /* AZDial.m */; };
+		44965B5C1EFFF17800350EDA /* AZDialBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B221EFFF17700350EDA /* AZDialBack.png */; };
+		44965B5D1EFFF17800350EDA /* AZDialBack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B231EFFF17700350EDA /* AZDialBack@2x.png */; };
+		44965B5E1EFFF17800350EDA /* AZDialStepperMinus.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B241EFFF17700350EDA /* AZDialStepperMinus.png */; };
+		44965B5F1EFFF17800350EDA /* AZDialStepperMinus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B251EFFF17700350EDA /* AZDialStepperMinus@2x.png */; };
+		44965B601EFFF17800350EDA /* AZDialStepperMinusDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B261EFFF17700350EDA /* AZDialStepperMinusDown.png */; };
+		44965B611EFFF17800350EDA /* AZDialStepperMinusDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B271EFFF17700350EDA /* AZDialStepperMinusDown@2x.png */; };
+		44965B621EFFF17800350EDA /* AZDialStepperPlus.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B281EFFF17700350EDA /* AZDialStepperPlus.png */; };
+		44965B631EFFF17800350EDA /* AZDialStepperPlus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B291EFFF17700350EDA /* AZDialStepperPlus@2x.png */; };
+		44965B641EFFF17800350EDA /* AZDialStepperPlusDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2A1EFFF17700350EDA /* AZDialStepperPlusDown.png */; };
+		44965B651EFFF17800350EDA /* AZDialStepperPlusDown@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2B1EFFF17700350EDA /* AZDialStepperPlusDown@2X.png */; };
+		44965B661EFFF17800350EDA /* AZDialTile.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2C1EFFF17700350EDA /* AZDialTile.png */; };
+		44965B671EFFF17800350EDA /* AZDialTile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2D1EFFF17700350EDA /* AZDialTile@2x.png */; };
+		44965B681EFFF17800350EDA /* AZStore-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2F1EFFF17700350EDA /* AZStore-32.png */; };
+		44965B691EFFF17800350EDA /* AZStore-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B301EFFF17700350EDA /* AZStore-32@2x.png */; };
+		44965B6A1EFFF17800350EDA /* AZStore-Addin-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B311EFFF17700350EDA /* AZStore-Addin-32.png */; };
+		44965B6B1EFFF17800350EDA /* AZStore-Addin-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B321EFFF17700350EDA /* AZStore-Addin-32@2x.png */; };
+		44965B6C1EFFF17800350EDA /* AZStore-Space-44.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B331EFFF17800350EDA /* AZStore-Space-44.png */; };
+		44965B6D1EFFF17800350EDA /* AZStore-Space-44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B341EFFF17800350EDA /* AZStore-Space-44@2x.png */; };
+		44965B6E1EFFF17800350EDA /* AZStore-Stop-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B351EFFF17800350EDA /* AZStore-Stop-32.png */; };
+		44965B6F1EFFF17800350EDA /* AZStore-Stop-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B361EFFF17800350EDA /* AZStore-Stop-32@2x.png */; };
+		44965B701EFFF17800350EDA /* AZStoreCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B371EFFF17800350EDA /* AZStoreCell.h */; };
+		44965B711EFFF17800350EDA /* AZStoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B381EFFF17800350EDA /* AZStoreCell.m */; };
+		44965B721EFFF17800350EDA /* AZStoreCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B391EFFF17800350EDA /* AZStoreCell.xib */; };
+		44965B731EFFF17800350EDA /* AZStoreTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B3A1EFFF17800350EDA /* AZStoreTVC.h */; };
+		44965B741EFFF17800350EDA /* AZStoreTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B3B1EFFF17800350EDA /* AZStoreTVC.m */; };
+		44965B751EFFF17800350EDA /* Icon57-CalcRoll.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3C1EFFF17800350EDA /* Icon57-CalcRoll.png */; };
+		44965B761EFFF17800350EDA /* Icon57-CalcRoll@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3D1EFFF17800350EDA /* Icon57-CalcRoll@2x.png */; };
+		44965B771EFFF17800350EDA /* Icon57-Condition.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3E1EFFF17800350EDA /* Icon57-Condition.png */; };
+		44965B781EFFF17800350EDA /* Icon57-Condition@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3F1EFFF17800350EDA /* Icon57-Condition@2x.png */; };
+		44965B791EFFF17800350EDA /* Icon57-PackList.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B401EFFF17800350EDA /* Icon57-PackList.png */; };
+		44965B7A1EFFF17800350EDA /* Icon57-PackList@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B411EFFF17800350EDA /* Icon57-PackList@2x.png */; };
+		44965B7B1EFFF17800350EDA /* Icon57-PayNote.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B421EFFF17800350EDA /* Icon57-PayNote.png */; };
+		44965B7C1EFFF17800350EDA /* Icon57-PayNote@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B431EFFF17800350EDA /* Icon57-PayNote@2x.png */; };
+		44965B7D1EFFF17800350EDA /* Icon57-SplitPay.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B441EFFF17800350EDA /* Icon57-SplitPay.png */; };
+		44965B7E1EFFF17800350EDA /* NSDataBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B451EFFF17800350EDA /* NSDataBase64.h */; };
+		44965B7F1EFFF17800350EDA /* NSDataBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B461EFFF17800350EDA /* NSDataBase64.m */; };
+		44965B801EFFF17800350EDA /* VerificationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B471EFFF17800350EDA /* VerificationController.h */; };
+		44965B811EFFF17800350EDA /* VerificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B481EFFF17800350EDA /* VerificationController.m */; };
+		44965B821EFFF17800350EDA /* AZWeb-Back-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4A1EFFF17800350EDA /* AZWeb-Back-16.png */; };
+		44965B831EFFF17800350EDA /* AZWeb-Back-16@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4B1EFFF17800350EDA /* AZWeb-Back-16@2x.png */; };
+		44965B841EFFF17800350EDA /* AZWeb-Forward-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4C1EFFF17800350EDA /* AZWeb-Forward-16.png */; };
+		44965B851EFFF17800350EDA /* AZWeb-Forward-16@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4D1EFFF17800350EDA /* AZWeb-Forward-16@2x.png */; };
+		44965B861EFFF17800350EDA /* AZWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B4E1EFFF17800350EDA /* AZWebView.h */; };
+		44965B871EFFF17800350EDA /* AZWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B4F1EFFF17800350EDA /* AZWebView.m */; };
 		4499D7D7134DA60600342648 /* Icon16-ItemGrayHide.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68A113196CC100012FB5 /* Icon16-ItemGrayHide.png */; };
 		4499D7D8134DA60600342648 /* Icon16-ItemGrayHide@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68A213196CC100012FB5 /* Icon16-ItemGrayHide@2x.png */; };
 		4499D7D9134DA60600342648 /* Icon16-ItemGrayShow.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68A313196CC100012FB5 /* Icon16-ItemGrayShow.png */; };
@@ -149,60 +205,6 @@
 		44D3E1B114B8BD9D0028FF24 /* Icon32-ExtParts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D3E1AF14B8BD9D0028FF24 /* Icon32-ExtParts@2x.png */; };
 		44D3E1B214B8BD9D0028FF24 /* Icon32-ExtParts.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D3E1B014B8BD9D0028FF24 /* Icon32-ExtParts.png */; };
 		44D7CE6C153660F900AE6920 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 44D7CE6B153660F900AE6920 /* libsqlite3.0.dylib */; };
-		44D9B2B715F1027C00F5045C /* AZStore-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B29C15F1027C00F5045C /* AZStore-32.png */; };
-		44D9B2B815F1027C00F5045C /* AZStore-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B29D15F1027C00F5045C /* AZStore-32@2x.png */; };
-		44D9B2B915F1027C00F5045C /* AZStore-Addin-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B29E15F1027C00F5045C /* AZStore-Addin-32.png */; };
-		44D9B2BA15F1027C00F5045C /* AZStore-Addin-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B29F15F1027C00F5045C /* AZStore-Addin-32@2x.png */; };
-		44D9B2BB15F1027C00F5045C /* AZStore-Space-44.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2A015F1027C00F5045C /* AZStore-Space-44.png */; };
-		44D9B2BC15F1027C00F5045C /* AZStore-Space-44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2A115F1027C00F5045C /* AZStore-Space-44@2x.png */; };
-		44D9B2BD15F1027C00F5045C /* AZStore-Stop-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2A215F1027C00F5045C /* AZStore-Stop-32.png */; };
-		44D9B2BE15F1027C00F5045C /* AZStore-Stop-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2A315F1027C00F5045C /* AZStore-Stop-32@2x.png */; };
-		44D9B2BF15F1027C00F5045C /* AZStoreCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 44D9B2A415F1027C00F5045C /* AZStoreCell.h */; };
-		44D9B2C015F1027C00F5045C /* AZStoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D9B2A515F1027C00F5045C /* AZStoreCell.m */; };
-		44D9B2C115F1027C00F5045C /* AZStoreCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2A615F1027C00F5045C /* AZStoreCell.xib */; };
-		44D9B2C215F1027C00F5045C /* AZStoreTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44D9B2A715F1027C00F5045C /* AZStoreTVC.h */; };
-		44D9B2C315F1027C00F5045C /* AZStoreTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D9B2A815F1027C00F5045C /* AZStoreTVC.m */; };
-		44D9B2C415F1027C00F5045C /* Icon57-CalcRoll.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2A915F1027C00F5045C /* Icon57-CalcRoll.png */; };
-		44D9B2C515F1027C00F5045C /* Icon57-CalcRoll@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2AA15F1027C00F5045C /* Icon57-CalcRoll@2x.png */; };
-		44D9B2C615F1027C00F5045C /* Icon57-Condition.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2AB15F1027C00F5045C /* Icon57-Condition.png */; };
-		44D9B2C715F1027C00F5045C /* Icon57-Condition@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2AC15F1027C00F5045C /* Icon57-Condition@2x.png */; };
-		44D9B2C815F1027C00F5045C /* Icon57-PackList.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2AD15F1027C00F5045C /* Icon57-PackList.png */; };
-		44D9B2C915F1027C00F5045C /* Icon57-PackList@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2AE15F1027C00F5045C /* Icon57-PackList@2x.png */; };
-		44D9B2CA15F1027C00F5045C /* Icon57-PayNote.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2AF15F1027C00F5045C /* Icon57-PayNote.png */; };
-		44D9B2CB15F1027C00F5045C /* Icon57-PayNote@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2B015F1027C00F5045C /* Icon57-PayNote@2x.png */; };
-		44D9B2CC15F1027C00F5045C /* Icon57-SplitPay.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D9B2B115F1027C00F5045C /* Icon57-SplitPay.png */; };
-		44D9B2CE15F1027C00F5045C /* NSDataBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 44D9B2B315F1027C00F5045C /* NSDataBase64.h */; };
-		44D9B2CF15F1027C00F5045C /* NSDataBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D9B2B415F1027C00F5045C /* NSDataBase64.m */; };
-		44D9B2D015F1027C00F5045C /* VerificationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 44D9B2B515F1027C00F5045C /* VerificationController.h */; };
-		44D9B2D115F1027C00F5045C /* VerificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D9B2B615F1027C00F5045C /* VerificationController.m */; };
-		44DF7762156A760700386E89 /* AZWeb-Back-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF771E156A760700386E89 /* AZWeb-Back-16.png */; };
-		44DF7763156A760700386E89 /* AZWeb-Back-16@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF771F156A760700386E89 /* AZWeb-Back-16@2x.png */; };
-		44DF7764156A760700386E89 /* AZWeb-Forward-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF7720156A760700386E89 /* AZWeb-Forward-16.png */; };
-		44DF7765156A760700386E89 /* AZWeb-Forward-16@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF7721156A760700386E89 /* AZWeb-Forward-16@2x.png */; };
-		44DF7766156A760700386E89 /* AZWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 44DF7722156A760700386E89 /* AZWebView.h */; };
-		44DF7767156A760700386E89 /* AZWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 44DF7723156A760700386E89 /* AZWebView.m */; };
-		44DF7785156A760700386E89 /* AZDial.h in Headers */ = {isa = PBXBuildFile; fileRef = 44DF7744156A760700386E89 /* AZDial.h */; };
-		44DF7786156A760700386E89 /* AZDial.m in Sources */ = {isa = PBXBuildFile; fileRef = 44DF7745156A760700386E89 /* AZDial.m */; };
-		44DF7787156A760700386E89 /* AZDialBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF7746156A760700386E89 /* AZDialBack.png */; };
-		44DF7788156A760700386E89 /* AZDialBack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF7747156A760700386E89 /* AZDialBack@2x.png */; };
-		44DF7789156A760700386E89 /* AZDialStepperMinus.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF7748156A760700386E89 /* AZDialStepperMinus.png */; };
-		44DF778A156A760700386E89 /* AZDialStepperMinus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF7749156A760700386E89 /* AZDialStepperMinus@2x.png */; };
-		44DF778B156A760700386E89 /* AZDialStepperMinusDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF774A156A760700386E89 /* AZDialStepperMinusDown.png */; };
-		44DF778C156A760700386E89 /* AZDialStepperMinusDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF774B156A760700386E89 /* AZDialStepperMinusDown@2x.png */; };
-		44DF778D156A760700386E89 /* AZDialStepperPlus.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF774C156A760700386E89 /* AZDialStepperPlus.png */; };
-		44DF778E156A760700386E89 /* AZDialStepperPlus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF774D156A760700386E89 /* AZDialStepperPlus@2x.png */; };
-		44DF778F156A760700386E89 /* AZDialStepperPlusDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF774E156A760700386E89 /* AZDialStepperPlusDown.png */; };
-		44DF7790156A760700386E89 /* AZDialStepperPlusDown@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF774F156A760700386E89 /* AZDialStepperPlusDown@2X.png */; };
-		44DF7791156A760700386E89 /* AZDialTile.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF7750156A760700386E89 /* AZDialTile.png */; };
-		44DF7792156A760700386E89 /* AZDialTile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF7751156A760700386E89 /* AZDialTile@2x.png */; };
-		44DF7793156A760700386E89 /* AZAbout-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF7753156A760700386E89 /* AZAbout-32.png */; };
-		44DF7794156A760700386E89 /* AZAbout-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44DF7754156A760700386E89 /* AZAbout-32@2x.png */; };
-		44DF7795156A760700386E89 /* AZAbout-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44DF7755156A760700386E89 /* AZAbout-iPad.xib */; };
-		44DF7796156A760700386E89 /* AZAbout.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44DF7756156A760700386E89 /* AZAbout.xib */; };
-		44DF7797156A760700386E89 /* AZAboutVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44DF7757156A760700386E89 /* AZAboutVC.h */; };
-		44DF7798156A760700386E89 /* AZAboutVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44DF7758156A760700386E89 /* AZAboutVC.m */; };
-		44DF779A156A760700386E89 /* AZClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 44DF775D156A760700386E89 /* AZClass.h */; };
-		44DF779B156A760700386E89 /* AZClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 44DF775E156A760700386E89 /* AZClass.m */; };
 		44E486B61EC80B910041876C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 44E486B51EC80B910041876C /* GoogleService-Info.plist */; };
 		44EFD08A14C17CAF003FF260 /* Icon-Close-44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD07A14C17CAF003FF260 /* Icon-Close-44@2x.png */; };
 		44EFD08B14C17CAF003FF260 /* Icon-Close-44.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD07B14C17CAF003FF260 /* Icon-Close-44.png */; };
@@ -330,6 +332,64 @@
 		4491C7B411186531005955FD /* selectGroupTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = selectGroupTVC.h; sourceTree = "<group>"; };
 		4491C7B511186531005955FD /* selectGroupTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = selectGroupTVC.m; sourceTree = "<group>"; };
 		449312B410F0D5A700C6C8E5 /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
+		44965B101EFFF17700350EDA /* AZAbout-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZAbout-32.png"; sourceTree = "<group>"; };
+		44965B111EFFF17700350EDA /* AZAbout-32@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZAbout-32@2x.png"; sourceTree = "<group>"; };
+		44965B121EFFF17700350EDA /* AZAbout-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AZAbout-iPad.xib"; sourceTree = "<group>"; };
+		44965B131EFFF17700350EDA /* AZAbout.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AZAbout.xib; sourceTree = "<group>"; };
+		44965B141EFFF17700350EDA /* AZAboutVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZAboutVC.h; sourceTree = "<group>"; };
+		44965B151EFFF17700350EDA /* AZAboutVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZAboutVC.m; sourceTree = "<group>"; };
+		44965B171EFFF17700350EDA /* en */ = {isa = PBXFileReference; lastKnownFileType = text; name = en; path = en.lproj/AZAbout_Agree.txt; sourceTree = "<group>"; };
+		44965B181EFFF17700350EDA /* ja */ = {isa = PBXFileReference; lastKnownFileType = text; name = ja; path = ja.lproj/AZAbout_Agree.txt; sourceTree = "<group>"; };
+		44965B1A1EFFF17700350EDA /* AZClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZClass.h; sourceTree = "<group>"; };
+		44965B1B1EFFF17700350EDA /* AZClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZClass.m; sourceTree = "<group>"; };
+		44965B1D1EFFF17700350EDA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AZLocalizable.strings; sourceTree = "<group>"; };
+		44965B1E1EFFF17700350EDA /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/AZLocalizable.strings; sourceTree = "<group>"; };
+		44965B201EFFF17700350EDA /* AZDial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZDial.h; sourceTree = "<group>"; };
+		44965B211EFFF17700350EDA /* AZDial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZDial.m; sourceTree = "<group>"; };
+		44965B221EFFF17700350EDA /* AZDialBack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZDialBack.png; sourceTree = "<group>"; };
+		44965B231EFFF17700350EDA /* AZDialBack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDialBack@2x.png"; sourceTree = "<group>"; };
+		44965B241EFFF17700350EDA /* AZDialStepperMinus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZDialStepperMinus.png; sourceTree = "<group>"; };
+		44965B251EFFF17700350EDA /* AZDialStepperMinus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDialStepperMinus@2x.png"; sourceTree = "<group>"; };
+		44965B261EFFF17700350EDA /* AZDialStepperMinusDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZDialStepperMinusDown.png; sourceTree = "<group>"; };
+		44965B271EFFF17700350EDA /* AZDialStepperMinusDown@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDialStepperMinusDown@2x.png"; sourceTree = "<group>"; };
+		44965B281EFFF17700350EDA /* AZDialStepperPlus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZDialStepperPlus.png; sourceTree = "<group>"; };
+		44965B291EFFF17700350EDA /* AZDialStepperPlus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDialStepperPlus@2x.png"; sourceTree = "<group>"; };
+		44965B2A1EFFF17700350EDA /* AZDialStepperPlusDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZDialStepperPlusDown.png; sourceTree = "<group>"; };
+		44965B2B1EFFF17700350EDA /* AZDialStepperPlusDown@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDialStepperPlusDown@2X.png"; sourceTree = "<group>"; };
+		44965B2C1EFFF17700350EDA /* AZDialTile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZDialTile.png; sourceTree = "<group>"; };
+		44965B2D1EFFF17700350EDA /* AZDialTile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDialTile@2x.png"; sourceTree = "<group>"; };
+		44965B2F1EFFF17700350EDA /* AZStore-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-32.png"; sourceTree = "<group>"; };
+		44965B301EFFF17700350EDA /* AZStore-32@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-32@2x.png"; sourceTree = "<group>"; };
+		44965B311EFFF17700350EDA /* AZStore-Addin-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Addin-32.png"; sourceTree = "<group>"; };
+		44965B321EFFF17700350EDA /* AZStore-Addin-32@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Addin-32@2x.png"; sourceTree = "<group>"; };
+		44965B331EFFF17800350EDA /* AZStore-Space-44.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Space-44.png"; sourceTree = "<group>"; };
+		44965B341EFFF17800350EDA /* AZStore-Space-44@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Space-44@2x.png"; sourceTree = "<group>"; };
+		44965B351EFFF17800350EDA /* AZStore-Stop-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Stop-32.png"; sourceTree = "<group>"; };
+		44965B361EFFF17800350EDA /* AZStore-Stop-32@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Stop-32@2x.png"; sourceTree = "<group>"; };
+		44965B371EFFF17800350EDA /* AZStoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZStoreCell.h; sourceTree = "<group>"; };
+		44965B381EFFF17800350EDA /* AZStoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZStoreCell.m; sourceTree = "<group>"; };
+		44965B391EFFF17800350EDA /* AZStoreCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AZStoreCell.xib; sourceTree = "<group>"; };
+		44965B3A1EFFF17800350EDA /* AZStoreTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZStoreTVC.h; sourceTree = "<group>"; };
+		44965B3B1EFFF17800350EDA /* AZStoreTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZStoreTVC.m; sourceTree = "<group>"; };
+		44965B3C1EFFF17800350EDA /* Icon57-CalcRoll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-CalcRoll.png"; sourceTree = "<group>"; };
+		44965B3D1EFFF17800350EDA /* Icon57-CalcRoll@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-CalcRoll@2x.png"; sourceTree = "<group>"; };
+		44965B3E1EFFF17800350EDA /* Icon57-Condition.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-Condition.png"; sourceTree = "<group>"; };
+		44965B3F1EFFF17800350EDA /* Icon57-Condition@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-Condition@2x.png"; sourceTree = "<group>"; };
+		44965B401EFFF17800350EDA /* Icon57-PackList.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-PackList.png"; sourceTree = "<group>"; };
+		44965B411EFFF17800350EDA /* Icon57-PackList@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-PackList@2x.png"; sourceTree = "<group>"; };
+		44965B421EFFF17800350EDA /* Icon57-PayNote.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-PayNote.png"; sourceTree = "<group>"; };
+		44965B431EFFF17800350EDA /* Icon57-PayNote@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-PayNote@2x.png"; sourceTree = "<group>"; };
+		44965B441EFFF17800350EDA /* Icon57-SplitPay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-SplitPay.png"; sourceTree = "<group>"; };
+		44965B451EFFF17800350EDA /* NSDataBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDataBase64.h; sourceTree = "<group>"; };
+		44965B461EFFF17800350EDA /* NSDataBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDataBase64.m; sourceTree = "<group>"; };
+		44965B471EFFF17800350EDA /* VerificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerificationController.h; sourceTree = "<group>"; };
+		44965B481EFFF17800350EDA /* VerificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerificationController.m; sourceTree = "<group>"; };
+		44965B4A1EFFF17800350EDA /* AZWeb-Back-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZWeb-Back-16.png"; sourceTree = "<group>"; };
+		44965B4B1EFFF17800350EDA /* AZWeb-Back-16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZWeb-Back-16@2x.png"; sourceTree = "<group>"; };
+		44965B4C1EFFF17800350EDA /* AZWeb-Forward-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZWeb-Forward-16.png"; sourceTree = "<group>"; };
+		44965B4D1EFFF17800350EDA /* AZWeb-Forward-16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZWeb-Forward-16@2x.png"; sourceTree = "<group>"; };
+		44965B4E1EFFF17800350EDA /* AZWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZWebView.h; sourceTree = "<group>"; };
+		44965B4F1EFFF17800350EDA /* AZWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZWebView.m; sourceTree = "<group>"; };
 		4499D7C9134D9D8900342648 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4499D9BC134DA60700342648 /* PackList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PackList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4499D9C0134DB1D300342648 /* Icon57@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57@2x.png"; sourceTree = "<group>"; };
@@ -387,60 +447,6 @@
 		44D7CE6F1536616300AE6920 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		44D7D44E125484B500E1E362 /* SpSearchVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpSearchVC.h; sourceTree = "<group>"; };
 		44D7D44F125484B500E1E362 /* SpSearchVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpSearchVC.m; sourceTree = "<group>"; };
-		44D9B29C15F1027C00F5045C /* AZStore-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-32.png"; sourceTree = "<group>"; };
-		44D9B29D15F1027C00F5045C /* AZStore-32@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-32@2x.png"; sourceTree = "<group>"; };
-		44D9B29E15F1027C00F5045C /* AZStore-Addin-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Addin-32.png"; sourceTree = "<group>"; };
-		44D9B29F15F1027C00F5045C /* AZStore-Addin-32@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Addin-32@2x.png"; sourceTree = "<group>"; };
-		44D9B2A015F1027C00F5045C /* AZStore-Space-44.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Space-44.png"; sourceTree = "<group>"; };
-		44D9B2A115F1027C00F5045C /* AZStore-Space-44@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Space-44@2x.png"; sourceTree = "<group>"; };
-		44D9B2A215F1027C00F5045C /* AZStore-Stop-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Stop-32.png"; sourceTree = "<group>"; };
-		44D9B2A315F1027C00F5045C /* AZStore-Stop-32@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Stop-32@2x.png"; sourceTree = "<group>"; };
-		44D9B2A415F1027C00F5045C /* AZStoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZStoreCell.h; sourceTree = "<group>"; };
-		44D9B2A515F1027C00F5045C /* AZStoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZStoreCell.m; sourceTree = "<group>"; };
-		44D9B2A615F1027C00F5045C /* AZStoreCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AZStoreCell.xib; sourceTree = "<group>"; };
-		44D9B2A715F1027C00F5045C /* AZStoreTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZStoreTVC.h; sourceTree = "<group>"; };
-		44D9B2A815F1027C00F5045C /* AZStoreTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZStoreTVC.m; sourceTree = "<group>"; };
-		44D9B2A915F1027C00F5045C /* Icon57-CalcRoll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-CalcRoll.png"; sourceTree = "<group>"; };
-		44D9B2AA15F1027C00F5045C /* Icon57-CalcRoll@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-CalcRoll@2x.png"; sourceTree = "<group>"; };
-		44D9B2AB15F1027C00F5045C /* Icon57-Condition.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-Condition.png"; sourceTree = "<group>"; };
-		44D9B2AC15F1027C00F5045C /* Icon57-Condition@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-Condition@2x.png"; sourceTree = "<group>"; };
-		44D9B2AD15F1027C00F5045C /* Icon57-PackList.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-PackList.png"; sourceTree = "<group>"; };
-		44D9B2AE15F1027C00F5045C /* Icon57-PackList@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-PackList@2x.png"; sourceTree = "<group>"; };
-		44D9B2AF15F1027C00F5045C /* Icon57-PayNote.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-PayNote.png"; sourceTree = "<group>"; };
-		44D9B2B015F1027C00F5045C /* Icon57-PayNote@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-PayNote@2x.png"; sourceTree = "<group>"; };
-		44D9B2B115F1027C00F5045C /* Icon57-SplitPay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-SplitPay.png"; sourceTree = "<group>"; };
-		44D9B2B315F1027C00F5045C /* NSDataBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDataBase64.h; sourceTree = "<group>"; };
-		44D9B2B415F1027C00F5045C /* NSDataBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDataBase64.m; sourceTree = "<group>"; };
-		44D9B2B515F1027C00F5045C /* VerificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerificationController.h; sourceTree = "<group>"; };
-		44D9B2B615F1027C00F5045C /* VerificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerificationController.m; sourceTree = "<group>"; };
-		44DF771E156A760700386E89 /* AZWeb-Back-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZWeb-Back-16.png"; sourceTree = "<group>"; };
-		44DF771F156A760700386E89 /* AZWeb-Back-16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZWeb-Back-16@2x.png"; sourceTree = "<group>"; };
-		44DF7720156A760700386E89 /* AZWeb-Forward-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZWeb-Forward-16.png"; sourceTree = "<group>"; };
-		44DF7721156A760700386E89 /* AZWeb-Forward-16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZWeb-Forward-16@2x.png"; sourceTree = "<group>"; };
-		44DF7722156A760700386E89 /* AZWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZWebView.h; sourceTree = "<group>"; };
-		44DF7723156A760700386E89 /* AZWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZWebView.m; sourceTree = "<group>"; };
-		44DF7744156A760700386E89 /* AZDial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZDial.h; sourceTree = "<group>"; };
-		44DF7745156A760700386E89 /* AZDial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZDial.m; sourceTree = "<group>"; };
-		44DF7746156A760700386E89 /* AZDialBack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZDialBack.png; sourceTree = "<group>"; };
-		44DF7747156A760700386E89 /* AZDialBack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDialBack@2x.png"; sourceTree = "<group>"; };
-		44DF7748156A760700386E89 /* AZDialStepperMinus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZDialStepperMinus.png; sourceTree = "<group>"; };
-		44DF7749156A760700386E89 /* AZDialStepperMinus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDialStepperMinus@2x.png"; sourceTree = "<group>"; };
-		44DF774A156A760700386E89 /* AZDialStepperMinusDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZDialStepperMinusDown.png; sourceTree = "<group>"; };
-		44DF774B156A760700386E89 /* AZDialStepperMinusDown@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDialStepperMinusDown@2x.png"; sourceTree = "<group>"; };
-		44DF774C156A760700386E89 /* AZDialStepperPlus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZDialStepperPlus.png; sourceTree = "<group>"; };
-		44DF774D156A760700386E89 /* AZDialStepperPlus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDialStepperPlus@2x.png"; sourceTree = "<group>"; };
-		44DF774E156A760700386E89 /* AZDialStepperPlusDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZDialStepperPlusDown.png; sourceTree = "<group>"; };
-		44DF774F156A760700386E89 /* AZDialStepperPlusDown@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDialStepperPlusDown@2X.png"; sourceTree = "<group>"; };
-		44DF7750156A760700386E89 /* AZDialTile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZDialTile.png; sourceTree = "<group>"; };
-		44DF7751156A760700386E89 /* AZDialTile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDialTile@2x.png"; sourceTree = "<group>"; };
-		44DF7753156A760700386E89 /* AZAbout-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZAbout-32.png"; sourceTree = "<group>"; };
-		44DF7754156A760700386E89 /* AZAbout-32@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZAbout-32@2x.png"; sourceTree = "<group>"; };
-		44DF7755156A760700386E89 /* AZAbout-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AZAbout-iPad.xib"; sourceTree = "<group>"; };
-		44DF7756156A760700386E89 /* AZAbout.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AZAbout.xib; sourceTree = "<group>"; };
-		44DF7757156A760700386E89 /* AZAboutVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZAboutVC.h; sourceTree = "<group>"; };
-		44DF7758156A760700386E89 /* AZAboutVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZAboutVC.m; sourceTree = "<group>"; };
-		44DF775D156A760700386E89 /* AZClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZClass.h; sourceTree = "<group>"; };
-		44DF775E156A760700386E89 /* AZClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZClass.m; sourceTree = "<group>"; };
 		44E070D912732BF3003BF988 /* SpDetailTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpDetailTVC.m; sourceTree = "<group>"; };
 		44E070DA12732BF3003BF988 /* SpDetailTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpDetailTVC.h; sourceTree = "<group>"; };
 		44E486B51EC80B910041876C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -525,7 +531,7 @@
 				44F195751EBC2D3D00F5FF93 /* Readme.h */,
 				44F195761EBC2D5300F5FF93 /* History.h */,
 				44CB23E711E039AF002A9331 /* OpenCode */,
-				44240A8215364ECB000981A2 /* AZClass */,
+				44965B0E1EFFF17700350EDA /* AZClass */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				44F0737F1105D9D80024B707 /* Images */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -580,18 +586,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		44240A8215364ECB000981A2 /* AZClass */ = {
-			isa = PBXGroup;
-			children = (
-				44D9B29B15F1027C00F5045C /* AZStore.relese */,
-				44DF771D156A760700386E89 /* AZWebView.relese */,
-				44DF7743156A760700386E89 /* AZDial.relese */,
-				44DF7752156A760700386E89 /* AZAbout.relese */,
-				44DF775C156A760700386E89 /* AZClass.relese */,
-			);
-			name = AZClass;
-			sourceTree = "<group>";
-		};
 		44835ABC156BDC1E00A83167 /* UIDevice-Hardware.release */ = {
 			isa = PBXGroup;
 			children = (
@@ -600,6 +594,109 @@
 			);
 			name = "UIDevice-Hardware.release";
 			path = "../../../OpenCode/UIDevice-Hardware/UIDevice-Hardware.release";
+			sourceTree = "<group>";
+		};
+		44965B0E1EFFF17700350EDA /* AZClass */ = {
+			isa = PBXGroup;
+			children = (
+				44965B0F1EFFF17700350EDA /* AZAbout.relese */,
+				44965B191EFFF17700350EDA /* AZClass.relese */,
+				44965B1F1EFFF17700350EDA /* AZDial.relese */,
+				44965B2E1EFFF17700350EDA /* AZStore.relese */,
+				44965B491EFFF17800350EDA /* AZWebView.relese */,
+			);
+			path = AZClass;
+			sourceTree = "<group>";
+		};
+		44965B0F1EFFF17700350EDA /* AZAbout.relese */ = {
+			isa = PBXGroup;
+			children = (
+				44965B101EFFF17700350EDA /* AZAbout-32.png */,
+				44965B111EFFF17700350EDA /* AZAbout-32@2x.png */,
+				44965B121EFFF17700350EDA /* AZAbout-iPad.xib */,
+				44965B131EFFF17700350EDA /* AZAbout.xib */,
+				44965B141EFFF17700350EDA /* AZAboutVC.h */,
+				44965B151EFFF17700350EDA /* AZAboutVC.m */,
+				44965B161EFFF17700350EDA /* AZAbout_Agree.txt */,
+			);
+			path = AZAbout.relese;
+			sourceTree = "<group>";
+		};
+		44965B191EFFF17700350EDA /* AZClass.relese */ = {
+			isa = PBXGroup;
+			children = (
+				44965B1A1EFFF17700350EDA /* AZClass.h */,
+				44965B1B1EFFF17700350EDA /* AZClass.m */,
+				44965B1C1EFFF17700350EDA /* AZLocalizable.strings */,
+			);
+			path = AZClass.relese;
+			sourceTree = "<group>";
+		};
+		44965B1F1EFFF17700350EDA /* AZDial.relese */ = {
+			isa = PBXGroup;
+			children = (
+				44965B201EFFF17700350EDA /* AZDial.h */,
+				44965B211EFFF17700350EDA /* AZDial.m */,
+				44965B221EFFF17700350EDA /* AZDialBack.png */,
+				44965B231EFFF17700350EDA /* AZDialBack@2x.png */,
+				44965B241EFFF17700350EDA /* AZDialStepperMinus.png */,
+				44965B251EFFF17700350EDA /* AZDialStepperMinus@2x.png */,
+				44965B261EFFF17700350EDA /* AZDialStepperMinusDown.png */,
+				44965B271EFFF17700350EDA /* AZDialStepperMinusDown@2x.png */,
+				44965B281EFFF17700350EDA /* AZDialStepperPlus.png */,
+				44965B291EFFF17700350EDA /* AZDialStepperPlus@2x.png */,
+				44965B2A1EFFF17700350EDA /* AZDialStepperPlusDown.png */,
+				44965B2B1EFFF17700350EDA /* AZDialStepperPlusDown@2X.png */,
+				44965B2C1EFFF17700350EDA /* AZDialTile.png */,
+				44965B2D1EFFF17700350EDA /* AZDialTile@2x.png */,
+			);
+			path = AZDial.relese;
+			sourceTree = "<group>";
+		};
+		44965B2E1EFFF17700350EDA /* AZStore.relese */ = {
+			isa = PBXGroup;
+			children = (
+				44965B2F1EFFF17700350EDA /* AZStore-32.png */,
+				44965B301EFFF17700350EDA /* AZStore-32@2x.png */,
+				44965B311EFFF17700350EDA /* AZStore-Addin-32.png */,
+				44965B321EFFF17700350EDA /* AZStore-Addin-32@2x.png */,
+				44965B331EFFF17800350EDA /* AZStore-Space-44.png */,
+				44965B341EFFF17800350EDA /* AZStore-Space-44@2x.png */,
+				44965B351EFFF17800350EDA /* AZStore-Stop-32.png */,
+				44965B361EFFF17800350EDA /* AZStore-Stop-32@2x.png */,
+				44965B371EFFF17800350EDA /* AZStoreCell.h */,
+				44965B381EFFF17800350EDA /* AZStoreCell.m */,
+				44965B391EFFF17800350EDA /* AZStoreCell.xib */,
+				44965B3A1EFFF17800350EDA /* AZStoreTVC.h */,
+				44965B3B1EFFF17800350EDA /* AZStoreTVC.m */,
+				44965B3C1EFFF17800350EDA /* Icon57-CalcRoll.png */,
+				44965B3D1EFFF17800350EDA /* Icon57-CalcRoll@2x.png */,
+				44965B3E1EFFF17800350EDA /* Icon57-Condition.png */,
+				44965B3F1EFFF17800350EDA /* Icon57-Condition@2x.png */,
+				44965B401EFFF17800350EDA /* Icon57-PackList.png */,
+				44965B411EFFF17800350EDA /* Icon57-PackList@2x.png */,
+				44965B421EFFF17800350EDA /* Icon57-PayNote.png */,
+				44965B431EFFF17800350EDA /* Icon57-PayNote@2x.png */,
+				44965B441EFFF17800350EDA /* Icon57-SplitPay.png */,
+				44965B451EFFF17800350EDA /* NSDataBase64.h */,
+				44965B461EFFF17800350EDA /* NSDataBase64.m */,
+				44965B471EFFF17800350EDA /* VerificationController.h */,
+				44965B481EFFF17800350EDA /* VerificationController.m */,
+			);
+			path = AZStore.relese;
+			sourceTree = "<group>";
+		};
+		44965B491EFFF17800350EDA /* AZWebView.relese */ = {
+			isa = PBXGroup;
+			children = (
+				44965B4A1EFFF17800350EDA /* AZWeb-Back-16.png */,
+				44965B4B1EFFF17800350EDA /* AZWeb-Back-16@2x.png */,
+				44965B4C1EFFF17800350EDA /* AZWeb-Forward-16.png */,
+				44965B4D1EFFF17800350EDA /* AZWeb-Forward-16@2x.png */,
+				44965B4E1EFFF17800350EDA /* AZWebView.h */,
+				44965B4F1EFFF17800350EDA /* AZWebView.m */,
+			);
+			path = AZWebView.relese;
 			sourceTree = "<group>";
 		};
 		44CB23E711E039AF002A9331 /* OpenCode */ = {
@@ -674,100 +771,6 @@
 				446AAE251111F0250077BF89 /* E3detailTVC.m */,
 			);
 			name = Main;
-			sourceTree = "<group>";
-		};
-		44D9B29B15F1027C00F5045C /* AZStore.relese */ = {
-			isa = PBXGroup;
-			children = (
-				44D9B29C15F1027C00F5045C /* AZStore-32.png */,
-				44D9B29D15F1027C00F5045C /* AZStore-32@2x.png */,
-				44D9B29E15F1027C00F5045C /* AZStore-Addin-32.png */,
-				44D9B29F15F1027C00F5045C /* AZStore-Addin-32@2x.png */,
-				44D9B2A015F1027C00F5045C /* AZStore-Space-44.png */,
-				44D9B2A115F1027C00F5045C /* AZStore-Space-44@2x.png */,
-				44D9B2A215F1027C00F5045C /* AZStore-Stop-32.png */,
-				44D9B2A315F1027C00F5045C /* AZStore-Stop-32@2x.png */,
-				44D9B2A415F1027C00F5045C /* AZStoreCell.h */,
-				44D9B2A515F1027C00F5045C /* AZStoreCell.m */,
-				44D9B2A615F1027C00F5045C /* AZStoreCell.xib */,
-				44D9B2A715F1027C00F5045C /* AZStoreTVC.h */,
-				44D9B2A815F1027C00F5045C /* AZStoreTVC.m */,
-				44D9B2A915F1027C00F5045C /* Icon57-CalcRoll.png */,
-				44D9B2AA15F1027C00F5045C /* Icon57-CalcRoll@2x.png */,
-				44D9B2AB15F1027C00F5045C /* Icon57-Condition.png */,
-				44D9B2AC15F1027C00F5045C /* Icon57-Condition@2x.png */,
-				44D9B2AD15F1027C00F5045C /* Icon57-PackList.png */,
-				44D9B2AE15F1027C00F5045C /* Icon57-PackList@2x.png */,
-				44D9B2AF15F1027C00F5045C /* Icon57-PayNote.png */,
-				44D9B2B015F1027C00F5045C /* Icon57-PayNote@2x.png */,
-				44D9B2B115F1027C00F5045C /* Icon57-SplitPay.png */,
-				44D9B2B315F1027C00F5045C /* NSDataBase64.h */,
-				44D9B2B415F1027C00F5045C /* NSDataBase64.m */,
-				44D9B2B515F1027C00F5045C /* VerificationController.h */,
-				44D9B2B615F1027C00F5045C /* VerificationController.m */,
-			);
-			name = AZStore.relese;
-			path = ../../AZClass/AZStore/AZStore.relese;
-			sourceTree = "<group>";
-		};
-		44DF771D156A760700386E89 /* AZWebView.relese */ = {
-			isa = PBXGroup;
-			children = (
-				44DF771E156A760700386E89 /* AZWeb-Back-16.png */,
-				44DF771F156A760700386E89 /* AZWeb-Back-16@2x.png */,
-				44DF7720156A760700386E89 /* AZWeb-Forward-16.png */,
-				44DF7721156A760700386E89 /* AZWeb-Forward-16@2x.png */,
-				44DF7722156A760700386E89 /* AZWebView.h */,
-				44DF7723156A760700386E89 /* AZWebView.m */,
-			);
-			name = AZWebView.relese;
-			path = ../../AZClass/AZWebView/AZWebView.relese;
-			sourceTree = "<group>";
-		};
-		44DF7743156A760700386E89 /* AZDial.relese */ = {
-			isa = PBXGroup;
-			children = (
-				44DF7744156A760700386E89 /* AZDial.h */,
-				44DF7745156A760700386E89 /* AZDial.m */,
-				44DF7746156A760700386E89 /* AZDialBack.png */,
-				44DF7747156A760700386E89 /* AZDialBack@2x.png */,
-				44DF7748156A760700386E89 /* AZDialStepperMinus.png */,
-				44DF7749156A760700386E89 /* AZDialStepperMinus@2x.png */,
-				44DF774A156A760700386E89 /* AZDialStepperMinusDown.png */,
-				44DF774B156A760700386E89 /* AZDialStepperMinusDown@2x.png */,
-				44DF774C156A760700386E89 /* AZDialStepperPlus.png */,
-				44DF774D156A760700386E89 /* AZDialStepperPlus@2x.png */,
-				44DF774E156A760700386E89 /* AZDialStepperPlusDown.png */,
-				44DF774F156A760700386E89 /* AZDialStepperPlusDown@2X.png */,
-				44DF7750156A760700386E89 /* AZDialTile.png */,
-				44DF7751156A760700386E89 /* AZDialTile@2x.png */,
-			);
-			name = AZDial.relese;
-			path = ../../AZClass/AZDial/AZDial.relese;
-			sourceTree = "<group>";
-		};
-		44DF7752156A760700386E89 /* AZAbout.relese */ = {
-			isa = PBXGroup;
-			children = (
-				44DF7753156A760700386E89 /* AZAbout-32.png */,
-				44DF7754156A760700386E89 /* AZAbout-32@2x.png */,
-				44DF7755156A760700386E89 /* AZAbout-iPad.xib */,
-				44DF7756156A760700386E89 /* AZAbout.xib */,
-				44DF7757156A760700386E89 /* AZAboutVC.h */,
-				44DF7758156A760700386E89 /* AZAboutVC.m */,
-			);
-			name = AZAbout.relese;
-			path = ../../AZClass/AZAbout/AZAbout.relese;
-			sourceTree = "<group>";
-		};
-		44DF775C156A760700386E89 /* AZClass.relese */ = {
-			isa = PBXGroup;
-			children = (
-				44DF775D156A760700386E89 /* AZClass.h */,
-				44DF775E156A760700386E89 /* AZClass.m */,
-			);
-			name = AZClass.relese;
-			path = ../../AZClass/AZClass.relese;
 			sourceTree = "<group>";
 		};
 		44E486B71EC80BC90041876C /* Firebase */ = {
@@ -913,11 +916,17 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44965B541EFFF17800350EDA /* AZAboutVC.h in Headers */,
 				4499D842134DA60600342648 /* PackList_Prefix.pch in Headers */,
 				4499D844134DA60600342648 /* SpListTVC.h in Headers */,
+				44965B731EFFF17800350EDA /* AZStoreTVC.h in Headers */,
+				44965B571EFFF17800350EDA /* AZClass.h in Headers */,
+				44965B801EFFF17800350EDA /* VerificationController.h in Headers */,
 				4499D845134DA60600342648 /* E3detailTVC.h in Headers */,
+				44965B7E1EFFF17800350EDA /* NSDataBase64.h in Headers */,
 				4499D847134DA60600342648 /* SettingTVC.h in Headers */,
 				4499D848134DA60600342648 /* selectGroupTVC.h in Headers */,
+				44965B5A1EFFF17800350EDA /* AZDial.h in Headers */,
 				4499D855134DA60600342648 /* FileCsv.h in Headers */,
 				4499D856134DA60600342648 /* SpSearchVC.h in Headers */,
 				4499D857134DA60600342648 /* SpAppendVC.h in Headers */,
@@ -925,19 +934,13 @@
 				4499D858134DA60600342648 /* SpPOST.h in Headers */,
 				4499D859134DA60600342648 /* SpDetailTVC.h in Headers */,
 				4499D9A9134DA60700342648 /* CalcView.h in Headers */,
+				44965B861EFFF17800350EDA /* AZWebView.h in Headers */,
 				441962E814B87DEE0047E1C3 /* PatternImageView.h in Headers */,
 				44A7DB2E14DE6A7A00DB72E2 /* NSDataAddition.h in Headers */,
 				44B2E95E14ED046000B45B62 /* CameraVC.h in Headers */,
-				44DF7766156A760700386E89 /* AZWebView.h in Headers */,
-				44DF7785156A760700386E89 /* AZDial.h in Headers */,
-				44DF7797156A760700386E89 /* AZAboutVC.h in Headers */,
-				44DF779A156A760700386E89 /* AZClass.h in Headers */,
 				44835AD0156BDC1E00A83167 /* UIDevice-Hardware.h in Headers */,
-				44D9B2BF15F1027C00F5045C /* AZStoreCell.h in Headers */,
-				44D9B2C215F1027C00F5045C /* AZStoreTVC.h in Headers */,
-				44D9B2CE15F1027C00F5045C /* NSDataBase64.h in Headers */,
-				44D9B2D015F1027C00F5045C /* VerificationController.h in Headers */,
 				4416337715F25D1B009CD324 /* MocFunctions.h in Headers */,
+				44965B701EFFF17800350EDA /* AZStoreCell.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1018,6 +1021,8 @@
 				4499D9C7134DB1D300342648 /* Icon57@2x.png in Resources */,
 				4499D7D7134DA60600342648 /* Icon16-ItemGrayHide.png in Resources */,
 				445F650A1EEE719300786744 /* Launch Screen.storyboard in Resources */,
+				44965B611EFFF17800350EDA /* AZDialStepperMinusDown@2x.png in Resources */,
+				44965B621EFFF17800350EDA /* AZDialStepperPlus.png in Resources */,
 				4499D7D8134DA60600342648 /* Icon16-ItemGrayHide@2x.png in Resources */,
 				4499D7D9134DA60600342648 /* Icon16-ItemGrayShow.png in Resources */,
 				4499D7DA134DA60600342648 /* Icon16-ItemGrayShow@2x.png in Resources */,
@@ -1028,9 +1033,13 @@
 				4499D7DF134DA60600342648 /* Icon16-Return3.png in Resources */,
 				4499D7E0134DA60600342648 /* Icon16-Return3@2x.png in Resources */,
 				4499D7E3134DA60600342648 /* Icon24-GreenPlus.png in Resources */,
+				44965B821EFFF17800350EDA /* AZWeb-Back-16.png in Resources */,
 				44F195851EBDD8F400F5FF93 /* E1viewController.xib in Resources */,
 				4499D7E4134DA60600342648 /* Icon24-GreenPlus@2x.png in Resources */,
+				44965B501EFFF17800350EDA /* AZAbout-32.png in Resources */,
+				44965B721EFFF17800350EDA /* AZStoreCell.xib in Resources */,
 				4499D7E5134DA60600342648 /* Icon24-RedMinus.png in Resources */,
+				44965B6D1EFFF17800350EDA /* AZStore-Space-44@2x.png in Resources */,
 				4499D7E6134DA60600342648 /* Icon24-RedMinus@2x.png in Resources */,
 				4499D7E7134DA60600342648 /* Icon32-BagBlue.png in Resources */,
 				4499D7E8134DA60600342648 /* Icon32-BagBlue@2x.png in Resources */,
@@ -1044,17 +1053,27 @@
 				4499D7F0134DA60600342648 /* Icon32-CircleCheck@2x.png in Resources */,
 				4499D7F1134DA60600342648 /* Icon32-CircleCheck2.png in Resources */,
 				4499D7F2134DA60600342648 /* Icon32-CircleCheck2@2x.png in Resources */,
+				44965B671EFFF17800350EDA /* AZDialTile@2x.png in Resources */,
+				44965B751EFFF17800350EDA /* Icon57-CalcRoll.png in Resources */,
 				4499D7F3134DA60600342648 /* Icon32-CircleGray.png in Resources */,
+				44965B5E1EFFF17800350EDA /* AZDialStepperMinus.png in Resources */,
+				44965B681EFFF17800350EDA /* AZStore-32.png in Resources */,
 				4499D7F4134DA60600342648 /* Icon32-CircleGray@2x.png in Resources */,
+				44965B5C1EFFF17800350EDA /* AZDialBack.png in Resources */,
 				4499D7F5134DA60600342648 /* Icon44-ClipOn.png in Resources */,
+				44965B831EFFF17800350EDA /* AZWeb-Back-16@2x.png in Resources */,
 				4499D7F6134DA60600342648 /* Icon44-ClipOn@2x.png in Resources */,
+				44965B561EFFF17800350EDA /* AZAbout_Agree.txt in Resources */,
 				4499D7F7134DA60600342648 /* Icon44-ClipOff@2x.png in Resources */,
 				4499D7F8134DA60600342648 /* Icon44-ClipOff.png in Resources */,
 				4499D7F9134DA60600342648 /* Icon-Drum.png in Resources */,
 				4499D7FA134DA60600342648 /* Icon-Drum@2x.png in Resources */,
 				4499D7FB134DA60600342648 /* Icon-DrumPush.png in Resources */,
+				44965B5D1EFFF17800350EDA /* AZDialBack@2x.png in Resources */,
 				4499D7FC134DA60600342648 /* Icon-DrumPush@2x.png in Resources */,
+				44965B591EFFF17800350EDA /* AZLocalizable.strings in Resources */,
 				4499D7FD134DA60600342648 /* Icon44-Calc.png in Resources */,
+				44965B661EFFF17800350EDA /* AZDialTile.png in Resources */,
 				4499D7FE134DA60600342648 /* Icon44-Calc@2x.png in Resources */,
 				445998D2141383730005F706 /* Icon32-MailNew@2x.png in Resources */,
 				445998D6141383730005F706 /* Icon32-MailNew.png in Resources */,
@@ -1062,17 +1081,27 @@
 				445998DE141383730005F706 /* Icon32-CircleCheckClear.png in Resources */,
 				44A595BA1416602E00F9B612 /* Icon32-PasteAdd@2x.png in Resources */,
 				44A595BE1416602E00F9B612 /* Icon32-PasteAdd.png in Resources */,
+				44965B6E1EFFF17800350EDA /* AZStore-Stop-32.png in Resources */,
+				44965B641EFFF17800350EDA /* AZDialStepperPlusDown.png in Resources */,
 				44A595C21416602E00F9B612 /* Icon32-PasteCopy.png in Resources */,
 				44A595C61416602E00F9B612 /* Icon32-PasteCopy@2x.png in Resources */,
 				44A595CA1416602E00F9B612 /* Icon32-SharedAdd.png in Resources */,
+				44965B6A1EFFF17800350EDA /* AZStore-Addin-32.png in Resources */,
+				44965B761EFFF17800350EDA /* Icon57-CalcRoll@2x.png in Resources */,
 				44A595CE1416602E00F9B612 /* Icon32-SharedAdd@2x.png in Resources */,
+				44965B651EFFF17800350EDA /* AZDialStepperPlusDown@2X.png in Resources */,
 				44A595D21416602E00F9B612 /* Icon32-Shared@2x.png in Resources */,
 				44A595D61416602E00F9B612 /* Icon32-Shared.png in Resources */,
+				44965B781EFFF17800350EDA /* Icon57-Condition@2x.png in Resources */,
 				44A595E21416658B00F9B612 /* Icon32-GoogleDoc.png in Resources */,
 				44A595E61416658B00F9B612 /* Icon32-GoogleDoc@2x.png in Resources */,
+				44965B6F1EFFF17800350EDA /* AZStore-Stop-32@2x.png in Resources */,
+				44965B791EFFF17800350EDA /* Icon57-PackList.png in Resources */,
 				44A595EA1416658B00F9B612 /* Icon32-GoogleAdd@2x.png in Resources */,
+				44965B631EFFF17800350EDA /* AZDialStepperPlus@2x.png in Resources */,
 				44A595EE1416658B00F9B612 /* Icon32-GoogleAdd.png in Resources */,
 				44A595F21416658B00F9B612 /* Icon32-NearPc.png in Resources */,
+				44965B771EFFF17800350EDA /* Icon57-Condition.png in Resources */,
 				44A595F61416658B00F9B612 /* Icon32-NearPc@2x.png in Resources */,
 				44A595FA1416658B00F9B612 /* Icon32-NearPcAdd@2x.png in Resources */,
 				44A595FE1416658B00F9B612 /* Icon32-NearPcAdd.png in Resources */,
@@ -1084,72 +1113,48 @@
 				449D12BE151817B700F68B6E /* Icon72@2x.png in Resources */,
 				440B5B2E14B44E13006BEA96 /* Tx-Back@2x.png in Resources */,
 				440B5B2F14B44E13006BEA96 /* Tx-Back.png in Resources */,
+				44965B691EFFF17800350EDA /* AZStore-32@2x.png in Resources */,
+				44965B841EFFF17800350EDA /* AZWeb-Forward-16.png in Resources */,
 				441962E214B8456B0047E1C3 /* Icon32-Setting@2x.png in Resources */,
 				441962E314B8456B0047E1C3 /* Icon32-Setting.png in Resources */,
 				441962E414B8456B0047E1C3 /* Icon32-Information.png in Resources */,
+				44965B511EFFF17800350EDA /* AZAbout-32@2x.png in Resources */,
+				44965B6C1EFFF17800350EDA /* AZStore-Space-44.png in Resources */,
 				441962E514B8456B0047E1C3 /* Icon32-Information@2x.png in Resources */,
+				44965B6B1EFFF17800350EDA /* AZStore-Addin-32@2x.png in Resources */,
 				44D3E1B114B8BD9D0028FF24 /* Icon32-ExtParts@2x.png in Resources */,
 				44D3E1B214B8BD9D0028FF24 /* Icon32-ExtParts.png in Resources */,
 				44EFD08A14C17CAF003FF260 /* Icon-Close-44@2x.png in Resources */,
 				44EFD08B14C17CAF003FF260 /* Icon-Close-44.png in Resources */,
 				44EFD08C14C17CAF003FF260 /* Icon-Info-32@2x.png in Resources */,
+				44965B5F1EFFF17800350EDA /* AZDialStepperMinus@2x.png in Resources */,
 				44EFD08D14C17CAF003FF260 /* Icon-Info-32.png in Resources */,
 				44EFD08E14C17CAF003FF260 /* Icon-Setting-32@2x.png in Resources */,
 				44EFD08F14C17CAF003FF260 /* Icon-Setting-32.png in Resources */,
+				44965B531EFFF17800350EDA /* AZAbout.xib in Resources */,
 				44EFD09814C17CAF003FF260 /* Icon-Store-40@2x.png in Resources */,
 				44EFD09914C17CAF003FF260 /* Icon-Store-40.png in Resources */,
 				44F5921414E38E1A00B875A9 /* CameraVC.xib in Resources */,
+				44965B7B1EFFF17800350EDA /* Icon57-PayNote.png in Resources */,
+				44965B7C1EFFF17800350EDA /* Icon57-PayNote@2x.png in Resources */,
+				44965B601EFFF17800350EDA /* AZDialStepperMinusDown.png in Resources */,
 				445F650B1EEE719300786744 /* Localizable.strings in Resources */,
 				44AC159114E806590007229F /* Icon32-Picasa@2x.png in Resources */,
+				44965B7D1EFFF17800350EDA /* Icon57-SplitPay.png in Resources */,
 				44AC159214E806590007229F /* Icon32-Picasa.png in Resources */,
 				44AC159514E8093B0007229F /* Icon32-PicasaBlack@2x.png in Resources */,
+				44965B521EFFF17800350EDA /* AZAbout-iPad.xib in Resources */,
 				44AC159614E8093B0007229F /* Icon32-PicasaBlack.png in Resources */,
 				44C167EE14E9505000F54B55 /* Icon24-Camera.png in Resources */,
+				44965B851EFFF17800350EDA /* AZWeb-Forward-16@2x.png in Resources */,
 				44C167EF14E9505000F54B55 /* Icon24-Camera@2x.png in Resources */,
 				44B2E96114ED58D000B45B62 /* Icon64-DownloadNG@2x.png in Resources */,
 				44B2E96214ED58D000B45B62 /* Icon64-DownloadNG.png in Resources */,
-				44DF7762156A760700386E89 /* AZWeb-Back-16.png in Resources */,
-				44DF7763156A760700386E89 /* AZWeb-Back-16@2x.png in Resources */,
-				44DF7764156A760700386E89 /* AZWeb-Forward-16.png in Resources */,
-				44DF7765156A760700386E89 /* AZWeb-Forward-16@2x.png in Resources */,
-				44DF7787156A760700386E89 /* AZDialBack.png in Resources */,
-				44DF7788156A760700386E89 /* AZDialBack@2x.png in Resources */,
-				44DF7789156A760700386E89 /* AZDialStepperMinus.png in Resources */,
-				44DF778A156A760700386E89 /* AZDialStepperMinus@2x.png in Resources */,
-				44DF778B156A760700386E89 /* AZDialStepperMinusDown.png in Resources */,
-				44DF778C156A760700386E89 /* AZDialStepperMinusDown@2x.png in Resources */,
-				44DF778D156A760700386E89 /* AZDialStepperPlus.png in Resources */,
-				44DF778E156A760700386E89 /* AZDialStepperPlus@2x.png in Resources */,
-				44DF778F156A760700386E89 /* AZDialStepperPlusDown.png in Resources */,
-				44DF7790156A760700386E89 /* AZDialStepperPlusDown@2X.png in Resources */,
-				44DF7791156A760700386E89 /* AZDialTile.png in Resources */,
-				44DF7792156A760700386E89 /* AZDialTile@2x.png in Resources */,
-				44DF7793156A760700386E89 /* AZAbout-32.png in Resources */,
-				44DF7794156A760700386E89 /* AZAbout-32@2x.png in Resources */,
-				44DF7795156A760700386E89 /* AZAbout-iPad.xib in Resources */,
-				44DF7796156A760700386E89 /* AZAbout.xib in Resources */,
-				44D9B2B715F1027C00F5045C /* AZStore-32.png in Resources */,
-				44D9B2B815F1027C00F5045C /* AZStore-32@2x.png in Resources */,
-				44D9B2B915F1027C00F5045C /* AZStore-Addin-32.png in Resources */,
-				44D9B2BA15F1027C00F5045C /* AZStore-Addin-32@2x.png in Resources */,
-				44D9B2BB15F1027C00F5045C /* AZStore-Space-44.png in Resources */,
-				44D9B2BC15F1027C00F5045C /* AZStore-Space-44@2x.png in Resources */,
-				44D9B2BD15F1027C00F5045C /* AZStore-Stop-32.png in Resources */,
-				44D9B2BE15F1027C00F5045C /* AZStore-Stop-32@2x.png in Resources */,
-				44D9B2C115F1027C00F5045C /* AZStoreCell.xib in Resources */,
-				44D9B2C415F1027C00F5045C /* Icon57-CalcRoll.png in Resources */,
 				44F195741EBB4C4900F5FF93 /* Images.xcassets in Resources */,
-				44D9B2C515F1027C00F5045C /* Icon57-CalcRoll@2x.png in Resources */,
-				44D9B2C615F1027C00F5045C /* Icon57-Condition.png in Resources */,
-				44D9B2C715F1027C00F5045C /* Icon57-Condition@2x.png in Resources */,
-				44D9B2C815F1027C00F5045C /* Icon57-PackList.png in Resources */,
-				44D9B2C915F1027C00F5045C /* Icon57-PackList@2x.png in Resources */,
 				44E486B61EC80B910041876C /* GoogleService-Info.plist in Resources */,
-				44D9B2CA15F1027C00F5045C /* Icon57-PayNote.png in Resources */,
-				44D9B2CB15F1027C00F5045C /* Icon57-PayNote@2x.png in Resources */,
-				44D9B2CC15F1027C00F5045C /* Icon57-SplitPay.png in Resources */,
 				44218452160392BB0097FF63 /* Icon72bag.png in Resources */,
 				44218453160392BB0097FF63 /* Icon72bag@2x.png in Resources */,
+				44965B7A1EFFF17800350EDA /* Icon57-PackList@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1208,10 +1213,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44965B5B1EFFF17800350EDA /* AZDial.m in Sources */,
+				44965B7F1EFFF17800350EDA /* NSDataBase64.m in Sources */,
 				4499D803134DA60600342648 /* main.m in Sources */,
 				4499D804134DA60600342648 /* AppDelegate.m in Sources */,
 				44F1957D1EBDB66000F5FF93 /* SFHFKeychainUtils.m in Sources */,
 				4499D805134DA60600342648 /* E1viewController.m in Sources */,
+				44965B871EFFF17800350EDA /* AZWebView.m in Sources */,
 				4499D807134DA60600342648 /* Elements.m in Sources */,
 				4499D808134DA60600342648 /* E1edit.m in Sources */,
 				4499D809134DA60600342648 /* E2viewController.m in Sources */,
@@ -1223,27 +1231,24 @@
 				4499D814134DA60600342648 /* selectGroupTVC.m in Sources */,
 				4499D817134DA60600342648 /* Global.m in Sources */,
 				4499D822134DA60600342648 /* FileCsv.m in Sources */,
+				44965B711EFFF17800350EDA /* AZStoreCell.m in Sources */,
+				44965B741EFFF17800350EDA /* AZStoreTVC.m in Sources */,
 				4499D823134DA60600342648 /* SpSearchVC.m in Sources */,
 				4499D824134DA60600342648 /* SpAppendVC.m in Sources */,
 				4499D825134DA60600342648 /* SpPOST.m in Sources */,
 				4499D826134DA60600342648 /* SpDetailTVC.m in Sources */,
 				4499D827134DA60600342648 /* CalcView.m in Sources */,
 				445998C61413757E0005F706 /* AzPackList.xcdatamodeld in Sources */,
+				44965B581EFFF17800350EDA /* AZClass.m in Sources */,
 				445998CA1413757E0005F706 /* Mapping3-4.xcmappingmodel in Sources */,
 				44BC130D14B40DB100202411 /* PadRootVC.m in Sources */,
+				44965B551EFFF17800350EDA /* AZAboutVC.m in Sources */,
 				441962E914B87DEE0047E1C3 /* PatternImageView.m in Sources */,
 				44A7DB2F14DE6A7A00DB72E2 /* NSDataAddition.m in Sources */,
 				44F5921314E38E1A00B875A9 /* CameraVC.m in Sources */,
-				44DF7767156A760700386E89 /* AZWebView.m in Sources */,
-				44DF7786156A760700386E89 /* AZDial.m in Sources */,
-				44DF7798156A760700386E89 /* AZAboutVC.m in Sources */,
-				44DF779B156A760700386E89 /* AZClass.m in Sources */,
 				44835AD1156BDC1E00A83167 /* UIDevice-Hardware.m in Sources */,
-				44D9B2C015F1027C00F5045C /* AZStoreCell.m in Sources */,
-				44D9B2C315F1027C00F5045C /* AZStoreTVC.m in Sources */,
-				44D9B2CF15F1027C00F5045C /* NSDataBase64.m in Sources */,
-				44D9B2D115F1027C00F5045C /* VerificationController.m in Sources */,
 				4416337615F25D1B009CD324 /* MocFunctions.m in Sources */,
+				44965B811EFFF17800350EDA /* VerificationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1266,6 +1271,24 @@
 				445F650D1EEE71B600786744 /* en */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		44965B161EFFF17700350EDA /* AZAbout_Agree.txt */ = {
+			isa = PBXVariantGroup;
+			children = (
+				44965B171EFFF17700350EDA /* en */,
+				44965B181EFFF17700350EDA /* ja */,
+			);
+			name = AZAbout_Agree.txt;
+			sourceTree = "<group>";
+		};
+		44965B1C1EFFF17700350EDA /* AZLocalizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				44965B1D1EFFF17700350EDA /* en */,
+				44965B1E1EFFF17700350EDA /* ja */,
+			);
+			name = AZLocalizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

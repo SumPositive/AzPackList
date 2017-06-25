@@ -1,0 +1,35 @@
+【Consensus on use】
+ AzukiSoft authors and officials will not bear any responsibility for damage caused by this application.
+ In addition; If you agree with 【Anonymous usage statistics】 and 【Security alert】, please use.
+
+【Security alert】
+ This app does not encrypt the information.
+　Personal or confidential information, please do not fill.
+  (The password is stored encrypted key chain by iOS to safely)
+
+【Anonymous usage statistics】
+ We will collect anonymous usage statistics, in order to improve this application.
+ This information are not included, personally identifiable information and entry data  records, in accordance with the privacy policy.
+ On statistics about usage, the following information is included.
+  ・Status of errors  (For bug fixes)
+  ・Status of each button click  (For review, such as button placement and consolidation) 
+  ・Status of option settings  (For review, setting by popularity) 
+
+【Privacy policy】
+Azukid officials and author of this app does not collect personally identifiable information.
+This app does not generate and communicate personally identifiable information. Therefore, does not leak.
+
+This app, Web services of their respective owners has been included below.
+Please check the "Privacy Policy" of their respective holders.
+・Apple - AppStore,iCloud　-　http://www.apple.com/jp/privacy/
+・Google - Analytics　-　http://www.google.com/intl/ja/policies/privacy/
+
+If your ad is displayed,
+・Apple - iAd　-　http://www.apple.com/jp/privacy/
+・Google - AdSence,AdMob　-　http://www.google.com/intl/ja/policies/privacy/
+
+The following Web service, the login information has been encrypted communication.
+・Google - GData　-　http://www.google.com/intl/ja/policies/privacy/
+・Dropbox - http://www.dropbox.com/dmca#privacy
+
+2012-04-01 Azukid

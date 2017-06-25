@@ -188,28 +188,12 @@
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
 {
-	switch (section) {
-		case 0: // 
-			if (mAppDelegate.ppIsPad) {
-				return 5;	// (0)回転は不要
-			} else {
-				return 6;
-			}
-			break;
-	}
-    return 0;
+    return 5;
 }
 
 // セルの高さを指示する
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-//	int iRaw = indexPath.row;
-//	if (mAppDelegate.ppIsPad) iRaw++;
-//	switch (iRaw) {
-////		case 6: // Google+
-//		case 6: // Crypt
-//			return 75;
-//	}
 	return 60; // デフォルト：44ピクセル
 }
 
@@ -241,36 +225,33 @@
 	NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
 	
 	float fX;
-	long  iCase;
+	long  iCase= indexPath.row;
 	if (mAppDelegate.ppIsPad) {
-		fX = self.tableView.frame.size.width - 60 - 120;
-		 iCase = indexPath.row + 1;
+        fX = self.tableView.frame.size.width - 60 - 120;
 	} else {
-		//fX = cell.frame.size.width - 120;
 		fX = self.tableView.frame.size.width - 120;
-		 iCase = indexPath.row;
 	}
 
 	switch (iCase) {
-		case 0:
-		{ // UD_OptShouldAutorotate
-			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptShouldAutorotate];
-			if (sw==nil) {
-				// add UISwitch
-				sw = [[UISwitch alloc] init];
-				BOOL bOpt = [userDefaults boolForKey:UD_OptShouldAutorotate];
-				[sw setOn:bOpt animated:NO]; // 初期値セット
-				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
-				sw.tag = TAG_OptShouldAutorotate;
-				sw.backgroundColor = [UIColor clearColor]; //背景透明
-				[cell.contentView  addSubview:sw]; //[sw release];
-				cell.textLabel.text = NSLocalizedString(@"Autorotate",nil);
-				cell.detailTextLabel.text = NSLocalizedString(@"Autorotate comment",nil);
-			}
-			sw.frame = CGRectMake(fX, 5, 120, 25); // 回転対応
-		}	break;
+//		case 0:
+//		{ // UD_OptShouldAutorotate
+//			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptShouldAutorotate];
+//			if (sw==nil) {
+//				// add UISwitch
+//				sw = [[UISwitch alloc] init];
+//				BOOL bOpt = [userDefaults boolForKey:UD_OptShouldAutorotate];
+//				[sw setOn:bOpt animated:NO]; // 初期値セット
+//				[sw addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+//				sw.tag = TAG_OptShouldAutorotate;
+//				sw.backgroundColor = [UIColor clearColor]; //背景透明
+//				[cell.contentView  addSubview:sw]; //[sw release];
+//				cell.textLabel.text = NSLocalizedString(@"Autorotate",nil);
+//				cell.detailTextLabel.text = NSLocalizedString(@"Autorotate comment",nil);
+//			}
+//			sw.frame = CGRectMake(fX, 5, 120, 25); // 回転対応
+//		}	break;
 		
-		case 1:
+		case 0:
 		{ // KV_OptShowTotalWeight
 			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptShowTotalWeight];
 			if (sw==nil) {
@@ -287,7 +268,7 @@
 			[sw setOn:[kvs boolForKey:KV_OptShowTotalWeight] animated:YES];
 		}	break;
 		
-		case 2:
+		case 1:
 		{ // KV_OptShowTotalWeightReq
 			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptShowTotalWeightReq];
 			if (sw==nil) {
@@ -304,7 +285,7 @@
 			[sw setOn:[kvs boolForKey:KV_OptShowTotalWeightReq] animated:YES];
 		}	break;
 		
-		case 3:
+		case 2:
 		{ // KV_OptWeightRound
 			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptTotlWeightRound];
 			if (sw==nil) {
@@ -321,7 +302,7 @@
 			[sw setOn:[kvs boolForKey:KV_OptWeightRound] animated:YES];
 		}	break;
 		
-		case 4:
+		case 3:
 		{ // KV_OptCheckingAtEditMode
 			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptCheckingAtEditMode];
 			if (sw==nil) {
@@ -338,7 +319,7 @@
 			[sw setOn:[kvs boolForKey:KV_OptCheckingAtEditMode] animated:YES];
 		}	break;
 		
-		case 5:
+		case 4:
 		{ // KV_OptSearchItemsNote
 			UISwitch *sw = (UISwitch*)[cell.contentView viewWithTag:TAG_OptSearchItemsNote];
 			if (sw==nil) {
