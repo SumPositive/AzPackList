@@ -193,7 +193,6 @@
 		44AC159214E806590007229F /* Icon32-Picasa.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159014E806590007229F /* Icon32-Picasa.png */; };
 		44AC159514E8093B0007229F /* Icon32-PicasaBlack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159314E8093A0007229F /* Icon32-PicasaBlack@2x.png */; };
 		44AC159614E8093B0007229F /* Icon32-PicasaBlack.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159414E8093A0007229F /* Icon32-PicasaBlack.png */; };
-		44B2E95E14ED046000B45B62 /* CameraVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44B2E95D14ED046000B45B62 /* CameraVC.h */; };
 		44B2E96114ED58D000B45B62 /* Icon64-DownloadNG@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44B2E95F14ED58D000B45B62 /* Icon64-DownloadNG@2x.png */; };
 		44B2E96214ED58D000B45B62 /* Icon64-DownloadNG.png in Resources */ = {isa = PBXBuildFile; fileRef = 44B2E96014ED58D000B45B62 /* Icon64-DownloadNG.png */; };
 		44BBBA26149493CD00A85BFF /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A2C0A2131BC9B100256C08 /* MessageUI.framework */; };
@@ -217,9 +216,6 @@
 		44F1957C1EBDB66000F5FF93 /* SFHFKeychainUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 44F1957A1EBDB66000F5FF93 /* SFHFKeychainUtils.h */; };
 		44F1957D1EBDB66000F5FF93 /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F1957B1EBDB66000F5FF93 /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		44F195851EBDD8F400F5FF93 /* E1viewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F195821EBDD8F300F5FF93 /* E1viewController.xib */; };
-		44F5921314E38E1A00B875A9 /* CameraVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F5921014E38E1A00B875A9 /* CameraVC.m */; };
-		44F5921414E38E1A00B875A9 /* CameraVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F5921114E38E1A00B875A9 /* CameraVC.xib */; };
-		44F5921614E39DCA00B875A9 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44F5921514E39DC900B875A9 /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -430,7 +426,6 @@
 		44ADD3A7115A1B4800829977 /* Global.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Global.m; sourceTree = "<group>"; };
 		44AFCC5312633920003352DE /* SpPOST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpPOST.m; sourceTree = "<group>"; };
 		44AFCC5412633920003352DE /* SpPOST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpPOST.h; sourceTree = "<group>"; };
-		44B2E95D14ED046000B45B62 /* CameraVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraVC.h; sourceTree = "<group>"; };
 		44B2E95F14ED58D000B45B62 /* Icon64-DownloadNG@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon64-DownloadNG@2x.png"; path = "Design/Icon64-DownloadNG@2x.png"; sourceTree = "<group>"; };
 		44B2E96014ED58D000B45B62 /* Icon64-DownloadNG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon64-DownloadNG.png"; path = "Design/Icon64-DownloadNG.png"; sourceTree = "<group>"; };
 		44C167E914E9505000F54B55 /* Icon24-Camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon24-Camera.png"; path = "Design/Icon24-Camera.png"; sourceTree = "<group>"; };
@@ -473,8 +468,6 @@
 		44F1957A1EBDB66000F5FF93 /* SFHFKeychainUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFHFKeychainUtils.h; sourceTree = "<group>"; };
 		44F1957B1EBDB66000F5FF93 /* SFHFKeychainUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHFKeychainUtils.m; sourceTree = "<group>"; };
 		44F195821EBDD8F300F5FF93 /* E1viewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = E1viewController.xib; sourceTree = "<group>"; };
-		44F5921014E38E1A00B875A9 /* CameraVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraVC.m; sourceTree = "<group>"; };
-		44F5921114E38E1A00B875A9 /* CameraVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CameraVC.xib; sourceTree = "<group>"; };
 		44F5921514E39DC900B875A9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		A7714273E80A6CA0EBF7768C /* libPods-PackList.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PackList.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -485,7 +478,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				44D7CE6C153660F900AE6920 /* libsqlite3.0.dylib in Frameworks */,
-				44F5921614E39DCA00B875A9 /* AVFoundation.framework in Frameworks */,
 				440DD96D14B316D800C9B40C /* StoreKit.framework in Frameworks */,
 				4499D834134DA60600342648 /* QuartzCore.framework in Frameworks */,
 				4499D836134DA60600342648 /* MediaPlayer.framework in Frameworks */,
@@ -709,9 +701,6 @@
 		44CB23E811E039DC002A9331 /* Sub */ = {
 			isa = PBXGroup;
 			children = (
-				44B2E95D14ED046000B45B62 /* CameraVC.h */,
-				44F5921014E38E1A00B875A9 /* CameraVC.m */,
-				44F5921114E38E1A00B875A9 /* CameraVC.xib */,
 				4453C33A131A86C200A97E1A /* CalcView.h */,
 				4453C33B131A86C200A97E1A /* CalcView.m */,
 				4491C7B411186531005955FD /* selectGroupTVC.h */,
@@ -933,7 +922,6 @@
 				44965B861EFFF17800350EDA /* AZWebView.h in Headers */,
 				441962E814B87DEE0047E1C3 /* PatternImageView.h in Headers */,
 				44A7DB2E14DE6A7A00DB72E2 /* NSDataAddition.h in Headers */,
-				44B2E95E14ED046000B45B62 /* CameraVC.h in Headers */,
 				44835AD0156BDC1E00A83167 /* UIDevice-Hardware.h in Headers */,
 				4416337715F25D1B009CD324 /* MocFunctions.h in Headers */,
 				44965B701EFFF17800350EDA /* AZStoreCell.h in Headers */,
@@ -1130,7 +1118,6 @@
 				44965B531EFFF17800350EDA /* AZAbout.xib in Resources */,
 				44EFD09814C17CAF003FF260 /* Icon-Store-40@2x.png in Resources */,
 				44EFD09914C17CAF003FF260 /* Icon-Store-40.png in Resources */,
-				44F5921414E38E1A00B875A9 /* CameraVC.xib in Resources */,
 				44965B7B1EFFF17800350EDA /* Icon57-PayNote.png in Resources */,
 				44965B7C1EFFF17800350EDA /* Icon57-PayNote@2x.png in Resources */,
 				44965B601EFFF17800350EDA /* AZDialStepperMinusDown.png in Resources */,
@@ -1240,7 +1227,6 @@
 				44965B551EFFF17800350EDA /* AZAboutVC.m in Sources */,
 				441962E914B87DEE0047E1C3 /* PatternImageView.m in Sources */,
 				44A7DB2F14DE6A7A00DB72E2 /* NSDataAddition.m in Sources */,
-				44F5921314E38E1A00B875A9 /* CameraVC.m in Sources */,
 				44835AD1156BDC1E00A83167 /* UIDevice-Hardware.m in Sources */,
 				4416337615F25D1B009CD324 /* MocFunctions.m in Sources */,
 				44965B811EFFF17800350EDA /* VerificationController.m in Sources */,

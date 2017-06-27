@@ -19,7 +19,7 @@
 #import "PatternImageView.h"
 
 //#import "GoogleService.h"
-#import "CameraVC.h"
+//#import "CameraVC.h"
 
 
 //#define LABEL_NOTE_SUFFIX   @"\n\n\n\n\n"  // UILabel *MlbNoteを上寄せするための改行（5行）
@@ -198,51 +198,51 @@
 	mSvPhoto.zoomScale = factor;
 }
 
-- (void)viewDesignPhoto
-{
-	CGRect rcPhoto;
-	if (mAppDelegate.ppIsPad) { // iPad  TableView(Grouped)両端の余白:-20
-		//rcPhoto = CGRectMake(8, 44-4, self.tableView.bounds.size.width-16-60, 480);
-		rcPhoto = CGRectMake(4, 44-4, self.preferredContentSize.width-8-60, 400);
-	}
-	else if (self.tableView.frame.size.width < 400) {	// iPhone縦
-		rcPhoto = CGRectMake(4, 40, 320-8-20, 320);
-	}
-	else {		// iPhone横
-		rcPhoto = CGRectMake(4, 40, 480-8-20, 320);
-	}
-	
-	// Icons
-	mIvIconPicasa.frame = CGRectMake(4, 4, 32, 32);
-	mActivityIndicator_on_IconPicasa.frame = mIvIconPicasa.bounds;
-	mBuCamera.frame = CGRectMake(rcPhoto.origin.x+rcPhoto.size.width-40, 0, 44, 44);
-	mLbPhotoMsg.frame = CGRectMake(4+32+4, 4, mBuCamera.frame.origin.x-4-32-4, 36);
-	//mLbPhotoMsg.backgroundColor = [UIColor brownColor];
-
-	if (mIvPhoto==nil OR mSvPhoto==nil)  {
-		return; //　Cell生成前に呼ばれたとき
-	}
-	
-	// Photo 表示位置調整
-	mSvPhoto.frame = rcPhoto;
-	//DEBUG_LOG_RECT(mSvPhoto.frame, @"mSvPhoto.frame");	
-	// 全体表示するためにスケール調整
-	CGFloat fw = mSvPhoto.frame.size.width / 640;
-	CGFloat fh = mSvPhoto.frame.size.height / 640;
-	if (fw < fh) {
-		mSvPhoto.minimumZoomScale = fw;
-		mSvPhoto.zoomScale = fw;
-	} else {
-		mSvPhoto.minimumZoomScale = fh;
-		mSvPhoto.zoomScale = fh;
-	}
-
-	if (mWebViewShop) {
-		// Shop 表示位置調整
-		rcPhoto.origin.y = 4;
-		mWebViewShop.frame = rcPhoto;
-	}
-}
+//- (void)viewDesignPhoto
+//{
+//	CGRect rcPhoto;
+//	if (mAppDelegate.ppIsPad) { // iPad  TableView(Grouped)両端の余白:-20
+//		//rcPhoto = CGRectMake(8, 44-4, self.tableView.bounds.size.width-16-60, 480);
+//		rcPhoto = CGRectMake(4, 44-4, self.preferredContentSize.width-8-60, 400);
+//	}
+//	else if (self.tableView.frame.size.width < 400) {	// iPhone縦
+//		rcPhoto = CGRectMake(4, 40, 320-8-20, 320);
+//	}
+//	else {		// iPhone横
+//		rcPhoto = CGRectMake(4, 40, 480-8-20, 320);
+//	}
+//	
+//	// Icons
+//	mIvIconPicasa.frame = CGRectMake(4, 4, 32, 32);
+//	mActivityIndicator_on_IconPicasa.frame = mIvIconPicasa.bounds;
+//	mBuCamera.frame = CGRectMake(rcPhoto.origin.x+rcPhoto.size.width-40, 0, 44, 44);
+//	mLbPhotoMsg.frame = CGRectMake(4+32+4, 4, mBuCamera.frame.origin.x-4-32-4, 36);
+//	//mLbPhotoMsg.backgroundColor = [UIColor brownColor];
+//
+//	if (mIvPhoto==nil OR mSvPhoto==nil)  {
+//		return; //　Cell生成前に呼ばれたとき
+//	}
+//	
+//	// Photo 表示位置調整
+//	mSvPhoto.frame = rcPhoto;
+//	//DEBUG_LOG_RECT(mSvPhoto.frame, @"mSvPhoto.frame");	
+//	// 全体表示するためにスケール調整
+//	CGFloat fw = mSvPhoto.frame.size.width / 640;
+//	CGFloat fh = mSvPhoto.frame.size.height / 640;
+//	if (fw < fh) {
+//		mSvPhoto.minimumZoomScale = fw;
+//		mSvPhoto.zoomScale = fw;
+//	} else {
+//		mSvPhoto.minimumZoomScale = fh;
+//		mSvPhoto.zoomScale = fh;
+//	}
+//
+//	if (mWebViewShop) {
+//		// Shop 表示位置調整
+//		rcPhoto.origin.y = 4;
+//		mWebViewShop.frame = rcPhoto;
+//	}
+//}
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {	// Zoom対象になるUIImageViewを返す
@@ -765,35 +765,35 @@
 	zKeyword = nil;
 }
 
-- (void)actionCamera
-{	
-	// CameraVC へ 　　＜＜＜ UIImagePickerController:を使わないカメラ。　将来の機能アップ時に利用するかも
-	CameraVC *cam = [[CameraVC alloc] init];
-	cam.imageView = mIvPhoto;
-	cam.e3target = pE3target;
-	[self.navigationController pushViewController:cam animated:YES];
-	
-/*	// 標準カメラにした。
-	UIImagePickerControllerSourceType stype = UIImagePickerControllerSourceTypeCamera;
-	if ([UIImagePickerController isSourceTypeAvailable:stype]) {
-		UIImagePickerController *ipc = [[UIImagePickerController alloc] init];
-		ipc.delegate = self;		// <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
-		ipc.sourceType = stype;
-		ipc.videoQuality = UIImagePickerControllerQualityTypeHigh;
-		ipc.allowsEditing = YES;  // NO=最大解像度になってしまう　　YES=640x640になる
-		if (appDelegate_.app_is_iPad) {
-			[selfPopover_ presentPopoverFromRect:mIvPhoto.frame
-									  inView:self.navigationController.view
-										permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-		} else {
-			[self presentModalViewController:ipc animated:YES];
-		}
-	} else {
-		// 使用できない
-		alertBox(NSLocalizedString(@"Camera Non",nil), nil, @"OK");
-		mBuCamera.hidden = YES;
-	}*/
-}
+//- (void)actionCamera
+//{	
+//	// CameraVC へ 　　＜＜＜ UIImagePickerController:を使わないカメラ。　将来の機能アップ時に利用するかも
+//	CameraVC *cam = [[CameraVC alloc] init];
+//	cam.imageView = mIvPhoto;
+//	cam.e3target = pE3target;
+//	[self.navigationController pushViewController:cam animated:YES];
+//	
+///*	// 標準カメラにした。
+//	UIImagePickerControllerSourceType stype = UIImagePickerControllerSourceTypeCamera;
+//	if ([UIImagePickerController isSourceTypeAvailable:stype]) {
+//		UIImagePickerController *ipc = [[UIImagePickerController alloc] init];
+//		ipc.delegate = self;		// <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+//		ipc.sourceType = stype;
+//		ipc.videoQuality = UIImagePickerControllerQualityTypeHigh;
+//		ipc.allowsEditing = YES;  // NO=最大解像度になってしまう　　YES=640x640になる
+//		if (appDelegate_.app_is_iPad) {
+//			[selfPopover_ presentPopoverFromRect:mIvPhoto.frame
+//									  inView:self.navigationController.view
+//										permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+//		} else {
+//			[self presentModalViewController:ipc animated:YES];
+//		}
+//	} else {
+//		// 使用できない
+//		alertBox(NSLocalizedString(@"Camera Non",nil), nil, @"OK");
+//		mBuCamera.hidden = YES;
+//	}*/
+//}
 /*
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {

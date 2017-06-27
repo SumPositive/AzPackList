@@ -628,13 +628,13 @@
 	// 広告非表示でも回転時に位置調整しておく必要あり ＜＜現れるときの開始位置のため＞＞
 	[appDelegate_ AdViewWillRotate:toInterfaceOrientation];
 
-	if (appDelegate_.ppIsPad) {	// CameraVC:で受信している
-		NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:
-							  [NSNumber numberWithInteger:toInterfaceOrientation], NFM_ToInterfaceOrientation, 
-							  nil];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NFM_ToInterfaceOrientation
-															object:self userInfo:info];
-	}
+//	if (appDelegate_.ppIsPad) {	// CameraVC:で受信している
+//		NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:
+//							  [NSNumber numberWithInteger:toInterfaceOrientation], NFM_ToInterfaceOrientation, 
+//							  nil];
+//		[[NSNotificationCenter defaultCenter] postNotificationName:NFM_ToInterfaceOrientation
+//															object:self userInfo:info];
+//	}
 }
 
 // 回転した後に呼び出される
