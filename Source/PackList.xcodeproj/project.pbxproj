@@ -84,9 +84,9 @@
 		44965B851EFFF17800350EDA /* AZWeb-Forward-16@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4D1EFFF17800350EDA /* AZWeb-Forward-16@2x.png */; };
 		44965B861EFFF17800350EDA /* AZWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B4E1EFFF17800350EDA /* AZWebView.h */; };
 		44965B871EFFF17800350EDA /* AZWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B4F1EFFF17800350EDA /* AZWebView.m */; };
-		44965B921EFFFF1400350EDA /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44965B901EFFFF1400350EDA /* Launch Screen.storyboard */; };
 		44965B9A1EFFFFFC00350EDA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44965B981EFFFFFC00350EDA /* Localizable.strings */; };
 		44965B9E1F02962500350EDA /* AZAbout_Agree.txt in Resources */ = {isa = PBXBuildFile; fileRef = 44965B9C1F02962500350EDA /* AZAbout_Agree.txt */; };
+		44965BA11F03E69900350EDA /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44965BA01F03E69900350EDA /* Launch Screen.storyboard */; };
 		4499D7D7134DA60600342648 /* Icon16-ItemGrayHide.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68A113196CC100012FB5 /* Icon16-ItemGrayHide.png */; };
 		4499D7D8134DA60600342648 /* Icon16-ItemGrayHide@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68A213196CC100012FB5 /* Icon16-ItemGrayHide@2x.png */; };
 		4499D7D9134DA60600342648 /* Icon16-ItemGrayShow.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68A313196CC100012FB5 /* Icon16-ItemGrayShow.png */; };
@@ -377,12 +377,11 @@
 		44965B4D1EFFF17800350EDA /* AZWeb-Forward-16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZWeb-Forward-16@2x.png"; sourceTree = "<group>"; };
 		44965B4E1EFFF17800350EDA /* AZWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZWebView.h; sourceTree = "<group>"; };
 		44965B4F1EFFF17800350EDA /* AZWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZWebView.m; sourceTree = "<group>"; };
-		44965B961EFFFF9900350EDA /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ja; path = "ja.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
-		44965B971EFFFFC200350EDA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = "en.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		44965B991EFFFFFC00350EDA /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		44965B9B1F00000B00350EDA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		44965B9D1F02962500350EDA /* ja */ = {isa = PBXFileReference; lastKnownFileType = text; name = ja; path = ja.lproj/AZAbout_Agree.txt; sourceTree = "<group>"; };
 		44965B9F1F02963600350EDA /* en */ = {isa = PBXFileReference; lastKnownFileType = text; name = en; path = en.lproj/AZAbout_Agree.txt; sourceTree = "<group>"; };
+		44965BA01F03E69900350EDA /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		4499D7C9134D9D8900342648 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4499D9BC134DA60700342648 /* PackList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PackList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4499D9C0134DB1D300342648 /* Icon57@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57@2x.png"; sourceTree = "<group>"; };
@@ -534,8 +533,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				44965BA01F03E69900350EDA /* Launch Screen.storyboard */,
 				44965B981EFFFFFC00350EDA /* Localizable.strings */,
-				44965B901EFFFF1400350EDA /* Launch Screen.storyboard */,
 				44F195731EBB4C4900F5FF93 /* Images.xcassets */,
 				4499D9C0134DB1D300342648 /* Icon57@2x.png */,
 				4499D9C1134DB1D300342648 /* Icon57.png */,
@@ -1003,8 +1002,8 @@
 			files = (
 				4499D9C9134DB1D300342648 /* Icon57.png in Resources */,
 				4499D9C7134DB1D300342648 /* Icon57@2x.png in Resources */,
+				44965BA11F03E69900350EDA /* Launch Screen.storyboard in Resources */,
 				4499D7D7134DA60600342648 /* Icon16-ItemGrayHide.png in Resources */,
-				44965B921EFFFF1400350EDA /* Launch Screen.storyboard in Resources */,
 				44965B611EFFF17800350EDA /* AZDialStepperMinusDown@2x.png in Resources */,
 				44965B621EFFF17800350EDA /* AZDialStepperPlus.png in Resources */,
 				4499D7D8134DA60600342648 /* Icon16-ItemGrayHide@2x.png in Resources */,
@@ -1236,15 +1235,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		44965B901EFFFF1400350EDA /* Launch Screen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				44965B961EFFFF9900350EDA /* ja */,
-				44965B971EFFFFC200350EDA /* en */,
-			);
-			name = "Launch Screen.storyboard";
-			sourceTree = "<group>";
-		};
 		44965B981EFFFFFC00350EDA /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
