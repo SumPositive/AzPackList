@@ -22,6 +22,8 @@
 		441962E914B87DEE0047E1C3 /* PatternImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 441962E714B87DED0047E1C3 /* PatternImageView.m */; };
 		44218452160392BB0097FF63 /* Icon72bag.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218450160392BA0097FF63 /* Icon72bag.png */; };
 		44218453160392BB0097FF63 /* Icon72bag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218451160392BB0097FF63 /* Icon72bag@2x.png */; };
+		445602E51F053EA900A83A50 /* Mapping4-5.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 445602E41F053EA900A83A50 /* Mapping4-5.xcmappingmodel */; };
+		445602EB1F053EF300A83A50 /* Mapping2-3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 445602EA1F053EF300A83A50 /* Mapping2-3.xcmappingmodel */; };
 		445998C61413757E0005F706 /* AzPackList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 445998BE1413757E0005F706 /* AzPackList.xcdatamodeld */; };
 		445998CA1413757E0005F706 /* Mapping3-4.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 445998C41413757E0005F706 /* Mapping3-4.xcmappingmodel */; };
 		445998D2141383730005F706 /* Icon32-MailNew@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CD141383730005F706 /* Icon32-MailNew@2x.png */; };
@@ -260,6 +262,8 @@
 		4453C341131A889000A97E1A /* Icon-DrumPush@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-DrumPush@2x.png"; path = "Design/Icon-DrumPush@2x.png"; sourceTree = "<group>"; };
 		445404CA131D5A4900FA1C3C /* Icon44-Calc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon44-Calc.png"; path = "Design/Icon44-Calc.png"; sourceTree = "<group>"; };
 		445404CB131D5A4900FA1C3C /* Icon44-Calc@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon44-Calc@2x.png"; path = "Design/Icon44-Calc@2x.png"; sourceTree = "<group>"; };
+		445602E41F053EA900A83A50 /* Mapping4-5.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "Mapping4-5.xcmappingmodel"; sourceTree = "<group>"; };
+		445602EA1F053EF300A83A50 /* Mapping2-3.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "Mapping2-3.xcmappingmodel"; sourceTree = "<group>"; };
 		4457518210C7A65900419205 /* Elements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Elements.h; sourceTree = "<group>"; };
 		4457518310C7A65900419205 /* Elements.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Elements.m; sourceTree = "<group>"; };
 		4457518910C7A9E700419205 /* E1edit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = E1edit.h; sourceTree = "<group>"; };
@@ -542,7 +546,9 @@
 				44EC383814A4DEF300127B41 /* Icon72.png */,
 				440DBE1514CAF24A00FD957F /* AzPackList5.entitlements */,
 				445998BE1413757E0005F706 /* AzPackList.xcdatamodeld */,
+				445602EA1F053EF300A83A50 /* Mapping2-3.xcmappingmodel */,
 				445998C41413757E0005F706 /* Mapping3-4.xcmappingmodel */,
+				445602E41F053EA900A83A50 /* Mapping4-5.xcmappingmodel */,
 				4499D7C9134D9D8900342648 /* Info.plist */,
 				4486955F10F5ABCC00AD02D8 /* PackList_Prefix.pch */,
 			);
@@ -1199,8 +1205,10 @@
 				4499D803134DA60600342648 /* main.m in Sources */,
 				4499D804134DA60600342648 /* AppDelegate.m in Sources */,
 				44F1957D1EBDB66000F5FF93 /* SFHFKeychainUtils.m in Sources */,
+				445602E51F053EA900A83A50 /* Mapping4-5.xcmappingmodel in Sources */,
 				4499D805134DA60600342648 /* E1viewController.m in Sources */,
 				44965B871EFFF17800350EDA /* AZWebView.m in Sources */,
+				445602EB1F053EF300A83A50 /* Mapping2-3.xcmappingmodel in Sources */,
 				4499D807134DA60600342648 /* Elements.m in Sources */,
 				4499D808134DA60600342648 /* E1edit.m in Sources */,
 				4499D809134DA60600342648 /* E2viewController.m in Sources */,

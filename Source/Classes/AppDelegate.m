@@ -221,7 +221,7 @@
 {
 	if ([url isFileURL]) {	// .packlist OR .azp ファイルをタッチしたとき、
 		NSLog(@"File loaded into [url path]=%@", [url path]);
-		if ([[[url pathExtension] lowercaseString] isEqualToString:GD_EXTENSION]) 
+		if ([[[url pathExtension] lowercaseString] isEqualToString:GD_EXTENSION] || [[[url pathExtension] lowercaseString] isEqualToString:@"packlist"])
 		{	// ファイル・タッチ対応
 			UIAlertView *alert = [[UIAlertView alloc] init];
 			alert.title = NSLocalizedString(@"Please Wait",nil);
