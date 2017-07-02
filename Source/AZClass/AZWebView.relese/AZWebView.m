@@ -390,12 +390,30 @@
 		NSLog(@"urlOutside=%@", urlOutside);
 
 		// アクセス禁止
-		mAlertMsg = [[UIAlertView alloc] initWithTitle:AZLocalizedString(@"AZWebView CAUTION", nil)
-														message:[urlOutside absoluteString]
-													   delegate:self
-											  cancelButtonTitle:AZLocalizedString(@"AZWebView Back", nil)
-											  otherButtonTitles:AZLocalizedString(@"AZWebView GoOut", nil), nil];
-		[mAlertMsg show];
+//		mAlertMsg = [[UIAlertView alloc] initWithTitle:AZLocalizedString(@"AZWebView CAUTION", nil)
+//														message:[urlOutside absoluteString]
+//													   delegate:self
+//											  cancelButtonTitle:AZLocalizedString(@"AZWebView Back", nil)
+//											  otherButtonTitles:AZLocalizedString(@"AZWebView GoOut", nil), nil];
+//		[mAlertMsg show];
+
+        [self azAleartTitle: AZLocalizedString(@"AZWebView CAUTION", nil)
+                    message: [urlOutside absoluteString]
+                         b1: AZLocalizedString(@"AZWebView Back", nil)
+                    b1style: UIAlertActionStyleCancel
+                   b1action: ^(UIAlertAction * _Nullable action) {
+                       //
+                   }
+                         b2: AZLocalizedString(@"AZWebView GoOut", nil)
+                    b2style: UIAlertActionStyleDefault
+                   b2action: ^(UIAlertAction * _Nullable action) {
+                       NSLog(@"urlOutside=%@",urlOutside);
+                       // リンクへ飛ぶ
+                       [[UIApplication sharedApplication] openURL:urlOutside]; // httpがあるので自動的にブラウザが立ち上がる
+                   }
+                   animated: YES
+                 completion: nil];
+        
 		mLbMessage.backgroundColor = [UIColor redColor]; //許可していないドメイン
 		return NO;
 	}
@@ -404,16 +422,16 @@
 
 
 //urlOutsideをcopy属性で保存している
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-// アラートビューでボタンがクリックされた時に呼び出されるデリゲート
-{
-    NSLog(@"button=%ld",(long)buttonIndex);
-    if (buttonIndex!=alertView.cancelButtonIndex) { // 「はい」のとき
-        NSLog(@"urlOutside=%@",urlOutside);
-        // リンクへ飛ぶ
-        [[UIApplication sharedApplication] openURL:urlOutside]; // httpがあるので自動的にブラウザが立ち上がる
-    }
-}
+//-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+//// アラートビューでボタンがクリックされた時に呼び出されるデリゲート
+//{
+//    NSLog(@"button=%ld",(long)buttonIndex);
+//    if (buttonIndex!=alertView.cancelButtonIndex) { // 「はい」のとき
+//        NSLog(@"urlOutside=%@",urlOutside);
+//        // リンクへ飛ぶ
+//        [[UIApplication sharedApplication] openURL:urlOutside]; // httpがあるので自動的にブラウザが立ち上がる
+//    }
+//}
 
 
 @end

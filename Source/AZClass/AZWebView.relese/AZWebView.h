@@ -19,7 +19,7 @@
 	UIBarButtonItem		*mBuBack;
 	UIBarButtonItem		*mBuReload;
 	UIBarButtonItem		*mBuForward;
-	UIAlertView				*mAlertMsg;
+//	UIAlertView				*mAlertMsg;
 	UIActivityIndicatorView *mActivityIndicator;
 	
 	BOOL					mIsPad;

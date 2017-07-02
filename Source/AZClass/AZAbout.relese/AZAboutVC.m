@@ -194,7 +194,7 @@
 		self.ppAuthor = @"M.Matsuyama"; //@"Sum Positive";
 
 		// 背景色　小豆色 RGB(152,81,75) #98514B
-		self.view.backgroundColor = [UIColor colorWithRed:152/255.0f 
+		self.view.backgroundColor = [UIColor colorWithRed:152/255.0f
 													green:81/255.0f 
 													 blue:75/255.0f
 													alpha:1.0f];
@@ -218,6 +218,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+
 	ibIvIcon.image = self.ppImgIcon;
 	ibLbTitle.text = self.ppProductTitle;
 	ibLbSubtitle.text = self.ppProductSubtitle;

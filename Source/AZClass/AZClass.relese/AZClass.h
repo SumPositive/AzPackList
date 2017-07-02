@@ -5,6 +5,9 @@
 //  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
 //
 
+#import "UIViewController+azAlert.h"
+
+
 #define AZClass_COPYRIGHT		@"2009 M.Matsuyama"
 
 #define OR  ||

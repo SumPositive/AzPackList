@@ -668,102 +668,102 @@
 }
 
 
-- (void)actionWebTitle:(NSString*)zTitle  Url:(NSString*)zUrl
-{
-	/*	WebSiteVC *web = [[WebSiteVC alloc] initWithBookmarkDelegate:self];	// [Bookmark] <webSiteBookmarkUrl:>
-	 web.title = nil;
-	 web.Rurl = zUrl;
-	 web.RzDomain = nil;*/
-	
-	AZWebView *wv = [[AZWebView alloc] init];
-	wv.ppBookmarkDelegate = self;
-	wv.title = zTitle;
-	wv.ppUrl = zUrl;
-	wv.ppDomain = [NSSet setWithObjects:
-				   @".amazon.co.jp",
-				   @".amazon.com",
-				   @".amazon.cn",
-				   @".javari.jp",					//Amazon
-				   @".doubleclick.net",		//Google
-				   @".rakuten.ne.jp",
-				   @".rakuten.co.jp",
-				   @".apple.com",
-				   @".azukid.com",
-				   @".tumblr.com",
-				   @"azukisoft.seesaa.net",
-				   nil]; //許可ドメインを列記する
-	
-	if (mAppDelegate.ppIsPad) {
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:wv];
-		nc.modalPresentationStyle = UIModalPresentationPageSheet;  // 背景Viewが保持される
-		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;//	UIModalTransitionStyleFlipHorizontal
-		//[mAppDelegate.mainSVC presentModalViewController:nc animated:YES];  //回転する
-		[mAppDelegate.mainSVC presentViewController:nc animated:YES completion:nil];  //回転する
-	} else {
-		[self.navigationController pushViewController:wv animated:YES];
-	}
-}
-
-- (void)actionWebSearchTitle:(NSString*)zTitle  URL:(NSString*)zUrl
-{
-	if ([mTfKeyword.text length]<=0) {
-		mTfKeyword.text = mTfName.text;
-		mAppDelegate.ppChanged = YES; // 変更あり
-		self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
-		
-		mTfKeyword.text = azStringNoEmoji( mTfKeyword.text ); // 絵文字を除去する
-		
-	/*	// 絵文字を除去する
-		NSMutableString *zKey = [NSMutableString new];
-		for (NSUInteger i = 0; i < [mTfKeyword.text length]; i++)
-		{
-			// UNICODE(UTF-16)文字を順に取り出します。
-			unichar code = [mTfKeyword.text characterAtIndex:i];
-			// UNICODE(UTF-16)絵文字範囲 http://ja.wikipedia.org/wiki/SoftBank%E7%B5%B5%E6%96%87%E5%AD%97
-			if ((0x20E0<=code && code<=0x2FFF) OR (0xD830<=code && code<=0xDFFF))
-			{
-				//NSLog(@"\\u%04x <<<", code);
-				i++;
-			} 
-			else {
-				//NSLog(@"\\u%04x", code);
-				[zKey appendFormat:@"%C", code];
-			}
-		}
-		NSLog(@"actionWebTitle: zKey=%@", zKey);
-	 */
-	}
-	
-	/* GstringPercentEscape()
-	// 日本語を含むURLをUTF8でエンコーディングする
-	// stringByAddingPercentEscapesUsingEncoding:はダメ　＜＜"(0×20)"#%><[\]^`{|}" しかエスケープしないため。
-	// エスケープさせない「コマンド使用」など文字を記述
-	static const CFStringRef charactersToLeaveUnescaped = NULL;  //コマンドを含まない文字列を変換するため
-	// 通常ではエスケープされないが、してほしい文字を記述
-	static const CFStringRef legalURLCharactersToBeEscaped = CFSTR("!*'();:@&=+$,./?%#[]");  //全てエスケープさせるため
-	// __bridge_transfer : CオブジェクトをARC管理オブジェクトにする
-	NSString *zKeyword = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
-																							   kCFAllocatorDefault,	
-																							   (__bridge CFStringRef)mTfKeyword.text,
-																							   charactersToLeaveUnescaped,
-																							   legalURLCharactersToBeEscaped,
-																							   kCFStringEncodingUTF8);
-	NSLog(@"Escape: zKeyword {%@}", zKeyword);
-	*/
-	
-	NSString *zKeyword = azStringPercentEscape( mTfKeyword.text );
-	
-/*	
-	WebSiteVC *web = [[WebSiteVC alloc] initWithBookmarkDelegate:self];	// [Bookmark] <webSiteBookmarkUrl:>
-	web.title = zTitle;
-	web.Rurl = [zUrl stringByAppendingString:zKeyword];
-	web.RzDomain = zDomain;
-	zKeyword = nil;
-*/
-
-	[self actionWebTitle:zTitle Url:[zUrl stringByAppendingString:zKeyword]];
-	zKeyword = nil;
-}
+//- (void)actionWebTitle:(NSString*)zTitle  Url:(NSString*)zUrl
+//{
+//	/*	WebSiteVC *web = [[WebSiteVC alloc] initWithBookmarkDelegate:self];	// [Bookmark] <webSiteBookmarkUrl:>
+//	 web.title = nil;
+//	 web.Rurl = zUrl;
+//	 web.RzDomain = nil;*/
+//	
+//	AZWebView *wv = [[AZWebView alloc] init];
+//	wv.ppBookmarkDelegate = self;
+//	wv.title = zTitle;
+//	wv.ppUrl = zUrl;
+//	wv.ppDomain = [NSSet setWithObjects:
+//				   @".amazon.co.jp",
+//				   @".amazon.com",
+//				   @".amazon.cn",
+//				   @".javari.jp",					//Amazon
+//				   @".doubleclick.net",		//Google
+//				   @".rakuten.ne.jp",
+//				   @".rakuten.co.jp",
+//				   @".apple.com",
+//				   @".azukid.com",
+//				   @".tumblr.com",
+//				   @"azukisoft.seesaa.net",
+//				   nil]; //許可ドメインを列記する
+//	
+//	if (mAppDelegate.ppIsPad) {
+//		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:wv];
+//		nc.modalPresentationStyle = UIModalPresentationPageSheet;  // 背景Viewが保持される
+//		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;//	UIModalTransitionStyleFlipHorizontal
+//		//[mAppDelegate.mainSVC presentModalViewController:nc animated:YES];  //回転する
+//		[mAppDelegate.mainSVC presentViewController:nc animated:YES completion:nil];  //回転する
+//	} else {
+//		[self.navigationController pushViewController:wv animated:YES];
+//	}
+//}
+//
+//- (void)actionWebSearchTitle:(NSString*)zTitle  URL:(NSString*)zUrl
+//{
+//	if ([mTfKeyword.text length]<=0) {
+//		mTfKeyword.text = mTfName.text;
+//		mAppDelegate.ppChanged = YES; // 変更あり
+//		self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
+//		
+//		mTfKeyword.text = azStringNoEmoji( mTfKeyword.text ); // 絵文字を除去する
+//		
+//	/*	// 絵文字を除去する
+//		NSMutableString *zKey = [NSMutableString new];
+//		for (NSUInteger i = 0; i < [mTfKeyword.text length]; i++)
+//		{
+//			// UNICODE(UTF-16)文字を順に取り出します。
+//			unichar code = [mTfKeyword.text characterAtIndex:i];
+//			// UNICODE(UTF-16)絵文字範囲 http://ja.wikipedia.org/wiki/SoftBank%E7%B5%B5%E6%96%87%E5%AD%97
+//			if ((0x20E0<=code && code<=0x2FFF) OR (0xD830<=code && code<=0xDFFF))
+//			{
+//				//NSLog(@"\\u%04x <<<", code);
+//				i++;
+//			} 
+//			else {
+//				//NSLog(@"\\u%04x", code);
+//				[zKey appendFormat:@"%C", code];
+//			}
+//		}
+//		NSLog(@"actionWebTitle: zKey=%@", zKey);
+//	 */
+//	}
+//	
+//	/* GstringPercentEscape()
+//	// 日本語を含むURLをUTF8でエンコーディングする
+//	// stringByAddingPercentEscapesUsingEncoding:はダメ　＜＜"(0×20)"#%><[\]^`{|}" しかエスケープしないため。
+//	// エスケープさせない「コマンド使用」など文字を記述
+//	static const CFStringRef charactersToLeaveUnescaped = NULL;  //コマンドを含まない文字列を変換するため
+//	// 通常ではエスケープされないが、してほしい文字を記述
+//	static const CFStringRef legalURLCharactersToBeEscaped = CFSTR("!*'();:@&=+$,./?%#[]");  //全てエスケープさせるため
+//	// __bridge_transfer : CオブジェクトをARC管理オブジェクトにする
+//	NSString *zKeyword = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
+//																							   kCFAllocatorDefault,	
+//																							   (__bridge CFStringRef)mTfKeyword.text,
+//																							   charactersToLeaveUnescaped,
+//																							   legalURLCharactersToBeEscaped,
+//																							   kCFStringEncodingUTF8);
+//	NSLog(@"Escape: zKeyword {%@}", zKeyword);
+//	*/
+//	
+//	NSString *zKeyword = azStringPercentEscape( mTfKeyword.text );
+//	
+///*	
+//	WebSiteVC *web = [[WebSiteVC alloc] initWithBookmarkDelegate:self];	// [Bookmark] <webSiteBookmarkUrl:>
+//	web.title = zTitle;
+//	web.Rurl = [zUrl stringByAppendingString:zKeyword];
+//	web.RzDomain = zDomain;
+//	zKeyword = nil;
+//*/
+//
+//	[self actionWebTitle:zTitle Url:[zUrl stringByAppendingString:zKeyword]];
+//	zKeyword = nil;
+//}
 
 //- (void)actionCamera
 //{	
@@ -1950,59 +1950,59 @@
 }
 
 
-#pragma mark - <AZWebViewBookmarkDelegate>
-- (void)azWebViewBookmark:(NSString *)url
-{
-	pE3target.shopUrl = url;
-	mAppDelegate.ppChanged = YES; // 変更あり
-	self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
-	// 「URLから読み込む」
-	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:pE3target.shopUrl]];
-	[mWebViewShop loadRequest:request];
-	[self.tableView reloadData]; // セル高さ、配置
-}
-
-#pragma mark - <UIWebViewDelegate>
-- (void)webViewDidStartLoad:(UIWebView *)webView 
-{	// ウェブビューがコンテンツの読み込みを始めた後
-	[mActivityIndicator_on_IconShop startAnimating];
-}
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView 
-{	// ウェブビューがコンテンツの読み込みを完了した後
-	[mActivityIndicator_on_IconShop stopAnimating];
-	mWebViewShop.hidden = NO;
-}
-
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error 
-{	// ウェブビューがコンテンツの読み込みに失敗した場合
-	[mActivityIndicator_on_IconShop stopAnimating];
-}
-
-/*** ここでは操作禁止にしているので不要
-// URL制限する：無制限ならばレーティング"17+"になってしまう！
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request 
- navigationType:(UIWebViewNavigationType)navigationType
-{	
-	if (navigationType == UIWebViewNavigationTypeLinkClicked) // リンクをクリックしたとき、だけチェックする 
-	{
-		NSString *zHost = [[request URL] host];
-		// 主ドメインからのリンク先で許可するドメイン
-		// Amazon
-		if ([zHost hasSuffix:@".amazon.co.jp"]) return YES; // 許可ドメイン
-		if ([zHost hasSuffix:@".amazon.com"]) return YES; // 許可ドメイン
-		if ([zHost hasSuffix:@".javari.jp"]) return YES; // 許可ドメイン
-		// 楽天
-		if ([zHost hasSuffix:@".rakuten.ne.jp"]) return YES; // 許可ドメイン
-		// Azukid support
-		if ([zHost hasSuffix:@".tumblr.com"]) return YES; // 許可ドメイン
-		if ([zHost hasSuffix:@".seesaa.net"]) return YES; // 許可ドメイン
-		if ([zHost hasSuffix:@".apple.com"]) return YES; // 許可ドメイン
-		return NO;
-	}
-	return YES;
-}
-*/
+//#pragma mark - <AZWebViewBookmarkDelegate>
+//- (void)azWebViewBookmark:(NSString *)url
+//{
+//	pE3target.shopUrl = url;
+//	mAppDelegate.ppChanged = YES; // 変更あり
+//	self.navigationItem.rightBarButtonItem.enabled = mAppDelegate.ppChanged;
+//	// 「URLから読み込む」
+//	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:pE3target.shopUrl]];
+//	[mWebViewShop loadRequest:request];
+//	[self.tableView reloadData]; // セル高さ、配置
+//}
+//
+//#pragma mark - <UIWebViewDelegate>
+//- (void)webViewDidStartLoad:(UIWebView *)webView 
+//{	// ウェブビューがコンテンツの読み込みを始めた後
+//	[mActivityIndicator_on_IconShop startAnimating];
+//}
+//
+//- (void)webViewDidFinishLoad:(UIWebView *)webView 
+//{	// ウェブビューがコンテンツの読み込みを完了した後
+//	[mActivityIndicator_on_IconShop stopAnimating];
+//	mWebViewShop.hidden = NO;
+//}
+//
+//- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error 
+//{	// ウェブビューがコンテンツの読み込みに失敗した場合
+//	[mActivityIndicator_on_IconShop stopAnimating];
+//}
+//
+///*** ここでは操作禁止にしているので不要
+//// URL制限する：無制限ならばレーティング"17+"になってしまう！
+//- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request 
+// navigationType:(UIWebViewNavigationType)navigationType
+//{	
+//	if (navigationType == UIWebViewNavigationTypeLinkClicked) // リンクをクリックしたとき、だけチェックする 
+//	{
+//		NSString *zHost = [[request URL] host];
+//		// 主ドメインからのリンク先で許可するドメイン
+//		// Amazon
+//		if ([zHost hasSuffix:@".amazon.co.jp"]) return YES; // 許可ドメイン
+//		if ([zHost hasSuffix:@".amazon.com"]) return YES; // 許可ドメイン
+//		if ([zHost hasSuffix:@".javari.jp"]) return YES; // 許可ドメイン
+//		// 楽天
+//		if ([zHost hasSuffix:@".rakuten.ne.jp"]) return YES; // 許可ドメイン
+//		// Azukid support
+//		if ([zHost hasSuffix:@".tumblr.com"]) return YES; // 許可ドメイン
+//		if ([zHost hasSuffix:@".seesaa.net"]) return YES; // 許可ドメイン
+//		if ([zHost hasSuffix:@".apple.com"]) return YES; // 許可ドメイン
+//		return NO;
+//	}
+//	return YES;
+//}
+//*/
 
 @end
 

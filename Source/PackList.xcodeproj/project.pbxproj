@@ -22,6 +22,8 @@
 		441962E914B87DEE0047E1C3 /* PatternImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 441962E714B87DED0047E1C3 /* PatternImageView.m */; };
 		44218452160392BB0097FF63 /* Icon72bag.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218450160392BA0097FF63 /* Icon72bag.png */; };
 		44218453160392BB0097FF63 /* Icon72bag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218451160392BB0097FF63 /* Icon72bag@2x.png */; };
+		44227A191F08E4B4003D9C8B /* UIViewController+azAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = 44227A171F08E4B4003D9C8B /* UIViewController+azAlert.h */; };
+		44227A1A1F08E4B4003D9C8B /* UIViewController+azAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 44227A181F08E4B4003D9C8B /* UIViewController+azAlert.m */; };
 		445602E51F053EA900A83A50 /* Mapping4-5.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 445602E41F053EA900A83A50 /* Mapping4-5.xcmappingmodel */; };
 		445602EB1F053EF300A83A50 /* Mapping2-3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 445602EA1F053EF300A83A50 /* Mapping2-3.xcmappingmodel */; };
 		445998C61413757E0005F706 /* AzPackList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 445998BE1413757E0005F706 /* AzPackList.xcdatamodeld */; };
@@ -249,6 +251,8 @@
 		441962E714B87DED0047E1C3 /* PatternImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PatternImageView.m; sourceTree = "<group>"; };
 		44218450160392BA0097FF63 /* Icon72bag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon72bag.png; sourceTree = "<group>"; };
 		44218451160392BB0097FF63 /* Icon72bag@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon72bag@2x.png"; sourceTree = "<group>"; };
+		44227A171F08E4B4003D9C8B /* UIViewController+azAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+azAlert.h"; path = "../../Classes/UIViewController+azAlert.h"; sourceTree = "<group>"; };
+		44227A181F08E4B4003D9C8B /* UIViewController+azAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+azAlert.m"; path = "../../Classes/UIViewController+azAlert.m"; sourceTree = "<group>"; };
 		4422F3C8135F215C0067EBEF /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		4453C332131A74CC00A97E1A /* Icon44-ClipOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon44-ClipOn.png"; path = "Design/Icon44-ClipOn.png"; sourceTree = "<group>"; };
 		4453C333131A74CC00A97E1A /* Icon44-ClipOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon44-ClipOn@2x.png"; path = "Design/Icon44-ClipOn@2x.png"; sourceTree = "<group>"; };
@@ -621,6 +625,8 @@
 			children = (
 				44965B1A1EFFF17700350EDA /* AZClass.h */,
 				44965B1B1EFFF17700350EDA /* AZClass.m */,
+				44227A171F08E4B4003D9C8B /* UIViewController+azAlert.h */,
+				44227A181F08E4B4003D9C8B /* UIViewController+azAlert.m */,
 			);
 			path = AZClass.relese;
 			sourceTree = "<group>";
@@ -919,6 +925,7 @@
 				44965B5A1EFFF17800350EDA /* AZDial.h in Headers */,
 				4499D855134DA60600342648 /* FileCsv.h in Headers */,
 				4499D856134DA60600342648 /* SpSearchVC.h in Headers */,
+				44227A191F08E4B4003D9C8B /* UIViewController+azAlert.h in Headers */,
 				4499D857134DA60600342648 /* SpAppendVC.h in Headers */,
 				44F1957C1EBDB66000F5FF93 /* SFHFKeychainUtils.h in Headers */,
 				4499D858134DA60600342648 /* SpPOST.h in Headers */,
@@ -1227,6 +1234,7 @@
 				4499D825134DA60600342648 /* SpPOST.m in Sources */,
 				4499D826134DA60600342648 /* SpDetailTVC.m in Sources */,
 				4499D827134DA60600342648 /* CalcView.m in Sources */,
+				44227A1A1F08E4B4003D9C8B /* UIViewController+azAlert.m in Sources */,
 				445998C61413757E0005F706 /* AzPackList.xcdatamodeld in Sources */,
 				44965B581EFFF17800350EDA /* AZClass.m in Sources */,
 				445998CA1413757E0005F706 /* Mapping3-4.xcmappingmodel in Sources */,
