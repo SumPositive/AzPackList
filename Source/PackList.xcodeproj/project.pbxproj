@@ -24,6 +24,7 @@
 		44218453160392BB0097FF63 /* Icon72bag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218451160392BB0097FF63 /* Icon72bag@2x.png */; };
 		44227A191F08E4B4003D9C8B /* UIViewController+azAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = 44227A171F08E4B4003D9C8B /* UIViewController+azAlert.h */; };
 		44227A1A1F08E4B4003D9C8B /* UIViewController+azAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 44227A181F08E4B4003D9C8B /* UIViewController+azAlert.m */; };
+		44227A211F1217F4003D9C8B /* AZLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44227A1F1F1217F4003D9C8B /* AZLocalizable.strings */; };
 		445602E51F053EA900A83A50 /* Mapping4-5.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 445602E41F053EA900A83A50 /* Mapping4-5.xcmappingmodel */; };
 		445602EB1F053EF300A83A50 /* Mapping2-3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 445602EA1F053EF300A83A50 /* Mapping2-3.xcmappingmodel */; };
 		445998C61413757E0005F706 /* AzPackList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 445998BE1413757E0005F706 /* AzPackList.xcdatamodeld */; };
@@ -253,6 +254,8 @@
 		44218451160392BB0097FF63 /* Icon72bag@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon72bag@2x.png"; sourceTree = "<group>"; };
 		44227A171F08E4B4003D9C8B /* UIViewController+azAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+azAlert.h"; path = "../../Classes/UIViewController+azAlert.h"; sourceTree = "<group>"; };
 		44227A181F08E4B4003D9C8B /* UIViewController+azAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+azAlert.m"; path = "../../Classes/UIViewController+azAlert.m"; sourceTree = "<group>"; };
+		44227A201F1217F4003D9C8B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AZLocalizable.strings; sourceTree = "<group>"; };
+		44227A221F121801003D9C8B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/AZLocalizable.strings; sourceTree = "<group>"; };
 		4422F3C8135F215C0067EBEF /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		4453C332131A74CC00A97E1A /* Icon44-ClipOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon44-ClipOn.png"; path = "Design/Icon44-ClipOn.png"; sourceTree = "<group>"; };
 		4453C333131A74CC00A97E1A /* Icon44-ClipOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon44-ClipOn@2x.png"; path = "Design/Icon44-ClipOn@2x.png"; sourceTree = "<group>"; };
@@ -623,6 +626,7 @@
 		44965B191EFFF17700350EDA /* AZClass.relese */ = {
 			isa = PBXGroup;
 			children = (
+				44227A1F1F1217F4003D9C8B /* AZLocalizable.strings */,
 				44965B1A1EFFF17700350EDA /* AZClass.h */,
 				44965B1B1EFFF17700350EDA /* AZClass.m */,
 				44227A171F08E4B4003D9C8B /* UIViewController+azAlert.h */,
@@ -1133,6 +1137,7 @@
 				44965B7B1EFFF17800350EDA /* Icon57-PayNote.png in Resources */,
 				44965B7C1EFFF17800350EDA /* Icon57-PayNote@2x.png in Resources */,
 				44965B601EFFF17800350EDA /* AZDialStepperMinusDown.png in Resources */,
+				44227A211F1217F4003D9C8B /* AZLocalizable.strings in Resources */,
 				44AC159114E806590007229F /* Icon32-Picasa@2x.png in Resources */,
 				44965B7D1EFFF17800350EDA /* Icon57-SplitPay.png in Resources */,
 				44AC159214E806590007229F /* Icon32-Picasa.png in Resources */,
@@ -1251,6 +1256,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		44227A1F1F1217F4003D9C8B /* AZLocalizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				44227A201F1217F4003D9C8B /* en */,
+				44227A221F121801003D9C8B /* ja */,
+			);
+			name = AZLocalizable.strings;
+			sourceTree = "<group>";
+		};
 		44965B981EFFFFFC00350EDA /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
