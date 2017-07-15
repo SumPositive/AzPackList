@@ -383,10 +383,16 @@
 
 - (void)padE2refresh:(NSInteger)iRow
 {
-	UINavigationController* MnaviLeftE2 = [appDelegate_.mainSVC.viewControllers objectAtIndex:0]; //[0]
-	if ([[MnaviLeftE2 visibleViewController] isMemberOfClass:[E2viewController class]])
+	UINavigationController* MnaviLeft = [appDelegate_.mainSVC.viewControllers objectAtIndex:0]; //[0]
+    
+    //NSLog(@"MnaviLeft: %@", MnaviLeft);
+    //NSLog(@"[MnaviLeft visibleViewController]: %@", [MnaviLeft visibleViewController]); //<<<<?? E3detailTVC になる
+    //NSLog(@"[[MnaviLeft viewControllers] objectAtIndex:1]: %@", [[MnaviLeft viewControllers] objectAtIndex:1]);
+    
+    UIViewController* vc = [[MnaviLeft viewControllers] objectAtIndex:1];
+	if ([vc isMemberOfClass:[E2viewController class]])
 	{	// E2 既存
-		E2viewController* e2vc = (E2viewController*)[MnaviLeftE2 visibleViewController];
+		E2viewController* e2vc = (E2viewController*)vc;
 		[e2vc viewWillAppear:YES]; // .contentOffset により位置再現している
 		if (0 <= iRow) 
 		{
@@ -410,6 +416,12 @@
 								  scrollPosition:UITableViewScrollPositionNone];
 			[e2vc.tableView deselectRowAtIndexPath:idx animated:YES];
 		}
+        else {
+            // iRow = (-1)
+            if ([e2vc respondsToSelector:@selector(refreshE2view)]) {	// メソッドの存在を確認する
+                [e2vc refreshE2view];// E2の再描画を呼び出す
+            }
+        }
 	}
 }
 
@@ -832,9 +844,15 @@
 		[self padE2refresh:indexPathEdit_.section];
 	}
 	else {
-		[self.tableView reloadData];
-		// 左側 E2 再描画
-		[self padE2refresh:(-1)];
+        if (appDelegate_.ppIsPad) {
+            [self requreyMe3array];//Add行を読む込む為に必要
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // 右　E3 再描画
+            [self.tableView reloadData];
+            // 左 E2 再描画
+            [self padE2refresh:(-1)];
+        });
 	}
 
 	// Photo E3detail保存時にアップできなかった場合など、未アップがあれば順次アップする

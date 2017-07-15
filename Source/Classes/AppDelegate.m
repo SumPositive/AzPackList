@@ -151,10 +151,11 @@
 
 	//-------------------------------------------------
 	if (self.ppIsPad) {
+        // Left[0]
 		__padRootVC = [[PadRootVC alloc] init]; // retainされる
 		AzNavigationController* naviLeft = [[AzNavigationController alloc]
 											initWithRootViewController:__padRootVC];
-		
+		// Right[0]
 		E1viewController *e1viewCon = [[E1viewController alloc] init];
 		AzNavigationController* naviRight = [[AzNavigationController alloc] initWithRootViewController:e1viewCon];
 		
