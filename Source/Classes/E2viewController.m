@@ -239,12 +239,12 @@
 			NSString *csvPath = fcsv.tmpPathFile;
 
 			// Body: 本文
-			NSString* zBody = [NSString stringWithFormat:@"%@%@%@%@%@", 
+			NSString* zBody = [NSString stringWithFormat:@"%@%@%@%@",
 							   NSLocalizedString(@"Email send Body1",nil),
 							   NSLocalizedString(@"Email send Body2",nil),
 							   NSLocalizedString(@"Email send Body3",nil),
-							   NSLocalizedString(@"Email send Body4",nil),
-							   NSLocalizedString(@"Email send Body5",nil) ];
+                               NSLocalizedString(@"Email send Body4",nil)];
+							   //NSLocalizedString(@"Email send Body5",nil) ];
 			if (fcsv.didEncryption) {
 				zBody = [zBody stringByAppendingString:NSLocalizedString(@"Email send Body6 didEncryption",nil)];
 			} else {
