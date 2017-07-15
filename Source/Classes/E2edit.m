@@ -199,13 +199,13 @@
 	if (appDelegate_.ppIsPad) {
 		CGRect rect;
 		rect.origin.x = 10;
-		rect.origin.y = 5;
+        rect.origin.y = 48; //5;
 		rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
 		rect.size.height = 40;
 		MtfName.frame = rect;
 		
 		rect.origin.x = 15;
-		rect.origin.y = 48;
+        rect.origin.y = 91; //48;
 		rect.size.width = self.view.frame.size.width - rect.origin.x * 2;
 		rect.size.height = self.view.frame.size.height - rect.origin.y - 10;
 		MtvNote.frame = rect;
