@@ -163,7 +163,7 @@
 		__mainSVC = [[UISplitViewController alloc] init];
 		__mainSVC.viewControllers = @[naviLeft, naviRight];
 		__mainSVC.delegate = self; //<UISplitViewControllerDelegate>
-        __mainSVC.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible; // タテ2分割が可能になった
+        __mainSVC.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible; //iOS9// タテ2分割が可能になった
 		// mainVC を window へ登録
 		//[__window addSubview:__mainSVC.view];
 		//[__window setRootViewController: __mainSVC];	//iOS6以降、こうしなければ回転しない。

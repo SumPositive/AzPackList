@@ -239,8 +239,8 @@
 //						  self.ppCopyright, self.ppAuthor];
 
     ibLbCopyright.text = [NSString stringWithFormat:
-                          @"Copyright Azukid\n"
-                          @"M.Matsuyama 2009\n"
+                          @"Copyright 1995\n"
+                          @"Masakazu.Matsuyama\n"
                           @"All Rights Reserved."];
 
 	[ibBuGoSupport setTitle:AZLocalizedString(@"AZAbout GoSupport",nil) 
