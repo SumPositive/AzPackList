@@ -509,9 +509,9 @@
 	// 商品IDリスト
 	NSSet *pids = [NSSet setWithObjects:STORE_PRODUCTID_AdOff, nil]; // 商品が複数ある場合は列記
 	[vc setProductIDs:pids];
-	[vc	setGiftDetail:NSLocalizedString(@"STORE GiftDetail", nil)
-			productID:STORE_PRODUCTID_AdOff
-			secretKey:@"1615AzPackList"]; //[1.2]にあるsecretKeyに一致すること
+//	[vc	setGiftDetail:NSLocalizedString(@"STORE GiftDetail", nil)
+//			productID:STORE_PRODUCTID_AdOff
+//			secretKey:@"1615AzPackList"]; //[1.2]にあるsecretKeyに一致すること
 	
 	// クラッキング対策：非消費型でもレシートチェックが必要になった。
 	// [Manage In-App Purchase]-[View or generate a shared secret]-[Generate]から取得した文字列をセットする
