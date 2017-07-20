@@ -239,7 +239,7 @@
 //						  self.ppCopyright, self.ppAuthor];
 
     ibLbCopyright.text = [NSString stringWithFormat:
-                          @"Copyright 1995\n"
+                          @"Copyright 2009\n"
                           @"Masakazu.Matsuyama\n"
                           @"All Rights Reserved."];
 
