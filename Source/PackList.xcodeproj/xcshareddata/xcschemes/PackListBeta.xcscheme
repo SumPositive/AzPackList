@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4499D7CD134DA60600342648"
                BuildableName = "PackList.app"
-               BlueprintName = "PackListDev"
+               BlueprintName = "PackListBeta"
                ReferencedContainer = "container:PackList.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -34,7 +34,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4499D7CD134DA60600342648"
             BuildableName = "PackList.app"
-            BlueprintName = "PackListDev"
+            BlueprintName = "PackListBeta"
             ReferencedContainer = "container:PackList.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -57,7 +57,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4499D7CD134DA60600342648"
             BuildableName = "PackList.app"
-            BlueprintName = "PackListDev"
+            BlueprintName = "PackListBeta"
             ReferencedContainer = "container:PackList.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -76,7 +76,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4499D7CD134DA60600342648"
             BuildableName = "PackList.app"
-            BlueprintName = "PackListDev"
+            BlueprintName = "PackListBeta"
             ReferencedContainer = "container:PackList.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
