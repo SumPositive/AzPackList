@@ -25,6 +25,222 @@
 		44227A191F08E4B4003D9C8B /* UIViewController+azAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = 44227A171F08E4B4003D9C8B /* UIViewController+azAlert.h */; };
 		44227A1A1F08E4B4003D9C8B /* UIViewController+azAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 44227A181F08E4B4003D9C8B /* UIViewController+azAlert.m */; };
 		44227A211F1217F4003D9C8B /* AZLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44227A1F1F1217F4003D9C8B /* AZLocalizable.strings */; };
+		4432573F1F23002700175312 /* Icon57.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C1134DB1D300342648 /* Icon57.png */; };
+		443257401F23002700175312 /* Icon57@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C0134DB1D300342648 /* Icon57@2x.png */; };
+		443257411F23002700175312 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44965BA01F03E69900350EDA /* Launch Screen.storyboard */; };
+		443257421F23002700175312 /* Icon16-ItemGrayHide.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68A113196CC100012FB5 /* Icon16-ItemGrayHide.png */; };
+		443257431F23002700175312 /* AZDialStepperMinusDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B271EFFF17700350EDA /* AZDialStepperMinusDown@2x.png */; };
+		443257441F23002700175312 /* AZDialStepperPlus.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B281EFFF17700350EDA /* AZDialStepperPlus.png */; };
+		443257451F23002700175312 /* Icon16-ItemGrayHide@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68A213196CC100012FB5 /* Icon16-ItemGrayHide@2x.png */; };
+		443257461F23002700175312 /* Icon16-ItemGrayShow.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68A313196CC100012FB5 /* Icon16-ItemGrayShow.png */; };
+		443257471F23002700175312 /* AZAbout_Agree.txt in Resources */ = {isa = PBXBuildFile; fileRef = 44965B9C1F02962500350EDA /* AZAbout_Agree.txt */; };
+		443257481F23002700175312 /* Icon16-ItemGrayShow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68A413196CC100012FB5 /* Icon16-ItemGrayShow@2x.png */; };
+		443257491F23002700175312 /* Icon16-Return1.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68A513196CC100012FB5 /* Icon16-Return1.png */; };
+		4432574A1F23002700175312 /* Icon16-Return1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68A613196CC100012FB5 /* Icon16-Return1@2x.png */; };
+		4432574B1F23002700175312 /* Icon16-Return2.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68A713196CC100012FB5 /* Icon16-Return2.png */; };
+		4432574C1F23002700175312 /* Icon16-Return2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68A813196CC100012FB5 /* Icon16-Return2@2x.png */; };
+		4432574D1F23002700175312 /* Icon16-Return3.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68A913196CC100012FB5 /* Icon16-Return3.png */; };
+		4432574E1F23002700175312 /* Icon16-Return3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68AA13196CC100012FB5 /* Icon16-Return3@2x.png */; };
+		4432574F1F23002700175312 /* Icon24-GreenPlus.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68AD13196CC100012FB5 /* Icon24-GreenPlus.png */; };
+		443257501F23002700175312 /* AZWeb-Back-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4A1EFFF17800350EDA /* AZWeb-Back-16.png */; };
+		443257511F23002700175312 /* E1viewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F195821EBDD8F300F5FF93 /* E1viewController.xib */; };
+		443257521F23002700175312 /* Icon24-GreenPlus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68AE13196CC100012FB5 /* Icon24-GreenPlus@2x.png */; };
+		443257531F23002700175312 /* AZAbout-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B101EFFF17700350EDA /* AZAbout-32.png */; };
+		443257541F23002700175312 /* AZStoreCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B391EFFF17800350EDA /* AZStoreCell.xib */; };
+		443257551F23002700175312 /* Icon24-RedMinus.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68AF13196CC100012FB5 /* Icon24-RedMinus.png */; };
+		443257561F23002700175312 /* AZStore-Space-44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B341EFFF17800350EDA /* AZStore-Space-44@2x.png */; };
+		443257571F23002700175312 /* Icon24-RedMinus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B013196CC100012FB5 /* Icon24-RedMinus@2x.png */; };
+		443257581F23002700175312 /* Icon32-BagBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B113196CC100012FB5 /* Icon32-BagBlue.png */; };
+		443257591F23002700175312 /* Icon32-BagBlue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B213196CC100012FB5 /* Icon32-BagBlue@2x.png */; };
+		4432575A1F23002700175312 /* Icon32-BagGray.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B313196CC100012FB5 /* Icon32-BagGray.png */; };
+		4432575B1F23002700175312 /* Icon32-BagGray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B413196CC100012FB5 /* Icon32-BagGray@2x.png */; };
+		4432575C1F23002700175312 /* Icon32-BagYellow.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B513196CC100012FB5 /* Icon32-BagYellow.png */; };
+		4432575D1F23002700175312 /* Icon32-BagYellow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B613196CC100012FB5 /* Icon32-BagYellow@2x.png */; };
+		4432575E1F23002700175312 /* Icon32-Circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B713196CC100012FB5 /* Icon32-Circle.png */; };
+		4432575F1F23002700175312 /* Icon32-Circle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B813196CC100012FB5 /* Icon32-Circle@2x.png */; };
+		443257601F23002700175312 /* Icon32-CircleCheck.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B913196CC100012FB5 /* Icon32-CircleCheck.png */; };
+		443257611F23002700175312 /* Icon32-CircleCheck@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BA13196CC100012FB5 /* Icon32-CircleCheck@2x.png */; };
+		443257621F23002700175312 /* Icon32-CircleCheck2.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BB13196CC100012FB5 /* Icon32-CircleCheck2.png */; };
+		443257631F23002700175312 /* Icon32-CircleCheck2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BC13196CC100012FB5 /* Icon32-CircleCheck2@2x.png */; };
+		443257641F23002700175312 /* AZDialTile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2D1EFFF17700350EDA /* AZDialTile@2x.png */; };
+		443257651F23002700175312 /* Icon57-CalcRoll.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3C1EFFF17800350EDA /* Icon57-CalcRoll.png */; };
+		443257661F23002700175312 /* Icon32-CircleGray.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BD13196CC100012FB5 /* Icon32-CircleGray.png */; };
+		443257671F23002700175312 /* AZDialStepperMinus.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B241EFFF17700350EDA /* AZDialStepperMinus.png */; };
+		443257681F23002700175312 /* AZStore-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2F1EFFF17700350EDA /* AZStore-32.png */; };
+		443257691F23002700175312 /* Icon32-CircleGray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BE13196CC100012FB5 /* Icon32-CircleGray@2x.png */; };
+		4432576A1F23002700175312 /* AZDialBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B221EFFF17700350EDA /* AZDialBack.png */; };
+		4432576B1F23002700175312 /* Icon44-ClipOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C332131A74CC00A97E1A /* Icon44-ClipOn.png */; };
+		4432576C1F23002700175312 /* AZWeb-Back-16@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4B1EFFF17800350EDA /* AZWeb-Back-16@2x.png */; };
+		4432576D1F23002700175312 /* Icon44-ClipOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C333131A74CC00A97E1A /* Icon44-ClipOn@2x.png */; };
+		4432576E1F23002700175312 /* Icon44-ClipOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C334131A74CC00A97E1A /* Icon44-ClipOff@2x.png */; };
+		4432576F1F23002700175312 /* Icon44-ClipOff.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C335131A74CC00A97E1A /* Icon44-ClipOff.png */; };
+		443257701F23002700175312 /* Icon-Drum.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C33E131A888F00A97E1A /* Icon-Drum.png */; };
+		443257711F23002700175312 /* Icon-Drum@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C33F131A889000A97E1A /* Icon-Drum@2x.png */; };
+		443257721F23002700175312 /* Icon-DrumPush.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C340131A889000A97E1A /* Icon-DrumPush.png */; };
+		443257731F23002700175312 /* AZDialBack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B231EFFF17700350EDA /* AZDialBack@2x.png */; };
+		443257741F23002700175312 /* Icon-DrumPush@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C341131A889000A97E1A /* Icon-DrumPush@2x.png */; };
+		443257751F23002700175312 /* Icon44-Calc.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CA131D5A4900FA1C3C /* Icon44-Calc.png */; };
+		443257761F23002700175312 /* AZDialTile.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2C1EFFF17700350EDA /* AZDialTile.png */; };
+		443257771F23002700175312 /* Icon44-Calc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CB131D5A4900FA1C3C /* Icon44-Calc@2x.png */; };
+		443257781F23002700175312 /* Icon32-MailNew@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CD141383730005F706 /* Icon32-MailNew@2x.png */; };
+		443257791F23002700175312 /* Icon32-MailNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CE141383730005F706 /* Icon32-MailNew.png */; };
+		4432577A1F23002700175312 /* Icon32-CircleCheckClear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CF141383730005F706 /* Icon32-CircleCheckClear@2x.png */; };
+		4432577B1F23002700175312 /* Icon32-CircleCheckClear.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998D0141383730005F706 /* Icon32-CircleCheckClear.png */; };
+		4432577C1F23002700175312 /* Icon32-PasteAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B11416602E00F9B612 /* Icon32-PasteAdd@2x.png */; };
+		4432577D1F23002700175312 /* Icon32-PasteAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B21416602E00F9B612 /* Icon32-PasteAdd.png */; };
+		4432577E1F23002700175312 /* AZStore-Stop-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B351EFFF17800350EDA /* AZStore-Stop-32.png */; };
+		4432577F1F23002700175312 /* AZDialStepperPlusDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2A1EFFF17700350EDA /* AZDialStepperPlusDown.png */; };
+		443257801F23002700175312 /* Icon32-PasteCopy.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B31416602E00F9B612 /* Icon32-PasteCopy.png */; };
+		443257811F23002700175312 /* Icon32-PasteCopy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B41416602E00F9B612 /* Icon32-PasteCopy@2x.png */; };
+		443257821F23002700175312 /* Icon32-SharedAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B51416602E00F9B612 /* Icon32-SharedAdd.png */; };
+		443257831F23002700175312 /* AZStore-Addin-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B311EFFF17700350EDA /* AZStore-Addin-32.png */; };
+		443257841F23002700175312 /* Icon57-CalcRoll@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3D1EFFF17800350EDA /* Icon57-CalcRoll@2x.png */; };
+		443257851F23002700175312 /* Icon32-SharedAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B61416602E00F9B612 /* Icon32-SharedAdd@2x.png */; };
+		443257861F23002700175312 /* AZDialStepperPlusDown@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2B1EFFF17700350EDA /* AZDialStepperPlusDown@2X.png */; };
+		443257871F23002700175312 /* Icon32-Shared@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B71416602E00F9B612 /* Icon32-Shared@2x.png */; };
+		443257881F23002700175312 /* Icon32-Shared.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B81416602E00F9B612 /* Icon32-Shared.png */; };
+		443257891F23002700175312 /* Icon57-Condition@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3F1EFFF17800350EDA /* Icon57-Condition@2x.png */; };
+		4432578A1F23002700175312 /* Icon32-GoogleDoc.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595D91416658B00F9B612 /* Icon32-GoogleDoc.png */; };
+		4432578B1F23002700175312 /* Icon32-GoogleDoc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DA1416658B00F9B612 /* Icon32-GoogleDoc@2x.png */; };
+		4432578C1F23002700175312 /* AZStore-Stop-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B361EFFF17800350EDA /* AZStore-Stop-32@2x.png */; };
+		4432578D1F23002700175312 /* Icon57-PackList.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B401EFFF17800350EDA /* Icon57-PackList.png */; };
+		4432578E1F23002700175312 /* Icon32-GoogleAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DB1416658B00F9B612 /* Icon32-GoogleAdd@2x.png */; };
+		4432578F1F23002700175312 /* AZDialStepperPlus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B291EFFF17700350EDA /* AZDialStepperPlus@2x.png */; };
+		443257901F23002700175312 /* Icon32-GoogleAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DC1416658B00F9B612 /* Icon32-GoogleAdd.png */; };
+		443257911F23002700175312 /* Icon32-NearPc.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DD1416658B00F9B612 /* Icon32-NearPc.png */; };
+		443257921F23002700175312 /* Icon57-Condition.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3E1EFFF17800350EDA /* Icon57-Condition.png */; };
+		443257931F23002700175312 /* Icon32-NearPc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DE1416658B00F9B612 /* Icon32-NearPc@2x.png */; };
+		443257941F23002700175312 /* Icon32-NearPcAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DF1416658B00F9B612 /* Icon32-NearPcAdd@2x.png */; };
+		443257951F23002700175312 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44965B981EFFFFFC00350EDA /* Localizable.strings */; };
+		443257961F23002700175312 /* Icon32-NearPcAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595E01416658B00F9B612 /* Icon32-NearPcAdd.png */; };
+		443257971F23002700175312 /* Icon32-Rakuten@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A5960114166E4200F9B612 /* Icon32-Rakuten@2x.png */; };
+		443257981F23002700175312 /* Icon32-Rakuten.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A5960214166E4200F9B612 /* Icon32-Rakuten.png */; };
+		443257991F23002700175312 /* Icon32-Amazon.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A5961F1416718E00F9B612 /* Icon32-Amazon.png */; };
+		4432579A1F23002700175312 /* Icon32-Amazon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A596201416718E00F9B612 /* Icon32-Amazon@2x.png */; };
+		4432579B1F23002700175312 /* Icon72.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EC383814A4DEF300127B41 /* Icon72.png */; };
+		4432579C1F23002700175312 /* Icon72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 449D12BD151817B700F68B6E /* Icon72@2x.png */; };
+		4432579D1F23002700175312 /* Tx-Back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 440B5B2C14B44E13006BEA96 /* Tx-Back@2x.png */; };
+		4432579E1F23002700175312 /* Tx-Back.png in Resources */ = {isa = PBXBuildFile; fileRef = 440B5B2D14B44E13006BEA96 /* Tx-Back.png */; };
+		4432579F1F23002700175312 /* AZStore-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B301EFFF17700350EDA /* AZStore-32@2x.png */; };
+		443257A01F23002700175312 /* AZWeb-Forward-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4C1EFFF17800350EDA /* AZWeb-Forward-16.png */; };
+		443257A11F23002700175312 /* Icon32-Setting@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962DE14B8456B0047E1C3 /* Icon32-Setting@2x.png */; };
+		443257A21F23002700175312 /* Icon32-Setting.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962DF14B8456B0047E1C3 /* Icon32-Setting.png */; };
+		443257A31F23002700175312 /* Icon32-Information.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962E014B8456B0047E1C3 /* Icon32-Information.png */; };
+		443257A41F23002700175312 /* AZAbout-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B111EFFF17700350EDA /* AZAbout-32@2x.png */; };
+		443257A51F23002700175312 /* AZStore-Space-44.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B331EFFF17800350EDA /* AZStore-Space-44.png */; };
+		443257A61F23002700175312 /* Icon32-Information@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962E114B8456B0047E1C3 /* Icon32-Information@2x.png */; };
+		443257A71F23002700175312 /* AZStore-Addin-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B321EFFF17700350EDA /* AZStore-Addin-32@2x.png */; };
+		443257A81F23002700175312 /* Icon32-ExtParts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D3E1AF14B8BD9D0028FF24 /* Icon32-ExtParts@2x.png */; };
+		443257A91F23002700175312 /* Icon32-ExtParts.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D3E1B014B8BD9D0028FF24 /* Icon32-ExtParts.png */; };
+		443257AA1F23002700175312 /* Icon-Close-44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD07A14C17CAF003FF260 /* Icon-Close-44@2x.png */; };
+		443257AB1F23002700175312 /* Icon-Close-44.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD07B14C17CAF003FF260 /* Icon-Close-44.png */; };
+		443257AC1F23002700175312 /* Icon-Info-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD07C14C17CAF003FF260 /* Icon-Info-32@2x.png */; };
+		443257AD1F23002700175312 /* AZDialStepperMinus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B251EFFF17700350EDA /* AZDialStepperMinus@2x.png */; };
+		443257AE1F23002700175312 /* Icon-Info-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD07D14C17CAF003FF260 /* Icon-Info-32.png */; };
+		443257AF1F23002700175312 /* Icon-Setting-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD07E14C17CAF003FF260 /* Icon-Setting-32@2x.png */; };
+		443257B01F23002700175312 /* Icon-Setting-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD07F14C17CAF003FF260 /* Icon-Setting-32.png */; };
+		443257B11F23002700175312 /* AZAbout.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B131EFFF17700350EDA /* AZAbout.xib */; };
+		443257B21F23002700175312 /* Icon-Store-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD08814C17CAF003FF260 /* Icon-Store-40@2x.png */; };
+		443257B31F23002700175312 /* Icon-Store-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD08914C17CAF003FF260 /* Icon-Store-40.png */; };
+		443257B41F23002700175312 /* Icon57-PayNote.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B421EFFF17800350EDA /* Icon57-PayNote.png */; };
+		443257B51F23002700175312 /* Icon57-PayNote@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B431EFFF17800350EDA /* Icon57-PayNote@2x.png */; };
+		443257B61F23002700175312 /* AZDialStepperMinusDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B261EFFF17700350EDA /* AZDialStepperMinusDown.png */; };
+		443257B71F23002700175312 /* AZLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44227A1F1F1217F4003D9C8B /* AZLocalizable.strings */; };
+		443257B81F23002700175312 /* Icon32-Picasa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC158F14E806590007229F /* Icon32-Picasa@2x.png */; };
+		443257B91F23002700175312 /* Icon57-SplitPay.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B441EFFF17800350EDA /* Icon57-SplitPay.png */; };
+		443257BA1F23002700175312 /* Icon32-Picasa.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159014E806590007229F /* Icon32-Picasa.png */; };
+		443257BB1F23002700175312 /* Icon32-PicasaBlack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159314E8093A0007229F /* Icon32-PicasaBlack@2x.png */; };
+		443257BC1F23002700175312 /* AZAbout-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B121EFFF17700350EDA /* AZAbout-iPad.xib */; };
+		443257BD1F23002700175312 /* Icon32-PicasaBlack.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159414E8093A0007229F /* Icon32-PicasaBlack.png */; };
+		443257BE1F23002700175312 /* Icon24-Camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 44C167E914E9505000F54B55 /* Icon24-Camera.png */; };
+		443257BF1F23002700175312 /* AZWeb-Forward-16@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4D1EFFF17800350EDA /* AZWeb-Forward-16@2x.png */; };
+		443257C01F23002700175312 /* Icon24-Camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44C167EA14E9505000F54B55 /* Icon24-Camera@2x.png */; };
+		443257C11F23002700175312 /* Icon64-DownloadNG@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44B2E95F14ED58D000B45B62 /* Icon64-DownloadNG@2x.png */; };
+		443257C21F23002700175312 /* Icon64-DownloadNG.png in Resources */ = {isa = PBXBuildFile; fileRef = 44B2E96014ED58D000B45B62 /* Icon64-DownloadNG.png */; };
+		443257C31F23002700175312 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44F195731EBB4C4900F5FF93 /* Images.xcassets */; };
+		443257C41F23002700175312 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 44E486B51EC80B910041876C /* GoogleService-Info.plist */; };
+		443257C51F23002700175312 /* Icon72bag.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218450160392BA0097FF63 /* Icon72bag.png */; };
+		443257C61F23002700175312 /* Icon72bag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218451160392BB0097FF63 /* Icon72bag@2x.png */; };
+		443257C71F23002700175312 /* Icon57-PackList@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B411EFFF17800350EDA /* Icon57-PackList@2x.png */; };
+		443257C91F23002700175312 /* AZDial.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B211EFFF17700350EDA /* AZDial.m */; };
+		443257CA1F23002700175312 /* NSDataBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B461EFFF17800350EDA /* NSDataBase64.m */; };
+		443257CB1F23002700175312 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
+		443257CC1F23002700175312 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* AppDelegate.m */; };
+		443257CD1F23002700175312 /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F1957B1EBDB66000F5FF93 /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		443257CE1F23002700175312 /* Mapping4-5.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 445602E41F053EA900A83A50 /* Mapping4-5.xcmappingmodel */; };
+		443257CF1F23002700175312 /* E1viewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* E1viewController.m */; };
+		443257D01F23002700175312 /* AZWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B4F1EFFF17800350EDA /* AZWebView.m */; };
+		443257D11F23002700175312 /* Mapping2-3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 445602EA1F053EF300A83A50 /* Mapping2-3.xcmappingmodel */; };
+		443257D21F23002700175312 /* Elements.m in Sources */ = {isa = PBXBuildFile; fileRef = 4457518310C7A65900419205 /* Elements.m */; };
+		443257D31F23002700175312 /* E1edit.m in Sources */ = {isa = PBXBuildFile; fileRef = 4457518A10C7A9E700419205 /* E1edit.m */; };
+		443257D41F23002700175312 /* E2viewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 449D67CC10C80DCB00691BF4 /* E2viewController.m */; };
+		443257D51F23002700175312 /* E2edit.m in Sources */ = {isa = PBXBuildFile; fileRef = 447DFE3910C9342F00C887FA /* E2edit.m */; };
+		443257D61F23002700175312 /* E3viewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 446EFA1210CB988D0035EA2A /* E3viewController.m */; };
+		443257D71F23002700175312 /* SpListTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4400E1FC110F493A000DFC3B /* SpListTVC.m */; };
+		443257D81F23002700175312 /* E3detailTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 446AAE251111F0250077BF89 /* E3detailTVC.m */; };
+		443257D91F23002700175312 /* SettingTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 448549021115726F00D10CC8 /* SettingTVC.m */; };
+		443257DA1F23002700175312 /* selectGroupTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4491C7B511186531005955FD /* selectGroupTVC.m */; };
+		443257DB1F23002700175312 /* Global.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ADD3A7115A1B4800829977 /* Global.m */; };
+		443257DC1F23002700175312 /* FileCsv.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F07DBA119AFE69007D8863 /* FileCsv.m */; };
+		443257DD1F23002700175312 /* AZStoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B381EFFF17800350EDA /* AZStoreCell.m */; };
+		443257DE1F23002700175312 /* AZStoreTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B3B1EFFF17800350EDA /* AZStoreTVC.m */; };
+		443257DF1F23002700175312 /* SpSearchVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D7D44F125484B500E1E362 /* SpSearchVC.m */; };
+		443257E01F23002700175312 /* SpAppendVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44601C9C126187BA005E189A /* SpAppendVC.m */; };
+		443257E11F23002700175312 /* SpPOST.m in Sources */ = {isa = PBXBuildFile; fileRef = 44AFCC5312633920003352DE /* SpPOST.m */; };
+		443257E21F23002700175312 /* SpDetailTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44E070D912732BF3003BF988 /* SpDetailTVC.m */; };
+		443257E31F23002700175312 /* CalcView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4453C33B131A86C200A97E1A /* CalcView.m */; };
+		443257E41F23002700175312 /* UIViewController+azAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 44227A181F08E4B4003D9C8B /* UIViewController+azAlert.m */; };
+		443257E51F23002700175312 /* AzPackList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 445998BE1413757E0005F706 /* AzPackList.xcdatamodeld */; };
+		443257E61F23002700175312 /* AZClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B1B1EFFF17700350EDA /* AZClass.m */; };
+		443257E71F23002700175312 /* Mapping3-4.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 445998C41413757E0005F706 /* Mapping3-4.xcmappingmodel */; };
+		443257E81F23002700175312 /* PadRootVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 447990FB137582A2003F437A /* PadRootVC.m */; };
+		443257E91F23002700175312 /* AZAboutVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B151EFFF17700350EDA /* AZAboutVC.m */; };
+		443257EA1F23002700175312 /* PatternImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 441962E714B87DED0047E1C3 /* PatternImageView.m */; };
+		443257EB1F23002700175312 /* NSDataAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 44A7DB2D14DE6A7A00DB72E2 /* NSDataAddition.m */; };
+		443257EC1F23002700175312 /* UIDevice-Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 44835ABE156BDC1E00A83167 /* UIDevice-Hardware.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		443257ED1F23002700175312 /* MocFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4416337415F25D1B009CD324 /* MocFunctions.m */; };
+		443257EE1F23002700175312 /* VerificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B481EFFF17800350EDA /* VerificationController.m */; };
+		443257F01F23002700175312 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 44D7CE6B153660F900AE6920 /* libsqlite3.0.dylib */; };
+		443257F11F23002700175312 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 440DD96C14B316D800C9B40C /* StoreKit.framework */; };
+		443257F21F23002700175312 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A2C0A4131BC9B900256C08 /* QuartzCore.framework */; };
+		443257F31F23002700175312 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A2C0A0131BC9A000256C08 /* MediaPlayer.framework */; };
+		443257F41F23002700175312 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */; };
+		443257F51F23002700175312 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A2C09D131BC98700256C08 /* AudioToolbox.framework */; };
+		443257F61F23002700175312 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		443257F71F23002700175312 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		443257F81F23002700175312 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28860BE40F44EE6400985440 /* CoreData.framework */; };
+		443257F91F23002700175312 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C2A7D41108AD3C006445DC /* Security.framework */; };
+		443257FA1F23002700175312 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44EEBEDA1185E20000EA26AB /* CFNetwork.framework */; };
+		443257FB1F23002700175312 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A2C0A2131BC9B100256C08 /* MessageUI.framework */; };
+		443257FC1F23002700175312 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4422F3C8135F215C0067EBEF /* SystemConfiguration.framework */; };
+		443257FD1F23002700175312 /* libPods-PackList.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A7714273E80A6CA0EBF7768C /* libPods-PackList.a */; };
+		443257FF1F23002700175312 /* AZAboutVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B141EFFF17700350EDA /* AZAboutVC.h */; };
+		443258001F23002700175312 /* PackList_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 4486955F10F5ABCC00AD02D8 /* PackList_Prefix.pch */; };
+		443258011F23002700175312 /* SpListTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 4400E1FB110F493A000DFC3B /* SpListTVC.h */; };
+		443258021F23002700175312 /* AZStoreTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B3A1EFFF17800350EDA /* AZStoreTVC.h */; };
+		443258031F23002700175312 /* AZClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B1A1EFFF17700350EDA /* AZClass.h */; };
+		443258041F23002700175312 /* VerificationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B471EFFF17800350EDA /* VerificationController.h */; };
+		443258051F23002700175312 /* E3detailTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 446AAE241111F0250077BF89 /* E3detailTVC.h */; };
+		443258061F23002700175312 /* NSDataBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B451EFFF17800350EDA /* NSDataBase64.h */; };
+		443258071F23002700175312 /* SettingTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 448549031115726F00D10CC8 /* SettingTVC.h */; };
+		443258081F23002700175312 /* selectGroupTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 4491C7B411186531005955FD /* selectGroupTVC.h */; };
+		443258091F23002700175312 /* AZDial.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B201EFFF17700350EDA /* AZDial.h */; };
+		4432580A1F23002700175312 /* FileCsv.h in Headers */ = {isa = PBXBuildFile; fileRef = 44F07DB9119AFE69007D8863 /* FileCsv.h */; };
+		4432580B1F23002700175312 /* SpSearchVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44D7D44E125484B500E1E362 /* SpSearchVC.h */; };
+		4432580C1F23002700175312 /* UIViewController+azAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = 44227A171F08E4B4003D9C8B /* UIViewController+azAlert.h */; };
+		4432580D1F23002700175312 /* SpAppendVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44601C9D126187BA005E189A /* SpAppendVC.h */; };
+		4432580E1F23002700175312 /* SFHFKeychainUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 44F1957A1EBDB66000F5FF93 /* SFHFKeychainUtils.h */; };
+		4432580F1F23002700175312 /* SpPOST.h in Headers */ = {isa = PBXBuildFile; fileRef = 44AFCC5412633920003352DE /* SpPOST.h */; };
+		443258101F23002700175312 /* SpDetailTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44E070DA12732BF3003BF988 /* SpDetailTVC.h */; };
+		443258111F23002700175312 /* CalcView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4453C33A131A86C200A97E1A /* CalcView.h */; };
+		443258121F23002700175312 /* AZWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B4E1EFFF17800350EDA /* AZWebView.h */; };
+		443258131F23002700175312 /* PatternImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 441962E614B87DED0047E1C3 /* PatternImageView.h */; };
+		443258141F23002700175312 /* NSDataAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 44A7DB2C14DE6A7A00DB72E2 /* NSDataAddition.h */; };
+		443258151F23002700175312 /* UIDevice-Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 44835ABD156BDC1E00A83167 /* UIDevice-Hardware.h */; };
+		443258161F23002700175312 /* MocFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4416337515F25D1B009CD324 /* MocFunctions.h */; };
+		443258171F23002700175312 /* AZStoreCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B371EFFF17800350EDA /* AZStoreCell.h */; };
+		443258CA1F23097800175312 /* InfoDev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* InfoDev.plist */; };
+		443258CB1F23097D00175312 /* InfoS.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4432581E1F23002700175312 /* InfoS.plist */; };
 		445602E51F053EA900A83A50 /* Mapping4-5.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 445602E41F053EA900A83A50 /* Mapping4-5.xcmappingmodel */; };
 		445602EB1F053EF300A83A50 /* Mapping2-3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 445602EA1F053EF300A83A50 /* Mapping2-3.xcmappingmodel */; };
 		445998C61413757E0005F706 /* AzPackList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 445998BE1413757E0005F706 /* AzPackList.xcdatamodeld */; };
@@ -257,6 +473,8 @@
 		44227A201F1217F4003D9C8B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AZLocalizable.strings; sourceTree = "<group>"; };
 		44227A221F121801003D9C8B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/AZLocalizable.strings; sourceTree = "<group>"; };
 		4422F3C8135F215C0067EBEF /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		4432581D1F23002700175312 /* PackList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PackList.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4432581E1F23002700175312 /* InfoS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = InfoS.plist; path = /Users/masa/Code2017/PackList/Source/InfoS.plist; sourceTree = "<absolute>"; };
 		4453C332131A74CC00A97E1A /* Icon44-ClipOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon44-ClipOn.png"; path = "Design/Icon44-ClipOn.png"; sourceTree = "<group>"; };
 		4453C333131A74CC00A97E1A /* Icon44-ClipOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon44-ClipOn@2x.png"; path = "Design/Icon44-ClipOn@2x.png"; sourceTree = "<group>"; };
 		4453C334131A74CC00A97E1A /* Icon44-ClipOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon44-ClipOff@2x.png"; path = "Design/Icon44-ClipOff@2x.png"; sourceTree = "<group>"; };
@@ -393,7 +611,7 @@
 		44965B9D1F02962500350EDA /* ja */ = {isa = PBXFileReference; lastKnownFileType = text; name = ja; path = ja.lproj/AZAbout_Agree.txt; sourceTree = "<group>"; };
 		44965B9F1F02963600350EDA /* en */ = {isa = PBXFileReference; lastKnownFileType = text; name = en; path = en.lproj/AZAbout_Agree.txt; sourceTree = "<group>"; };
 		44965BA01F03E69900350EDA /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
-		4499D7C9134D9D8900342648 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4499D7C9134D9D8900342648 /* InfoDev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InfoDev.plist; sourceTree = "<group>"; };
 		4499D9BC134DA60700342648 /* PackList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PackList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4499D9C0134DB1D300342648 /* Icon57@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57@2x.png"; sourceTree = "<group>"; };
 		4499D9C1134DB1D300342648 /* Icon57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon57.png; sourceTree = "<group>"; };
@@ -483,6 +701,27 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		443257EF1F23002700175312 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				443257F01F23002700175312 /* libsqlite3.0.dylib in Frameworks */,
+				443257F11F23002700175312 /* StoreKit.framework in Frameworks */,
+				443257F21F23002700175312 /* QuartzCore.framework in Frameworks */,
+				443257F31F23002700175312 /* MediaPlayer.framework in Frameworks */,
+				443257F41F23002700175312 /* CoreGraphics.framework in Frameworks */,
+				443257F51F23002700175312 /* AudioToolbox.framework in Frameworks */,
+				443257F61F23002700175312 /* Foundation.framework in Frameworks */,
+				443257F71F23002700175312 /* UIKit.framework in Frameworks */,
+				443257F81F23002700175312 /* CoreData.framework in Frameworks */,
+				443257F91F23002700175312 /* Security.framework in Frameworks */,
+				443257FA1F23002700175312 /* CFNetwork.framework in Frameworks */,
+				443257FB1F23002700175312 /* MessageUI.framework in Frameworks */,
+				443257FC1F23002700175312 /* SystemConfiguration.framework in Frameworks */,
+				443257FD1F23002700175312 /* libPods-PackList.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4499D832134DA60600342648 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -520,6 +759,7 @@
 			isa = PBXGroup;
 			children = (
 				4499D9BC134DA60700342648 /* PackList.app */,
+				4432581D1F23002700175312 /* PackList.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -556,7 +796,8 @@
 				445602EA1F053EF300A83A50 /* Mapping2-3.xcmappingmodel */,
 				445998C41413757E0005F706 /* Mapping3-4.xcmappingmodel */,
 				445602E41F053EA900A83A50 /* Mapping4-5.xcmappingmodel */,
-				4499D7C9134D9D8900342648 /* Info.plist */,
+				4499D7C9134D9D8900342648 /* InfoDev.plist */,
+				4432581E1F23002700175312 /* InfoS.plist */,
 				4486955F10F5ABCC00AD02D8 /* PackList_Prefix.pch */,
 			);
 			name = Resources;
@@ -912,6 +1153,38 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		443257FE1F23002700175312 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				443257FF1F23002700175312 /* AZAboutVC.h in Headers */,
+				443258001F23002700175312 /* PackList_Prefix.pch in Headers */,
+				443258011F23002700175312 /* SpListTVC.h in Headers */,
+				443258021F23002700175312 /* AZStoreTVC.h in Headers */,
+				443258031F23002700175312 /* AZClass.h in Headers */,
+				443258041F23002700175312 /* VerificationController.h in Headers */,
+				443258051F23002700175312 /* E3detailTVC.h in Headers */,
+				443258061F23002700175312 /* NSDataBase64.h in Headers */,
+				443258071F23002700175312 /* SettingTVC.h in Headers */,
+				443258081F23002700175312 /* selectGroupTVC.h in Headers */,
+				443258091F23002700175312 /* AZDial.h in Headers */,
+				4432580A1F23002700175312 /* FileCsv.h in Headers */,
+				4432580B1F23002700175312 /* SpSearchVC.h in Headers */,
+				4432580C1F23002700175312 /* UIViewController+azAlert.h in Headers */,
+				4432580D1F23002700175312 /* SpAppendVC.h in Headers */,
+				4432580E1F23002700175312 /* SFHFKeychainUtils.h in Headers */,
+				4432580F1F23002700175312 /* SpPOST.h in Headers */,
+				443258101F23002700175312 /* SpDetailTVC.h in Headers */,
+				443258111F23002700175312 /* CalcView.h in Headers */,
+				443258121F23002700175312 /* AZWebView.h in Headers */,
+				443258131F23002700175312 /* PatternImageView.h in Headers */,
+				443258141F23002700175312 /* NSDataAddition.h in Headers */,
+				443258151F23002700175312 /* UIDevice-Hardware.h in Headers */,
+				443258161F23002700175312 /* MocFunctions.h in Headers */,
+				443258171F23002700175312 /* AZStoreCell.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4499D841134DA60600342648 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -947,9 +1220,30 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		4499D7CD134DA60600342648 /* PackList */ = {
+		4432573C1F23002700175312 /* PackList */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4499D9B8134DA60700342648 /* Build configuration list for PBXNativeTarget "PackList" */;
+			buildConfigurationList = 4432581A1F23002700175312 /* Build configuration list for PBXNativeTarget "PackList" */;
+			buildPhases = (
+				4432573D1F23002700175312 /* [CP] Check Pods Manifest.lock */,
+				4432573E1F23002700175312 /* Resources */,
+				443257C81F23002700175312 /* Sources */,
+				443257EF1F23002700175312 /* Frameworks */,
+				443257FE1F23002700175312 /* Headers */,
+				443258181F23002700175312 /* [CP] Embed Pods Frameworks */,
+				443258191F23002700175312 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PackList;
+			productName = iPack;
+			productReference = 4432581D1F23002700175312 /* PackList.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4499D7CD134DA60600342648 /* PackListDev */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4499D9B8134DA60700342648 /* Build configuration list for PBXNativeTarget "PackListDev" */;
 			buildPhases = (
 				52384375A771C21DB0EC224F /* [CP] Check Pods Manifest.lock */,
 				4499D7CE134DA60600342648 /* Resources */,
@@ -963,7 +1257,7 @@
 			);
 			dependencies = (
 			);
-			name = PackList;
+			name = PackListDev;
 			productName = iPack;
 			productReference = 4499D9BC134DA60700342648 /* PackList.app */;
 			productType = "com.apple.product-type.application";
@@ -1007,12 +1301,158 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4499D7CD134DA60600342648 /* PackList */,
+				4499D7CD134DA60600342648 /* PackListDev */,
+				4432573C1F23002700175312 /* PackList */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		4432573E1F23002700175312 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4432573F1F23002700175312 /* Icon57.png in Resources */,
+				443257401F23002700175312 /* Icon57@2x.png in Resources */,
+				443257411F23002700175312 /* Launch Screen.storyboard in Resources */,
+				443257421F23002700175312 /* Icon16-ItemGrayHide.png in Resources */,
+				443257431F23002700175312 /* AZDialStepperMinusDown@2x.png in Resources */,
+				443257441F23002700175312 /* AZDialStepperPlus.png in Resources */,
+				443257451F23002700175312 /* Icon16-ItemGrayHide@2x.png in Resources */,
+				443257461F23002700175312 /* Icon16-ItemGrayShow.png in Resources */,
+				443257471F23002700175312 /* AZAbout_Agree.txt in Resources */,
+				443257481F23002700175312 /* Icon16-ItemGrayShow@2x.png in Resources */,
+				443257491F23002700175312 /* Icon16-Return1.png in Resources */,
+				4432574A1F23002700175312 /* Icon16-Return1@2x.png in Resources */,
+				4432574B1F23002700175312 /* Icon16-Return2.png in Resources */,
+				4432574C1F23002700175312 /* Icon16-Return2@2x.png in Resources */,
+				4432574D1F23002700175312 /* Icon16-Return3.png in Resources */,
+				4432574E1F23002700175312 /* Icon16-Return3@2x.png in Resources */,
+				4432574F1F23002700175312 /* Icon24-GreenPlus.png in Resources */,
+				443257501F23002700175312 /* AZWeb-Back-16.png in Resources */,
+				443257511F23002700175312 /* E1viewController.xib in Resources */,
+				443257521F23002700175312 /* Icon24-GreenPlus@2x.png in Resources */,
+				443257531F23002700175312 /* AZAbout-32.png in Resources */,
+				443257541F23002700175312 /* AZStoreCell.xib in Resources */,
+				443257551F23002700175312 /* Icon24-RedMinus.png in Resources */,
+				443257561F23002700175312 /* AZStore-Space-44@2x.png in Resources */,
+				443257571F23002700175312 /* Icon24-RedMinus@2x.png in Resources */,
+				443257581F23002700175312 /* Icon32-BagBlue.png in Resources */,
+				443257591F23002700175312 /* Icon32-BagBlue@2x.png in Resources */,
+				4432575A1F23002700175312 /* Icon32-BagGray.png in Resources */,
+				4432575B1F23002700175312 /* Icon32-BagGray@2x.png in Resources */,
+				4432575C1F23002700175312 /* Icon32-BagYellow.png in Resources */,
+				4432575D1F23002700175312 /* Icon32-BagYellow@2x.png in Resources */,
+				4432575E1F23002700175312 /* Icon32-Circle.png in Resources */,
+				4432575F1F23002700175312 /* Icon32-Circle@2x.png in Resources */,
+				443257601F23002700175312 /* Icon32-CircleCheck.png in Resources */,
+				443257611F23002700175312 /* Icon32-CircleCheck@2x.png in Resources */,
+				443257621F23002700175312 /* Icon32-CircleCheck2.png in Resources */,
+				443257631F23002700175312 /* Icon32-CircleCheck2@2x.png in Resources */,
+				443257641F23002700175312 /* AZDialTile@2x.png in Resources */,
+				443257651F23002700175312 /* Icon57-CalcRoll.png in Resources */,
+				443257661F23002700175312 /* Icon32-CircleGray.png in Resources */,
+				443257671F23002700175312 /* AZDialStepperMinus.png in Resources */,
+				443257681F23002700175312 /* AZStore-32.png in Resources */,
+				443257691F23002700175312 /* Icon32-CircleGray@2x.png in Resources */,
+				4432576A1F23002700175312 /* AZDialBack.png in Resources */,
+				4432576B1F23002700175312 /* Icon44-ClipOn.png in Resources */,
+				4432576C1F23002700175312 /* AZWeb-Back-16@2x.png in Resources */,
+				4432576D1F23002700175312 /* Icon44-ClipOn@2x.png in Resources */,
+				4432576E1F23002700175312 /* Icon44-ClipOff@2x.png in Resources */,
+				4432576F1F23002700175312 /* Icon44-ClipOff.png in Resources */,
+				443257701F23002700175312 /* Icon-Drum.png in Resources */,
+				443257711F23002700175312 /* Icon-Drum@2x.png in Resources */,
+				443257721F23002700175312 /* Icon-DrumPush.png in Resources */,
+				443257731F23002700175312 /* AZDialBack@2x.png in Resources */,
+				443257741F23002700175312 /* Icon-DrumPush@2x.png in Resources */,
+				443257751F23002700175312 /* Icon44-Calc.png in Resources */,
+				443257761F23002700175312 /* AZDialTile.png in Resources */,
+				443257771F23002700175312 /* Icon44-Calc@2x.png in Resources */,
+				443257781F23002700175312 /* Icon32-MailNew@2x.png in Resources */,
+				443257791F23002700175312 /* Icon32-MailNew.png in Resources */,
+				4432577A1F23002700175312 /* Icon32-CircleCheckClear@2x.png in Resources */,
+				4432577B1F23002700175312 /* Icon32-CircleCheckClear.png in Resources */,
+				4432577C1F23002700175312 /* Icon32-PasteAdd@2x.png in Resources */,
+				4432577D1F23002700175312 /* Icon32-PasteAdd.png in Resources */,
+				4432577E1F23002700175312 /* AZStore-Stop-32.png in Resources */,
+				4432577F1F23002700175312 /* AZDialStepperPlusDown.png in Resources */,
+				443257801F23002700175312 /* Icon32-PasteCopy.png in Resources */,
+				443257811F23002700175312 /* Icon32-PasteCopy@2x.png in Resources */,
+				443257821F23002700175312 /* Icon32-SharedAdd.png in Resources */,
+				443257831F23002700175312 /* AZStore-Addin-32.png in Resources */,
+				443257841F23002700175312 /* Icon57-CalcRoll@2x.png in Resources */,
+				443257851F23002700175312 /* Icon32-SharedAdd@2x.png in Resources */,
+				443257861F23002700175312 /* AZDialStepperPlusDown@2X.png in Resources */,
+				443257871F23002700175312 /* Icon32-Shared@2x.png in Resources */,
+				443257881F23002700175312 /* Icon32-Shared.png in Resources */,
+				443257891F23002700175312 /* Icon57-Condition@2x.png in Resources */,
+				4432578A1F23002700175312 /* Icon32-GoogleDoc.png in Resources */,
+				4432578B1F23002700175312 /* Icon32-GoogleDoc@2x.png in Resources */,
+				4432578C1F23002700175312 /* AZStore-Stop-32@2x.png in Resources */,
+				4432578D1F23002700175312 /* Icon57-PackList.png in Resources */,
+				4432578E1F23002700175312 /* Icon32-GoogleAdd@2x.png in Resources */,
+				4432578F1F23002700175312 /* AZDialStepperPlus@2x.png in Resources */,
+				443257901F23002700175312 /* Icon32-GoogleAdd.png in Resources */,
+				443257911F23002700175312 /* Icon32-NearPc.png in Resources */,
+				443257921F23002700175312 /* Icon57-Condition.png in Resources */,
+				443257931F23002700175312 /* Icon32-NearPc@2x.png in Resources */,
+				443257941F23002700175312 /* Icon32-NearPcAdd@2x.png in Resources */,
+				443257951F23002700175312 /* Localizable.strings in Resources */,
+				443257961F23002700175312 /* Icon32-NearPcAdd.png in Resources */,
+				443257971F23002700175312 /* Icon32-Rakuten@2x.png in Resources */,
+				443257981F23002700175312 /* Icon32-Rakuten.png in Resources */,
+				443257991F23002700175312 /* Icon32-Amazon.png in Resources */,
+				4432579A1F23002700175312 /* Icon32-Amazon@2x.png in Resources */,
+				443258CB1F23097D00175312 /* InfoS.plist in Resources */,
+				4432579B1F23002700175312 /* Icon72.png in Resources */,
+				4432579C1F23002700175312 /* Icon72@2x.png in Resources */,
+				4432579D1F23002700175312 /* Tx-Back@2x.png in Resources */,
+				4432579E1F23002700175312 /* Tx-Back.png in Resources */,
+				4432579F1F23002700175312 /* AZStore-32@2x.png in Resources */,
+				443257A01F23002700175312 /* AZWeb-Forward-16.png in Resources */,
+				443257A11F23002700175312 /* Icon32-Setting@2x.png in Resources */,
+				443257A21F23002700175312 /* Icon32-Setting.png in Resources */,
+				443257A31F23002700175312 /* Icon32-Information.png in Resources */,
+				443257A41F23002700175312 /* AZAbout-32@2x.png in Resources */,
+				443257A51F23002700175312 /* AZStore-Space-44.png in Resources */,
+				443257A61F23002700175312 /* Icon32-Information@2x.png in Resources */,
+				443257A71F23002700175312 /* AZStore-Addin-32@2x.png in Resources */,
+				443257A81F23002700175312 /* Icon32-ExtParts@2x.png in Resources */,
+				443257A91F23002700175312 /* Icon32-ExtParts.png in Resources */,
+				443257AA1F23002700175312 /* Icon-Close-44@2x.png in Resources */,
+				443257AB1F23002700175312 /* Icon-Close-44.png in Resources */,
+				443257AC1F23002700175312 /* Icon-Info-32@2x.png in Resources */,
+				443257AD1F23002700175312 /* AZDialStepperMinus@2x.png in Resources */,
+				443257AE1F23002700175312 /* Icon-Info-32.png in Resources */,
+				443257AF1F23002700175312 /* Icon-Setting-32@2x.png in Resources */,
+				443257B01F23002700175312 /* Icon-Setting-32.png in Resources */,
+				443257B11F23002700175312 /* AZAbout.xib in Resources */,
+				443257B21F23002700175312 /* Icon-Store-40@2x.png in Resources */,
+				443257B31F23002700175312 /* Icon-Store-40.png in Resources */,
+				443257B41F23002700175312 /* Icon57-PayNote.png in Resources */,
+				443257B51F23002700175312 /* Icon57-PayNote@2x.png in Resources */,
+				443257B61F23002700175312 /* AZDialStepperMinusDown.png in Resources */,
+				443257B71F23002700175312 /* AZLocalizable.strings in Resources */,
+				443257B81F23002700175312 /* Icon32-Picasa@2x.png in Resources */,
+				443257B91F23002700175312 /* Icon57-SplitPay.png in Resources */,
+				443257BA1F23002700175312 /* Icon32-Picasa.png in Resources */,
+				443257BB1F23002700175312 /* Icon32-PicasaBlack@2x.png in Resources */,
+				443257BC1F23002700175312 /* AZAbout-iPad.xib in Resources */,
+				443257BD1F23002700175312 /* Icon32-PicasaBlack.png in Resources */,
+				443257BE1F23002700175312 /* Icon24-Camera.png in Resources */,
+				443257BF1F23002700175312 /* AZWeb-Forward-16@2x.png in Resources */,
+				443257C01F23002700175312 /* Icon24-Camera@2x.png in Resources */,
+				443257C11F23002700175312 /* Icon64-DownloadNG@2x.png in Resources */,
+				443257C21F23002700175312 /* Icon64-DownloadNG.png in Resources */,
+				443257C31F23002700175312 /* Images.xcassets in Resources */,
+				443257C41F23002700175312 /* GoogleService-Info.plist in Resources */,
+				443257C51F23002700175312 /* Icon72bag.png in Resources */,
+				443257C61F23002700175312 /* Icon72bag@2x.png in Resources */,
+				443257C71F23002700175312 /* Icon57-PackList@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4499D7CE134DA60600342648 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1073,6 +1513,7 @@
 				4499D7FC134DA60600342648 /* Icon-DrumPush@2x.png in Resources */,
 				4499D7FD134DA60600342648 /* Icon44-Calc.png in Resources */,
 				44965B661EFFF17800350EDA /* AZDialTile.png in Resources */,
+				443258CA1F23097800175312 /* InfoDev.plist in Resources */,
 				4499D7FE134DA60600342648 /* Icon44-Calc@2x.png in Resources */,
 				445998D2141383730005F706 /* Icon32-MailNew@2x.png in Resources */,
 				445998D6141383730005F706 /* Icon32-MailNew.png in Resources */,
@@ -1175,6 +1616,51 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PackList/Pods-PackList-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		4432573D1F23002700175312 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		443258181F23002700175312 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PackList/Pods-PackList-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		443258191F23002700175312 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PackList/Pods-PackList-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		52384375A771C21DB0EC224F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1208,6 +1694,51 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		443257C81F23002700175312 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				443257C91F23002700175312 /* AZDial.m in Sources */,
+				443257CA1F23002700175312 /* NSDataBase64.m in Sources */,
+				443257CB1F23002700175312 /* main.m in Sources */,
+				443257CC1F23002700175312 /* AppDelegate.m in Sources */,
+				443257CD1F23002700175312 /* SFHFKeychainUtils.m in Sources */,
+				443257CE1F23002700175312 /* Mapping4-5.xcmappingmodel in Sources */,
+				443257CF1F23002700175312 /* E1viewController.m in Sources */,
+				443257D01F23002700175312 /* AZWebView.m in Sources */,
+				443257D11F23002700175312 /* Mapping2-3.xcmappingmodel in Sources */,
+				443257D21F23002700175312 /* Elements.m in Sources */,
+				443257D31F23002700175312 /* E1edit.m in Sources */,
+				443257D41F23002700175312 /* E2viewController.m in Sources */,
+				443257D51F23002700175312 /* E2edit.m in Sources */,
+				443257D61F23002700175312 /* E3viewController.m in Sources */,
+				443257D71F23002700175312 /* SpListTVC.m in Sources */,
+				443257D81F23002700175312 /* E3detailTVC.m in Sources */,
+				443257D91F23002700175312 /* SettingTVC.m in Sources */,
+				443257DA1F23002700175312 /* selectGroupTVC.m in Sources */,
+				443257DB1F23002700175312 /* Global.m in Sources */,
+				443257DC1F23002700175312 /* FileCsv.m in Sources */,
+				443257DD1F23002700175312 /* AZStoreCell.m in Sources */,
+				443257DE1F23002700175312 /* AZStoreTVC.m in Sources */,
+				443257DF1F23002700175312 /* SpSearchVC.m in Sources */,
+				443257E01F23002700175312 /* SpAppendVC.m in Sources */,
+				443257E11F23002700175312 /* SpPOST.m in Sources */,
+				443257E21F23002700175312 /* SpDetailTVC.m in Sources */,
+				443257E31F23002700175312 /* CalcView.m in Sources */,
+				443257E41F23002700175312 /* UIViewController+azAlert.m in Sources */,
+				443257E51F23002700175312 /* AzPackList.xcdatamodeld in Sources */,
+				443257E61F23002700175312 /* AZClass.m in Sources */,
+				443257E71F23002700175312 /* Mapping3-4.xcmappingmodel in Sources */,
+				443257E81F23002700175312 /* PadRootVC.m in Sources */,
+				443257E91F23002700175312 /* AZAboutVC.m in Sources */,
+				443257EA1F23002700175312 /* PatternImageView.m in Sources */,
+				443257EB1F23002700175312 /* NSDataAddition.m in Sources */,
+				443257EC1F23002700175312 /* UIDevice-Hardware.m in Sources */,
+				443257ED1F23002700175312 /* MocFunctions.m in Sources */,
+				443257EE1F23002700175312 /* VerificationController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4499D802134DA60600342648 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1286,6 +1817,89 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		4432581B1F23002700175312 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0856A4FFB9B3EE59C836D0D3 /* Pods-PackList.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_OBJCPP_ARC_ABI = NO;
+				CODE_SIGN_ENTITLEMENTS = AzPackList5.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 5C2UYK6F45;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = PackList_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = InfoS.plist;
+				INFOPLIST_PREPROCESSOR_DEFINITIONS = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.azukid.AzPackingS1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = Debug;
+		};
+		4432581C1F23002700175312 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 39E6E751C34099A8071392DD /* Pods-PackList.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_OBJCPP_ARC_ABI = NO;
+				CODE_SIGN_ENTITLEMENTS = AzPackList5.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				DEVELOPMENT_TEAM = 5C2UYK6F45;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = PackList_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = InfoS.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.azukid.AzPackingS1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = Release;
+		};
 		4499D9B9134DA60700342648 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0856A4FFB9B3EE59C836D0D3 /* Pods-PackList.debug.xcconfig */;
@@ -1309,7 +1923,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = InfoDev.plist;
 				INFOPLIST_PREPROCESSOR_DEFINITIONS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -1349,7 +1963,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = InfoDev.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -1468,7 +2082,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4499D9B8134DA60700342648 /* Build configuration list for PBXNativeTarget "PackList" */ = {
+		4432581A1F23002700175312 /* Build configuration list for PBXNativeTarget "PackList" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4432581B1F23002700175312 /* Debug */,
+				4432581C1F23002700175312 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4499D9B8134DA60700342648 /* Build configuration list for PBXNativeTarget "PackListDev" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4499D9B9134DA60700342648 /* Debug */,

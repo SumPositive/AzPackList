@@ -1,7 +1,7 @@
 # Uncomment the next line to define a global platform for your project
 platform :ios, '9.0'
 
-target 'PackList' do
+def install_pods
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   # use_frameworks!
 
@@ -23,3 +23,15 @@ target 'PackList' do
 
 
 end
+
+# PackListDev 開発版(com.azukid.AzPackList5) 常に先行公開
+target 'PackListDev' do
+    install_pods
+end
+
+# PackList 安定版(com.azukid.AzPackingS1)
+target 'PackList' do
+    install_pods
+end
+
+

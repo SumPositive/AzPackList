@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4432573C1F23002700175312"
+               BlueprintIdentifier = "4499D7CD134DA60600342648"
                BuildableName = "PackList.app"
-               BlueprintName = "PackList"
+               BlueprintName = "PackListDev"
                ReferencedContainer = "container:PackList.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +32,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4432573C1F23002700175312"
+            BlueprintIdentifier = "4499D7CD134DA60600342648"
             BuildableName = "PackList.app"
-            BlueprintName = "PackList"
+            BlueprintName = "PackListDev"
             ReferencedContainer = "container:PackList.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -55,9 +55,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4432573C1F23002700175312"
+            BlueprintIdentifier = "4499D7CD134DA60600342648"
             BuildableName = "PackList.app"
-            BlueprintName = "PackList"
+            BlueprintName = "PackListDev"
             ReferencedContainer = "container:PackList.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -74,9 +74,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4432573C1F23002700175312"
+            BlueprintIdentifier = "4499D7CD134DA60600342648"
             BuildableName = "PackList.app"
-            BlueprintName = "PackList"
+            BlueprintName = "PackListDev"
             ReferencedContainer = "container:PackList.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
