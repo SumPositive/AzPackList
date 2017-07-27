@@ -28,7 +28,7 @@
             <nil key="simulatedStatusBarMetrics"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-324" y="312"/>
+            <point key="canvasLocation" x="-70" y="196"/>
         </viewController>
         <view contentMode="scaleToFill" misplaced="YES" id="88">
             <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>

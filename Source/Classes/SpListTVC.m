@@ -24,8 +24,8 @@
 
 #define ACTION_TAG_A_PLAN	901
 
-#define ALERT_TAG_PREVIEW	802
-#define ALERT_TAG_BREAK		811
+//#define ALERT_TAG_PREVIEW	802
+//#define ALERT_TAG_BREAK		811
 
 
 #ifdef DEBUGxxx
@@ -399,36 +399,43 @@
 		@autoreleasepool {
 			NSString *err = [self vSharePlanSearch:[RaSharePlans count]];
 			if (err) {
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Search Err",nil)
-																message:err
-															   delegate:nil 
-													  cancelButtonTitle:nil 
-													  otherButtonTitles:NSLocalizedString(@"Roger",nil), nil];
-				[alert show];
-				//[alert release];
+//				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Search Err",nil)
+//																message:err
+//															   delegate:nil 
+//													  cancelButtonTitle:nil 
+//													  otherButtonTitles:NSLocalizedString(@"Roger",nil), nil];
+//				[alert show];
+
+                [AZAlert target:nil
+                          title:NSLocalizedString(@"Search Err",nil)
+                        message:err
+                        b1title:NSLocalizedString(@"Roger",nil)
+                        b1style:UIAlertActionStyleDefault
+                       b1action:nil];
+
 			}
 		}
 	}
 }	
 
-#pragma mark - <UIAlertViewDelegate>
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	switch (alertView.tag) {
-		case ALERT_TAG_PREVIEW:	// 前画面に戻す
-			[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
-			break;
-			
-		case ALERT_TAG_BREAK: // 通信中断する
-			if (RurlConnection) {
-				[RurlConnection cancel];
-				//[RurlConnection release], 
-				RurlConnection = nil;
-			}
-			[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
-			break;
-	}
-}
+//#pragma mark - <UIAlertViewDelegate>
+//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//	switch (alertView.tag) {
+//		case ALERT_TAG_PREVIEW:	// 前画面に戻す
+//			[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
+//			break;
+//			
+//		case ALERT_TAG_BREAK: // 通信中断する
+//			if (RurlConnection) {
+//				[RurlConnection cancel];
+//				//[RurlConnection release], 
+//				RurlConnection = nil;
+//			}
+//			[self.navigationController popViewControllerAnimated:YES];	// 前のViewへ戻る
+//			break;
+//	}
+//}
 
 
 #pragma mark - NSURLConnection delegate

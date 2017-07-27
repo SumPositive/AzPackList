@@ -1107,6 +1107,10 @@
 		443F299A1F28EBEC00386907 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 443F29941F28EBCB00386907 /* InfoPlist.strings */; };
 		443F299B1F28EBEC00386907 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 443F29941F28EBCB00386907 /* InfoPlist.strings */; };
 		443F299C1F28EBED00386907 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 443F29941F28EBCB00386907 /* InfoPlist.strings */; };
+		443F299F1F2A2D2500386907 /* AZAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = 443F299D1F2A2D2500386907 /* AZAlert.h */; };
+		443F29A01F2A2D2500386907 /* AZAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = 443F299D1F2A2D2500386907 /* AZAlert.h */; };
+		443F29A11F2A2D2500386907 /* AZAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 443F299E1F2A2D2500386907 /* AZAlert.m */; };
+		443F29A21F2A2D2500386907 /* AZAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 443F299E1F2A2D2500386907 /* AZAlert.m */; };
 		445602E51F053EA900A83A50 /* Mapping4-5.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 445602E41F053EA900A83A50 /* Mapping4-5.xcmappingmodel */; };
 		445602EB1F053EF300A83A50 /* Mapping2-3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 445602EA1F053EF300A83A50 /* Mapping2-3.xcmappingmodel */; };
 		445998C61413757E0005F706 /* AzPackList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 445998BE1413757E0005F706 /* AzPackList.xcdatamodeld */; };
@@ -1362,6 +1366,8 @@
 		443F298E1F28E88500386907 /* PackListPad copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PackListPad copy-Info.plist"; path = "/Users/masa/Code2017/PackList/Source/PackListPad copy-Info.plist"; sourceTree = "<absolute>"; };
 		443F29951F28EBCB00386907 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		443F29971F28EBD700386907 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		443F299D1F2A2D2500386907 /* AZAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZAlert.h; sourceTree = "<group>"; };
+		443F299E1F2A2D2500386907 /* AZAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZAlert.m; sourceTree = "<group>"; };
 		4453C332131A74CC00A97E1A /* Icon44-ClipOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon44-ClipOn.png"; path = "Design/Icon44-ClipOn.png"; sourceTree = "<group>"; };
 		4453C333131A74CC00A97E1A /* Icon44-ClipOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon44-ClipOn@2x.png"; path = "Design/Icon44-ClipOn@2x.png"; sourceTree = "<group>"; };
 		4453C334131A74CC00A97E1A /* Icon44-ClipOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon44-ClipOff@2x.png"; path = "Design/Icon44-ClipOff@2x.png"; sourceTree = "<group>"; };
@@ -1842,6 +1848,8 @@
 		44965B0E1EFFF17700350EDA /* AZClass */ = {
 			isa = PBXGroup;
 			children = (
+				443F299D1F2A2D2500386907 /* AZAlert.h */,
+				443F299E1F2A2D2500386907 /* AZAlert.m */,
 				44965B0F1EFFF17700350EDA /* AZAbout.relese */,
 				44965B191EFFF17700350EDA /* AZClass.relese */,
 				44965B1F1EFFF17700350EDA /* AZDial.relese */,
@@ -2170,6 +2178,7 @@
 			files = (
 				443257FF1F23002700175312 /* AZAboutVC.h in Headers */,
 				443258001F23002700175312 /* PackList_Prefix.pch in Headers */,
+				443F299F1F2A2D2500386907 /* AZAlert.h in Headers */,
 				443258011F23002700175312 /* SpListTVC.h in Headers */,
 				443258021F23002700175312 /* AZStoreTVC.h in Headers */,
 				443258031F23002700175312 /* AZClass.h in Headers */,
@@ -2330,6 +2339,7 @@
 			files = (
 				44965B541EFFF17800350EDA /* AZAboutVC.h in Headers */,
 				4499D842134DA60600342648 /* PackList_Prefix.pch in Headers */,
+				443F29A01F2A2D2500386907 /* AZAlert.h in Headers */,
 				4499D844134DA60600342648 /* SpListTVC.h in Headers */,
 				44965B731EFFF17800350EDA /* AZStoreTVC.h in Headers */,
 				44965B571EFFF17800350EDA /* AZClass.h in Headers */,
@@ -2493,6 +2503,9 @@
 			attributes = {
 				LastUpgradeCheck = 0830;
 				TargetAttributes = {
+					443F26E31F28E83100386907 = {
+						ProvisioningStyle = Manual;
+					};
 					4499D7CD134DA60600342648 = {
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -3696,6 +3709,7 @@
 				443257CC1F23002700175312 /* AppDelegate.m in Sources */,
 				443257CD1F23002700175312 /* SFHFKeychainUtils.m in Sources */,
 				443257CE1F23002700175312 /* Mapping4-5.xcmappingmodel in Sources */,
+				443F29A11F2A2D2500386907 /* AZAlert.m in Sources */,
 				443257CF1F23002700175312 /* E1viewController.m in Sources */,
 				443257D01F23002700175312 /* AZWebView.m in Sources */,
 				443257D11F23002700175312 /* Mapping2-3.xcmappingmodel in Sources */,
@@ -3921,6 +3935,7 @@
 				4499D804134DA60600342648 /* AppDelegate.m in Sources */,
 				44F1957D1EBDB66000F5FF93 /* SFHFKeychainUtils.m in Sources */,
 				445602E51F053EA900A83A50 /* Mapping4-5.xcmappingmodel in Sources */,
+				443F29A21F2A2D2500386907 /* AZAlert.m in Sources */,
 				4499D805134DA60600342648 /* E1viewController.m in Sources */,
 				44965B871EFFF17800350EDA /* AZWebView.m in Sources */,
 				445602EB1F053EF300A83A50 /* Mapping2-3.xcmappingmodel in Sources */,
@@ -4184,8 +4199,9 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.azukid.AzPacking;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "ada0c0eb-67ff-44f8-aef1-36f56601d970";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "Dev EZFJTAD9J6.com.azukid.AzPacking";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = arm64;
@@ -4203,7 +4219,7 @@
 				CLANG_WARN_OBJCPP_ARC_ABI = NO;
 				CODE_SIGN_ENTITLEMENTS = AzPackList5.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				DEVELOPMENT_TEAM = 5C2UYK6F45;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -4220,8 +4236,9 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.azukid.AzPacking;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "1d85700d-9acd-419d-b627-afe590c62198";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "Dis EZFJTAD9J6.com.azukid.AzPacking";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = YES;
 				TARGETED_DEVICE_FAMILY = 1;

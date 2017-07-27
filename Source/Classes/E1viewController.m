@@ -17,21 +17,21 @@
 #define ACTIONSEET_TAG_BarMenu			910
 #define ACTIONSEET_TAG_MENU					929
 
-#define ALERT_TAG_HTTPServerStop	109
-#define ALERT_TAG_SupportSite			118
+//#define ALERT_TAG_HTTPServerStop	109
+//#define ALERT_TAG_SupportSite			118
 #define ALERT_TAG_DELETEPACK		127
-#define ALERT_TAG_CloudReset			136
+//#define ALERT_TAG_CloudReset			136
 
 
 @interface E1viewController ()
-<NSFetchedResultsControllerDelegate, UIActionSheetDelegate	,UIPopoverControllerDelegate, AZStoreDelegate>
+<NSFetchedResultsControllerDelegate, UIPopoverControllerDelegate, AZStoreDelegate>
 {
     //__weak IBOutlet UITableView*    _tableView;      self.tableView
 
     NSManagedObjectContext		*mMoc;
     NSFetchedResultsController	*mFetchedE1;
     HTTPServer								*mHttpServer;
-    UIAlertView								*mHttpServerAlert;
+//    UIAlertView								*mHttpServerAlert;
     NSDictionary							*mAddressDic;
     
     E1edit							*e1editView_;
@@ -691,73 +691,73 @@
 	//[Me1editView release]; // self.navigationControllerがOwnerになる
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	switch (alertView.tag) {
-		case ALERT_TAG_HTTPServerStop:
-//			[mHttpServer stop];
-//			//[RhttpServer release];
-//			mHttpServer = nil;
-//			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LocalhostAdressesResolved" object:nil];
-//			// 再表示
-//			//[self.tableView reloadData]; これだけではダメ
-//			[self viewWillAppear:YES]; // Fech データセットさせるため
-			break;
-			
-		case ALERT_TAG_SupportSite:
-			if (buttonIndex == 1) { // OK
-				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://packlist.tumblr.com/"]];
-			}
-			break;
-
-		case ALERT_TAG_DELETEPACK: // E1削除
-			if (buttonIndex == 1) //OK 
-			{	//========== E1 削除実行 ==========
-				NSLog(@"MactionDeleteRow=%ld", (long)actionDeleteRow_);
-				[self actionE1deleteCell:actionDeleteRow_];
-			}
-			break;
-		case ALERT_TAG_CloudReset:
-			[self actionCloudReset];
-			break;
-	}
-}
-
-
-// UIActionSheetDelegate 処理部
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	// buttonIndexは、actionSheetの上から順に(0〜)付与されるようだ。
-	switch (actionSheet.tag) {
-		case ACTIONSEET_TAG_DELETEPACK: // E1削除
-			if (buttonIndex == actionSheet.destructiveButtonIndex) 
-			{	//========== E1 削除実行 ==========
-				NSLog(@"MactionDeleteRow=%ld", (long)actionDeleteRow_);
-				[self actionE1deleteCell:actionDeleteRow_];
-			}
-			break;
-			
-/*		case ACTIONSEET_TAG_MENU:
-			switch (buttonIndex) {
-				case 0: // SharePlan Search
-					[self	actionImportSharedPackList];
-					break;
-					
-				case 1: // Restore from Google
-					[self actionImportGoogle];
-					break;
-					
-				case 2: // Restore from YourPC
-					[self actionImportYourPC];
-					break;
-					
-				case 3: // PasteBoard
-					[self actionImportPasteBoard];
-					break;
-			}
-			break;*/
-	}
-}
+//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//	switch (alertView.tag) {
+//		case ALERT_TAG_HTTPServerStop:
+////			[mHttpServer stop];
+////			//[RhttpServer release];
+////			mHttpServer = nil;
+////			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LocalhostAdressesResolved" object:nil];
+////			// 再表示
+////			//[self.tableView reloadData]; これだけではダメ
+////			[self viewWillAppear:YES]; // Fech データセットさせるため
+//			break;
+//			
+//		case ALERT_TAG_SupportSite:
+//			if (buttonIndex == 1) { // OK
+//				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://packlist.tumblr.com/"]];
+//			}
+//			break;
+//
+//		case ALERT_TAG_DELETEPACK: // E1削除
+//			if (buttonIndex == 1) //OK 
+//			{	//========== E1 削除実行 ==========
+//				NSLog(@"MactionDeleteRow=%ld", (long)actionDeleteRow_);
+//				[self actionE1deleteCell:actionDeleteRow_];
+//			}
+//			break;
+//		case ALERT_TAG_CloudReset:
+//			[self actionCloudReset];
+//			break;
+//	}
+//}
+//
+//
+//// UIActionSheetDelegate 処理部
+//- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//	// buttonIndexは、actionSheetの上から順に(0〜)付与されるようだ。
+//	switch (actionSheet.tag) {
+//		case ACTIONSEET_TAG_DELETEPACK: // E1削除
+//			if (buttonIndex == actionSheet.destructiveButtonIndex) 
+//			{	//========== E1 削除実行 ==========
+//				NSLog(@"MactionDeleteRow=%ld", (long)actionDeleteRow_);
+//				[self actionE1deleteCell:actionDeleteRow_];
+//			}
+//			break;
+//			
+///*		case ACTIONSEET_TAG_MENU:
+//			switch (buttonIndex) {
+//				case 0: // SharePlan Search
+//					[self	actionImportSharedPackList];
+//					break;
+//					
+//				case 1: // Restore from Google
+//					[self actionImportGoogle];
+//					break;
+//					
+//				case 2: // Restore from YourPC
+//					[self actionImportYourPC];
+//					break;
+//					
+//				case 3: // PasteBoard
+//					[self actionImportPasteBoard];
+//					break;
+//			}
+//			break;*/
+//	}
+//}
 
 // HTTP Server Address Display
 - (void)httpInfoUpdate:(NSNotification *) notification
@@ -1078,8 +1078,8 @@
 //		mHttpServer = nil;
 //	}
 	//[RalertHttpServer release], 
-	mHttpServerAlert = nil;
-	//[MdicAddresses release], 
+//	mHttpServerAlert = nil;
+	//[MdicAddresses release],
 	mAddressDic = nil;
 	//[RfetchedE1 release],		
 	mFetchedE1 = nil;
@@ -1524,27 +1524,43 @@
 		UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 		NSString *title = [NSString stringWithFormat:@"%@\n%@",
 						   cell.textLabel.text, NSLocalizedString(@"DELETE Pack caution", nil)];
-		if (appDelegate_.ppIsPad) {
-			//[2.0.1] iPadだとCancelボタンが表示されないためUIActionSheetにした。
-			UIAlertView *av = [[UIAlertView alloc] initWithTitle: title
-														 message:@"" 
-														delegate:self 
-											   cancelButtonTitle:NSLocalizedString(@"Cancel", nil) 
-											   otherButtonTitles:NSLocalizedString(@"DELETE Pack", nil), nil];
-			av.tag = ALERT_TAG_DELETEPACK;
-			[av show];
-		} else {
-			UIActionSheet *action = [[UIActionSheet alloc] 
-									 initWithTitle: title
-									 delegate:self 
-									 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-									 destructiveButtonTitle:NSLocalizedString(@"DELETE Pack", nil)
-									 otherButtonTitles:nil];
-			action.tag = ACTIONSEET_TAG_DELETEPACK;
-			//[2.0]ToolBar非表示（TabBarも無い）　＜＜ToolBar無しでshowFromToolbarするとFreeze＞＞
-			[action showInView:self.view]; //windowから出すと回転対応しない
-			//BUG//[action release]; autoreleaseにした
-		}
+        
+//		if (appDelegate_.ppIsPad) {
+//			//[2.0.1] iPadだとCancelボタンが表示されないためUIActionSheetにした。
+//			UIAlertView *av = [[UIAlertView alloc] initWithTitle: title
+//														 message:@"" 
+//														delegate:self 
+//											   cancelButtonTitle:NSLocalizedString(@"Cancel", nil) 
+//											   otherButtonTitles:NSLocalizedString(@"DELETE Pack", nil), nil];
+//			av.tag = ALERT_TAG_DELETEPACK;
+//			[av show];
+//		} else {
+//			UIActionSheet *action = [[UIActionSheet alloc] 
+//									 initWithTitle: title
+//									 delegate:self 
+//									 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+//									 destructiveButtonTitle:NSLocalizedString(@"DELETE Pack", nil)
+//									 otherButtonTitles:nil];
+//			action.tag = ACTIONSEET_TAG_DELETEPACK;
+//			//[2.0]ToolBar非表示（TabBarも無い）　＜＜ToolBar無しでshowFromToolbarするとFreeze＞＞
+//			[action showInView:self.view]; //windowから出すと回転対応しない
+//			//BUG//[action release]; autoreleaseにした
+//		}
+        
+        [AZAlert target:self
+             actionRect:[tableView rectForRowAtIndexPath:indexPath]
+                  title:title
+                message:nil
+                b1title:NSLocalizedString(@"DELETE Pack", nil)
+                b1style:UIAlertActionStyleDestructive
+               b1action:^(UIAlertAction * _Nullable action) {
+                   //========== E1 削除実行 ==========
+                   NSLog(@"MactionDeleteRow=%ld", (long)actionDeleteRow_);
+                   [self actionE1deleteCell:actionDeleteRow_];
+               }
+                b2title:NSLocalizedString(@"Cancel", nil)
+                b2style:UIAlertActionStyleCancel
+               b2action:nil];
 	}
 }
 
