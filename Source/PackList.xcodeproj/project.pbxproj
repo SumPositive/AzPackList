@@ -46,9 +46,7 @@
 		443257511F23002700175312 /* E1viewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F195821EBDD8F300F5FF93 /* E1viewController.xib */; };
 		443257521F23002700175312 /* Icon24-GreenPlus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68AE13196CC100012FB5 /* Icon24-GreenPlus@2x.png */; };
 		443257531F23002700175312 /* AZAbout-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B101EFFF17700350EDA /* AZAbout-32.png */; };
-		443257541F23002700175312 /* AZStoreCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B391EFFF17800350EDA /* AZStoreCell.xib */; };
 		443257551F23002700175312 /* Icon24-RedMinus.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68AF13196CC100012FB5 /* Icon24-RedMinus.png */; };
-		443257561F23002700175312 /* AZStore-Space-44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B341EFFF17800350EDA /* AZStore-Space-44@2x.png */; };
 		443257571F23002700175312 /* Icon24-RedMinus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B013196CC100012FB5 /* Icon24-RedMinus@2x.png */; };
 		443257581F23002700175312 /* Icon32-BagBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B113196CC100012FB5 /* Icon32-BagBlue.png */; };
 		443257591F23002700175312 /* Icon32-BagBlue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B213196CC100012FB5 /* Icon32-BagBlue@2x.png */; };
@@ -63,10 +61,8 @@
 		443257621F23002700175312 /* Icon32-CircleCheck2.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BB13196CC100012FB5 /* Icon32-CircleCheck2.png */; };
 		443257631F23002700175312 /* Icon32-CircleCheck2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BC13196CC100012FB5 /* Icon32-CircleCheck2@2x.png */; };
 		443257641F23002700175312 /* AZDialTile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2D1EFFF17700350EDA /* AZDialTile@2x.png */; };
-		443257651F23002700175312 /* Icon57-CalcRoll.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3C1EFFF17800350EDA /* Icon57-CalcRoll.png */; };
 		443257661F23002700175312 /* Icon32-CircleGray.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BD13196CC100012FB5 /* Icon32-CircleGray.png */; };
 		443257671F23002700175312 /* AZDialStepperMinus.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B241EFFF17700350EDA /* AZDialStepperMinus.png */; };
-		443257681F23002700175312 /* AZStore-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2F1EFFF17700350EDA /* AZStore-32.png */; };
 		443257691F23002700175312 /* Icon32-CircleGray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BE13196CC100012FB5 /* Icon32-CircleGray@2x.png */; };
 		4432576A1F23002700175312 /* AZDialBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B221EFFF17700350EDA /* AZDialBack.png */; };
 		4432576B1F23002700175312 /* Icon44-ClipOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C332131A74CC00A97E1A /* Icon44-ClipOn.png */; };
@@ -88,27 +84,20 @@
 		4432577B1F23002700175312 /* Icon32-CircleCheckClear.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998D0141383730005F706 /* Icon32-CircleCheckClear.png */; };
 		4432577C1F23002700175312 /* Icon32-PasteAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B11416602E00F9B612 /* Icon32-PasteAdd@2x.png */; };
 		4432577D1F23002700175312 /* Icon32-PasteAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B21416602E00F9B612 /* Icon32-PasteAdd.png */; };
-		4432577E1F23002700175312 /* AZStore-Stop-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B351EFFF17800350EDA /* AZStore-Stop-32.png */; };
 		4432577F1F23002700175312 /* AZDialStepperPlusDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2A1EFFF17700350EDA /* AZDialStepperPlusDown.png */; };
 		443257801F23002700175312 /* Icon32-PasteCopy.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B31416602E00F9B612 /* Icon32-PasteCopy.png */; };
 		443257811F23002700175312 /* Icon32-PasteCopy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B41416602E00F9B612 /* Icon32-PasteCopy@2x.png */; };
 		443257821F23002700175312 /* Icon32-SharedAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B51416602E00F9B612 /* Icon32-SharedAdd.png */; };
-		443257831F23002700175312 /* AZStore-Addin-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B311EFFF17700350EDA /* AZStore-Addin-32.png */; };
-		443257841F23002700175312 /* Icon57-CalcRoll@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3D1EFFF17800350EDA /* Icon57-CalcRoll@2x.png */; };
 		443257851F23002700175312 /* Icon32-SharedAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B61416602E00F9B612 /* Icon32-SharedAdd@2x.png */; };
 		443257861F23002700175312 /* AZDialStepperPlusDown@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2B1EFFF17700350EDA /* AZDialStepperPlusDown@2X.png */; };
 		443257871F23002700175312 /* Icon32-Shared@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B71416602E00F9B612 /* Icon32-Shared@2x.png */; };
 		443257881F23002700175312 /* Icon32-Shared.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B81416602E00F9B612 /* Icon32-Shared.png */; };
-		443257891F23002700175312 /* Icon57-Condition@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3F1EFFF17800350EDA /* Icon57-Condition@2x.png */; };
 		4432578A1F23002700175312 /* Icon32-GoogleDoc.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595D91416658B00F9B612 /* Icon32-GoogleDoc.png */; };
 		4432578B1F23002700175312 /* Icon32-GoogleDoc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DA1416658B00F9B612 /* Icon32-GoogleDoc@2x.png */; };
-		4432578C1F23002700175312 /* AZStore-Stop-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B361EFFF17800350EDA /* AZStore-Stop-32@2x.png */; };
-		4432578D1F23002700175312 /* Icon57-PackList.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B401EFFF17800350EDA /* Icon57-PackList.png */; };
 		4432578E1F23002700175312 /* Icon32-GoogleAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DB1416658B00F9B612 /* Icon32-GoogleAdd@2x.png */; };
 		4432578F1F23002700175312 /* AZDialStepperPlus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B291EFFF17700350EDA /* AZDialStepperPlus@2x.png */; };
 		443257901F23002700175312 /* Icon32-GoogleAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DC1416658B00F9B612 /* Icon32-GoogleAdd.png */; };
 		443257911F23002700175312 /* Icon32-NearPc.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DD1416658B00F9B612 /* Icon32-NearPc.png */; };
-		443257921F23002700175312 /* Icon57-Condition.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3E1EFFF17800350EDA /* Icon57-Condition.png */; };
 		443257931F23002700175312 /* Icon32-NearPc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DE1416658B00F9B612 /* Icon32-NearPc@2x.png */; };
 		443257941F23002700175312 /* Icon32-NearPcAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DF1416658B00F9B612 /* Icon32-NearPcAdd@2x.png */; };
 		443257951F23002700175312 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44965B981EFFFFFC00350EDA /* Localizable.strings */; };
@@ -121,15 +110,12 @@
 		4432579C1F23002700175312 /* Icon72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 449D12BD151817B700F68B6E /* Icon72@2x.png */; };
 		4432579D1F23002700175312 /* Tx-Back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 440B5B2C14B44E13006BEA96 /* Tx-Back@2x.png */; };
 		4432579E1F23002700175312 /* Tx-Back.png in Resources */ = {isa = PBXBuildFile; fileRef = 440B5B2D14B44E13006BEA96 /* Tx-Back.png */; };
-		4432579F1F23002700175312 /* AZStore-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B301EFFF17700350EDA /* AZStore-32@2x.png */; };
 		443257A01F23002700175312 /* AZWeb-Forward-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4C1EFFF17800350EDA /* AZWeb-Forward-16.png */; };
 		443257A11F23002700175312 /* Icon32-Setting@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962DE14B8456B0047E1C3 /* Icon32-Setting@2x.png */; };
 		443257A21F23002700175312 /* Icon32-Setting.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962DF14B8456B0047E1C3 /* Icon32-Setting.png */; };
 		443257A31F23002700175312 /* Icon32-Information.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962E014B8456B0047E1C3 /* Icon32-Information.png */; };
 		443257A41F23002700175312 /* AZAbout-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B111EFFF17700350EDA /* AZAbout-32@2x.png */; };
-		443257A51F23002700175312 /* AZStore-Space-44.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B331EFFF17800350EDA /* AZStore-Space-44.png */; };
 		443257A61F23002700175312 /* Icon32-Information@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962E114B8456B0047E1C3 /* Icon32-Information@2x.png */; };
-		443257A71F23002700175312 /* AZStore-Addin-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B321EFFF17700350EDA /* AZStore-Addin-32@2x.png */; };
 		443257A81F23002700175312 /* Icon32-ExtParts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D3E1AF14B8BD9D0028FF24 /* Icon32-ExtParts@2x.png */; };
 		443257A91F23002700175312 /* Icon32-ExtParts.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D3E1B014B8BD9D0028FF24 /* Icon32-ExtParts.png */; };
 		443257AA1F23002700175312 /* Icon-Close-44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD07A14C17CAF003FF260 /* Icon-Close-44@2x.png */; };
@@ -142,12 +128,9 @@
 		443257B11F23002700175312 /* AZAbout.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B131EFFF17700350EDA /* AZAbout.xib */; };
 		443257B21F23002700175312 /* Icon-Store-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD08814C17CAF003FF260 /* Icon-Store-40@2x.png */; };
 		443257B31F23002700175312 /* Icon-Store-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD08914C17CAF003FF260 /* Icon-Store-40.png */; };
-		443257B41F23002700175312 /* Icon57-PayNote.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B421EFFF17800350EDA /* Icon57-PayNote.png */; };
-		443257B51F23002700175312 /* Icon57-PayNote@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B431EFFF17800350EDA /* Icon57-PayNote@2x.png */; };
 		443257B61F23002700175312 /* AZDialStepperMinusDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B261EFFF17700350EDA /* AZDialStepperMinusDown.png */; };
 		443257B71F23002700175312 /* AZLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44227A1F1F1217F4003D9C8B /* AZLocalizable.strings */; };
 		443257B81F23002700175312 /* Icon32-Picasa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC158F14E806590007229F /* Icon32-Picasa@2x.png */; };
-		443257B91F23002700175312 /* Icon57-SplitPay.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B441EFFF17800350EDA /* Icon57-SplitPay.png */; };
 		443257BA1F23002700175312 /* Icon32-Picasa.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159014E806590007229F /* Icon32-Picasa.png */; };
 		443257BB1F23002700175312 /* Icon32-PicasaBlack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159314E8093A0007229F /* Icon32-PicasaBlack@2x.png */; };
 		443257BC1F23002700175312 /* AZAbout-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B121EFFF17700350EDA /* AZAbout-iPad.xib */; };
@@ -161,9 +144,7 @@
 		443257C41F23002700175312 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 44E486B51EC80B910041876C /* GoogleService-Info.plist */; };
 		443257C51F23002700175312 /* Icon72bag.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218450160392BA0097FF63 /* Icon72bag.png */; };
 		443257C61F23002700175312 /* Icon72bag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218451160392BB0097FF63 /* Icon72bag@2x.png */; };
-		443257C71F23002700175312 /* Icon57-PackList@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B411EFFF17800350EDA /* Icon57-PackList@2x.png */; };
 		443257C91F23002700175312 /* AZDial.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B211EFFF17700350EDA /* AZDial.m */; };
-		443257CA1F23002700175312 /* NSDataBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B461EFFF17800350EDA /* NSDataBase64.m */; };
 		443257CB1F23002700175312 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		443257CC1F23002700175312 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* AppDelegate.m */; };
 		443257CD1F23002700175312 /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F1957B1EBDB66000F5FF93 /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -176,18 +157,11 @@
 		443257D41F23002700175312 /* E2viewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 449D67CC10C80DCB00691BF4 /* E2viewController.m */; };
 		443257D51F23002700175312 /* E2edit.m in Sources */ = {isa = PBXBuildFile; fileRef = 447DFE3910C9342F00C887FA /* E2edit.m */; };
 		443257D61F23002700175312 /* E3viewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 446EFA1210CB988D0035EA2A /* E3viewController.m */; };
-		443257D71F23002700175312 /* SpListTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4400E1FC110F493A000DFC3B /* SpListTVC.m */; };
 		443257D81F23002700175312 /* E3detailTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 446AAE251111F0250077BF89 /* E3detailTVC.m */; };
 		443257D91F23002700175312 /* SettingTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 448549021115726F00D10CC8 /* SettingTVC.m */; };
 		443257DA1F23002700175312 /* selectGroupTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4491C7B511186531005955FD /* selectGroupTVC.m */; };
 		443257DB1F23002700175312 /* Global.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ADD3A7115A1B4800829977 /* Global.m */; };
 		443257DC1F23002700175312 /* FileCsv.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F07DBA119AFE69007D8863 /* FileCsv.m */; };
-		443257DD1F23002700175312 /* AZStoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B381EFFF17800350EDA /* AZStoreCell.m */; };
-		443257DE1F23002700175312 /* AZStoreTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B3B1EFFF17800350EDA /* AZStoreTVC.m */; };
-		443257DF1F23002700175312 /* SpSearchVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D7D44F125484B500E1E362 /* SpSearchVC.m */; };
-		443257E01F23002700175312 /* SpAppendVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44601C9C126187BA005E189A /* SpAppendVC.m */; };
-		443257E11F23002700175312 /* SpPOST.m in Sources */ = {isa = PBXBuildFile; fileRef = 44AFCC5312633920003352DE /* SpPOST.m */; };
-		443257E21F23002700175312 /* SpDetailTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44E070D912732BF3003BF988 /* SpDetailTVC.m */; };
 		443257E31F23002700175312 /* CalcView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4453C33B131A86C200A97E1A /* CalcView.m */; };
 		443257E41F23002700175312 /* UIViewController+azAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 44227A181F08E4B4003D9C8B /* UIViewController+azAlert.m */; };
 		443257E51F23002700175312 /* AzPackList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 445998BE1413757E0005F706 /* AzPackList.xcdatamodeld */; };
@@ -199,7 +173,6 @@
 		443257EB1F23002700175312 /* NSDataAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 44A7DB2D14DE6A7A00DB72E2 /* NSDataAddition.m */; };
 		443257EC1F23002700175312 /* UIDevice-Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 44835ABE156BDC1E00A83167 /* UIDevice-Hardware.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		443257ED1F23002700175312 /* MocFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4416337415F25D1B009CD324 /* MocFunctions.m */; };
-		443257EE1F23002700175312 /* VerificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B481EFFF17800350EDA /* VerificationController.m */; };
 		443257F01F23002700175312 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 44D7CE6B153660F900AE6920 /* libsqlite3.0.dylib */; };
 		443257F11F23002700175312 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 440DD96C14B316D800C9B40C /* StoreKit.framework */; };
 		443257F21F23002700175312 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A2C0A4131BC9B900256C08 /* QuartzCore.framework */; };
@@ -216,29 +189,20 @@
 		443257FD1F23002700175312 /* libPods-PackList.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A7714273E80A6CA0EBF7768C /* libPods-PackList.a */; };
 		443257FF1F23002700175312 /* AZAboutVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B141EFFF17700350EDA /* AZAboutVC.h */; };
 		443258001F23002700175312 /* PackList_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 4486955F10F5ABCC00AD02D8 /* PackList_Prefix.pch */; };
-		443258011F23002700175312 /* SpListTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 4400E1FB110F493A000DFC3B /* SpListTVC.h */; };
-		443258021F23002700175312 /* AZStoreTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B3A1EFFF17800350EDA /* AZStoreTVC.h */; };
 		443258031F23002700175312 /* AZClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B1A1EFFF17700350EDA /* AZClass.h */; };
-		443258041F23002700175312 /* VerificationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B471EFFF17800350EDA /* VerificationController.h */; };
 		443258051F23002700175312 /* E3detailTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 446AAE241111F0250077BF89 /* E3detailTVC.h */; };
-		443258061F23002700175312 /* NSDataBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B451EFFF17800350EDA /* NSDataBase64.h */; };
 		443258071F23002700175312 /* SettingTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 448549031115726F00D10CC8 /* SettingTVC.h */; };
 		443258081F23002700175312 /* selectGroupTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 4491C7B411186531005955FD /* selectGroupTVC.h */; };
 		443258091F23002700175312 /* AZDial.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B201EFFF17700350EDA /* AZDial.h */; };
 		4432580A1F23002700175312 /* FileCsv.h in Headers */ = {isa = PBXBuildFile; fileRef = 44F07DB9119AFE69007D8863 /* FileCsv.h */; };
-		4432580B1F23002700175312 /* SpSearchVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44D7D44E125484B500E1E362 /* SpSearchVC.h */; };
 		4432580C1F23002700175312 /* UIViewController+azAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = 44227A171F08E4B4003D9C8B /* UIViewController+azAlert.h */; };
-		4432580D1F23002700175312 /* SpAppendVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44601C9D126187BA005E189A /* SpAppendVC.h */; };
 		4432580E1F23002700175312 /* SFHFKeychainUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 44F1957A1EBDB66000F5FF93 /* SFHFKeychainUtils.h */; };
-		4432580F1F23002700175312 /* SpPOST.h in Headers */ = {isa = PBXBuildFile; fileRef = 44AFCC5412633920003352DE /* SpPOST.h */; };
-		443258101F23002700175312 /* SpDetailTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44E070DA12732BF3003BF988 /* SpDetailTVC.h */; };
 		443258111F23002700175312 /* CalcView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4453C33A131A86C200A97E1A /* CalcView.h */; };
 		443258121F23002700175312 /* AZWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B4E1EFFF17800350EDA /* AZWebView.h */; };
 		443258131F23002700175312 /* PatternImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 441962E614B87DED0047E1C3 /* PatternImageView.h */; };
 		443258141F23002700175312 /* NSDataAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 44A7DB2C14DE6A7A00DB72E2 /* NSDataAddition.h */; };
 		443258151F23002700175312 /* UIDevice-Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 44835ABD156BDC1E00A83167 /* UIDevice-Hardware.h */; };
 		443258161F23002700175312 /* MocFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4416337515F25D1B009CD324 /* MocFunctions.h */; };
-		443258171F23002700175312 /* AZStoreCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B371EFFF17800350EDA /* AZStoreCell.h */; };
 		443258CA1F23097800175312 /* PackListBeta-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* PackListBeta-Info.plist */; };
 		443258CB1F23097D00175312 /* PackList-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4432581E1F23002700175312 /* PackList-Info.plist */; };
 		443F26021F28E7C000386907 /* Icon57.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C1134DB1D300342648 /* Icon57.png */; };
@@ -262,9 +226,7 @@
 		443F26141F28E7C000386907 /* E1viewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F195821EBDD8F300F5FF93 /* E1viewController.xib */; };
 		443F26151F28E7C000386907 /* Icon24-GreenPlus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68AE13196CC100012FB5 /* Icon24-GreenPlus@2x.png */; };
 		443F26161F28E7C000386907 /* AZAbout-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B101EFFF17700350EDA /* AZAbout-32.png */; };
-		443F26171F28E7C000386907 /* AZStoreCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B391EFFF17800350EDA /* AZStoreCell.xib */; };
 		443F26181F28E7C000386907 /* Icon24-RedMinus.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68AF13196CC100012FB5 /* Icon24-RedMinus.png */; };
-		443F26191F28E7C000386907 /* AZStore-Space-44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B341EFFF17800350EDA /* AZStore-Space-44@2x.png */; };
 		443F261A1F28E7C000386907 /* Icon24-RedMinus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B013196CC100012FB5 /* Icon24-RedMinus@2x.png */; };
 		443F261B1F28E7C000386907 /* Icon32-BagBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B113196CC100012FB5 /* Icon32-BagBlue.png */; };
 		443F261C1F28E7C000386907 /* Icon32-BagBlue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B213196CC100012FB5 /* Icon32-BagBlue@2x.png */; };
@@ -279,10 +241,8 @@
 		443F26251F28E7C000386907 /* Icon32-CircleCheck2.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BB13196CC100012FB5 /* Icon32-CircleCheck2.png */; };
 		443F26261F28E7C000386907 /* Icon32-CircleCheck2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BC13196CC100012FB5 /* Icon32-CircleCheck2@2x.png */; };
 		443F26271F28E7C000386907 /* AZDialTile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2D1EFFF17700350EDA /* AZDialTile@2x.png */; };
-		443F26281F28E7C000386907 /* Icon57-CalcRoll.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3C1EFFF17800350EDA /* Icon57-CalcRoll.png */; };
 		443F26291F28E7C000386907 /* Icon32-CircleGray.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BD13196CC100012FB5 /* Icon32-CircleGray.png */; };
 		443F262A1F28E7C000386907 /* AZDialStepperMinus.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B241EFFF17700350EDA /* AZDialStepperMinus.png */; };
-		443F262B1F28E7C000386907 /* AZStore-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2F1EFFF17700350EDA /* AZStore-32.png */; };
 		443F262C1F28E7C000386907 /* Icon32-CircleGray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BE13196CC100012FB5 /* Icon32-CircleGray@2x.png */; };
 		443F262D1F28E7C000386907 /* AZDialBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B221EFFF17700350EDA /* AZDialBack.png */; };
 		443F262E1F28E7C000386907 /* Icon44-ClipOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C332131A74CC00A97E1A /* Icon44-ClipOn.png */; };
@@ -297,7 +257,6 @@
 		443F26371F28E7C000386907 /* Icon-DrumPush@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C341131A889000A97E1A /* Icon-DrumPush@2x.png */; };
 		443F26381F28E7C000386907 /* Icon44-Calc.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CA131D5A4900FA1C3C /* Icon44-Calc.png */; };
 		443F26391F28E7C000386907 /* AZDialTile.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2C1EFFF17700350EDA /* AZDialTile.png */; };
-		443F263A1F28E7C000386907 /* PackListBeta-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* PackListBeta-Info.plist */; };
 		443F263B1F28E7C000386907 /* Icon44-Calc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CB131D5A4900FA1C3C /* Icon44-Calc@2x.png */; };
 		443F263C1F28E7C000386907 /* Icon32-MailNew@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CD141383730005F706 /* Icon32-MailNew@2x.png */; };
 		443F263D1F28E7C000386907 /* Icon32-MailNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CE141383730005F706 /* Icon32-MailNew.png */; };
@@ -305,27 +264,20 @@
 		443F263F1F28E7C000386907 /* Icon32-CircleCheckClear.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998D0141383730005F706 /* Icon32-CircleCheckClear.png */; };
 		443F26401F28E7C000386907 /* Icon32-PasteAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B11416602E00F9B612 /* Icon32-PasteAdd@2x.png */; };
 		443F26411F28E7C000386907 /* Icon32-PasteAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B21416602E00F9B612 /* Icon32-PasteAdd.png */; };
-		443F26421F28E7C000386907 /* AZStore-Stop-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B351EFFF17800350EDA /* AZStore-Stop-32.png */; };
 		443F26431F28E7C000386907 /* AZDialStepperPlusDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2A1EFFF17700350EDA /* AZDialStepperPlusDown.png */; };
 		443F26441F28E7C000386907 /* Icon32-PasteCopy.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B31416602E00F9B612 /* Icon32-PasteCopy.png */; };
 		443F26451F28E7C000386907 /* Icon32-PasteCopy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B41416602E00F9B612 /* Icon32-PasteCopy@2x.png */; };
 		443F26461F28E7C000386907 /* Icon32-SharedAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B51416602E00F9B612 /* Icon32-SharedAdd.png */; };
-		443F26471F28E7C000386907 /* AZStore-Addin-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B311EFFF17700350EDA /* AZStore-Addin-32.png */; };
-		443F26481F28E7C000386907 /* Icon57-CalcRoll@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3D1EFFF17800350EDA /* Icon57-CalcRoll@2x.png */; };
 		443F26491F28E7C000386907 /* Icon32-SharedAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B61416602E00F9B612 /* Icon32-SharedAdd@2x.png */; };
 		443F264A1F28E7C000386907 /* AZDialStepperPlusDown@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2B1EFFF17700350EDA /* AZDialStepperPlusDown@2X.png */; };
 		443F264B1F28E7C000386907 /* Icon32-Shared@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B71416602E00F9B612 /* Icon32-Shared@2x.png */; };
 		443F264C1F28E7C000386907 /* Icon32-Shared.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B81416602E00F9B612 /* Icon32-Shared.png */; };
-		443F264D1F28E7C000386907 /* Icon57-Condition@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3F1EFFF17800350EDA /* Icon57-Condition@2x.png */; };
 		443F264E1F28E7C000386907 /* Icon32-GoogleDoc.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595D91416658B00F9B612 /* Icon32-GoogleDoc.png */; };
 		443F264F1F28E7C000386907 /* Icon32-GoogleDoc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DA1416658B00F9B612 /* Icon32-GoogleDoc@2x.png */; };
-		443F26501F28E7C000386907 /* AZStore-Stop-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B361EFFF17800350EDA /* AZStore-Stop-32@2x.png */; };
-		443F26511F28E7C000386907 /* Icon57-PackList.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B401EFFF17800350EDA /* Icon57-PackList.png */; };
 		443F26521F28E7C000386907 /* Icon32-GoogleAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DB1416658B00F9B612 /* Icon32-GoogleAdd@2x.png */; };
 		443F26531F28E7C000386907 /* AZDialStepperPlus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B291EFFF17700350EDA /* AZDialStepperPlus@2x.png */; };
 		443F26541F28E7C000386907 /* Icon32-GoogleAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DC1416658B00F9B612 /* Icon32-GoogleAdd.png */; };
 		443F26551F28E7C000386907 /* Icon32-NearPc.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DD1416658B00F9B612 /* Icon32-NearPc.png */; };
-		443F26561F28E7C000386907 /* Icon57-Condition.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3E1EFFF17800350EDA /* Icon57-Condition.png */; };
 		443F26571F28E7C000386907 /* Icon32-NearPc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DE1416658B00F9B612 /* Icon32-NearPc@2x.png */; };
 		443F26581F28E7C000386907 /* Icon32-NearPcAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DF1416658B00F9B612 /* Icon32-NearPcAdd@2x.png */; };
 		443F26591F28E7C000386907 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44965B981EFFFFFC00350EDA /* Localizable.strings */; };
@@ -338,15 +290,12 @@
 		443F26601F28E7C000386907 /* Icon72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 449D12BD151817B700F68B6E /* Icon72@2x.png */; };
 		443F26611F28E7C000386907 /* Tx-Back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 440B5B2C14B44E13006BEA96 /* Tx-Back@2x.png */; };
 		443F26621F28E7C000386907 /* Tx-Back.png in Resources */ = {isa = PBXBuildFile; fileRef = 440B5B2D14B44E13006BEA96 /* Tx-Back.png */; };
-		443F26631F28E7C000386907 /* AZStore-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B301EFFF17700350EDA /* AZStore-32@2x.png */; };
 		443F26641F28E7C000386907 /* AZWeb-Forward-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4C1EFFF17800350EDA /* AZWeb-Forward-16.png */; };
 		443F26651F28E7C000386907 /* Icon32-Setting@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962DE14B8456B0047E1C3 /* Icon32-Setting@2x.png */; };
 		443F26661F28E7C000386907 /* Icon32-Setting.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962DF14B8456B0047E1C3 /* Icon32-Setting.png */; };
 		443F26671F28E7C000386907 /* Icon32-Information.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962E014B8456B0047E1C3 /* Icon32-Information.png */; };
 		443F26681F28E7C000386907 /* AZAbout-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B111EFFF17700350EDA /* AZAbout-32@2x.png */; };
-		443F26691F28E7C000386907 /* AZStore-Space-44.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B331EFFF17800350EDA /* AZStore-Space-44.png */; };
 		443F266A1F28E7C000386907 /* Icon32-Information@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962E114B8456B0047E1C3 /* Icon32-Information@2x.png */; };
-		443F266B1F28E7C000386907 /* AZStore-Addin-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B321EFFF17700350EDA /* AZStore-Addin-32@2x.png */; };
 		443F266C1F28E7C000386907 /* Icon32-ExtParts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D3E1AF14B8BD9D0028FF24 /* Icon32-ExtParts@2x.png */; };
 		443F266D1F28E7C000386907 /* Icon32-ExtParts.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D3E1B014B8BD9D0028FF24 /* Icon32-ExtParts.png */; };
 		443F266E1F28E7C000386907 /* Icon-Close-44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD07A14C17CAF003FF260 /* Icon-Close-44@2x.png */; };
@@ -359,12 +308,9 @@
 		443F26751F28E7C000386907 /* AZAbout.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B131EFFF17700350EDA /* AZAbout.xib */; };
 		443F26761F28E7C000386907 /* Icon-Store-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD08814C17CAF003FF260 /* Icon-Store-40@2x.png */; };
 		443F26771F28E7C000386907 /* Icon-Store-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD08914C17CAF003FF260 /* Icon-Store-40.png */; };
-		443F26781F28E7C000386907 /* Icon57-PayNote.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B421EFFF17800350EDA /* Icon57-PayNote.png */; };
-		443F26791F28E7C000386907 /* Icon57-PayNote@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B431EFFF17800350EDA /* Icon57-PayNote@2x.png */; };
 		443F267A1F28E7C000386907 /* AZDialStepperMinusDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B261EFFF17700350EDA /* AZDialStepperMinusDown.png */; };
 		443F267B1F28E7C000386907 /* AZLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44227A1F1F1217F4003D9C8B /* AZLocalizable.strings */; };
 		443F267C1F28E7C000386907 /* Icon32-Picasa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC158F14E806590007229F /* Icon32-Picasa@2x.png */; };
-		443F267D1F28E7C000386907 /* Icon57-SplitPay.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B441EFFF17800350EDA /* Icon57-SplitPay.png */; };
 		443F267E1F28E7C000386907 /* Icon32-Picasa.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159014E806590007229F /* Icon32-Picasa.png */; };
 		443F267F1F28E7C000386907 /* Icon32-PicasaBlack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159314E8093A0007229F /* Icon32-PicasaBlack@2x.png */; };
 		443F26801F28E7C000386907 /* AZAbout-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B121EFFF17700350EDA /* AZAbout-iPad.xib */; };
@@ -378,9 +324,7 @@
 		443F26881F28E7C000386907 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 44E486B51EC80B910041876C /* GoogleService-Info.plist */; };
 		443F26891F28E7C000386907 /* Icon72bag.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218450160392BA0097FF63 /* Icon72bag.png */; };
 		443F268A1F28E7C000386907 /* Icon72bag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218451160392BB0097FF63 /* Icon72bag@2x.png */; };
-		443F268B1F28E7C000386907 /* Icon57-PackList@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B411EFFF17800350EDA /* Icon57-PackList@2x.png */; };
 		443F268D1F28E7C000386907 /* AZDial.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B211EFFF17700350EDA /* AZDial.m */; };
-		443F268E1F28E7C000386907 /* NSDataBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B461EFFF17800350EDA /* NSDataBase64.m */; };
 		443F268F1F28E7C000386907 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		443F26901F28E7C000386907 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* AppDelegate.m */; };
 		443F26911F28E7C000386907 /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F1957B1EBDB66000F5FF93 /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -393,18 +337,11 @@
 		443F26981F28E7C000386907 /* E2viewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 449D67CC10C80DCB00691BF4 /* E2viewController.m */; };
 		443F26991F28E7C000386907 /* E2edit.m in Sources */ = {isa = PBXBuildFile; fileRef = 447DFE3910C9342F00C887FA /* E2edit.m */; };
 		443F269A1F28E7C000386907 /* E3viewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 446EFA1210CB988D0035EA2A /* E3viewController.m */; };
-		443F269B1F28E7C000386907 /* SpListTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4400E1FC110F493A000DFC3B /* SpListTVC.m */; };
 		443F269C1F28E7C000386907 /* E3detailTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 446AAE251111F0250077BF89 /* E3detailTVC.m */; };
 		443F269D1F28E7C000386907 /* SettingTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 448549021115726F00D10CC8 /* SettingTVC.m */; };
 		443F269E1F28E7C000386907 /* selectGroupTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4491C7B511186531005955FD /* selectGroupTVC.m */; };
 		443F269F1F28E7C000386907 /* Global.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ADD3A7115A1B4800829977 /* Global.m */; };
 		443F26A01F28E7C000386907 /* FileCsv.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F07DBA119AFE69007D8863 /* FileCsv.m */; };
-		443F26A11F28E7C000386907 /* AZStoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B381EFFF17800350EDA /* AZStoreCell.m */; };
-		443F26A21F28E7C000386907 /* AZStoreTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B3B1EFFF17800350EDA /* AZStoreTVC.m */; };
-		443F26A31F28E7C000386907 /* SpSearchVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D7D44F125484B500E1E362 /* SpSearchVC.m */; };
-		443F26A41F28E7C000386907 /* SpAppendVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44601C9C126187BA005E189A /* SpAppendVC.m */; };
-		443F26A51F28E7C000386907 /* SpPOST.m in Sources */ = {isa = PBXBuildFile; fileRef = 44AFCC5312633920003352DE /* SpPOST.m */; };
-		443F26A61F28E7C000386907 /* SpDetailTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44E070D912732BF3003BF988 /* SpDetailTVC.m */; };
 		443F26A71F28E7C000386907 /* CalcView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4453C33B131A86C200A97E1A /* CalcView.m */; };
 		443F26A81F28E7C000386907 /* UIViewController+azAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 44227A181F08E4B4003D9C8B /* UIViewController+azAlert.m */; };
 		443F26A91F28E7C000386907 /* AzPackList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 445998BE1413757E0005F706 /* AzPackList.xcdatamodeld */; };
@@ -416,7 +353,6 @@
 		443F26AF1F28E7C000386907 /* NSDataAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 44A7DB2D14DE6A7A00DB72E2 /* NSDataAddition.m */; };
 		443F26B01F28E7C000386907 /* UIDevice-Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 44835ABE156BDC1E00A83167 /* UIDevice-Hardware.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		443F26B11F28E7C000386907 /* MocFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4416337415F25D1B009CD324 /* MocFunctions.m */; };
-		443F26B21F28E7C000386907 /* VerificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B481EFFF17800350EDA /* VerificationController.m */; };
 		443F26B41F28E7C000386907 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 44D7CE6B153660F900AE6920 /* libsqlite3.0.dylib */; };
 		443F26B51F28E7C000386907 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 440DD96C14B316D800C9B40C /* StoreKit.framework */; };
 		443F26B61F28E7C000386907 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A2C0A4131BC9B900256C08 /* QuartzCore.framework */; };
@@ -433,29 +369,20 @@
 		443F26C11F28E7C000386907 /* libPods-PackList.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A7714273E80A6CA0EBF7768C /* libPods-PackList.a */; };
 		443F26C31F28E7C000386907 /* AZAboutVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B141EFFF17700350EDA /* AZAboutVC.h */; };
 		443F26C41F28E7C000386907 /* PackList_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 4486955F10F5ABCC00AD02D8 /* PackList_Prefix.pch */; };
-		443F26C51F28E7C000386907 /* SpListTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 4400E1FB110F493A000DFC3B /* SpListTVC.h */; };
-		443F26C61F28E7C000386907 /* AZStoreTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B3A1EFFF17800350EDA /* AZStoreTVC.h */; };
 		443F26C71F28E7C000386907 /* AZClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B1A1EFFF17700350EDA /* AZClass.h */; };
-		443F26C81F28E7C000386907 /* VerificationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B471EFFF17800350EDA /* VerificationController.h */; };
 		443F26C91F28E7C000386907 /* E3detailTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 446AAE241111F0250077BF89 /* E3detailTVC.h */; };
-		443F26CA1F28E7C000386907 /* NSDataBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B451EFFF17800350EDA /* NSDataBase64.h */; };
 		443F26CB1F28E7C000386907 /* SettingTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 448549031115726F00D10CC8 /* SettingTVC.h */; };
 		443F26CC1F28E7C000386907 /* selectGroupTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 4491C7B411186531005955FD /* selectGroupTVC.h */; };
 		443F26CD1F28E7C000386907 /* AZDial.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B201EFFF17700350EDA /* AZDial.h */; };
 		443F26CE1F28E7C000386907 /* FileCsv.h in Headers */ = {isa = PBXBuildFile; fileRef = 44F07DB9119AFE69007D8863 /* FileCsv.h */; };
-		443F26CF1F28E7C000386907 /* SpSearchVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44D7D44E125484B500E1E362 /* SpSearchVC.h */; };
 		443F26D01F28E7C000386907 /* UIViewController+azAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = 44227A171F08E4B4003D9C8B /* UIViewController+azAlert.h */; };
-		443F26D11F28E7C000386907 /* SpAppendVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44601C9D126187BA005E189A /* SpAppendVC.h */; };
 		443F26D21F28E7C000386907 /* SFHFKeychainUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 44F1957A1EBDB66000F5FF93 /* SFHFKeychainUtils.h */; };
-		443F26D31F28E7C000386907 /* SpPOST.h in Headers */ = {isa = PBXBuildFile; fileRef = 44AFCC5412633920003352DE /* SpPOST.h */; };
-		443F26D41F28E7C000386907 /* SpDetailTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44E070DA12732BF3003BF988 /* SpDetailTVC.h */; };
 		443F26D51F28E7C000386907 /* CalcView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4453C33A131A86C200A97E1A /* CalcView.h */; };
 		443F26D61F28E7C000386907 /* AZWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B4E1EFFF17800350EDA /* AZWebView.h */; };
 		443F26D71F28E7C000386907 /* PatternImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 441962E614B87DED0047E1C3 /* PatternImageView.h */; };
 		443F26D81F28E7C000386907 /* NSDataAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 44A7DB2C14DE6A7A00DB72E2 /* NSDataAddition.h */; };
 		443F26D91F28E7C000386907 /* UIDevice-Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 44835ABD156BDC1E00A83167 /* UIDevice-Hardware.h */; };
 		443F26DA1F28E7C000386907 /* MocFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4416337515F25D1B009CD324 /* MocFunctions.h */; };
-		443F26DB1F28E7C100386907 /* AZStoreCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B371EFFF17800350EDA /* AZStoreCell.h */; };
 		443F26E61F28E83100386907 /* Icon57.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C1134DB1D300342648 /* Icon57.png */; };
 		443F26E71F28E83100386907 /* Icon57@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C0134DB1D300342648 /* Icon57@2x.png */; };
 		443F26E81F28E83100386907 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44965BA01F03E69900350EDA /* Launch Screen.storyboard */; };
@@ -477,9 +404,7 @@
 		443F26F81F28E83100386907 /* E1viewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F195821EBDD8F300F5FF93 /* E1viewController.xib */; };
 		443F26F91F28E83100386907 /* Icon24-GreenPlus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68AE13196CC100012FB5 /* Icon24-GreenPlus@2x.png */; };
 		443F26FA1F28E83100386907 /* AZAbout-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B101EFFF17700350EDA /* AZAbout-32.png */; };
-		443F26FB1F28E83100386907 /* AZStoreCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B391EFFF17800350EDA /* AZStoreCell.xib */; };
 		443F26FC1F28E83100386907 /* Icon24-RedMinus.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68AF13196CC100012FB5 /* Icon24-RedMinus.png */; };
-		443F26FD1F28E83100386907 /* AZStore-Space-44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B341EFFF17800350EDA /* AZStore-Space-44@2x.png */; };
 		443F26FE1F28E83100386907 /* Icon24-RedMinus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B013196CC100012FB5 /* Icon24-RedMinus@2x.png */; };
 		443F26FF1F28E83100386907 /* Icon32-BagBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B113196CC100012FB5 /* Icon32-BagBlue.png */; };
 		443F27001F28E83100386907 /* Icon32-BagBlue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B213196CC100012FB5 /* Icon32-BagBlue@2x.png */; };
@@ -494,10 +419,8 @@
 		443F27091F28E83100386907 /* Icon32-CircleCheck2.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BB13196CC100012FB5 /* Icon32-CircleCheck2.png */; };
 		443F270A1F28E83100386907 /* Icon32-CircleCheck2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BC13196CC100012FB5 /* Icon32-CircleCheck2@2x.png */; };
 		443F270B1F28E83100386907 /* AZDialTile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2D1EFFF17700350EDA /* AZDialTile@2x.png */; };
-		443F270C1F28E83100386907 /* Icon57-CalcRoll.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3C1EFFF17800350EDA /* Icon57-CalcRoll.png */; };
 		443F270D1F28E83100386907 /* Icon32-CircleGray.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BD13196CC100012FB5 /* Icon32-CircleGray.png */; };
 		443F270E1F28E83100386907 /* AZDialStepperMinus.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B241EFFF17700350EDA /* AZDialStepperMinus.png */; };
-		443F270F1F28E83100386907 /* AZStore-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2F1EFFF17700350EDA /* AZStore-32.png */; };
 		443F27101F28E83100386907 /* Icon32-CircleGray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BE13196CC100012FB5 /* Icon32-CircleGray@2x.png */; };
 		443F27111F28E83100386907 /* AZDialBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B221EFFF17700350EDA /* AZDialBack.png */; };
 		443F27121F28E83100386907 /* Icon44-ClipOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C332131A74CC00A97E1A /* Icon44-ClipOn.png */; };
@@ -512,7 +435,6 @@
 		443F271B1F28E83100386907 /* Icon-DrumPush@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C341131A889000A97E1A /* Icon-DrumPush@2x.png */; };
 		443F271C1F28E83100386907 /* Icon44-Calc.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CA131D5A4900FA1C3C /* Icon44-Calc.png */; };
 		443F271D1F28E83100386907 /* AZDialTile.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2C1EFFF17700350EDA /* AZDialTile.png */; };
-		443F271E1F28E83100386907 /* PackListBeta-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* PackListBeta-Info.plist */; };
 		443F271F1F28E83100386907 /* Icon44-Calc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CB131D5A4900FA1C3C /* Icon44-Calc@2x.png */; };
 		443F27201F28E83100386907 /* Icon32-MailNew@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CD141383730005F706 /* Icon32-MailNew@2x.png */; };
 		443F27211F28E83100386907 /* Icon32-MailNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CE141383730005F706 /* Icon32-MailNew.png */; };
@@ -520,27 +442,20 @@
 		443F27231F28E83100386907 /* Icon32-CircleCheckClear.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998D0141383730005F706 /* Icon32-CircleCheckClear.png */; };
 		443F27241F28E83100386907 /* Icon32-PasteAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B11416602E00F9B612 /* Icon32-PasteAdd@2x.png */; };
 		443F27251F28E83100386907 /* Icon32-PasteAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B21416602E00F9B612 /* Icon32-PasteAdd.png */; };
-		443F27261F28E83100386907 /* AZStore-Stop-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B351EFFF17800350EDA /* AZStore-Stop-32.png */; };
 		443F27271F28E83100386907 /* AZDialStepperPlusDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2A1EFFF17700350EDA /* AZDialStepperPlusDown.png */; };
 		443F27281F28E83100386907 /* Icon32-PasteCopy.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B31416602E00F9B612 /* Icon32-PasteCopy.png */; };
 		443F27291F28E83100386907 /* Icon32-PasteCopy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B41416602E00F9B612 /* Icon32-PasteCopy@2x.png */; };
 		443F272A1F28E83100386907 /* Icon32-SharedAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B51416602E00F9B612 /* Icon32-SharedAdd.png */; };
-		443F272B1F28E83100386907 /* AZStore-Addin-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B311EFFF17700350EDA /* AZStore-Addin-32.png */; };
-		443F272C1F28E83100386907 /* Icon57-CalcRoll@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3D1EFFF17800350EDA /* Icon57-CalcRoll@2x.png */; };
 		443F272D1F28E83100386907 /* Icon32-SharedAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B61416602E00F9B612 /* Icon32-SharedAdd@2x.png */; };
 		443F272E1F28E83100386907 /* AZDialStepperPlusDown@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2B1EFFF17700350EDA /* AZDialStepperPlusDown@2X.png */; };
 		443F272F1F28E83100386907 /* Icon32-Shared@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B71416602E00F9B612 /* Icon32-Shared@2x.png */; };
 		443F27301F28E83100386907 /* Icon32-Shared.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B81416602E00F9B612 /* Icon32-Shared.png */; };
-		443F27311F28E83100386907 /* Icon57-Condition@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3F1EFFF17800350EDA /* Icon57-Condition@2x.png */; };
 		443F27321F28E83100386907 /* Icon32-GoogleDoc.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595D91416658B00F9B612 /* Icon32-GoogleDoc.png */; };
 		443F27331F28E83100386907 /* Icon32-GoogleDoc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DA1416658B00F9B612 /* Icon32-GoogleDoc@2x.png */; };
-		443F27341F28E83100386907 /* AZStore-Stop-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B361EFFF17800350EDA /* AZStore-Stop-32@2x.png */; };
-		443F27351F28E83100386907 /* Icon57-PackList.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B401EFFF17800350EDA /* Icon57-PackList.png */; };
 		443F27361F28E83100386907 /* Icon32-GoogleAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DB1416658B00F9B612 /* Icon32-GoogleAdd@2x.png */; };
 		443F27371F28E83100386907 /* AZDialStepperPlus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B291EFFF17700350EDA /* AZDialStepperPlus@2x.png */; };
 		443F27381F28E83100386907 /* Icon32-GoogleAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DC1416658B00F9B612 /* Icon32-GoogleAdd.png */; };
 		443F27391F28E83100386907 /* Icon32-NearPc.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DD1416658B00F9B612 /* Icon32-NearPc.png */; };
-		443F273A1F28E83100386907 /* Icon57-Condition.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3E1EFFF17800350EDA /* Icon57-Condition.png */; };
 		443F273B1F28E83100386907 /* Icon32-NearPc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DE1416658B00F9B612 /* Icon32-NearPc@2x.png */; };
 		443F273C1F28E83100386907 /* Icon32-NearPcAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DF1416658B00F9B612 /* Icon32-NearPcAdd@2x.png */; };
 		443F273D1F28E83100386907 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44965B981EFFFFFC00350EDA /* Localizable.strings */; };
@@ -553,15 +468,12 @@
 		443F27441F28E83100386907 /* Icon72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 449D12BD151817B700F68B6E /* Icon72@2x.png */; };
 		443F27451F28E83100386907 /* Tx-Back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 440B5B2C14B44E13006BEA96 /* Tx-Back@2x.png */; };
 		443F27461F28E83100386907 /* Tx-Back.png in Resources */ = {isa = PBXBuildFile; fileRef = 440B5B2D14B44E13006BEA96 /* Tx-Back.png */; };
-		443F27471F28E83100386907 /* AZStore-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B301EFFF17700350EDA /* AZStore-32@2x.png */; };
 		443F27481F28E83100386907 /* AZWeb-Forward-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4C1EFFF17800350EDA /* AZWeb-Forward-16.png */; };
 		443F27491F28E83100386907 /* Icon32-Setting@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962DE14B8456B0047E1C3 /* Icon32-Setting@2x.png */; };
 		443F274A1F28E83100386907 /* Icon32-Setting.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962DF14B8456B0047E1C3 /* Icon32-Setting.png */; };
 		443F274B1F28E83100386907 /* Icon32-Information.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962E014B8456B0047E1C3 /* Icon32-Information.png */; };
 		443F274C1F28E83100386907 /* AZAbout-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B111EFFF17700350EDA /* AZAbout-32@2x.png */; };
-		443F274D1F28E83100386907 /* AZStore-Space-44.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B331EFFF17800350EDA /* AZStore-Space-44.png */; };
 		443F274E1F28E83100386907 /* Icon32-Information@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962E114B8456B0047E1C3 /* Icon32-Information@2x.png */; };
-		443F274F1F28E83100386907 /* AZStore-Addin-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B321EFFF17700350EDA /* AZStore-Addin-32@2x.png */; };
 		443F27501F28E83100386907 /* Icon32-ExtParts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D3E1AF14B8BD9D0028FF24 /* Icon32-ExtParts@2x.png */; };
 		443F27511F28E83100386907 /* Icon32-ExtParts.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D3E1B014B8BD9D0028FF24 /* Icon32-ExtParts.png */; };
 		443F27521F28E83100386907 /* Icon-Close-44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD07A14C17CAF003FF260 /* Icon-Close-44@2x.png */; };
@@ -574,12 +486,9 @@
 		443F27591F28E83100386907 /* AZAbout.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B131EFFF17700350EDA /* AZAbout.xib */; };
 		443F275A1F28E83100386907 /* Icon-Store-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD08814C17CAF003FF260 /* Icon-Store-40@2x.png */; };
 		443F275B1F28E83100386907 /* Icon-Store-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD08914C17CAF003FF260 /* Icon-Store-40.png */; };
-		443F275C1F28E83100386907 /* Icon57-PayNote.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B421EFFF17800350EDA /* Icon57-PayNote.png */; };
-		443F275D1F28E83100386907 /* Icon57-PayNote@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B431EFFF17800350EDA /* Icon57-PayNote@2x.png */; };
 		443F275E1F28E83100386907 /* AZDialStepperMinusDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B261EFFF17700350EDA /* AZDialStepperMinusDown.png */; };
 		443F275F1F28E83100386907 /* AZLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44227A1F1F1217F4003D9C8B /* AZLocalizable.strings */; };
 		443F27601F28E83100386907 /* Icon32-Picasa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC158F14E806590007229F /* Icon32-Picasa@2x.png */; };
-		443F27611F28E83100386907 /* Icon57-SplitPay.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B441EFFF17800350EDA /* Icon57-SplitPay.png */; };
 		443F27621F28E83100386907 /* Icon32-Picasa.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159014E806590007229F /* Icon32-Picasa.png */; };
 		443F27631F28E83100386907 /* Icon32-PicasaBlack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159314E8093A0007229F /* Icon32-PicasaBlack@2x.png */; };
 		443F27641F28E83100386907 /* AZAbout-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B121EFFF17700350EDA /* AZAbout-iPad.xib */; };
@@ -593,9 +502,7 @@
 		443F276C1F28E83100386907 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 44E486B51EC80B910041876C /* GoogleService-Info.plist */; };
 		443F276D1F28E83100386907 /* Icon72bag.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218450160392BA0097FF63 /* Icon72bag.png */; };
 		443F276E1F28E83100386907 /* Icon72bag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218451160392BB0097FF63 /* Icon72bag@2x.png */; };
-		443F276F1F28E83100386907 /* Icon57-PackList@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B411EFFF17800350EDA /* Icon57-PackList@2x.png */; };
 		443F27711F28E83100386907 /* AZDial.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B211EFFF17700350EDA /* AZDial.m */; };
-		443F27721F28E83100386907 /* NSDataBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B461EFFF17800350EDA /* NSDataBase64.m */; };
 		443F27731F28E83100386907 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		443F27741F28E83100386907 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* AppDelegate.m */; };
 		443F27751F28E83100386907 /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F1957B1EBDB66000F5FF93 /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -608,18 +515,11 @@
 		443F277C1F28E83100386907 /* E2viewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 449D67CC10C80DCB00691BF4 /* E2viewController.m */; };
 		443F277D1F28E83100386907 /* E2edit.m in Sources */ = {isa = PBXBuildFile; fileRef = 447DFE3910C9342F00C887FA /* E2edit.m */; };
 		443F277E1F28E83100386907 /* E3viewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 446EFA1210CB988D0035EA2A /* E3viewController.m */; };
-		443F277F1F28E83100386907 /* SpListTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4400E1FC110F493A000DFC3B /* SpListTVC.m */; };
 		443F27801F28E83100386907 /* E3detailTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 446AAE251111F0250077BF89 /* E3detailTVC.m */; };
 		443F27811F28E83100386907 /* SettingTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 448549021115726F00D10CC8 /* SettingTVC.m */; };
 		443F27821F28E83100386907 /* selectGroupTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4491C7B511186531005955FD /* selectGroupTVC.m */; };
 		443F27831F28E83100386907 /* Global.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ADD3A7115A1B4800829977 /* Global.m */; };
 		443F27841F28E83100386907 /* FileCsv.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F07DBA119AFE69007D8863 /* FileCsv.m */; };
-		443F27851F28E83100386907 /* AZStoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B381EFFF17800350EDA /* AZStoreCell.m */; };
-		443F27861F28E83100386907 /* AZStoreTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B3B1EFFF17800350EDA /* AZStoreTVC.m */; };
-		443F27871F28E83100386907 /* SpSearchVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D7D44F125484B500E1E362 /* SpSearchVC.m */; };
-		443F27881F28E83100386907 /* SpAppendVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44601C9C126187BA005E189A /* SpAppendVC.m */; };
-		443F27891F28E83100386907 /* SpPOST.m in Sources */ = {isa = PBXBuildFile; fileRef = 44AFCC5312633920003352DE /* SpPOST.m */; };
-		443F278A1F28E83100386907 /* SpDetailTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44E070D912732BF3003BF988 /* SpDetailTVC.m */; };
 		443F278B1F28E83100386907 /* CalcView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4453C33B131A86C200A97E1A /* CalcView.m */; };
 		443F278C1F28E83100386907 /* UIViewController+azAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 44227A181F08E4B4003D9C8B /* UIViewController+azAlert.m */; };
 		443F278D1F28E83100386907 /* AzPackList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 445998BE1413757E0005F706 /* AzPackList.xcdatamodeld */; };
@@ -631,7 +531,6 @@
 		443F27931F28E83100386907 /* NSDataAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 44A7DB2D14DE6A7A00DB72E2 /* NSDataAddition.m */; };
 		443F27941F28E83100386907 /* UIDevice-Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 44835ABE156BDC1E00A83167 /* UIDevice-Hardware.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		443F27951F28E83100386907 /* MocFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4416337415F25D1B009CD324 /* MocFunctions.m */; };
-		443F27961F28E83100386907 /* VerificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B481EFFF17800350EDA /* VerificationController.m */; };
 		443F27981F28E83100386907 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 44D7CE6B153660F900AE6920 /* libsqlite3.0.dylib */; };
 		443F27991F28E83100386907 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 440DD96C14B316D800C9B40C /* StoreKit.framework */; };
 		443F279A1F28E83100386907 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A2C0A4131BC9B900256C08 /* QuartzCore.framework */; };
@@ -648,29 +547,20 @@
 		443F27A51F28E83100386907 /* libPods-PackList.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A7714273E80A6CA0EBF7768C /* libPods-PackList.a */; };
 		443F27A71F28E83100386907 /* AZAboutVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B141EFFF17700350EDA /* AZAboutVC.h */; };
 		443F27A81F28E83100386907 /* PackList_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 4486955F10F5ABCC00AD02D8 /* PackList_Prefix.pch */; };
-		443F27A91F28E83100386907 /* SpListTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 4400E1FB110F493A000DFC3B /* SpListTVC.h */; };
-		443F27AA1F28E83100386907 /* AZStoreTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B3A1EFFF17800350EDA /* AZStoreTVC.h */; };
 		443F27AB1F28E83100386907 /* AZClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B1A1EFFF17700350EDA /* AZClass.h */; };
-		443F27AC1F28E83100386907 /* VerificationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B471EFFF17800350EDA /* VerificationController.h */; };
 		443F27AD1F28E83100386907 /* E3detailTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 446AAE241111F0250077BF89 /* E3detailTVC.h */; };
-		443F27AE1F28E83100386907 /* NSDataBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B451EFFF17800350EDA /* NSDataBase64.h */; };
 		443F27AF1F28E83100386907 /* SettingTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 448549031115726F00D10CC8 /* SettingTVC.h */; };
 		443F27B01F28E83100386907 /* selectGroupTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 4491C7B411186531005955FD /* selectGroupTVC.h */; };
 		443F27B11F28E83100386907 /* AZDial.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B201EFFF17700350EDA /* AZDial.h */; };
 		443F27B21F28E83100386907 /* FileCsv.h in Headers */ = {isa = PBXBuildFile; fileRef = 44F07DB9119AFE69007D8863 /* FileCsv.h */; };
-		443F27B31F28E83100386907 /* SpSearchVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44D7D44E125484B500E1E362 /* SpSearchVC.h */; };
 		443F27B41F28E83100386907 /* UIViewController+azAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = 44227A171F08E4B4003D9C8B /* UIViewController+azAlert.h */; };
-		443F27B51F28E83100386907 /* SpAppendVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44601C9D126187BA005E189A /* SpAppendVC.h */; };
 		443F27B61F28E83100386907 /* SFHFKeychainUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 44F1957A1EBDB66000F5FF93 /* SFHFKeychainUtils.h */; };
-		443F27B71F28E83100386907 /* SpPOST.h in Headers */ = {isa = PBXBuildFile; fileRef = 44AFCC5412633920003352DE /* SpPOST.h */; };
-		443F27B81F28E83100386907 /* SpDetailTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44E070DA12732BF3003BF988 /* SpDetailTVC.h */; };
 		443F27B91F28E83100386907 /* CalcView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4453C33A131A86C200A97E1A /* CalcView.h */; };
 		443F27BA1F28E83100386907 /* AZWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B4E1EFFF17800350EDA /* AZWebView.h */; };
 		443F27BB1F28E83100386907 /* PatternImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 441962E614B87DED0047E1C3 /* PatternImageView.h */; };
 		443F27BC1F28E83100386907 /* NSDataAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 44A7DB2C14DE6A7A00DB72E2 /* NSDataAddition.h */; };
 		443F27BD1F28E83100386907 /* UIDevice-Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 44835ABD156BDC1E00A83167 /* UIDevice-Hardware.h */; };
 		443F27BE1F28E83100386907 /* MocFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4416337515F25D1B009CD324 /* MocFunctions.h */; };
-		443F27BF1F28E83100386907 /* AZStoreCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B371EFFF17800350EDA /* AZStoreCell.h */; };
 		443F27CA1F28E85D00386907 /* Icon57.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C1134DB1D300342648 /* Icon57.png */; };
 		443F27CB1F28E85D00386907 /* Icon57@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C0134DB1D300342648 /* Icon57@2x.png */; };
 		443F27CC1F28E85D00386907 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44965BA01F03E69900350EDA /* Launch Screen.storyboard */; };
@@ -692,9 +582,7 @@
 		443F27DC1F28E85D00386907 /* E1viewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F195821EBDD8F300F5FF93 /* E1viewController.xib */; };
 		443F27DD1F28E85D00386907 /* Icon24-GreenPlus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68AE13196CC100012FB5 /* Icon24-GreenPlus@2x.png */; };
 		443F27DE1F28E85D00386907 /* AZAbout-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B101EFFF17700350EDA /* AZAbout-32.png */; };
-		443F27DF1F28E85D00386907 /* AZStoreCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B391EFFF17800350EDA /* AZStoreCell.xib */; };
 		443F27E01F28E85D00386907 /* Icon24-RedMinus.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68AF13196CC100012FB5 /* Icon24-RedMinus.png */; };
-		443F27E11F28E85D00386907 /* AZStore-Space-44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B341EFFF17800350EDA /* AZStore-Space-44@2x.png */; };
 		443F27E21F28E85D00386907 /* Icon24-RedMinus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B013196CC100012FB5 /* Icon24-RedMinus@2x.png */; };
 		443F27E31F28E85D00386907 /* Icon32-BagBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B113196CC100012FB5 /* Icon32-BagBlue.png */; };
 		443F27E41F28E85D00386907 /* Icon32-BagBlue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B213196CC100012FB5 /* Icon32-BagBlue@2x.png */; };
@@ -709,10 +597,8 @@
 		443F27ED1F28E85D00386907 /* Icon32-CircleCheck2.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BB13196CC100012FB5 /* Icon32-CircleCheck2.png */; };
 		443F27EE1F28E85D00386907 /* Icon32-CircleCheck2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BC13196CC100012FB5 /* Icon32-CircleCheck2@2x.png */; };
 		443F27EF1F28E85D00386907 /* AZDialTile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2D1EFFF17700350EDA /* AZDialTile@2x.png */; };
-		443F27F01F28E85D00386907 /* Icon57-CalcRoll.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3C1EFFF17800350EDA /* Icon57-CalcRoll.png */; };
 		443F27F11F28E85D00386907 /* Icon32-CircleGray.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BD13196CC100012FB5 /* Icon32-CircleGray.png */; };
 		443F27F21F28E85D00386907 /* AZDialStepperMinus.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B241EFFF17700350EDA /* AZDialStepperMinus.png */; };
-		443F27F31F28E85D00386907 /* AZStore-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2F1EFFF17700350EDA /* AZStore-32.png */; };
 		443F27F41F28E85D00386907 /* Icon32-CircleGray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BE13196CC100012FB5 /* Icon32-CircleGray@2x.png */; };
 		443F27F51F28E85D00386907 /* AZDialBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B221EFFF17700350EDA /* AZDialBack.png */; };
 		443F27F61F28E85D00386907 /* Icon44-ClipOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C332131A74CC00A97E1A /* Icon44-ClipOn.png */; };
@@ -727,7 +613,6 @@
 		443F27FF1F28E85D00386907 /* Icon-DrumPush@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C341131A889000A97E1A /* Icon-DrumPush@2x.png */; };
 		443F28001F28E85D00386907 /* Icon44-Calc.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CA131D5A4900FA1C3C /* Icon44-Calc.png */; };
 		443F28011F28E85D00386907 /* AZDialTile.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2C1EFFF17700350EDA /* AZDialTile.png */; };
-		443F28021F28E85D00386907 /* PackListBeta-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* PackListBeta-Info.plist */; };
 		443F28031F28E85D00386907 /* Icon44-Calc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CB131D5A4900FA1C3C /* Icon44-Calc@2x.png */; };
 		443F28041F28E85D00386907 /* Icon32-MailNew@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CD141383730005F706 /* Icon32-MailNew@2x.png */; };
 		443F28051F28E85D00386907 /* Icon32-MailNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CE141383730005F706 /* Icon32-MailNew.png */; };
@@ -735,27 +620,20 @@
 		443F28071F28E85D00386907 /* Icon32-CircleCheckClear.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998D0141383730005F706 /* Icon32-CircleCheckClear.png */; };
 		443F28081F28E85D00386907 /* Icon32-PasteAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B11416602E00F9B612 /* Icon32-PasteAdd@2x.png */; };
 		443F28091F28E85D00386907 /* Icon32-PasteAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B21416602E00F9B612 /* Icon32-PasteAdd.png */; };
-		443F280A1F28E85D00386907 /* AZStore-Stop-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B351EFFF17800350EDA /* AZStore-Stop-32.png */; };
 		443F280B1F28E85D00386907 /* AZDialStepperPlusDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2A1EFFF17700350EDA /* AZDialStepperPlusDown.png */; };
 		443F280C1F28E85D00386907 /* Icon32-PasteCopy.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B31416602E00F9B612 /* Icon32-PasteCopy.png */; };
 		443F280D1F28E85D00386907 /* Icon32-PasteCopy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B41416602E00F9B612 /* Icon32-PasteCopy@2x.png */; };
 		443F280E1F28E85D00386907 /* Icon32-SharedAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B51416602E00F9B612 /* Icon32-SharedAdd.png */; };
-		443F280F1F28E85D00386907 /* AZStore-Addin-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B311EFFF17700350EDA /* AZStore-Addin-32.png */; };
-		443F28101F28E85D00386907 /* Icon57-CalcRoll@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3D1EFFF17800350EDA /* Icon57-CalcRoll@2x.png */; };
 		443F28111F28E85D00386907 /* Icon32-SharedAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B61416602E00F9B612 /* Icon32-SharedAdd@2x.png */; };
 		443F28121F28E85D00386907 /* AZDialStepperPlusDown@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2B1EFFF17700350EDA /* AZDialStepperPlusDown@2X.png */; };
 		443F28131F28E85D00386907 /* Icon32-Shared@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B71416602E00F9B612 /* Icon32-Shared@2x.png */; };
 		443F28141F28E85D00386907 /* Icon32-Shared.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B81416602E00F9B612 /* Icon32-Shared.png */; };
-		443F28151F28E85D00386907 /* Icon57-Condition@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3F1EFFF17800350EDA /* Icon57-Condition@2x.png */; };
 		443F28161F28E85D00386907 /* Icon32-GoogleDoc.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595D91416658B00F9B612 /* Icon32-GoogleDoc.png */; };
 		443F28171F28E85D00386907 /* Icon32-GoogleDoc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DA1416658B00F9B612 /* Icon32-GoogleDoc@2x.png */; };
-		443F28181F28E85D00386907 /* AZStore-Stop-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B361EFFF17800350EDA /* AZStore-Stop-32@2x.png */; };
-		443F28191F28E85D00386907 /* Icon57-PackList.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B401EFFF17800350EDA /* Icon57-PackList.png */; };
 		443F281A1F28E85D00386907 /* Icon32-GoogleAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DB1416658B00F9B612 /* Icon32-GoogleAdd@2x.png */; };
 		443F281B1F28E85D00386907 /* AZDialStepperPlus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B291EFFF17700350EDA /* AZDialStepperPlus@2x.png */; };
 		443F281C1F28E85D00386907 /* Icon32-GoogleAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DC1416658B00F9B612 /* Icon32-GoogleAdd.png */; };
 		443F281D1F28E85D00386907 /* Icon32-NearPc.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DD1416658B00F9B612 /* Icon32-NearPc.png */; };
-		443F281E1F28E85D00386907 /* Icon57-Condition.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3E1EFFF17800350EDA /* Icon57-Condition.png */; };
 		443F281F1F28E85D00386907 /* Icon32-NearPc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DE1416658B00F9B612 /* Icon32-NearPc@2x.png */; };
 		443F28201F28E85D00386907 /* Icon32-NearPcAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DF1416658B00F9B612 /* Icon32-NearPcAdd@2x.png */; };
 		443F28211F28E85D00386907 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44965B981EFFFFFC00350EDA /* Localizable.strings */; };
@@ -768,15 +646,12 @@
 		443F28281F28E85D00386907 /* Icon72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 449D12BD151817B700F68B6E /* Icon72@2x.png */; };
 		443F28291F28E85D00386907 /* Tx-Back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 440B5B2C14B44E13006BEA96 /* Tx-Back@2x.png */; };
 		443F282A1F28E85D00386907 /* Tx-Back.png in Resources */ = {isa = PBXBuildFile; fileRef = 440B5B2D14B44E13006BEA96 /* Tx-Back.png */; };
-		443F282B1F28E85D00386907 /* AZStore-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B301EFFF17700350EDA /* AZStore-32@2x.png */; };
 		443F282C1F28E85D00386907 /* AZWeb-Forward-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4C1EFFF17800350EDA /* AZWeb-Forward-16.png */; };
 		443F282D1F28E85D00386907 /* Icon32-Setting@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962DE14B8456B0047E1C3 /* Icon32-Setting@2x.png */; };
 		443F282E1F28E85D00386907 /* Icon32-Setting.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962DF14B8456B0047E1C3 /* Icon32-Setting.png */; };
 		443F282F1F28E85D00386907 /* Icon32-Information.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962E014B8456B0047E1C3 /* Icon32-Information.png */; };
 		443F28301F28E85D00386907 /* AZAbout-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B111EFFF17700350EDA /* AZAbout-32@2x.png */; };
-		443F28311F28E85D00386907 /* AZStore-Space-44.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B331EFFF17800350EDA /* AZStore-Space-44.png */; };
 		443F28321F28E85D00386907 /* Icon32-Information@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962E114B8456B0047E1C3 /* Icon32-Information@2x.png */; };
-		443F28331F28E85D00386907 /* AZStore-Addin-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B321EFFF17700350EDA /* AZStore-Addin-32@2x.png */; };
 		443F28341F28E85D00386907 /* Icon32-ExtParts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D3E1AF14B8BD9D0028FF24 /* Icon32-ExtParts@2x.png */; };
 		443F28351F28E85D00386907 /* Icon32-ExtParts.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D3E1B014B8BD9D0028FF24 /* Icon32-ExtParts.png */; };
 		443F28361F28E85D00386907 /* Icon-Close-44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD07A14C17CAF003FF260 /* Icon-Close-44@2x.png */; };
@@ -789,12 +664,9 @@
 		443F283D1F28E85D00386907 /* AZAbout.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B131EFFF17700350EDA /* AZAbout.xib */; };
 		443F283E1F28E85D00386907 /* Icon-Store-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD08814C17CAF003FF260 /* Icon-Store-40@2x.png */; };
 		443F283F1F28E85D00386907 /* Icon-Store-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD08914C17CAF003FF260 /* Icon-Store-40.png */; };
-		443F28401F28E85D00386907 /* Icon57-PayNote.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B421EFFF17800350EDA /* Icon57-PayNote.png */; };
-		443F28411F28E85D00386907 /* Icon57-PayNote@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B431EFFF17800350EDA /* Icon57-PayNote@2x.png */; };
 		443F28421F28E85D00386907 /* AZDialStepperMinusDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B261EFFF17700350EDA /* AZDialStepperMinusDown.png */; };
 		443F28431F28E85D00386907 /* AZLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44227A1F1F1217F4003D9C8B /* AZLocalizable.strings */; };
 		443F28441F28E85D00386907 /* Icon32-Picasa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC158F14E806590007229F /* Icon32-Picasa@2x.png */; };
-		443F28451F28E85D00386907 /* Icon57-SplitPay.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B441EFFF17800350EDA /* Icon57-SplitPay.png */; };
 		443F28461F28E85D00386907 /* Icon32-Picasa.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159014E806590007229F /* Icon32-Picasa.png */; };
 		443F28471F28E85D00386907 /* Icon32-PicasaBlack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159314E8093A0007229F /* Icon32-PicasaBlack@2x.png */; };
 		443F28481F28E85D00386907 /* AZAbout-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B121EFFF17700350EDA /* AZAbout-iPad.xib */; };
@@ -808,9 +680,7 @@
 		443F28501F28E85D00386907 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 44E486B51EC80B910041876C /* GoogleService-Info.plist */; };
 		443F28511F28E85D00386907 /* Icon72bag.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218450160392BA0097FF63 /* Icon72bag.png */; };
 		443F28521F28E85D00386907 /* Icon72bag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218451160392BB0097FF63 /* Icon72bag@2x.png */; };
-		443F28531F28E85D00386907 /* Icon57-PackList@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B411EFFF17800350EDA /* Icon57-PackList@2x.png */; };
 		443F28551F28E85D00386907 /* AZDial.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B211EFFF17700350EDA /* AZDial.m */; };
-		443F28561F28E85D00386907 /* NSDataBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B461EFFF17800350EDA /* NSDataBase64.m */; };
 		443F28571F28E85D00386907 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		443F28581F28E85D00386907 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* AppDelegate.m */; };
 		443F28591F28E85D00386907 /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F1957B1EBDB66000F5FF93 /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -823,18 +693,11 @@
 		443F28601F28E85D00386907 /* E2viewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 449D67CC10C80DCB00691BF4 /* E2viewController.m */; };
 		443F28611F28E85D00386907 /* E2edit.m in Sources */ = {isa = PBXBuildFile; fileRef = 447DFE3910C9342F00C887FA /* E2edit.m */; };
 		443F28621F28E85D00386907 /* E3viewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 446EFA1210CB988D0035EA2A /* E3viewController.m */; };
-		443F28631F28E85D00386907 /* SpListTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4400E1FC110F493A000DFC3B /* SpListTVC.m */; };
 		443F28641F28E85D00386907 /* E3detailTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 446AAE251111F0250077BF89 /* E3detailTVC.m */; };
 		443F28651F28E85D00386907 /* SettingTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 448549021115726F00D10CC8 /* SettingTVC.m */; };
 		443F28661F28E85D00386907 /* selectGroupTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4491C7B511186531005955FD /* selectGroupTVC.m */; };
 		443F28671F28E85D00386907 /* Global.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ADD3A7115A1B4800829977 /* Global.m */; };
 		443F28681F28E85D00386907 /* FileCsv.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F07DBA119AFE69007D8863 /* FileCsv.m */; };
-		443F28691F28E85D00386907 /* AZStoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B381EFFF17800350EDA /* AZStoreCell.m */; };
-		443F286A1F28E85D00386907 /* AZStoreTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B3B1EFFF17800350EDA /* AZStoreTVC.m */; };
-		443F286B1F28E85D00386907 /* SpSearchVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D7D44F125484B500E1E362 /* SpSearchVC.m */; };
-		443F286C1F28E85D00386907 /* SpAppendVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44601C9C126187BA005E189A /* SpAppendVC.m */; };
-		443F286D1F28E85D00386907 /* SpPOST.m in Sources */ = {isa = PBXBuildFile; fileRef = 44AFCC5312633920003352DE /* SpPOST.m */; };
-		443F286E1F28E85D00386907 /* SpDetailTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44E070D912732BF3003BF988 /* SpDetailTVC.m */; };
 		443F286F1F28E85D00386907 /* CalcView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4453C33B131A86C200A97E1A /* CalcView.m */; };
 		443F28701F28E85D00386907 /* UIViewController+azAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 44227A181F08E4B4003D9C8B /* UIViewController+azAlert.m */; };
 		443F28711F28E85D00386907 /* AzPackList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 445998BE1413757E0005F706 /* AzPackList.xcdatamodeld */; };
@@ -846,7 +709,6 @@
 		443F28771F28E85D00386907 /* NSDataAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 44A7DB2D14DE6A7A00DB72E2 /* NSDataAddition.m */; };
 		443F28781F28E85D00386907 /* UIDevice-Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 44835ABE156BDC1E00A83167 /* UIDevice-Hardware.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		443F28791F28E85D00386907 /* MocFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4416337415F25D1B009CD324 /* MocFunctions.m */; };
-		443F287A1F28E85D00386907 /* VerificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B481EFFF17800350EDA /* VerificationController.m */; };
 		443F287C1F28E85D00386907 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 44D7CE6B153660F900AE6920 /* libsqlite3.0.dylib */; };
 		443F287D1F28E85D00386907 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 440DD96C14B316D800C9B40C /* StoreKit.framework */; };
 		443F287E1F28E85D00386907 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A2C0A4131BC9B900256C08 /* QuartzCore.framework */; };
@@ -863,29 +725,20 @@
 		443F28891F28E85D00386907 /* libPods-PackList.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A7714273E80A6CA0EBF7768C /* libPods-PackList.a */; };
 		443F288B1F28E85D00386907 /* AZAboutVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B141EFFF17700350EDA /* AZAboutVC.h */; };
 		443F288C1F28E85D00386907 /* PackList_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 4486955F10F5ABCC00AD02D8 /* PackList_Prefix.pch */; };
-		443F288D1F28E85D00386907 /* SpListTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 4400E1FB110F493A000DFC3B /* SpListTVC.h */; };
-		443F288E1F28E85D00386907 /* AZStoreTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B3A1EFFF17800350EDA /* AZStoreTVC.h */; };
 		443F288F1F28E85D00386907 /* AZClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B1A1EFFF17700350EDA /* AZClass.h */; };
-		443F28901F28E85D00386907 /* VerificationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B471EFFF17800350EDA /* VerificationController.h */; };
 		443F28911F28E85D00386907 /* E3detailTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 446AAE241111F0250077BF89 /* E3detailTVC.h */; };
-		443F28921F28E85D00386907 /* NSDataBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B451EFFF17800350EDA /* NSDataBase64.h */; };
 		443F28931F28E85D00386907 /* SettingTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 448549031115726F00D10CC8 /* SettingTVC.h */; };
 		443F28941F28E85D00386907 /* selectGroupTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 4491C7B411186531005955FD /* selectGroupTVC.h */; };
 		443F28951F28E85D00386907 /* AZDial.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B201EFFF17700350EDA /* AZDial.h */; };
 		443F28961F28E85D00386907 /* FileCsv.h in Headers */ = {isa = PBXBuildFile; fileRef = 44F07DB9119AFE69007D8863 /* FileCsv.h */; };
-		443F28971F28E85D00386907 /* SpSearchVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44D7D44E125484B500E1E362 /* SpSearchVC.h */; };
 		443F28981F28E85D00386907 /* UIViewController+azAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = 44227A171F08E4B4003D9C8B /* UIViewController+azAlert.h */; };
-		443F28991F28E85D00386907 /* SpAppendVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44601C9D126187BA005E189A /* SpAppendVC.h */; };
 		443F289A1F28E85D00386907 /* SFHFKeychainUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 44F1957A1EBDB66000F5FF93 /* SFHFKeychainUtils.h */; };
-		443F289B1F28E85D00386907 /* SpPOST.h in Headers */ = {isa = PBXBuildFile; fileRef = 44AFCC5412633920003352DE /* SpPOST.h */; };
-		443F289C1F28E85D00386907 /* SpDetailTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44E070DA12732BF3003BF988 /* SpDetailTVC.h */; };
 		443F289D1F28E85D00386907 /* CalcView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4453C33A131A86C200A97E1A /* CalcView.h */; };
 		443F289E1F28E85D00386907 /* AZWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B4E1EFFF17800350EDA /* AZWebView.h */; };
 		443F289F1F28E85D00386907 /* PatternImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 441962E614B87DED0047E1C3 /* PatternImageView.h */; };
 		443F28A01F28E85D00386907 /* NSDataAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 44A7DB2C14DE6A7A00DB72E2 /* NSDataAddition.h */; };
 		443F28A11F28E85D00386907 /* UIDevice-Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 44835ABD156BDC1E00A83167 /* UIDevice-Hardware.h */; };
 		443F28A21F28E85D00386907 /* MocFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4416337515F25D1B009CD324 /* MocFunctions.h */; };
-		443F28A31F28E85D00386907 /* AZStoreCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B371EFFF17800350EDA /* AZStoreCell.h */; };
 		443F28AE1F28E88500386907 /* Icon57.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C1134DB1D300342648 /* Icon57.png */; };
 		443F28AF1F28E88500386907 /* Icon57@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C0134DB1D300342648 /* Icon57@2x.png */; };
 		443F28B01F28E88500386907 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44965BA01F03E69900350EDA /* Launch Screen.storyboard */; };
@@ -907,9 +760,7 @@
 		443F28C01F28E88500386907 /* E1viewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F195821EBDD8F300F5FF93 /* E1viewController.xib */; };
 		443F28C11F28E88500386907 /* Icon24-GreenPlus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68AE13196CC100012FB5 /* Icon24-GreenPlus@2x.png */; };
 		443F28C21F28E88500386907 /* AZAbout-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B101EFFF17700350EDA /* AZAbout-32.png */; };
-		443F28C31F28E88500386907 /* AZStoreCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B391EFFF17800350EDA /* AZStoreCell.xib */; };
 		443F28C41F28E88500386907 /* Icon24-RedMinus.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68AF13196CC100012FB5 /* Icon24-RedMinus.png */; };
-		443F28C51F28E88500386907 /* AZStore-Space-44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B341EFFF17800350EDA /* AZStore-Space-44@2x.png */; };
 		443F28C61F28E88500386907 /* Icon24-RedMinus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B013196CC100012FB5 /* Icon24-RedMinus@2x.png */; };
 		443F28C71F28E88500386907 /* Icon32-BagBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B113196CC100012FB5 /* Icon32-BagBlue.png */; };
 		443F28C81F28E88500386907 /* Icon32-BagBlue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68B213196CC100012FB5 /* Icon32-BagBlue@2x.png */; };
@@ -924,10 +775,8 @@
 		443F28D11F28E88500386907 /* Icon32-CircleCheck2.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BB13196CC100012FB5 /* Icon32-CircleCheck2.png */; };
 		443F28D21F28E88500386907 /* Icon32-CircleCheck2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BC13196CC100012FB5 /* Icon32-CircleCheck2@2x.png */; };
 		443F28D31F28E88500386907 /* AZDialTile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2D1EFFF17700350EDA /* AZDialTile@2x.png */; };
-		443F28D41F28E88500386907 /* Icon57-CalcRoll.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3C1EFFF17800350EDA /* Icon57-CalcRoll.png */; };
 		443F28D51F28E88500386907 /* Icon32-CircleGray.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BD13196CC100012FB5 /* Icon32-CircleGray.png */; };
 		443F28D61F28E88500386907 /* AZDialStepperMinus.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B241EFFF17700350EDA /* AZDialStepperMinus.png */; };
-		443F28D71F28E88500386907 /* AZStore-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2F1EFFF17700350EDA /* AZStore-32.png */; };
 		443F28D81F28E88500386907 /* Icon32-CircleGray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D68BE13196CC100012FB5 /* Icon32-CircleGray@2x.png */; };
 		443F28D91F28E88500386907 /* AZDialBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B221EFFF17700350EDA /* AZDialBack.png */; };
 		443F28DA1F28E88500386907 /* Icon44-ClipOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C332131A74CC00A97E1A /* Icon44-ClipOn.png */; };
@@ -942,7 +791,6 @@
 		443F28E31F28E88500386907 /* Icon-DrumPush@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C341131A889000A97E1A /* Icon-DrumPush@2x.png */; };
 		443F28E41F28E88500386907 /* Icon44-Calc.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CA131D5A4900FA1C3C /* Icon44-Calc.png */; };
 		443F28E51F28E88500386907 /* AZDialTile.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2C1EFFF17700350EDA /* AZDialTile.png */; };
-		443F28E61F28E88500386907 /* PackListBeta-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* PackListBeta-Info.plist */; };
 		443F28E71F28E88500386907 /* Icon44-Calc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CB131D5A4900FA1C3C /* Icon44-Calc@2x.png */; };
 		443F28E81F28E88500386907 /* Icon32-MailNew@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CD141383730005F706 /* Icon32-MailNew@2x.png */; };
 		443F28E91F28E88500386907 /* Icon32-MailNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CE141383730005F706 /* Icon32-MailNew.png */; };
@@ -950,27 +798,20 @@
 		443F28EB1F28E88500386907 /* Icon32-CircleCheckClear.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998D0141383730005F706 /* Icon32-CircleCheckClear.png */; };
 		443F28EC1F28E88500386907 /* Icon32-PasteAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B11416602E00F9B612 /* Icon32-PasteAdd@2x.png */; };
 		443F28ED1F28E88500386907 /* Icon32-PasteAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B21416602E00F9B612 /* Icon32-PasteAdd.png */; };
-		443F28EE1F28E88500386907 /* AZStore-Stop-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B351EFFF17800350EDA /* AZStore-Stop-32.png */; };
 		443F28EF1F28E88500386907 /* AZDialStepperPlusDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2A1EFFF17700350EDA /* AZDialStepperPlusDown.png */; };
 		443F28F01F28E88500386907 /* Icon32-PasteCopy.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B31416602E00F9B612 /* Icon32-PasteCopy.png */; };
 		443F28F11F28E88500386907 /* Icon32-PasteCopy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B41416602E00F9B612 /* Icon32-PasteCopy@2x.png */; };
 		443F28F21F28E88500386907 /* Icon32-SharedAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B51416602E00F9B612 /* Icon32-SharedAdd.png */; };
-		443F28F31F28E88500386907 /* AZStore-Addin-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B311EFFF17700350EDA /* AZStore-Addin-32.png */; };
-		443F28F41F28E88500386907 /* Icon57-CalcRoll@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3D1EFFF17800350EDA /* Icon57-CalcRoll@2x.png */; };
 		443F28F51F28E88500386907 /* Icon32-SharedAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B61416602E00F9B612 /* Icon32-SharedAdd@2x.png */; };
 		443F28F61F28E88500386907 /* AZDialStepperPlusDown@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2B1EFFF17700350EDA /* AZDialStepperPlusDown@2X.png */; };
 		443F28F71F28E88500386907 /* Icon32-Shared@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B71416602E00F9B612 /* Icon32-Shared@2x.png */; };
 		443F28F81F28E88500386907 /* Icon32-Shared.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595B81416602E00F9B612 /* Icon32-Shared.png */; };
-		443F28F91F28E88500386907 /* Icon57-Condition@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3F1EFFF17800350EDA /* Icon57-Condition@2x.png */; };
 		443F28FA1F28E88500386907 /* Icon32-GoogleDoc.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595D91416658B00F9B612 /* Icon32-GoogleDoc.png */; };
 		443F28FB1F28E88500386907 /* Icon32-GoogleDoc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DA1416658B00F9B612 /* Icon32-GoogleDoc@2x.png */; };
-		443F28FC1F28E88500386907 /* AZStore-Stop-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B361EFFF17800350EDA /* AZStore-Stop-32@2x.png */; };
-		443F28FD1F28E88500386907 /* Icon57-PackList.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B401EFFF17800350EDA /* Icon57-PackList.png */; };
 		443F28FE1F28E88500386907 /* Icon32-GoogleAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DB1416658B00F9B612 /* Icon32-GoogleAdd@2x.png */; };
 		443F28FF1F28E88500386907 /* AZDialStepperPlus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B291EFFF17700350EDA /* AZDialStepperPlus@2x.png */; };
 		443F29001F28E88500386907 /* Icon32-GoogleAdd.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DC1416658B00F9B612 /* Icon32-GoogleAdd.png */; };
 		443F29011F28E88500386907 /* Icon32-NearPc.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DD1416658B00F9B612 /* Icon32-NearPc.png */; };
-		443F29021F28E88500386907 /* Icon57-Condition.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3E1EFFF17800350EDA /* Icon57-Condition.png */; };
 		443F29031F28E88500386907 /* Icon32-NearPc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DE1416658B00F9B612 /* Icon32-NearPc@2x.png */; };
 		443F29041F28E88500386907 /* Icon32-NearPcAdd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A595DF1416658B00F9B612 /* Icon32-NearPcAdd@2x.png */; };
 		443F29051F28E88500386907 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44965B981EFFFFFC00350EDA /* Localizable.strings */; };
@@ -983,15 +824,12 @@
 		443F290C1F28E88500386907 /* Icon72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 449D12BD151817B700F68B6E /* Icon72@2x.png */; };
 		443F290D1F28E88500386907 /* Tx-Back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 440B5B2C14B44E13006BEA96 /* Tx-Back@2x.png */; };
 		443F290E1F28E88500386907 /* Tx-Back.png in Resources */ = {isa = PBXBuildFile; fileRef = 440B5B2D14B44E13006BEA96 /* Tx-Back.png */; };
-		443F290F1F28E88500386907 /* AZStore-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B301EFFF17700350EDA /* AZStore-32@2x.png */; };
 		443F29101F28E88500386907 /* AZWeb-Forward-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4C1EFFF17800350EDA /* AZWeb-Forward-16.png */; };
 		443F29111F28E88500386907 /* Icon32-Setting@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962DE14B8456B0047E1C3 /* Icon32-Setting@2x.png */; };
 		443F29121F28E88500386907 /* Icon32-Setting.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962DF14B8456B0047E1C3 /* Icon32-Setting.png */; };
 		443F29131F28E88500386907 /* Icon32-Information.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962E014B8456B0047E1C3 /* Icon32-Information.png */; };
 		443F29141F28E88500386907 /* AZAbout-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B111EFFF17700350EDA /* AZAbout-32@2x.png */; };
-		443F29151F28E88500386907 /* AZStore-Space-44.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B331EFFF17800350EDA /* AZStore-Space-44.png */; };
 		443F29161F28E88500386907 /* Icon32-Information@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 441962E114B8456B0047E1C3 /* Icon32-Information@2x.png */; };
-		443F29171F28E88500386907 /* AZStore-Addin-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B321EFFF17700350EDA /* AZStore-Addin-32@2x.png */; };
 		443F29181F28E88500386907 /* Icon32-ExtParts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D3E1AF14B8BD9D0028FF24 /* Icon32-ExtParts@2x.png */; };
 		443F29191F28E88500386907 /* Icon32-ExtParts.png in Resources */ = {isa = PBXBuildFile; fileRef = 44D3E1B014B8BD9D0028FF24 /* Icon32-ExtParts.png */; };
 		443F291A1F28E88500386907 /* Icon-Close-44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD07A14C17CAF003FF260 /* Icon-Close-44@2x.png */; };
@@ -1004,12 +842,9 @@
 		443F29211F28E88500386907 /* AZAbout.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B131EFFF17700350EDA /* AZAbout.xib */; };
 		443F29221F28E88500386907 /* Icon-Store-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD08814C17CAF003FF260 /* Icon-Store-40@2x.png */; };
 		443F29231F28E88500386907 /* Icon-Store-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD08914C17CAF003FF260 /* Icon-Store-40.png */; };
-		443F29241F28E88500386907 /* Icon57-PayNote.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B421EFFF17800350EDA /* Icon57-PayNote.png */; };
-		443F29251F28E88500386907 /* Icon57-PayNote@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B431EFFF17800350EDA /* Icon57-PayNote@2x.png */; };
 		443F29261F28E88500386907 /* AZDialStepperMinusDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B261EFFF17700350EDA /* AZDialStepperMinusDown.png */; };
 		443F29271F28E88500386907 /* AZLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44227A1F1F1217F4003D9C8B /* AZLocalizable.strings */; };
 		443F29281F28E88500386907 /* Icon32-Picasa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC158F14E806590007229F /* Icon32-Picasa@2x.png */; };
-		443F29291F28E88500386907 /* Icon57-SplitPay.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B441EFFF17800350EDA /* Icon57-SplitPay.png */; };
 		443F292A1F28E88500386907 /* Icon32-Picasa.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159014E806590007229F /* Icon32-Picasa.png */; };
 		443F292B1F28E88500386907 /* Icon32-PicasaBlack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44AC159314E8093A0007229F /* Icon32-PicasaBlack@2x.png */; };
 		443F292C1F28E88500386907 /* AZAbout-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B121EFFF17700350EDA /* AZAbout-iPad.xib */; };
@@ -1023,9 +858,7 @@
 		443F29341F28E88500386907 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 44E486B51EC80B910041876C /* GoogleService-Info.plist */; };
 		443F29351F28E88500386907 /* Icon72bag.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218450160392BA0097FF63 /* Icon72bag.png */; };
 		443F29361F28E88500386907 /* Icon72bag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44218451160392BB0097FF63 /* Icon72bag@2x.png */; };
-		443F29371F28E88500386907 /* Icon57-PackList@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B411EFFF17800350EDA /* Icon57-PackList@2x.png */; };
 		443F29391F28E88500386907 /* AZDial.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B211EFFF17700350EDA /* AZDial.m */; };
-		443F293A1F28E88500386907 /* NSDataBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B461EFFF17800350EDA /* NSDataBase64.m */; };
 		443F293B1F28E88500386907 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		443F293C1F28E88500386907 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* AppDelegate.m */; };
 		443F293D1F28E88500386907 /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F1957B1EBDB66000F5FF93 /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -1038,18 +871,11 @@
 		443F29441F28E88500386907 /* E2viewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 449D67CC10C80DCB00691BF4 /* E2viewController.m */; };
 		443F29451F28E88500386907 /* E2edit.m in Sources */ = {isa = PBXBuildFile; fileRef = 447DFE3910C9342F00C887FA /* E2edit.m */; };
 		443F29461F28E88500386907 /* E3viewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 446EFA1210CB988D0035EA2A /* E3viewController.m */; };
-		443F29471F28E88500386907 /* SpListTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4400E1FC110F493A000DFC3B /* SpListTVC.m */; };
 		443F29481F28E88500386907 /* E3detailTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 446AAE251111F0250077BF89 /* E3detailTVC.m */; };
 		443F29491F28E88500386907 /* SettingTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 448549021115726F00D10CC8 /* SettingTVC.m */; };
 		443F294A1F28E88500386907 /* selectGroupTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4491C7B511186531005955FD /* selectGroupTVC.m */; };
 		443F294B1F28E88500386907 /* Global.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ADD3A7115A1B4800829977 /* Global.m */; };
 		443F294C1F28E88500386907 /* FileCsv.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F07DBA119AFE69007D8863 /* FileCsv.m */; };
-		443F294D1F28E88500386907 /* AZStoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B381EFFF17800350EDA /* AZStoreCell.m */; };
-		443F294E1F28E88500386907 /* AZStoreTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B3B1EFFF17800350EDA /* AZStoreTVC.m */; };
-		443F294F1F28E88500386907 /* SpSearchVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D7D44F125484B500E1E362 /* SpSearchVC.m */; };
-		443F29501F28E88500386907 /* SpAppendVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44601C9C126187BA005E189A /* SpAppendVC.m */; };
-		443F29511F28E88500386907 /* SpPOST.m in Sources */ = {isa = PBXBuildFile; fileRef = 44AFCC5312633920003352DE /* SpPOST.m */; };
-		443F29521F28E88500386907 /* SpDetailTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44E070D912732BF3003BF988 /* SpDetailTVC.m */; };
 		443F29531F28E88500386907 /* CalcView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4453C33B131A86C200A97E1A /* CalcView.m */; };
 		443F29541F28E88500386907 /* UIViewController+azAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 44227A181F08E4B4003D9C8B /* UIViewController+azAlert.m */; };
 		443F29551F28E88500386907 /* AzPackList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 445998BE1413757E0005F706 /* AzPackList.xcdatamodeld */; };
@@ -1061,7 +887,6 @@
 		443F295B1F28E88500386907 /* NSDataAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 44A7DB2D14DE6A7A00DB72E2 /* NSDataAddition.m */; };
 		443F295C1F28E88500386907 /* UIDevice-Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 44835ABE156BDC1E00A83167 /* UIDevice-Hardware.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		443F295D1F28E88500386907 /* MocFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4416337415F25D1B009CD324 /* MocFunctions.m */; };
-		443F295E1F28E88500386907 /* VerificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B481EFFF17800350EDA /* VerificationController.m */; };
 		443F29601F28E88500386907 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 44D7CE6B153660F900AE6920 /* libsqlite3.0.dylib */; };
 		443F29611F28E88500386907 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 440DD96C14B316D800C9B40C /* StoreKit.framework */; };
 		443F29621F28E88500386907 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A2C0A4131BC9B900256C08 /* QuartzCore.framework */; };
@@ -1078,29 +903,20 @@
 		443F296D1F28E88500386907 /* libPods-PackList.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A7714273E80A6CA0EBF7768C /* libPods-PackList.a */; };
 		443F296F1F28E88500386907 /* AZAboutVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B141EFFF17700350EDA /* AZAboutVC.h */; };
 		443F29701F28E88500386907 /* PackList_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 4486955F10F5ABCC00AD02D8 /* PackList_Prefix.pch */; };
-		443F29711F28E88500386907 /* SpListTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 4400E1FB110F493A000DFC3B /* SpListTVC.h */; };
-		443F29721F28E88500386907 /* AZStoreTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B3A1EFFF17800350EDA /* AZStoreTVC.h */; };
 		443F29731F28E88500386907 /* AZClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B1A1EFFF17700350EDA /* AZClass.h */; };
-		443F29741F28E88500386907 /* VerificationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B471EFFF17800350EDA /* VerificationController.h */; };
 		443F29751F28E88500386907 /* E3detailTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 446AAE241111F0250077BF89 /* E3detailTVC.h */; };
-		443F29761F28E88500386907 /* NSDataBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B451EFFF17800350EDA /* NSDataBase64.h */; };
 		443F29771F28E88500386907 /* SettingTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 448549031115726F00D10CC8 /* SettingTVC.h */; };
 		443F29781F28E88500386907 /* selectGroupTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 4491C7B411186531005955FD /* selectGroupTVC.h */; };
 		443F29791F28E88500386907 /* AZDial.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B201EFFF17700350EDA /* AZDial.h */; };
 		443F297A1F28E88500386907 /* FileCsv.h in Headers */ = {isa = PBXBuildFile; fileRef = 44F07DB9119AFE69007D8863 /* FileCsv.h */; };
-		443F297B1F28E88500386907 /* SpSearchVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44D7D44E125484B500E1E362 /* SpSearchVC.h */; };
 		443F297C1F28E88500386907 /* UIViewController+azAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = 44227A171F08E4B4003D9C8B /* UIViewController+azAlert.h */; };
-		443F297D1F28E88500386907 /* SpAppendVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44601C9D126187BA005E189A /* SpAppendVC.h */; };
 		443F297E1F28E88500386907 /* SFHFKeychainUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 44F1957A1EBDB66000F5FF93 /* SFHFKeychainUtils.h */; };
-		443F297F1F28E88500386907 /* SpPOST.h in Headers */ = {isa = PBXBuildFile; fileRef = 44AFCC5412633920003352DE /* SpPOST.h */; };
-		443F29801F28E88500386907 /* SpDetailTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44E070DA12732BF3003BF988 /* SpDetailTVC.h */; };
 		443F29811F28E88500386907 /* CalcView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4453C33A131A86C200A97E1A /* CalcView.h */; };
 		443F29821F28E88500386907 /* AZWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B4E1EFFF17800350EDA /* AZWebView.h */; };
 		443F29831F28E88500386907 /* PatternImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 441962E614B87DED0047E1C3 /* PatternImageView.h */; };
 		443F29841F28E88500386907 /* NSDataAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 44A7DB2C14DE6A7A00DB72E2 /* NSDataAddition.h */; };
 		443F29851F28E88500386907 /* UIDevice-Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 44835ABD156BDC1E00A83167 /* UIDevice-Hardware.h */; };
 		443F29861F28E88500386907 /* MocFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4416337515F25D1B009CD324 /* MocFunctions.h */; };
-		443F29871F28E88500386907 /* AZStoreCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B371EFFF17800350EDA /* AZStoreCell.h */; };
 		443F29961F28EBCB00386907 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 443F29941F28EBCB00386907 /* InfoPlist.strings */; };
 		443F29981F28EBEB00386907 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 443F29941F28EBCB00386907 /* InfoPlist.strings */; };
 		443F29991F28EBEB00386907 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 443F29941F28EBCB00386907 /* InfoPlist.strings */; };
@@ -1120,6 +936,12 @@
 		44835AD0156BDC1E00A83167 /* UIDevice-Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 44835ABD156BDC1E00A83167 /* UIDevice-Hardware.h */; };
 		44835AD1156BDC1E00A83167 /* UIDevice-Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 44835ABE156BDC1E00A83167 /* UIDevice-Hardware.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		449072B71F3D414700EF9117 /* AZAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 443F299E1F2A2D2500386907 /* AZAlert.m */; };
+		449072B91F3D98D800EF9117 /* PackListTel-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 443F26E21F28E7C100386907 /* PackListTel-Info.plist */; };
+		449072BA1F3D98DD00EF9117 /* PackListTelFree-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 443F27C61F28E83100386907 /* PackListTelFree-Info.plist */; };
+		449072BB1F3D98E000EF9117 /* PackListPad-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 443F28AA1F28E85E00386907 /* PackListPad-Info.plist */; };
+		449072BC1F3D98E400EF9117 /* PackListPadFree-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 443F298E1F28E88500386907 /* PackListPadFree-Info.plist */; };
+		449072BE1F3DE6BF00EF9117 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 449072BD1F3DE6BF00EF9117 /* Settings.bundle */; };
+		449072BF1F3DE6BF00EF9117 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 449072BD1F3DE6BF00EF9117 /* Settings.bundle */; };
 		44965B501EFFF17800350EDA /* AZAbout-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B101EFFF17700350EDA /* AZAbout-32.png */; };
 		44965B511EFFF17800350EDA /* AZAbout-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B111EFFF17700350EDA /* AZAbout-32@2x.png */; };
 		44965B521EFFF17800350EDA /* AZAbout-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B121EFFF17700350EDA /* AZAbout-iPad.xib */; };
@@ -1142,32 +964,6 @@
 		44965B651EFFF17800350EDA /* AZDialStepperPlusDown@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2B1EFFF17700350EDA /* AZDialStepperPlusDown@2X.png */; };
 		44965B661EFFF17800350EDA /* AZDialTile.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2C1EFFF17700350EDA /* AZDialTile.png */; };
 		44965B671EFFF17800350EDA /* AZDialTile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2D1EFFF17700350EDA /* AZDialTile@2x.png */; };
-		44965B681EFFF17800350EDA /* AZStore-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2F1EFFF17700350EDA /* AZStore-32.png */; };
-		44965B691EFFF17800350EDA /* AZStore-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B301EFFF17700350EDA /* AZStore-32@2x.png */; };
-		44965B6A1EFFF17800350EDA /* AZStore-Addin-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B311EFFF17700350EDA /* AZStore-Addin-32.png */; };
-		44965B6B1EFFF17800350EDA /* AZStore-Addin-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B321EFFF17700350EDA /* AZStore-Addin-32@2x.png */; };
-		44965B6C1EFFF17800350EDA /* AZStore-Space-44.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B331EFFF17800350EDA /* AZStore-Space-44.png */; };
-		44965B6D1EFFF17800350EDA /* AZStore-Space-44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B341EFFF17800350EDA /* AZStore-Space-44@2x.png */; };
-		44965B6E1EFFF17800350EDA /* AZStore-Stop-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B351EFFF17800350EDA /* AZStore-Stop-32.png */; };
-		44965B6F1EFFF17800350EDA /* AZStore-Stop-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B361EFFF17800350EDA /* AZStore-Stop-32@2x.png */; };
-		44965B701EFFF17800350EDA /* AZStoreCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B371EFFF17800350EDA /* AZStoreCell.h */; };
-		44965B711EFFF17800350EDA /* AZStoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B381EFFF17800350EDA /* AZStoreCell.m */; };
-		44965B721EFFF17800350EDA /* AZStoreCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B391EFFF17800350EDA /* AZStoreCell.xib */; };
-		44965B731EFFF17800350EDA /* AZStoreTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B3A1EFFF17800350EDA /* AZStoreTVC.h */; };
-		44965B741EFFF17800350EDA /* AZStoreTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B3B1EFFF17800350EDA /* AZStoreTVC.m */; };
-		44965B751EFFF17800350EDA /* Icon57-CalcRoll.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3C1EFFF17800350EDA /* Icon57-CalcRoll.png */; };
-		44965B761EFFF17800350EDA /* Icon57-CalcRoll@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3D1EFFF17800350EDA /* Icon57-CalcRoll@2x.png */; };
-		44965B771EFFF17800350EDA /* Icon57-Condition.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3E1EFFF17800350EDA /* Icon57-Condition.png */; };
-		44965B781EFFF17800350EDA /* Icon57-Condition@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B3F1EFFF17800350EDA /* Icon57-Condition@2x.png */; };
-		44965B791EFFF17800350EDA /* Icon57-PackList.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B401EFFF17800350EDA /* Icon57-PackList.png */; };
-		44965B7A1EFFF17800350EDA /* Icon57-PackList@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B411EFFF17800350EDA /* Icon57-PackList@2x.png */; };
-		44965B7B1EFFF17800350EDA /* Icon57-PayNote.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B421EFFF17800350EDA /* Icon57-PayNote.png */; };
-		44965B7C1EFFF17800350EDA /* Icon57-PayNote@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B431EFFF17800350EDA /* Icon57-PayNote@2x.png */; };
-		44965B7D1EFFF17800350EDA /* Icon57-SplitPay.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B441EFFF17800350EDA /* Icon57-SplitPay.png */; };
-		44965B7E1EFFF17800350EDA /* NSDataBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B451EFFF17800350EDA /* NSDataBase64.h */; };
-		44965B7F1EFFF17800350EDA /* NSDataBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B461EFFF17800350EDA /* NSDataBase64.m */; };
-		44965B801EFFF17800350EDA /* VerificationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B471EFFF17800350EDA /* VerificationController.h */; };
-		44965B811EFFF17800350EDA /* VerificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965B481EFFF17800350EDA /* VerificationController.m */; };
 		44965B821EFFF17800350EDA /* AZWeb-Back-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4A1EFFF17800350EDA /* AZWeb-Back-16.png */; };
 		44965B831EFFF17800350EDA /* AZWeb-Back-16@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4B1EFFF17800350EDA /* AZWeb-Back-16@2x.png */; };
 		44965B841EFFF17800350EDA /* AZWeb-Forward-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B4C1EFFF17800350EDA /* AZWeb-Forward-16.png */; };
@@ -1223,16 +1019,11 @@
 		4499D809134DA60600342648 /* E2viewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 449D67CC10C80DCB00691BF4 /* E2viewController.m */; };
 		4499D80A134DA60600342648 /* E2edit.m in Sources */ = {isa = PBXBuildFile; fileRef = 447DFE3910C9342F00C887FA /* E2edit.m */; };
 		4499D80B134DA60600342648 /* E3viewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 446EFA1210CB988D0035EA2A /* E3viewController.m */; };
-		4499D810134DA60600342648 /* SpListTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4400E1FC110F493A000DFC3B /* SpListTVC.m */; };
 		4499D811134DA60600342648 /* E3detailTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 446AAE251111F0250077BF89 /* E3detailTVC.m */; };
 		4499D813134DA60600342648 /* SettingTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 448549021115726F00D10CC8 /* SettingTVC.m */; };
 		4499D814134DA60600342648 /* selectGroupTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4491C7B511186531005955FD /* selectGroupTVC.m */; };
 		4499D817134DA60600342648 /* Global.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ADD3A7115A1B4800829977 /* Global.m */; };
 		4499D822134DA60600342648 /* FileCsv.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F07DBA119AFE69007D8863 /* FileCsv.m */; };
-		4499D823134DA60600342648 /* SpSearchVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D7D44F125484B500E1E362 /* SpSearchVC.m */; };
-		4499D824134DA60600342648 /* SpAppendVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44601C9C126187BA005E189A /* SpAppendVC.m */; };
-		4499D825134DA60600342648 /* SpPOST.m in Sources */ = {isa = PBXBuildFile; fileRef = 44AFCC5312633920003352DE /* SpPOST.m */; };
-		4499D826134DA60600342648 /* SpDetailTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44E070D912732BF3003BF988 /* SpDetailTVC.m */; };
 		4499D827134DA60600342648 /* CalcView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4453C33B131A86C200A97E1A /* CalcView.m */; };
 		4499D834134DA60600342648 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A2C0A4131BC9B900256C08 /* QuartzCore.framework */; };
 		4499D836134DA60600342648 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A2C0A0131BC9A000256C08 /* MediaPlayer.framework */; };
@@ -1244,15 +1035,10 @@
 		4499D83C134DA60600342648 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C2A7D41108AD3C006445DC /* Security.framework */; };
 		4499D83D134DA60600342648 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44EEBEDA1185E20000EA26AB /* CFNetwork.framework */; };
 		4499D842134DA60600342648 /* PackList_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 4486955F10F5ABCC00AD02D8 /* PackList_Prefix.pch */; };
-		4499D844134DA60600342648 /* SpListTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 4400E1FB110F493A000DFC3B /* SpListTVC.h */; };
 		4499D845134DA60600342648 /* E3detailTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 446AAE241111F0250077BF89 /* E3detailTVC.h */; };
 		4499D847134DA60600342648 /* SettingTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 448549031115726F00D10CC8 /* SettingTVC.h */; };
 		4499D848134DA60600342648 /* selectGroupTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 4491C7B411186531005955FD /* selectGroupTVC.h */; };
 		4499D855134DA60600342648 /* FileCsv.h in Headers */ = {isa = PBXBuildFile; fileRef = 44F07DB9119AFE69007D8863 /* FileCsv.h */; };
-		4499D856134DA60600342648 /* SpSearchVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44D7D44E125484B500E1E362 /* SpSearchVC.h */; };
-		4499D857134DA60600342648 /* SpAppendVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44601C9D126187BA005E189A /* SpAppendVC.h */; };
-		4499D858134DA60600342648 /* SpPOST.h in Headers */ = {isa = PBXBuildFile; fileRef = 44AFCC5412633920003352DE /* SpPOST.h */; };
-		4499D859134DA60600342648 /* SpDetailTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 44E070DA12732BF3003BF988 /* SpDetailTVC.h */; };
 		4499D9A9134DA60700342648 /* CalcView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4453C33A131A86C200A97E1A /* CalcView.h */; };
 		4499D9C7134DB1D300342648 /* Icon57@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C0134DB1D300342648 /* Icon57@2x.png */; };
 		4499D9C9134DB1D300342648 /* Icon57.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C1134DB1D300342648 /* Icon57.png */; };
@@ -1330,8 +1116,6 @@
 		39E6E751C34099A8071392DD /* Pods-PackList.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PackList.release.xcconfig"; path = "Pods/Target Support Files/Pods-PackList/Pods-PackList.release.xcconfig"; sourceTree = "<group>"; };
 		3D4BA33F28EE556992E806BF /* libPods-PackListPadFree.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PackListPadFree.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		423F6E60CDA28F40C23F3EE3 /* Pods-PackListTel.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PackListTel.release.xcconfig"; path = "Pods/Target Support Files/Pods-PackListTel/Pods-PackListTel.release.xcconfig"; sourceTree = "<group>"; };
-		4400E1FB110F493A000DFC3B /* SpListTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpListTVC.h; sourceTree = "<group>"; };
-		4400E1FC110F493A000DFC3B /* SpListTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpListTVC.m; sourceTree = "<group>"; };
 		440B5B2C14B44E13006BEA96 /* Tx-Back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Tx-Back@2x.png"; path = "Design/Tx-Back@2x.png"; sourceTree = "<group>"; };
 		440B5B2D14B44E13006BEA96 /* Tx-Back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Tx-Back.png"; path = "Design/Tx-Back.png"; sourceTree = "<group>"; };
 		440DBE1414CAE98D00FD957F /* AzPackList 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "AzPackList 5.xcdatamodel"; sourceTree = "<group>"; };
@@ -1398,8 +1182,6 @@
 		445998CE141383730005F706 /* Icon32-MailNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon32-MailNew.png"; path = "Design/Icon32-MailNew.png"; sourceTree = "<group>"; };
 		445998CF141383730005F706 /* Icon32-CircleCheckClear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon32-CircleCheckClear@2x.png"; path = "Design/Icon32-CircleCheckClear@2x.png"; sourceTree = "<group>"; };
 		445998D0141383730005F706 /* Icon32-CircleCheckClear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon32-CircleCheckClear.png"; path = "Design/Icon32-CircleCheckClear.png"; sourceTree = "<group>"; };
-		44601C9C126187BA005E189A /* SpAppendVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpAppendVC.m; sourceTree = "<group>"; };
-		44601C9D126187BA005E189A /* SpAppendVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpAppendVC.h; sourceTree = "<group>"; };
 		446AAE241111F0250077BF89 /* E3detailTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = E3detailTVC.h; sourceTree = "<group>"; };
 		446AAE251111F0250077BF89 /* E3detailTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = E3detailTVC.m; sourceTree = "<group>"; };
 		446D68A113196CC100012FB5 /* Icon16-ItemGrayHide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon16-ItemGrayHide.png"; path = "Design/Icon16-ItemGrayHide.png"; sourceTree = "<group>"; };
@@ -1440,6 +1222,7 @@
 		448549021115726F00D10CC8 /* SettingTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingTVC.m; sourceTree = "<group>"; };
 		448549031115726F00D10CC8 /* SettingTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingTVC.h; sourceTree = "<group>"; };
 		4486955F10F5ABCC00AD02D8 /* PackList_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackList_Prefix.pch; sourceTree = "<group>"; };
+		449072BD1F3DE6BF00EF9117 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		4491C7B411186531005955FD /* selectGroupTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = selectGroupTVC.h; sourceTree = "<group>"; };
 		4491C7B511186531005955FD /* selectGroupTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = selectGroupTVC.m; sourceTree = "<group>"; };
 		449312B410F0D5A700C6C8E5 /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
@@ -1465,32 +1248,6 @@
 		44965B2B1EFFF17700350EDA /* AZDialStepperPlusDown@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDialStepperPlusDown@2X.png"; sourceTree = "<group>"; };
 		44965B2C1EFFF17700350EDA /* AZDialTile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZDialTile.png; sourceTree = "<group>"; };
 		44965B2D1EFFF17700350EDA /* AZDialTile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZDialTile@2x.png"; sourceTree = "<group>"; };
-		44965B2F1EFFF17700350EDA /* AZStore-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-32.png"; sourceTree = "<group>"; };
-		44965B301EFFF17700350EDA /* AZStore-32@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-32@2x.png"; sourceTree = "<group>"; };
-		44965B311EFFF17700350EDA /* AZStore-Addin-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Addin-32.png"; sourceTree = "<group>"; };
-		44965B321EFFF17700350EDA /* AZStore-Addin-32@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Addin-32@2x.png"; sourceTree = "<group>"; };
-		44965B331EFFF17800350EDA /* AZStore-Space-44.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Space-44.png"; sourceTree = "<group>"; };
-		44965B341EFFF17800350EDA /* AZStore-Space-44@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Space-44@2x.png"; sourceTree = "<group>"; };
-		44965B351EFFF17800350EDA /* AZStore-Stop-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Stop-32.png"; sourceTree = "<group>"; };
-		44965B361EFFF17800350EDA /* AZStore-Stop-32@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZStore-Stop-32@2x.png"; sourceTree = "<group>"; };
-		44965B371EFFF17800350EDA /* AZStoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZStoreCell.h; sourceTree = "<group>"; };
-		44965B381EFFF17800350EDA /* AZStoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZStoreCell.m; sourceTree = "<group>"; };
-		44965B391EFFF17800350EDA /* AZStoreCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AZStoreCell.xib; sourceTree = "<group>"; };
-		44965B3A1EFFF17800350EDA /* AZStoreTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZStoreTVC.h; sourceTree = "<group>"; };
-		44965B3B1EFFF17800350EDA /* AZStoreTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZStoreTVC.m; sourceTree = "<group>"; };
-		44965B3C1EFFF17800350EDA /* Icon57-CalcRoll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-CalcRoll.png"; sourceTree = "<group>"; };
-		44965B3D1EFFF17800350EDA /* Icon57-CalcRoll@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-CalcRoll@2x.png"; sourceTree = "<group>"; };
-		44965B3E1EFFF17800350EDA /* Icon57-Condition.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-Condition.png"; sourceTree = "<group>"; };
-		44965B3F1EFFF17800350EDA /* Icon57-Condition@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-Condition@2x.png"; sourceTree = "<group>"; };
-		44965B401EFFF17800350EDA /* Icon57-PackList.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-PackList.png"; sourceTree = "<group>"; };
-		44965B411EFFF17800350EDA /* Icon57-PackList@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-PackList@2x.png"; sourceTree = "<group>"; };
-		44965B421EFFF17800350EDA /* Icon57-PayNote.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-PayNote.png"; sourceTree = "<group>"; };
-		44965B431EFFF17800350EDA /* Icon57-PayNote@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-PayNote@2x.png"; sourceTree = "<group>"; };
-		44965B441EFFF17800350EDA /* Icon57-SplitPay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57-SplitPay.png"; sourceTree = "<group>"; };
-		44965B451EFFF17800350EDA /* NSDataBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDataBase64.h; sourceTree = "<group>"; };
-		44965B461EFFF17800350EDA /* NSDataBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDataBase64.m; sourceTree = "<group>"; };
-		44965B471EFFF17800350EDA /* VerificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerificationController.h; sourceTree = "<group>"; };
-		44965B481EFFF17800350EDA /* VerificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerificationController.m; sourceTree = "<group>"; };
 		44965B4A1EFFF17800350EDA /* AZWeb-Back-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZWeb-Back-16.png"; sourceTree = "<group>"; };
 		44965B4B1EFFF17800350EDA /* AZWeb-Back-16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZWeb-Back-16@2x.png"; sourceTree = "<group>"; };
 		44965B4C1EFFF17800350EDA /* AZWeb-Forward-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZWeb-Forward-16.png"; sourceTree = "<group>"; };
@@ -1543,8 +1300,6 @@
 		44AC3EE113573EB100039013 /* Icon24-Free.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon24-Free.png"; path = "Design/Icon24-Free.png"; sourceTree = "<group>"; };
 		44AC3EE213573EB100039013 /* Icon24-Free@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon24-Free@2x.png"; path = "Design/Icon24-Free@2x.png"; sourceTree = "<group>"; };
 		44ADD3A7115A1B4800829977 /* Global.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Global.m; sourceTree = "<group>"; };
-		44AFCC5312633920003352DE /* SpPOST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpPOST.m; sourceTree = "<group>"; };
-		44AFCC5412633920003352DE /* SpPOST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpPOST.h; sourceTree = "<group>"; };
 		44B2E95F14ED58D000B45B62 /* Icon64-DownloadNG@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon64-DownloadNG@2x.png"; path = "Design/Icon64-DownloadNG@2x.png"; sourceTree = "<group>"; };
 		44B2E96014ED58D000B45B62 /* Icon64-DownloadNG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon64-DownloadNG.png"; path = "Design/Icon64-DownloadNG.png"; sourceTree = "<group>"; };
 		44C167E914E9505000F54B55 /* Icon24-Camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon24-Camera.png"; path = "Design/Icon24-Camera.png"; sourceTree = "<group>"; };
@@ -1556,10 +1311,6 @@
 		44D7CE6B153660F900AE6920 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		44D7CE6D1536613100AE6920 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		44D7CE6F1536616300AE6920 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
-		44D7D44E125484B500E1E362 /* SpSearchVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpSearchVC.h; sourceTree = "<group>"; };
-		44D7D44F125484B500E1E362 /* SpSearchVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpSearchVC.m; sourceTree = "<group>"; };
-		44E070D912732BF3003BF988 /* SpDetailTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpDetailTVC.m; sourceTree = "<group>"; };
-		44E070DA12732BF3003BF988 /* SpDetailTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpDetailTVC.h; sourceTree = "<group>"; };
 		44E486B51EC80B910041876C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		44EC383814A4DEF300127B41 /* Icon72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon72.png; sourceTree = "<group>"; };
 		44EEBEDA1185E20000EA26AB /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -1778,6 +1529,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				449072BD1F3DE6BF00EF9117 /* Settings.bundle */,
 				443F29941F28EBCB00386907 /* InfoPlist.strings */,
 				44965BA01F03E69900350EDA /* Launch Screen.storyboard */,
 				44965B981EFFFFFC00350EDA /* Localizable.strings */,
@@ -1850,7 +1602,6 @@
 				44965B0F1EFFF17700350EDA /* AZAbout.relese */,
 				44965B191EFFF17700350EDA /* AZClass.relese */,
 				44965B1F1EFFF17700350EDA /* AZDial.relese */,
-				44965B2E1EFFF17700350EDA /* AZStore.relese */,
 				44965B491EFFF17800350EDA /* AZWebView.relese */,
 			);
 			path = AZClass;
@@ -1903,39 +1654,6 @@
 			path = AZDial.relese;
 			sourceTree = "<group>";
 		};
-		44965B2E1EFFF17700350EDA /* AZStore.relese */ = {
-			isa = PBXGroup;
-			children = (
-				44965B2F1EFFF17700350EDA /* AZStore-32.png */,
-				44965B301EFFF17700350EDA /* AZStore-32@2x.png */,
-				44965B311EFFF17700350EDA /* AZStore-Addin-32.png */,
-				44965B321EFFF17700350EDA /* AZStore-Addin-32@2x.png */,
-				44965B331EFFF17800350EDA /* AZStore-Space-44.png */,
-				44965B341EFFF17800350EDA /* AZStore-Space-44@2x.png */,
-				44965B351EFFF17800350EDA /* AZStore-Stop-32.png */,
-				44965B361EFFF17800350EDA /* AZStore-Stop-32@2x.png */,
-				44965B371EFFF17800350EDA /* AZStoreCell.h */,
-				44965B381EFFF17800350EDA /* AZStoreCell.m */,
-				44965B391EFFF17800350EDA /* AZStoreCell.xib */,
-				44965B3A1EFFF17800350EDA /* AZStoreTVC.h */,
-				44965B3B1EFFF17800350EDA /* AZStoreTVC.m */,
-				44965B3C1EFFF17800350EDA /* Icon57-CalcRoll.png */,
-				44965B3D1EFFF17800350EDA /* Icon57-CalcRoll@2x.png */,
-				44965B3E1EFFF17800350EDA /* Icon57-Condition.png */,
-				44965B3F1EFFF17800350EDA /* Icon57-Condition@2x.png */,
-				44965B401EFFF17800350EDA /* Icon57-PackList.png */,
-				44965B411EFFF17800350EDA /* Icon57-PackList@2x.png */,
-				44965B421EFFF17800350EDA /* Icon57-PayNote.png */,
-				44965B431EFFF17800350EDA /* Icon57-PayNote@2x.png */,
-				44965B441EFFF17800350EDA /* Icon57-SplitPay.png */,
-				44965B451EFFF17800350EDA /* NSDataBase64.h */,
-				44965B461EFFF17800350EDA /* NSDataBase64.m */,
-				44965B471EFFF17800350EDA /* VerificationController.h */,
-				44965B481EFFF17800350EDA /* VerificationController.m */,
-			);
-			path = AZStore.relese;
-			sourceTree = "<group>";
-		};
 		44965B491EFFF17800350EDA /* AZWebView.relese */ = {
 			isa = PBXGroup;
 			children = (
@@ -1973,16 +1691,6 @@
 				448549021115726F00D10CC8 /* SettingTVC.m */,
 				44F07DB9119AFE69007D8863 /* FileCsv.h */,
 				44F07DBA119AFE69007D8863 /* FileCsv.m */,
-				44AFCC5412633920003352DE /* SpPOST.h */,
-				44AFCC5312633920003352DE /* SpPOST.m */,
-				44D7D44E125484B500E1E362 /* SpSearchVC.h */,
-				44D7D44F125484B500E1E362 /* SpSearchVC.m */,
-				4400E1FB110F493A000DFC3B /* SpListTVC.h */,
-				4400E1FC110F493A000DFC3B /* SpListTVC.m */,
-				44E070DA12732BF3003BF988 /* SpDetailTVC.h */,
-				44E070D912732BF3003BF988 /* SpDetailTVC.m */,
-				44601C9D126187BA005E189A /* SpAppendVC.h */,
-				44601C9C126187BA005E189A /* SpAppendVC.m */,
 			);
 			name = Sub;
 			sourceTree = "<group>";
@@ -2175,29 +1883,20 @@
 			files = (
 				443257FF1F23002700175312 /* AZAboutVC.h in Headers */,
 				443258001F23002700175312 /* PackList_Prefix.pch in Headers */,
-				443258011F23002700175312 /* SpListTVC.h in Headers */,
-				443258021F23002700175312 /* AZStoreTVC.h in Headers */,
 				443258031F23002700175312 /* AZClass.h in Headers */,
-				443258041F23002700175312 /* VerificationController.h in Headers */,
 				443258051F23002700175312 /* E3detailTVC.h in Headers */,
-				443258061F23002700175312 /* NSDataBase64.h in Headers */,
 				443258071F23002700175312 /* SettingTVC.h in Headers */,
 				443258081F23002700175312 /* selectGroupTVC.h in Headers */,
 				443258091F23002700175312 /* AZDial.h in Headers */,
 				4432580A1F23002700175312 /* FileCsv.h in Headers */,
-				4432580B1F23002700175312 /* SpSearchVC.h in Headers */,
 				4432580C1F23002700175312 /* UIViewController+azAlert.h in Headers */,
-				4432580D1F23002700175312 /* SpAppendVC.h in Headers */,
 				4432580E1F23002700175312 /* SFHFKeychainUtils.h in Headers */,
-				4432580F1F23002700175312 /* SpPOST.h in Headers */,
-				443258101F23002700175312 /* SpDetailTVC.h in Headers */,
 				443258111F23002700175312 /* CalcView.h in Headers */,
 				443258121F23002700175312 /* AZWebView.h in Headers */,
 				443258131F23002700175312 /* PatternImageView.h in Headers */,
 				443258141F23002700175312 /* NSDataAddition.h in Headers */,
 				443258151F23002700175312 /* UIDevice-Hardware.h in Headers */,
 				443258161F23002700175312 /* MocFunctions.h in Headers */,
-				443258171F23002700175312 /* AZStoreCell.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2207,29 +1906,20 @@
 			files = (
 				443F26C31F28E7C000386907 /* AZAboutVC.h in Headers */,
 				443F26C41F28E7C000386907 /* PackList_Prefix.pch in Headers */,
-				443F26C51F28E7C000386907 /* SpListTVC.h in Headers */,
-				443F26C61F28E7C000386907 /* AZStoreTVC.h in Headers */,
 				443F26C71F28E7C000386907 /* AZClass.h in Headers */,
-				443F26C81F28E7C000386907 /* VerificationController.h in Headers */,
 				443F26C91F28E7C000386907 /* E3detailTVC.h in Headers */,
-				443F26CA1F28E7C000386907 /* NSDataBase64.h in Headers */,
 				443F26CB1F28E7C000386907 /* SettingTVC.h in Headers */,
 				443F26CC1F28E7C000386907 /* selectGroupTVC.h in Headers */,
 				443F26CD1F28E7C000386907 /* AZDial.h in Headers */,
 				443F26CE1F28E7C000386907 /* FileCsv.h in Headers */,
-				443F26CF1F28E7C000386907 /* SpSearchVC.h in Headers */,
 				443F26D01F28E7C000386907 /* UIViewController+azAlert.h in Headers */,
-				443F26D11F28E7C000386907 /* SpAppendVC.h in Headers */,
 				443F26D21F28E7C000386907 /* SFHFKeychainUtils.h in Headers */,
-				443F26D31F28E7C000386907 /* SpPOST.h in Headers */,
-				443F26D41F28E7C000386907 /* SpDetailTVC.h in Headers */,
 				443F26D51F28E7C000386907 /* CalcView.h in Headers */,
 				443F26D61F28E7C000386907 /* AZWebView.h in Headers */,
 				443F26D71F28E7C000386907 /* PatternImageView.h in Headers */,
 				443F26D81F28E7C000386907 /* NSDataAddition.h in Headers */,
 				443F26D91F28E7C000386907 /* UIDevice-Hardware.h in Headers */,
 				443F26DA1F28E7C000386907 /* MocFunctions.h in Headers */,
-				443F26DB1F28E7C100386907 /* AZStoreCell.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2239,29 +1929,20 @@
 			files = (
 				443F27A71F28E83100386907 /* AZAboutVC.h in Headers */,
 				443F27A81F28E83100386907 /* PackList_Prefix.pch in Headers */,
-				443F27A91F28E83100386907 /* SpListTVC.h in Headers */,
-				443F27AA1F28E83100386907 /* AZStoreTVC.h in Headers */,
 				443F27AB1F28E83100386907 /* AZClass.h in Headers */,
-				443F27AC1F28E83100386907 /* VerificationController.h in Headers */,
 				443F27AD1F28E83100386907 /* E3detailTVC.h in Headers */,
-				443F27AE1F28E83100386907 /* NSDataBase64.h in Headers */,
 				443F27AF1F28E83100386907 /* SettingTVC.h in Headers */,
 				443F27B01F28E83100386907 /* selectGroupTVC.h in Headers */,
 				443F27B11F28E83100386907 /* AZDial.h in Headers */,
 				443F27B21F28E83100386907 /* FileCsv.h in Headers */,
-				443F27B31F28E83100386907 /* SpSearchVC.h in Headers */,
 				443F27B41F28E83100386907 /* UIViewController+azAlert.h in Headers */,
-				443F27B51F28E83100386907 /* SpAppendVC.h in Headers */,
 				443F27B61F28E83100386907 /* SFHFKeychainUtils.h in Headers */,
-				443F27B71F28E83100386907 /* SpPOST.h in Headers */,
-				443F27B81F28E83100386907 /* SpDetailTVC.h in Headers */,
 				443F27B91F28E83100386907 /* CalcView.h in Headers */,
 				443F27BA1F28E83100386907 /* AZWebView.h in Headers */,
 				443F27BB1F28E83100386907 /* PatternImageView.h in Headers */,
 				443F27BC1F28E83100386907 /* NSDataAddition.h in Headers */,
 				443F27BD1F28E83100386907 /* UIDevice-Hardware.h in Headers */,
 				443F27BE1F28E83100386907 /* MocFunctions.h in Headers */,
-				443F27BF1F28E83100386907 /* AZStoreCell.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2271,29 +1952,20 @@
 			files = (
 				443F288B1F28E85D00386907 /* AZAboutVC.h in Headers */,
 				443F288C1F28E85D00386907 /* PackList_Prefix.pch in Headers */,
-				443F288D1F28E85D00386907 /* SpListTVC.h in Headers */,
-				443F288E1F28E85D00386907 /* AZStoreTVC.h in Headers */,
 				443F288F1F28E85D00386907 /* AZClass.h in Headers */,
-				443F28901F28E85D00386907 /* VerificationController.h in Headers */,
 				443F28911F28E85D00386907 /* E3detailTVC.h in Headers */,
-				443F28921F28E85D00386907 /* NSDataBase64.h in Headers */,
 				443F28931F28E85D00386907 /* SettingTVC.h in Headers */,
 				443F28941F28E85D00386907 /* selectGroupTVC.h in Headers */,
 				443F28951F28E85D00386907 /* AZDial.h in Headers */,
 				443F28961F28E85D00386907 /* FileCsv.h in Headers */,
-				443F28971F28E85D00386907 /* SpSearchVC.h in Headers */,
 				443F28981F28E85D00386907 /* UIViewController+azAlert.h in Headers */,
-				443F28991F28E85D00386907 /* SpAppendVC.h in Headers */,
 				443F289A1F28E85D00386907 /* SFHFKeychainUtils.h in Headers */,
-				443F289B1F28E85D00386907 /* SpPOST.h in Headers */,
-				443F289C1F28E85D00386907 /* SpDetailTVC.h in Headers */,
 				443F289D1F28E85D00386907 /* CalcView.h in Headers */,
 				443F289E1F28E85D00386907 /* AZWebView.h in Headers */,
 				443F289F1F28E85D00386907 /* PatternImageView.h in Headers */,
 				443F28A01F28E85D00386907 /* NSDataAddition.h in Headers */,
 				443F28A11F28E85D00386907 /* UIDevice-Hardware.h in Headers */,
 				443F28A21F28E85D00386907 /* MocFunctions.h in Headers */,
-				443F28A31F28E85D00386907 /* AZStoreCell.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2303,29 +1975,20 @@
 			files = (
 				443F296F1F28E88500386907 /* AZAboutVC.h in Headers */,
 				443F29701F28E88500386907 /* PackList_Prefix.pch in Headers */,
-				443F29711F28E88500386907 /* SpListTVC.h in Headers */,
-				443F29721F28E88500386907 /* AZStoreTVC.h in Headers */,
 				443F29731F28E88500386907 /* AZClass.h in Headers */,
-				443F29741F28E88500386907 /* VerificationController.h in Headers */,
 				443F29751F28E88500386907 /* E3detailTVC.h in Headers */,
-				443F29761F28E88500386907 /* NSDataBase64.h in Headers */,
 				443F29771F28E88500386907 /* SettingTVC.h in Headers */,
 				443F29781F28E88500386907 /* selectGroupTVC.h in Headers */,
 				443F29791F28E88500386907 /* AZDial.h in Headers */,
 				443F297A1F28E88500386907 /* FileCsv.h in Headers */,
-				443F297B1F28E88500386907 /* SpSearchVC.h in Headers */,
 				443F297C1F28E88500386907 /* UIViewController+azAlert.h in Headers */,
-				443F297D1F28E88500386907 /* SpAppendVC.h in Headers */,
 				443F297E1F28E88500386907 /* SFHFKeychainUtils.h in Headers */,
-				443F297F1F28E88500386907 /* SpPOST.h in Headers */,
-				443F29801F28E88500386907 /* SpDetailTVC.h in Headers */,
 				443F29811F28E88500386907 /* CalcView.h in Headers */,
 				443F29821F28E88500386907 /* AZWebView.h in Headers */,
 				443F29831F28E88500386907 /* PatternImageView.h in Headers */,
 				443F29841F28E88500386907 /* NSDataAddition.h in Headers */,
 				443F29851F28E88500386907 /* UIDevice-Hardware.h in Headers */,
 				443F29861F28E88500386907 /* MocFunctions.h in Headers */,
-				443F29871F28E88500386907 /* AZStoreCell.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2335,29 +1998,20 @@
 			files = (
 				44965B541EFFF17800350EDA /* AZAboutVC.h in Headers */,
 				4499D842134DA60600342648 /* PackList_Prefix.pch in Headers */,
-				4499D844134DA60600342648 /* SpListTVC.h in Headers */,
-				44965B731EFFF17800350EDA /* AZStoreTVC.h in Headers */,
 				44965B571EFFF17800350EDA /* AZClass.h in Headers */,
-				44965B801EFFF17800350EDA /* VerificationController.h in Headers */,
 				4499D845134DA60600342648 /* E3detailTVC.h in Headers */,
-				44965B7E1EFFF17800350EDA /* NSDataBase64.h in Headers */,
 				4499D847134DA60600342648 /* SettingTVC.h in Headers */,
 				4499D848134DA60600342648 /* selectGroupTVC.h in Headers */,
 				44965B5A1EFFF17800350EDA /* AZDial.h in Headers */,
 				4499D855134DA60600342648 /* FileCsv.h in Headers */,
-				4499D856134DA60600342648 /* SpSearchVC.h in Headers */,
 				44227A191F08E4B4003D9C8B /* UIViewController+azAlert.h in Headers */,
-				4499D857134DA60600342648 /* SpAppendVC.h in Headers */,
 				44F1957C1EBDB66000F5FF93 /* SFHFKeychainUtils.h in Headers */,
-				4499D858134DA60600342648 /* SpPOST.h in Headers */,
-				4499D859134DA60600342648 /* SpDetailTVC.h in Headers */,
 				4499D9A9134DA60700342648 /* CalcView.h in Headers */,
 				44965B861EFFF17800350EDA /* AZWebView.h in Headers */,
 				441962E814B87DEE0047E1C3 /* PatternImageView.h in Headers */,
 				44A7DB2E14DE6A7A00DB72E2 /* NSDataAddition.h in Headers */,
 				44835AD0156BDC1E00A83167 /* UIDevice-Hardware.h in Headers */,
 				4416337715F25D1B009CD324 /* MocFunctions.h in Headers */,
-				44965B701EFFF17800350EDA /* AZStoreCell.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2574,13 +2228,12 @@
 				443257511F23002700175312 /* E1viewController.xib in Resources */,
 				443257521F23002700175312 /* Icon24-GreenPlus@2x.png in Resources */,
 				443257531F23002700175312 /* AZAbout-32.png in Resources */,
-				443257541F23002700175312 /* AZStoreCell.xib in Resources */,
 				443257551F23002700175312 /* Icon24-RedMinus.png in Resources */,
-				443257561F23002700175312 /* AZStore-Space-44@2x.png in Resources */,
 				443257571F23002700175312 /* Icon24-RedMinus@2x.png in Resources */,
 				443257581F23002700175312 /* Icon32-BagBlue.png in Resources */,
 				443257591F23002700175312 /* Icon32-BagBlue@2x.png in Resources */,
 				4432575A1F23002700175312 /* Icon32-BagGray.png in Resources */,
+				449072BE1F3DE6BF00EF9117 /* Settings.bundle in Resources */,
 				4432575B1F23002700175312 /* Icon32-BagGray@2x.png in Resources */,
 				4432575C1F23002700175312 /* Icon32-BagYellow.png in Resources */,
 				4432575D1F23002700175312 /* Icon32-BagYellow@2x.png in Resources */,
@@ -2591,10 +2244,8 @@
 				443257621F23002700175312 /* Icon32-CircleCheck2.png in Resources */,
 				443257631F23002700175312 /* Icon32-CircleCheck2@2x.png in Resources */,
 				443257641F23002700175312 /* AZDialTile@2x.png in Resources */,
-				443257651F23002700175312 /* Icon57-CalcRoll.png in Resources */,
 				443257661F23002700175312 /* Icon32-CircleGray.png in Resources */,
 				443257671F23002700175312 /* AZDialStepperMinus.png in Resources */,
-				443257681F23002700175312 /* AZStore-32.png in Resources */,
 				443257691F23002700175312 /* Icon32-CircleGray@2x.png in Resources */,
 				4432576A1F23002700175312 /* AZDialBack.png in Resources */,
 				4432576B1F23002700175312 /* Icon44-ClipOn.png in Resources */,
@@ -2616,27 +2267,20 @@
 				4432577B1F23002700175312 /* Icon32-CircleCheckClear.png in Resources */,
 				4432577C1F23002700175312 /* Icon32-PasteAdd@2x.png in Resources */,
 				4432577D1F23002700175312 /* Icon32-PasteAdd.png in Resources */,
-				4432577E1F23002700175312 /* AZStore-Stop-32.png in Resources */,
 				4432577F1F23002700175312 /* AZDialStepperPlusDown.png in Resources */,
 				443257801F23002700175312 /* Icon32-PasteCopy.png in Resources */,
 				443257811F23002700175312 /* Icon32-PasteCopy@2x.png in Resources */,
 				443257821F23002700175312 /* Icon32-SharedAdd.png in Resources */,
-				443257831F23002700175312 /* AZStore-Addin-32.png in Resources */,
-				443257841F23002700175312 /* Icon57-CalcRoll@2x.png in Resources */,
 				443257851F23002700175312 /* Icon32-SharedAdd@2x.png in Resources */,
 				443257861F23002700175312 /* AZDialStepperPlusDown@2X.png in Resources */,
 				443257871F23002700175312 /* Icon32-Shared@2x.png in Resources */,
 				443257881F23002700175312 /* Icon32-Shared.png in Resources */,
-				443257891F23002700175312 /* Icon57-Condition@2x.png in Resources */,
 				4432578A1F23002700175312 /* Icon32-GoogleDoc.png in Resources */,
 				4432578B1F23002700175312 /* Icon32-GoogleDoc@2x.png in Resources */,
-				4432578C1F23002700175312 /* AZStore-Stop-32@2x.png in Resources */,
-				4432578D1F23002700175312 /* Icon57-PackList.png in Resources */,
 				4432578E1F23002700175312 /* Icon32-GoogleAdd@2x.png in Resources */,
 				4432578F1F23002700175312 /* AZDialStepperPlus@2x.png in Resources */,
 				443257901F23002700175312 /* Icon32-GoogleAdd.png in Resources */,
 				443257911F23002700175312 /* Icon32-NearPc.png in Resources */,
-				443257921F23002700175312 /* Icon57-Condition.png in Resources */,
 				443257931F23002700175312 /* Icon32-NearPc@2x.png in Resources */,
 				443257941F23002700175312 /* Icon32-NearPcAdd@2x.png in Resources */,
 				443257951F23002700175312 /* Localizable.strings in Resources */,
@@ -2650,15 +2294,12 @@
 				4432579C1F23002700175312 /* Icon72@2x.png in Resources */,
 				4432579D1F23002700175312 /* Tx-Back@2x.png in Resources */,
 				4432579E1F23002700175312 /* Tx-Back.png in Resources */,
-				4432579F1F23002700175312 /* AZStore-32@2x.png in Resources */,
 				443257A01F23002700175312 /* AZWeb-Forward-16.png in Resources */,
 				443257A11F23002700175312 /* Icon32-Setting@2x.png in Resources */,
 				443257A21F23002700175312 /* Icon32-Setting.png in Resources */,
 				443257A31F23002700175312 /* Icon32-Information.png in Resources */,
 				443257A41F23002700175312 /* AZAbout-32@2x.png in Resources */,
-				443257A51F23002700175312 /* AZStore-Space-44.png in Resources */,
 				443257A61F23002700175312 /* Icon32-Information@2x.png in Resources */,
-				443257A71F23002700175312 /* AZStore-Addin-32@2x.png in Resources */,
 				443257A81F23002700175312 /* Icon32-ExtParts@2x.png in Resources */,
 				443257A91F23002700175312 /* Icon32-ExtParts.png in Resources */,
 				443257AA1F23002700175312 /* Icon-Close-44@2x.png in Resources */,
@@ -2671,12 +2312,9 @@
 				443257B11F23002700175312 /* AZAbout.xib in Resources */,
 				443257B21F23002700175312 /* Icon-Store-40@2x.png in Resources */,
 				443257B31F23002700175312 /* Icon-Store-40.png in Resources */,
-				443257B41F23002700175312 /* Icon57-PayNote.png in Resources */,
-				443257B51F23002700175312 /* Icon57-PayNote@2x.png in Resources */,
 				443257B61F23002700175312 /* AZDialStepperMinusDown.png in Resources */,
 				443257B71F23002700175312 /* AZLocalizable.strings in Resources */,
 				443257B81F23002700175312 /* Icon32-Picasa@2x.png in Resources */,
-				443257B91F23002700175312 /* Icon57-SplitPay.png in Resources */,
 				443257BA1F23002700175312 /* Icon32-Picasa.png in Resources */,
 				443257BB1F23002700175312 /* Icon32-PicasaBlack@2x.png in Resources */,
 				443F29961F28EBCB00386907 /* InfoPlist.strings in Resources */,
@@ -2691,7 +2329,6 @@
 				443257C41F23002700175312 /* GoogleService-Info.plist in Resources */,
 				443257C51F23002700175312 /* Icon72bag.png in Resources */,
 				443257C61F23002700175312 /* Icon72bag@2x.png in Resources */,
-				443257C71F23002700175312 /* Icon57-PackList@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2720,9 +2357,7 @@
 				443F26141F28E7C000386907 /* E1viewController.xib in Resources */,
 				443F26151F28E7C000386907 /* Icon24-GreenPlus@2x.png in Resources */,
 				443F26161F28E7C000386907 /* AZAbout-32.png in Resources */,
-				443F26171F28E7C000386907 /* AZStoreCell.xib in Resources */,
 				443F26181F28E7C000386907 /* Icon24-RedMinus.png in Resources */,
-				443F26191F28E7C000386907 /* AZStore-Space-44@2x.png in Resources */,
 				443F261A1F28E7C000386907 /* Icon24-RedMinus@2x.png in Resources */,
 				443F261B1F28E7C000386907 /* Icon32-BagBlue.png in Resources */,
 				443F261C1F28E7C000386907 /* Icon32-BagBlue@2x.png in Resources */,
@@ -2737,10 +2372,8 @@
 				443F26251F28E7C000386907 /* Icon32-CircleCheck2.png in Resources */,
 				443F26261F28E7C000386907 /* Icon32-CircleCheck2@2x.png in Resources */,
 				443F26271F28E7C000386907 /* AZDialTile@2x.png in Resources */,
-				443F26281F28E7C000386907 /* Icon57-CalcRoll.png in Resources */,
 				443F26291F28E7C000386907 /* Icon32-CircleGray.png in Resources */,
 				443F262A1F28E7C000386907 /* AZDialStepperMinus.png in Resources */,
-				443F262B1F28E7C000386907 /* AZStore-32.png in Resources */,
 				443F262C1F28E7C000386907 /* Icon32-CircleGray@2x.png in Resources */,
 				443F262D1F28E7C000386907 /* AZDialBack.png in Resources */,
 				443F262E1F28E7C000386907 /* Icon44-ClipOn.png in Resources */,
@@ -2755,7 +2388,6 @@
 				443F26371F28E7C000386907 /* Icon-DrumPush@2x.png in Resources */,
 				443F26381F28E7C000386907 /* Icon44-Calc.png in Resources */,
 				443F26391F28E7C000386907 /* AZDialTile.png in Resources */,
-				443F263A1F28E7C000386907 /* PackListBeta-Info.plist in Resources */,
 				443F263B1F28E7C000386907 /* Icon44-Calc@2x.png in Resources */,
 				443F263C1F28E7C000386907 /* Icon32-MailNew@2x.png in Resources */,
 				443F263D1F28E7C000386907 /* Icon32-MailNew.png in Resources */,
@@ -2763,27 +2395,20 @@
 				443F263F1F28E7C000386907 /* Icon32-CircleCheckClear.png in Resources */,
 				443F26401F28E7C000386907 /* Icon32-PasteAdd@2x.png in Resources */,
 				443F26411F28E7C000386907 /* Icon32-PasteAdd.png in Resources */,
-				443F26421F28E7C000386907 /* AZStore-Stop-32.png in Resources */,
 				443F26431F28E7C000386907 /* AZDialStepperPlusDown.png in Resources */,
 				443F26441F28E7C000386907 /* Icon32-PasteCopy.png in Resources */,
 				443F26451F28E7C000386907 /* Icon32-PasteCopy@2x.png in Resources */,
 				443F26461F28E7C000386907 /* Icon32-SharedAdd.png in Resources */,
-				443F26471F28E7C000386907 /* AZStore-Addin-32.png in Resources */,
-				443F26481F28E7C000386907 /* Icon57-CalcRoll@2x.png in Resources */,
 				443F26491F28E7C000386907 /* Icon32-SharedAdd@2x.png in Resources */,
 				443F264A1F28E7C000386907 /* AZDialStepperPlusDown@2X.png in Resources */,
 				443F264B1F28E7C000386907 /* Icon32-Shared@2x.png in Resources */,
 				443F264C1F28E7C000386907 /* Icon32-Shared.png in Resources */,
-				443F264D1F28E7C000386907 /* Icon57-Condition@2x.png in Resources */,
 				443F264E1F28E7C000386907 /* Icon32-GoogleDoc.png in Resources */,
 				443F264F1F28E7C000386907 /* Icon32-GoogleDoc@2x.png in Resources */,
-				443F26501F28E7C000386907 /* AZStore-Stop-32@2x.png in Resources */,
-				443F26511F28E7C000386907 /* Icon57-PackList.png in Resources */,
 				443F26521F28E7C000386907 /* Icon32-GoogleAdd@2x.png in Resources */,
 				443F26531F28E7C000386907 /* AZDialStepperPlus@2x.png in Resources */,
 				443F26541F28E7C000386907 /* Icon32-GoogleAdd.png in Resources */,
 				443F26551F28E7C000386907 /* Icon32-NearPc.png in Resources */,
-				443F26561F28E7C000386907 /* Icon57-Condition.png in Resources */,
 				443F26571F28E7C000386907 /* Icon32-NearPc@2x.png in Resources */,
 				443F26581F28E7C000386907 /* Icon32-NearPcAdd@2x.png in Resources */,
 				443F26591F28E7C000386907 /* Localizable.strings in Resources */,
@@ -2795,16 +2420,14 @@
 				443F265F1F28E7C000386907 /* Icon72.png in Resources */,
 				443F26601F28E7C000386907 /* Icon72@2x.png in Resources */,
 				443F26611F28E7C000386907 /* Tx-Back@2x.png in Resources */,
+				449072B91F3D98D800EF9117 /* PackListTel-Info.plist in Resources */,
 				443F26621F28E7C000386907 /* Tx-Back.png in Resources */,
-				443F26631F28E7C000386907 /* AZStore-32@2x.png in Resources */,
 				443F26641F28E7C000386907 /* AZWeb-Forward-16.png in Resources */,
 				443F26651F28E7C000386907 /* Icon32-Setting@2x.png in Resources */,
 				443F26661F28E7C000386907 /* Icon32-Setting.png in Resources */,
 				443F26671F28E7C000386907 /* Icon32-Information.png in Resources */,
 				443F26681F28E7C000386907 /* AZAbout-32@2x.png in Resources */,
-				443F26691F28E7C000386907 /* AZStore-Space-44.png in Resources */,
 				443F266A1F28E7C000386907 /* Icon32-Information@2x.png in Resources */,
-				443F266B1F28E7C000386907 /* AZStore-Addin-32@2x.png in Resources */,
 				443F266C1F28E7C000386907 /* Icon32-ExtParts@2x.png in Resources */,
 				443F266D1F28E7C000386907 /* Icon32-ExtParts.png in Resources */,
 				443F266E1F28E7C000386907 /* Icon-Close-44@2x.png in Resources */,
@@ -2817,12 +2440,9 @@
 				443F26751F28E7C000386907 /* AZAbout.xib in Resources */,
 				443F26761F28E7C000386907 /* Icon-Store-40@2x.png in Resources */,
 				443F26771F28E7C000386907 /* Icon-Store-40.png in Resources */,
-				443F26781F28E7C000386907 /* Icon57-PayNote.png in Resources */,
-				443F26791F28E7C000386907 /* Icon57-PayNote@2x.png in Resources */,
 				443F267A1F28E7C000386907 /* AZDialStepperMinusDown.png in Resources */,
 				443F267B1F28E7C000386907 /* AZLocalizable.strings in Resources */,
 				443F267C1F28E7C000386907 /* Icon32-Picasa@2x.png in Resources */,
-				443F267D1F28E7C000386907 /* Icon57-SplitPay.png in Resources */,
 				443F267E1F28E7C000386907 /* Icon32-Picasa.png in Resources */,
 				443F267F1F28E7C000386907 /* Icon32-PicasaBlack@2x.png in Resources */,
 				443F29991F28EBEB00386907 /* InfoPlist.strings in Resources */,
@@ -2837,7 +2457,6 @@
 				443F26881F28E7C000386907 /* GoogleService-Info.plist in Resources */,
 				443F26891F28E7C000386907 /* Icon72bag.png in Resources */,
 				443F268A1F28E7C000386907 /* Icon72bag@2x.png in Resources */,
-				443F268B1F28E7C000386907 /* Icon57-PackList@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2866,9 +2485,7 @@
 				443F26F81F28E83100386907 /* E1viewController.xib in Resources */,
 				443F26F91F28E83100386907 /* Icon24-GreenPlus@2x.png in Resources */,
 				443F26FA1F28E83100386907 /* AZAbout-32.png in Resources */,
-				443F26FB1F28E83100386907 /* AZStoreCell.xib in Resources */,
 				443F26FC1F28E83100386907 /* Icon24-RedMinus.png in Resources */,
-				443F26FD1F28E83100386907 /* AZStore-Space-44@2x.png in Resources */,
 				443F26FE1F28E83100386907 /* Icon24-RedMinus@2x.png in Resources */,
 				443F26FF1F28E83100386907 /* Icon32-BagBlue.png in Resources */,
 				443F27001F28E83100386907 /* Icon32-BagBlue@2x.png in Resources */,
@@ -2883,10 +2500,8 @@
 				443F27091F28E83100386907 /* Icon32-CircleCheck2.png in Resources */,
 				443F270A1F28E83100386907 /* Icon32-CircleCheck2@2x.png in Resources */,
 				443F270B1F28E83100386907 /* AZDialTile@2x.png in Resources */,
-				443F270C1F28E83100386907 /* Icon57-CalcRoll.png in Resources */,
 				443F270D1F28E83100386907 /* Icon32-CircleGray.png in Resources */,
 				443F270E1F28E83100386907 /* AZDialStepperMinus.png in Resources */,
-				443F270F1F28E83100386907 /* AZStore-32.png in Resources */,
 				443F27101F28E83100386907 /* Icon32-CircleGray@2x.png in Resources */,
 				443F27111F28E83100386907 /* AZDialBack.png in Resources */,
 				443F27121F28E83100386907 /* Icon44-ClipOn.png in Resources */,
@@ -2901,7 +2516,6 @@
 				443F271B1F28E83100386907 /* Icon-DrumPush@2x.png in Resources */,
 				443F271C1F28E83100386907 /* Icon44-Calc.png in Resources */,
 				443F271D1F28E83100386907 /* AZDialTile.png in Resources */,
-				443F271E1F28E83100386907 /* PackListBeta-Info.plist in Resources */,
 				443F271F1F28E83100386907 /* Icon44-Calc@2x.png in Resources */,
 				443F27201F28E83100386907 /* Icon32-MailNew@2x.png in Resources */,
 				443F27211F28E83100386907 /* Icon32-MailNew.png in Resources */,
@@ -2909,27 +2523,20 @@
 				443F27231F28E83100386907 /* Icon32-CircleCheckClear.png in Resources */,
 				443F27241F28E83100386907 /* Icon32-PasteAdd@2x.png in Resources */,
 				443F27251F28E83100386907 /* Icon32-PasteAdd.png in Resources */,
-				443F27261F28E83100386907 /* AZStore-Stop-32.png in Resources */,
 				443F27271F28E83100386907 /* AZDialStepperPlusDown.png in Resources */,
 				443F27281F28E83100386907 /* Icon32-PasteCopy.png in Resources */,
 				443F27291F28E83100386907 /* Icon32-PasteCopy@2x.png in Resources */,
 				443F272A1F28E83100386907 /* Icon32-SharedAdd.png in Resources */,
-				443F272B1F28E83100386907 /* AZStore-Addin-32.png in Resources */,
-				443F272C1F28E83100386907 /* Icon57-CalcRoll@2x.png in Resources */,
 				443F272D1F28E83100386907 /* Icon32-SharedAdd@2x.png in Resources */,
 				443F272E1F28E83100386907 /* AZDialStepperPlusDown@2X.png in Resources */,
 				443F272F1F28E83100386907 /* Icon32-Shared@2x.png in Resources */,
 				443F27301F28E83100386907 /* Icon32-Shared.png in Resources */,
-				443F27311F28E83100386907 /* Icon57-Condition@2x.png in Resources */,
 				443F27321F28E83100386907 /* Icon32-GoogleDoc.png in Resources */,
 				443F27331F28E83100386907 /* Icon32-GoogleDoc@2x.png in Resources */,
-				443F27341F28E83100386907 /* AZStore-Stop-32@2x.png in Resources */,
-				443F27351F28E83100386907 /* Icon57-PackList.png in Resources */,
 				443F27361F28E83100386907 /* Icon32-GoogleAdd@2x.png in Resources */,
 				443F27371F28E83100386907 /* AZDialStepperPlus@2x.png in Resources */,
 				443F27381F28E83100386907 /* Icon32-GoogleAdd.png in Resources */,
 				443F27391F28E83100386907 /* Icon32-NearPc.png in Resources */,
-				443F273A1F28E83100386907 /* Icon57-Condition.png in Resources */,
 				443F273B1F28E83100386907 /* Icon32-NearPc@2x.png in Resources */,
 				443F273C1F28E83100386907 /* Icon32-NearPcAdd@2x.png in Resources */,
 				443F273D1F28E83100386907 /* Localizable.strings in Resources */,
@@ -2939,18 +2546,16 @@
 				443F27411F28E83100386907 /* Icon32-Amazon.png in Resources */,
 				443F27421F28E83100386907 /* Icon32-Amazon@2x.png in Resources */,
 				443F27431F28E83100386907 /* Icon72.png in Resources */,
+				449072BA1F3D98DD00EF9117 /* PackListTelFree-Info.plist in Resources */,
 				443F27441F28E83100386907 /* Icon72@2x.png in Resources */,
 				443F27451F28E83100386907 /* Tx-Back@2x.png in Resources */,
 				443F27461F28E83100386907 /* Tx-Back.png in Resources */,
-				443F27471F28E83100386907 /* AZStore-32@2x.png in Resources */,
 				443F27481F28E83100386907 /* AZWeb-Forward-16.png in Resources */,
 				443F27491F28E83100386907 /* Icon32-Setting@2x.png in Resources */,
 				443F274A1F28E83100386907 /* Icon32-Setting.png in Resources */,
 				443F274B1F28E83100386907 /* Icon32-Information.png in Resources */,
 				443F274C1F28E83100386907 /* AZAbout-32@2x.png in Resources */,
-				443F274D1F28E83100386907 /* AZStore-Space-44.png in Resources */,
 				443F274E1F28E83100386907 /* Icon32-Information@2x.png in Resources */,
-				443F274F1F28E83100386907 /* AZStore-Addin-32@2x.png in Resources */,
 				443F27501F28E83100386907 /* Icon32-ExtParts@2x.png in Resources */,
 				443F27511F28E83100386907 /* Icon32-ExtParts.png in Resources */,
 				443F27521F28E83100386907 /* Icon-Close-44@2x.png in Resources */,
@@ -2963,12 +2568,9 @@
 				443F27591F28E83100386907 /* AZAbout.xib in Resources */,
 				443F275A1F28E83100386907 /* Icon-Store-40@2x.png in Resources */,
 				443F275B1F28E83100386907 /* Icon-Store-40.png in Resources */,
-				443F275C1F28E83100386907 /* Icon57-PayNote.png in Resources */,
-				443F275D1F28E83100386907 /* Icon57-PayNote@2x.png in Resources */,
 				443F275E1F28E83100386907 /* AZDialStepperMinusDown.png in Resources */,
 				443F275F1F28E83100386907 /* AZLocalizable.strings in Resources */,
 				443F27601F28E83100386907 /* Icon32-Picasa@2x.png in Resources */,
-				443F27611F28E83100386907 /* Icon57-SplitPay.png in Resources */,
 				443F27621F28E83100386907 /* Icon32-Picasa.png in Resources */,
 				443F27631F28E83100386907 /* Icon32-PicasaBlack@2x.png in Resources */,
 				443F299A1F28EBEC00386907 /* InfoPlist.strings in Resources */,
@@ -2983,7 +2585,6 @@
 				443F276C1F28E83100386907 /* GoogleService-Info.plist in Resources */,
 				443F276D1F28E83100386907 /* Icon72bag.png in Resources */,
 				443F276E1F28E83100386907 /* Icon72bag@2x.png in Resources */,
-				443F276F1F28E83100386907 /* Icon57-PackList@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2995,6 +2596,7 @@
 				443F27CB1F28E85D00386907 /* Icon57@2x.png in Resources */,
 				443F27CC1F28E85D00386907 /* Launch Screen.storyboard in Resources */,
 				443F27CD1F28E85D00386907 /* Icon16-ItemGrayHide.png in Resources */,
+				449072BB1F3D98E000EF9117 /* PackListPad-Info.plist in Resources */,
 				443F27CE1F28E85D00386907 /* AZDialStepperMinusDown@2x.png in Resources */,
 				443F27CF1F28E85D00386907 /* AZDialStepperPlus.png in Resources */,
 				443F27D01F28E85D00386907 /* Icon16-ItemGrayHide@2x.png in Resources */,
@@ -3012,9 +2614,7 @@
 				443F27DC1F28E85D00386907 /* E1viewController.xib in Resources */,
 				443F27DD1F28E85D00386907 /* Icon24-GreenPlus@2x.png in Resources */,
 				443F27DE1F28E85D00386907 /* AZAbout-32.png in Resources */,
-				443F27DF1F28E85D00386907 /* AZStoreCell.xib in Resources */,
 				443F27E01F28E85D00386907 /* Icon24-RedMinus.png in Resources */,
-				443F27E11F28E85D00386907 /* AZStore-Space-44@2x.png in Resources */,
 				443F27E21F28E85D00386907 /* Icon24-RedMinus@2x.png in Resources */,
 				443F27E31F28E85D00386907 /* Icon32-BagBlue.png in Resources */,
 				443F27E41F28E85D00386907 /* Icon32-BagBlue@2x.png in Resources */,
@@ -3029,10 +2629,8 @@
 				443F27ED1F28E85D00386907 /* Icon32-CircleCheck2.png in Resources */,
 				443F27EE1F28E85D00386907 /* Icon32-CircleCheck2@2x.png in Resources */,
 				443F27EF1F28E85D00386907 /* AZDialTile@2x.png in Resources */,
-				443F27F01F28E85D00386907 /* Icon57-CalcRoll.png in Resources */,
 				443F27F11F28E85D00386907 /* Icon32-CircleGray.png in Resources */,
 				443F27F21F28E85D00386907 /* AZDialStepperMinus.png in Resources */,
-				443F27F31F28E85D00386907 /* AZStore-32.png in Resources */,
 				443F27F41F28E85D00386907 /* Icon32-CircleGray@2x.png in Resources */,
 				443F27F51F28E85D00386907 /* AZDialBack.png in Resources */,
 				443F27F61F28E85D00386907 /* Icon44-ClipOn.png in Resources */,
@@ -3047,7 +2645,6 @@
 				443F27FF1F28E85D00386907 /* Icon-DrumPush@2x.png in Resources */,
 				443F28001F28E85D00386907 /* Icon44-Calc.png in Resources */,
 				443F28011F28E85D00386907 /* AZDialTile.png in Resources */,
-				443F28021F28E85D00386907 /* PackListBeta-Info.plist in Resources */,
 				443F28031F28E85D00386907 /* Icon44-Calc@2x.png in Resources */,
 				443F28041F28E85D00386907 /* Icon32-MailNew@2x.png in Resources */,
 				443F28051F28E85D00386907 /* Icon32-MailNew.png in Resources */,
@@ -3055,27 +2652,20 @@
 				443F28071F28E85D00386907 /* Icon32-CircleCheckClear.png in Resources */,
 				443F28081F28E85D00386907 /* Icon32-PasteAdd@2x.png in Resources */,
 				443F28091F28E85D00386907 /* Icon32-PasteAdd.png in Resources */,
-				443F280A1F28E85D00386907 /* AZStore-Stop-32.png in Resources */,
 				443F280B1F28E85D00386907 /* AZDialStepperPlusDown.png in Resources */,
 				443F280C1F28E85D00386907 /* Icon32-PasteCopy.png in Resources */,
 				443F280D1F28E85D00386907 /* Icon32-PasteCopy@2x.png in Resources */,
 				443F280E1F28E85D00386907 /* Icon32-SharedAdd.png in Resources */,
-				443F280F1F28E85D00386907 /* AZStore-Addin-32.png in Resources */,
-				443F28101F28E85D00386907 /* Icon57-CalcRoll@2x.png in Resources */,
 				443F28111F28E85D00386907 /* Icon32-SharedAdd@2x.png in Resources */,
 				443F28121F28E85D00386907 /* AZDialStepperPlusDown@2X.png in Resources */,
 				443F28131F28E85D00386907 /* Icon32-Shared@2x.png in Resources */,
 				443F28141F28E85D00386907 /* Icon32-Shared.png in Resources */,
-				443F28151F28E85D00386907 /* Icon57-Condition@2x.png in Resources */,
 				443F28161F28E85D00386907 /* Icon32-GoogleDoc.png in Resources */,
 				443F28171F28E85D00386907 /* Icon32-GoogleDoc@2x.png in Resources */,
-				443F28181F28E85D00386907 /* AZStore-Stop-32@2x.png in Resources */,
-				443F28191F28E85D00386907 /* Icon57-PackList.png in Resources */,
 				443F281A1F28E85D00386907 /* Icon32-GoogleAdd@2x.png in Resources */,
 				443F281B1F28E85D00386907 /* AZDialStepperPlus@2x.png in Resources */,
 				443F281C1F28E85D00386907 /* Icon32-GoogleAdd.png in Resources */,
 				443F281D1F28E85D00386907 /* Icon32-NearPc.png in Resources */,
-				443F281E1F28E85D00386907 /* Icon57-Condition.png in Resources */,
 				443F281F1F28E85D00386907 /* Icon32-NearPc@2x.png in Resources */,
 				443F28201F28E85D00386907 /* Icon32-NearPcAdd@2x.png in Resources */,
 				443F28211F28E85D00386907 /* Localizable.strings in Resources */,
@@ -3088,15 +2678,12 @@
 				443F28281F28E85D00386907 /* Icon72@2x.png in Resources */,
 				443F28291F28E85D00386907 /* Tx-Back@2x.png in Resources */,
 				443F282A1F28E85D00386907 /* Tx-Back.png in Resources */,
-				443F282B1F28E85D00386907 /* AZStore-32@2x.png in Resources */,
 				443F282C1F28E85D00386907 /* AZWeb-Forward-16.png in Resources */,
 				443F282D1F28E85D00386907 /* Icon32-Setting@2x.png in Resources */,
 				443F282E1F28E85D00386907 /* Icon32-Setting.png in Resources */,
 				443F282F1F28E85D00386907 /* Icon32-Information.png in Resources */,
 				443F28301F28E85D00386907 /* AZAbout-32@2x.png in Resources */,
-				443F28311F28E85D00386907 /* AZStore-Space-44.png in Resources */,
 				443F28321F28E85D00386907 /* Icon32-Information@2x.png in Resources */,
-				443F28331F28E85D00386907 /* AZStore-Addin-32@2x.png in Resources */,
 				443F28341F28E85D00386907 /* Icon32-ExtParts@2x.png in Resources */,
 				443F28351F28E85D00386907 /* Icon32-ExtParts.png in Resources */,
 				443F28361F28E85D00386907 /* Icon-Close-44@2x.png in Resources */,
@@ -3109,12 +2696,9 @@
 				443F283D1F28E85D00386907 /* AZAbout.xib in Resources */,
 				443F283E1F28E85D00386907 /* Icon-Store-40@2x.png in Resources */,
 				443F283F1F28E85D00386907 /* Icon-Store-40.png in Resources */,
-				443F28401F28E85D00386907 /* Icon57-PayNote.png in Resources */,
-				443F28411F28E85D00386907 /* Icon57-PayNote@2x.png in Resources */,
 				443F28421F28E85D00386907 /* AZDialStepperMinusDown.png in Resources */,
 				443F28431F28E85D00386907 /* AZLocalizable.strings in Resources */,
 				443F28441F28E85D00386907 /* Icon32-Picasa@2x.png in Resources */,
-				443F28451F28E85D00386907 /* Icon57-SplitPay.png in Resources */,
 				443F28461F28E85D00386907 /* Icon32-Picasa.png in Resources */,
 				443F28471F28E85D00386907 /* Icon32-PicasaBlack@2x.png in Resources */,
 				443F299B1F28EBEC00386907 /* InfoPlist.strings in Resources */,
@@ -3129,7 +2713,6 @@
 				443F28501F28E85D00386907 /* GoogleService-Info.plist in Resources */,
 				443F28511F28E85D00386907 /* Icon72bag.png in Resources */,
 				443F28521F28E85D00386907 /* Icon72bag@2x.png in Resources */,
-				443F28531F28E85D00386907 /* Icon57-PackList@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3158,12 +2741,11 @@
 				443F28C01F28E88500386907 /* E1viewController.xib in Resources */,
 				443F28C11F28E88500386907 /* Icon24-GreenPlus@2x.png in Resources */,
 				443F28C21F28E88500386907 /* AZAbout-32.png in Resources */,
-				443F28C31F28E88500386907 /* AZStoreCell.xib in Resources */,
 				443F28C41F28E88500386907 /* Icon24-RedMinus.png in Resources */,
-				443F28C51F28E88500386907 /* AZStore-Space-44@2x.png in Resources */,
 				443F28C61F28E88500386907 /* Icon24-RedMinus@2x.png in Resources */,
 				443F28C71F28E88500386907 /* Icon32-BagBlue.png in Resources */,
 				443F28C81F28E88500386907 /* Icon32-BagBlue@2x.png in Resources */,
+				449072BC1F3D98E400EF9117 /* PackListPadFree-Info.plist in Resources */,
 				443F28C91F28E88500386907 /* Icon32-BagGray.png in Resources */,
 				443F28CA1F28E88500386907 /* Icon32-BagGray@2x.png in Resources */,
 				443F28CB1F28E88500386907 /* Icon32-BagYellow.png in Resources */,
@@ -3175,10 +2757,8 @@
 				443F28D11F28E88500386907 /* Icon32-CircleCheck2.png in Resources */,
 				443F28D21F28E88500386907 /* Icon32-CircleCheck2@2x.png in Resources */,
 				443F28D31F28E88500386907 /* AZDialTile@2x.png in Resources */,
-				443F28D41F28E88500386907 /* Icon57-CalcRoll.png in Resources */,
 				443F28D51F28E88500386907 /* Icon32-CircleGray.png in Resources */,
 				443F28D61F28E88500386907 /* AZDialStepperMinus.png in Resources */,
-				443F28D71F28E88500386907 /* AZStore-32.png in Resources */,
 				443F28D81F28E88500386907 /* Icon32-CircleGray@2x.png in Resources */,
 				443F28D91F28E88500386907 /* AZDialBack.png in Resources */,
 				443F28DA1F28E88500386907 /* Icon44-ClipOn.png in Resources */,
@@ -3193,7 +2773,6 @@
 				443F28E31F28E88500386907 /* Icon-DrumPush@2x.png in Resources */,
 				443F28E41F28E88500386907 /* Icon44-Calc.png in Resources */,
 				443F28E51F28E88500386907 /* AZDialTile.png in Resources */,
-				443F28E61F28E88500386907 /* PackListBeta-Info.plist in Resources */,
 				443F28E71F28E88500386907 /* Icon44-Calc@2x.png in Resources */,
 				443F28E81F28E88500386907 /* Icon32-MailNew@2x.png in Resources */,
 				443F28E91F28E88500386907 /* Icon32-MailNew.png in Resources */,
@@ -3201,27 +2780,20 @@
 				443F28EB1F28E88500386907 /* Icon32-CircleCheckClear.png in Resources */,
 				443F28EC1F28E88500386907 /* Icon32-PasteAdd@2x.png in Resources */,
 				443F28ED1F28E88500386907 /* Icon32-PasteAdd.png in Resources */,
-				443F28EE1F28E88500386907 /* AZStore-Stop-32.png in Resources */,
 				443F28EF1F28E88500386907 /* AZDialStepperPlusDown.png in Resources */,
 				443F28F01F28E88500386907 /* Icon32-PasteCopy.png in Resources */,
 				443F28F11F28E88500386907 /* Icon32-PasteCopy@2x.png in Resources */,
 				443F28F21F28E88500386907 /* Icon32-SharedAdd.png in Resources */,
-				443F28F31F28E88500386907 /* AZStore-Addin-32.png in Resources */,
-				443F28F41F28E88500386907 /* Icon57-CalcRoll@2x.png in Resources */,
 				443F28F51F28E88500386907 /* Icon32-SharedAdd@2x.png in Resources */,
 				443F28F61F28E88500386907 /* AZDialStepperPlusDown@2X.png in Resources */,
 				443F28F71F28E88500386907 /* Icon32-Shared@2x.png in Resources */,
 				443F28F81F28E88500386907 /* Icon32-Shared.png in Resources */,
-				443F28F91F28E88500386907 /* Icon57-Condition@2x.png in Resources */,
 				443F28FA1F28E88500386907 /* Icon32-GoogleDoc.png in Resources */,
 				443F28FB1F28E88500386907 /* Icon32-GoogleDoc@2x.png in Resources */,
-				443F28FC1F28E88500386907 /* AZStore-Stop-32@2x.png in Resources */,
-				443F28FD1F28E88500386907 /* Icon57-PackList.png in Resources */,
 				443F28FE1F28E88500386907 /* Icon32-GoogleAdd@2x.png in Resources */,
 				443F28FF1F28E88500386907 /* AZDialStepperPlus@2x.png in Resources */,
 				443F29001F28E88500386907 /* Icon32-GoogleAdd.png in Resources */,
 				443F29011F28E88500386907 /* Icon32-NearPc.png in Resources */,
-				443F29021F28E88500386907 /* Icon57-Condition.png in Resources */,
 				443F29031F28E88500386907 /* Icon32-NearPc@2x.png in Resources */,
 				443F29041F28E88500386907 /* Icon32-NearPcAdd@2x.png in Resources */,
 				443F29051F28E88500386907 /* Localizable.strings in Resources */,
@@ -3234,15 +2806,12 @@
 				443F290C1F28E88500386907 /* Icon72@2x.png in Resources */,
 				443F290D1F28E88500386907 /* Tx-Back@2x.png in Resources */,
 				443F290E1F28E88500386907 /* Tx-Back.png in Resources */,
-				443F290F1F28E88500386907 /* AZStore-32@2x.png in Resources */,
 				443F29101F28E88500386907 /* AZWeb-Forward-16.png in Resources */,
 				443F29111F28E88500386907 /* Icon32-Setting@2x.png in Resources */,
 				443F29121F28E88500386907 /* Icon32-Setting.png in Resources */,
 				443F29131F28E88500386907 /* Icon32-Information.png in Resources */,
 				443F29141F28E88500386907 /* AZAbout-32@2x.png in Resources */,
-				443F29151F28E88500386907 /* AZStore-Space-44.png in Resources */,
 				443F29161F28E88500386907 /* Icon32-Information@2x.png in Resources */,
-				443F29171F28E88500386907 /* AZStore-Addin-32@2x.png in Resources */,
 				443F29181F28E88500386907 /* Icon32-ExtParts@2x.png in Resources */,
 				443F29191F28E88500386907 /* Icon32-ExtParts.png in Resources */,
 				443F291A1F28E88500386907 /* Icon-Close-44@2x.png in Resources */,
@@ -3255,12 +2824,9 @@
 				443F29211F28E88500386907 /* AZAbout.xib in Resources */,
 				443F29221F28E88500386907 /* Icon-Store-40@2x.png in Resources */,
 				443F29231F28E88500386907 /* Icon-Store-40.png in Resources */,
-				443F29241F28E88500386907 /* Icon57-PayNote.png in Resources */,
-				443F29251F28E88500386907 /* Icon57-PayNote@2x.png in Resources */,
 				443F29261F28E88500386907 /* AZDialStepperMinusDown.png in Resources */,
 				443F29271F28E88500386907 /* AZLocalizable.strings in Resources */,
 				443F29281F28E88500386907 /* Icon32-Picasa@2x.png in Resources */,
-				443F29291F28E88500386907 /* Icon57-SplitPay.png in Resources */,
 				443F292A1F28E88500386907 /* Icon32-Picasa.png in Resources */,
 				443F292B1F28E88500386907 /* Icon32-PicasaBlack@2x.png in Resources */,
 				443F299C1F28EBED00386907 /* InfoPlist.strings in Resources */,
@@ -3275,7 +2841,6 @@
 				443F29341F28E88500386907 /* GoogleService-Info.plist in Resources */,
 				443F29351F28E88500386907 /* Icon72bag.png in Resources */,
 				443F29361F28E88500386907 /* Icon72bag@2x.png in Resources */,
-				443F29371F28E88500386907 /* Icon57-PackList@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3304,13 +2869,12 @@
 				44F195851EBDD8F400F5FF93 /* E1viewController.xib in Resources */,
 				4499D7E4134DA60600342648 /* Icon24-GreenPlus@2x.png in Resources */,
 				44965B501EFFF17800350EDA /* AZAbout-32.png in Resources */,
-				44965B721EFFF17800350EDA /* AZStoreCell.xib in Resources */,
 				4499D7E5134DA60600342648 /* Icon24-RedMinus.png in Resources */,
-				44965B6D1EFFF17800350EDA /* AZStore-Space-44@2x.png in Resources */,
 				4499D7E6134DA60600342648 /* Icon24-RedMinus@2x.png in Resources */,
 				4499D7E7134DA60600342648 /* Icon32-BagBlue.png in Resources */,
 				4499D7E8134DA60600342648 /* Icon32-BagBlue@2x.png in Resources */,
 				4499D7E9134DA60600342648 /* Icon32-BagGray.png in Resources */,
+				449072BF1F3DE6BF00EF9117 /* Settings.bundle in Resources */,
 				4499D7EA134DA60600342648 /* Icon32-BagGray@2x.png in Resources */,
 				4499D7EB134DA60600342648 /* Icon32-BagYellow.png in Resources */,
 				4499D7EC134DA60600342648 /* Icon32-BagYellow@2x.png in Resources */,
@@ -3321,10 +2885,8 @@
 				4499D7F1134DA60600342648 /* Icon32-CircleCheck2.png in Resources */,
 				4499D7F2134DA60600342648 /* Icon32-CircleCheck2@2x.png in Resources */,
 				44965B671EFFF17800350EDA /* AZDialTile@2x.png in Resources */,
-				44965B751EFFF17800350EDA /* Icon57-CalcRoll.png in Resources */,
 				4499D7F3134DA60600342648 /* Icon32-CircleGray.png in Resources */,
 				44965B5E1EFFF17800350EDA /* AZDialStepperMinus.png in Resources */,
-				44965B681EFFF17800350EDA /* AZStore-32.png in Resources */,
 				4499D7F4134DA60600342648 /* Icon32-CircleGray@2x.png in Resources */,
 				44965B5C1EFFF17800350EDA /* AZDialBack.png in Resources */,
 				4499D7F5134DA60600342648 /* Icon44-ClipOn.png in Resources */,
@@ -3347,27 +2909,20 @@
 				445998DE141383730005F706 /* Icon32-CircleCheckClear.png in Resources */,
 				44A595BA1416602E00F9B612 /* Icon32-PasteAdd@2x.png in Resources */,
 				44A595BE1416602E00F9B612 /* Icon32-PasteAdd.png in Resources */,
-				44965B6E1EFFF17800350EDA /* AZStore-Stop-32.png in Resources */,
 				44965B641EFFF17800350EDA /* AZDialStepperPlusDown.png in Resources */,
 				44A595C21416602E00F9B612 /* Icon32-PasteCopy.png in Resources */,
 				44A595C61416602E00F9B612 /* Icon32-PasteCopy@2x.png in Resources */,
 				44A595CA1416602E00F9B612 /* Icon32-SharedAdd.png in Resources */,
-				44965B6A1EFFF17800350EDA /* AZStore-Addin-32.png in Resources */,
-				44965B761EFFF17800350EDA /* Icon57-CalcRoll@2x.png in Resources */,
 				44A595CE1416602E00F9B612 /* Icon32-SharedAdd@2x.png in Resources */,
 				44965B651EFFF17800350EDA /* AZDialStepperPlusDown@2X.png in Resources */,
 				44A595D21416602E00F9B612 /* Icon32-Shared@2x.png in Resources */,
 				44A595D61416602E00F9B612 /* Icon32-Shared.png in Resources */,
-				44965B781EFFF17800350EDA /* Icon57-Condition@2x.png in Resources */,
 				44A595E21416658B00F9B612 /* Icon32-GoogleDoc.png in Resources */,
 				44A595E61416658B00F9B612 /* Icon32-GoogleDoc@2x.png in Resources */,
-				44965B6F1EFFF17800350EDA /* AZStore-Stop-32@2x.png in Resources */,
-				44965B791EFFF17800350EDA /* Icon57-PackList.png in Resources */,
 				44A595EA1416658B00F9B612 /* Icon32-GoogleAdd@2x.png in Resources */,
 				44965B631EFFF17800350EDA /* AZDialStepperPlus@2x.png in Resources */,
 				44A595EE1416658B00F9B612 /* Icon32-GoogleAdd.png in Resources */,
 				44A595F21416658B00F9B612 /* Icon32-NearPc.png in Resources */,
-				44965B771EFFF17800350EDA /* Icon57-Condition.png in Resources */,
 				44A595F61416658B00F9B612 /* Icon32-NearPc@2x.png in Resources */,
 				44A595FA1416658B00F9B612 /* Icon32-NearPcAdd@2x.png in Resources */,
 				44965B9A1EFFFFFC00350EDA /* Localizable.strings in Resources */,
@@ -3380,15 +2935,12 @@
 				449D12BE151817B700F68B6E /* Icon72@2x.png in Resources */,
 				440B5B2E14B44E13006BEA96 /* Tx-Back@2x.png in Resources */,
 				440B5B2F14B44E13006BEA96 /* Tx-Back.png in Resources */,
-				44965B691EFFF17800350EDA /* AZStore-32@2x.png in Resources */,
 				44965B841EFFF17800350EDA /* AZWeb-Forward-16.png in Resources */,
 				441962E214B8456B0047E1C3 /* Icon32-Setting@2x.png in Resources */,
 				441962E314B8456B0047E1C3 /* Icon32-Setting.png in Resources */,
 				441962E414B8456B0047E1C3 /* Icon32-Information.png in Resources */,
 				44965B511EFFF17800350EDA /* AZAbout-32@2x.png in Resources */,
-				44965B6C1EFFF17800350EDA /* AZStore-Space-44.png in Resources */,
 				441962E514B8456B0047E1C3 /* Icon32-Information@2x.png in Resources */,
-				44965B6B1EFFF17800350EDA /* AZStore-Addin-32@2x.png in Resources */,
 				44D3E1B114B8BD9D0028FF24 /* Icon32-ExtParts@2x.png in Resources */,
 				44D3E1B214B8BD9D0028FF24 /* Icon32-ExtParts.png in Resources */,
 				44EFD08A14C17CAF003FF260 /* Icon-Close-44@2x.png in Resources */,
@@ -3401,12 +2953,9 @@
 				44965B531EFFF17800350EDA /* AZAbout.xib in Resources */,
 				44EFD09814C17CAF003FF260 /* Icon-Store-40@2x.png in Resources */,
 				44EFD09914C17CAF003FF260 /* Icon-Store-40.png in Resources */,
-				44965B7B1EFFF17800350EDA /* Icon57-PayNote.png in Resources */,
-				44965B7C1EFFF17800350EDA /* Icon57-PayNote@2x.png in Resources */,
 				44965B601EFFF17800350EDA /* AZDialStepperMinusDown.png in Resources */,
 				44227A211F1217F4003D9C8B /* AZLocalizable.strings in Resources */,
 				44AC159114E806590007229F /* Icon32-Picasa@2x.png in Resources */,
-				44965B7D1EFFF17800350EDA /* Icon57-SplitPay.png in Resources */,
 				44AC159214E806590007229F /* Icon32-Picasa.png in Resources */,
 				44AC159514E8093B0007229F /* Icon32-PicasaBlack@2x.png in Resources */,
 				443F29981F28EBEB00386907 /* InfoPlist.strings in Resources */,
@@ -3421,7 +2970,6 @@
 				44E486B61EC80B910041876C /* GoogleService-Info.plist in Resources */,
 				44218452160392BB0097FF63 /* Icon72bag.png in Resources */,
 				44218453160392BB0097FF63 /* Icon72bag@2x.png in Resources */,
-				44965B7A1EFFF17800350EDA /* Icon57-PackList@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3706,7 +3254,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				443257C91F23002700175312 /* AZDial.m in Sources */,
-				443257CA1F23002700175312 /* NSDataBase64.m in Sources */,
 				443257CB1F23002700175312 /* main.m in Sources */,
 				443257CC1F23002700175312 /* AppDelegate.m in Sources */,
 				443257CD1F23002700175312 /* SFHFKeychainUtils.m in Sources */,
@@ -3720,18 +3267,11 @@
 				443257D41F23002700175312 /* E2viewController.m in Sources */,
 				443257D51F23002700175312 /* E2edit.m in Sources */,
 				443257D61F23002700175312 /* E3viewController.m in Sources */,
-				443257D71F23002700175312 /* SpListTVC.m in Sources */,
 				443257D81F23002700175312 /* E3detailTVC.m in Sources */,
 				443257D91F23002700175312 /* SettingTVC.m in Sources */,
 				443257DA1F23002700175312 /* selectGroupTVC.m in Sources */,
 				443257DB1F23002700175312 /* Global.m in Sources */,
 				443257DC1F23002700175312 /* FileCsv.m in Sources */,
-				443257DD1F23002700175312 /* AZStoreCell.m in Sources */,
-				443257DE1F23002700175312 /* AZStoreTVC.m in Sources */,
-				443257DF1F23002700175312 /* SpSearchVC.m in Sources */,
-				443257E01F23002700175312 /* SpAppendVC.m in Sources */,
-				443257E11F23002700175312 /* SpPOST.m in Sources */,
-				443257E21F23002700175312 /* SpDetailTVC.m in Sources */,
 				443257E31F23002700175312 /* CalcView.m in Sources */,
 				443257E41F23002700175312 /* UIViewController+azAlert.m in Sources */,
 				443257E51F23002700175312 /* AzPackList.xcdatamodeld in Sources */,
@@ -3743,7 +3283,6 @@
 				443257EB1F23002700175312 /* NSDataAddition.m in Sources */,
 				443257EC1F23002700175312 /* UIDevice-Hardware.m in Sources */,
 				443257ED1F23002700175312 /* MocFunctions.m in Sources */,
-				443257EE1F23002700175312 /* VerificationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3752,7 +3291,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				443F268D1F28E7C000386907 /* AZDial.m in Sources */,
-				443F268E1F28E7C000386907 /* NSDataBase64.m in Sources */,
 				443F268F1F28E7C000386907 /* main.m in Sources */,
 				443F26901F28E7C000386907 /* AppDelegate.m in Sources */,
 				443F26911F28E7C000386907 /* SFHFKeychainUtils.m in Sources */,
@@ -3766,18 +3304,11 @@
 				443F26981F28E7C000386907 /* E2viewController.m in Sources */,
 				443F26991F28E7C000386907 /* E2edit.m in Sources */,
 				443F269A1F28E7C000386907 /* E3viewController.m in Sources */,
-				443F269B1F28E7C000386907 /* SpListTVC.m in Sources */,
 				443F269C1F28E7C000386907 /* E3detailTVC.m in Sources */,
 				443F269D1F28E7C000386907 /* SettingTVC.m in Sources */,
 				443F269E1F28E7C000386907 /* selectGroupTVC.m in Sources */,
 				443F269F1F28E7C000386907 /* Global.m in Sources */,
 				443F26A01F28E7C000386907 /* FileCsv.m in Sources */,
-				443F26A11F28E7C000386907 /* AZStoreCell.m in Sources */,
-				443F26A21F28E7C000386907 /* AZStoreTVC.m in Sources */,
-				443F26A31F28E7C000386907 /* SpSearchVC.m in Sources */,
-				443F26A41F28E7C000386907 /* SpAppendVC.m in Sources */,
-				443F26A51F28E7C000386907 /* SpPOST.m in Sources */,
-				443F26A61F28E7C000386907 /* SpDetailTVC.m in Sources */,
 				443F26A71F28E7C000386907 /* CalcView.m in Sources */,
 				443F26A81F28E7C000386907 /* UIViewController+azAlert.m in Sources */,
 				443F26A91F28E7C000386907 /* AzPackList.xcdatamodeld in Sources */,
@@ -3789,7 +3320,6 @@
 				443F26AF1F28E7C000386907 /* NSDataAddition.m in Sources */,
 				443F26B01F28E7C000386907 /* UIDevice-Hardware.m in Sources */,
 				443F26B11F28E7C000386907 /* MocFunctions.m in Sources */,
-				443F26B21F28E7C000386907 /* VerificationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3798,7 +3328,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				443F27711F28E83100386907 /* AZDial.m in Sources */,
-				443F27721F28E83100386907 /* NSDataBase64.m in Sources */,
 				443F27731F28E83100386907 /* main.m in Sources */,
 				443F27741F28E83100386907 /* AppDelegate.m in Sources */,
 				443F27751F28E83100386907 /* SFHFKeychainUtils.m in Sources */,
@@ -3811,18 +3340,11 @@
 				443F277C1F28E83100386907 /* E2viewController.m in Sources */,
 				443F277D1F28E83100386907 /* E2edit.m in Sources */,
 				443F277E1F28E83100386907 /* E3viewController.m in Sources */,
-				443F277F1F28E83100386907 /* SpListTVC.m in Sources */,
 				443F27801F28E83100386907 /* E3detailTVC.m in Sources */,
 				443F27811F28E83100386907 /* SettingTVC.m in Sources */,
 				443F27821F28E83100386907 /* selectGroupTVC.m in Sources */,
 				443F27831F28E83100386907 /* Global.m in Sources */,
 				443F27841F28E83100386907 /* FileCsv.m in Sources */,
-				443F27851F28E83100386907 /* AZStoreCell.m in Sources */,
-				443F27861F28E83100386907 /* AZStoreTVC.m in Sources */,
-				443F27871F28E83100386907 /* SpSearchVC.m in Sources */,
-				443F27881F28E83100386907 /* SpAppendVC.m in Sources */,
-				443F27891F28E83100386907 /* SpPOST.m in Sources */,
-				443F278A1F28E83100386907 /* SpDetailTVC.m in Sources */,
 				443F278B1F28E83100386907 /* CalcView.m in Sources */,
 				443F278C1F28E83100386907 /* UIViewController+azAlert.m in Sources */,
 				443F278D1F28E83100386907 /* AzPackList.xcdatamodeld in Sources */,
@@ -3834,7 +3356,6 @@
 				443F27931F28E83100386907 /* NSDataAddition.m in Sources */,
 				443F27941F28E83100386907 /* UIDevice-Hardware.m in Sources */,
 				443F27951F28E83100386907 /* MocFunctions.m in Sources */,
-				443F27961F28E83100386907 /* VerificationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3843,7 +3364,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				443F28551F28E85D00386907 /* AZDial.m in Sources */,
-				443F28561F28E85D00386907 /* NSDataBase64.m in Sources */,
 				443F28571F28E85D00386907 /* main.m in Sources */,
 				443F28581F28E85D00386907 /* AppDelegate.m in Sources */,
 				443F28591F28E85D00386907 /* SFHFKeychainUtils.m in Sources */,
@@ -3856,18 +3376,11 @@
 				443F28601F28E85D00386907 /* E2viewController.m in Sources */,
 				443F28611F28E85D00386907 /* E2edit.m in Sources */,
 				443F28621F28E85D00386907 /* E3viewController.m in Sources */,
-				443F28631F28E85D00386907 /* SpListTVC.m in Sources */,
 				443F28641F28E85D00386907 /* E3detailTVC.m in Sources */,
 				443F28651F28E85D00386907 /* SettingTVC.m in Sources */,
 				443F28661F28E85D00386907 /* selectGroupTVC.m in Sources */,
 				443F28671F28E85D00386907 /* Global.m in Sources */,
 				443F28681F28E85D00386907 /* FileCsv.m in Sources */,
-				443F28691F28E85D00386907 /* AZStoreCell.m in Sources */,
-				443F286A1F28E85D00386907 /* AZStoreTVC.m in Sources */,
-				443F286B1F28E85D00386907 /* SpSearchVC.m in Sources */,
-				443F286C1F28E85D00386907 /* SpAppendVC.m in Sources */,
-				443F286D1F28E85D00386907 /* SpPOST.m in Sources */,
-				443F286E1F28E85D00386907 /* SpDetailTVC.m in Sources */,
 				443F286F1F28E85D00386907 /* CalcView.m in Sources */,
 				443F28701F28E85D00386907 /* UIViewController+azAlert.m in Sources */,
 				443F28711F28E85D00386907 /* AzPackList.xcdatamodeld in Sources */,
@@ -3879,7 +3392,6 @@
 				443F28771F28E85D00386907 /* NSDataAddition.m in Sources */,
 				443F28781F28E85D00386907 /* UIDevice-Hardware.m in Sources */,
 				443F28791F28E85D00386907 /* MocFunctions.m in Sources */,
-				443F287A1F28E85D00386907 /* VerificationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3888,7 +3400,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				443F29391F28E88500386907 /* AZDial.m in Sources */,
-				443F293A1F28E88500386907 /* NSDataBase64.m in Sources */,
 				443F293B1F28E88500386907 /* main.m in Sources */,
 				443F293C1F28E88500386907 /* AppDelegate.m in Sources */,
 				443F293D1F28E88500386907 /* SFHFKeychainUtils.m in Sources */,
@@ -3901,18 +3412,11 @@
 				443F29441F28E88500386907 /* E2viewController.m in Sources */,
 				443F29451F28E88500386907 /* E2edit.m in Sources */,
 				443F29461F28E88500386907 /* E3viewController.m in Sources */,
-				443F29471F28E88500386907 /* SpListTVC.m in Sources */,
 				443F29481F28E88500386907 /* E3detailTVC.m in Sources */,
 				443F29491F28E88500386907 /* SettingTVC.m in Sources */,
 				443F294A1F28E88500386907 /* selectGroupTVC.m in Sources */,
 				443F294B1F28E88500386907 /* Global.m in Sources */,
 				443F294C1F28E88500386907 /* FileCsv.m in Sources */,
-				443F294D1F28E88500386907 /* AZStoreCell.m in Sources */,
-				443F294E1F28E88500386907 /* AZStoreTVC.m in Sources */,
-				443F294F1F28E88500386907 /* SpSearchVC.m in Sources */,
-				443F29501F28E88500386907 /* SpAppendVC.m in Sources */,
-				443F29511F28E88500386907 /* SpPOST.m in Sources */,
-				443F29521F28E88500386907 /* SpDetailTVC.m in Sources */,
 				443F29531F28E88500386907 /* CalcView.m in Sources */,
 				443F29541F28E88500386907 /* UIViewController+azAlert.m in Sources */,
 				443F29551F28E88500386907 /* AzPackList.xcdatamodeld in Sources */,
@@ -3924,7 +3428,6 @@
 				443F295B1F28E88500386907 /* NSDataAddition.m in Sources */,
 				443F295C1F28E88500386907 /* UIDevice-Hardware.m in Sources */,
 				443F295D1F28E88500386907 /* MocFunctions.m in Sources */,
-				443F295E1F28E88500386907 /* VerificationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3933,7 +3436,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				44965B5B1EFFF17800350EDA /* AZDial.m in Sources */,
-				44965B7F1EFFF17800350EDA /* NSDataBase64.m in Sources */,
 				4499D803134DA60600342648 /* main.m in Sources */,
 				4499D804134DA60600342648 /* AppDelegate.m in Sources */,
 				44F1957D1EBDB66000F5FF93 /* SFHFKeychainUtils.m in Sources */,
@@ -3947,18 +3449,11 @@
 				4499D809134DA60600342648 /* E2viewController.m in Sources */,
 				4499D80A134DA60600342648 /* E2edit.m in Sources */,
 				4499D80B134DA60600342648 /* E3viewController.m in Sources */,
-				4499D810134DA60600342648 /* SpListTVC.m in Sources */,
 				4499D811134DA60600342648 /* E3detailTVC.m in Sources */,
 				4499D813134DA60600342648 /* SettingTVC.m in Sources */,
 				4499D814134DA60600342648 /* selectGroupTVC.m in Sources */,
 				4499D817134DA60600342648 /* Global.m in Sources */,
 				4499D822134DA60600342648 /* FileCsv.m in Sources */,
-				44965B711EFFF17800350EDA /* AZStoreCell.m in Sources */,
-				44965B741EFFF17800350EDA /* AZStoreTVC.m in Sources */,
-				4499D823134DA60600342648 /* SpSearchVC.m in Sources */,
-				4499D824134DA60600342648 /* SpAppendVC.m in Sources */,
-				4499D825134DA60600342648 /* SpPOST.m in Sources */,
-				4499D826134DA60600342648 /* SpDetailTVC.m in Sources */,
 				4499D827134DA60600342648 /* CalcView.m in Sources */,
 				44227A1A1F08E4B4003D9C8B /* UIViewController+azAlert.m in Sources */,
 				445998C61413757E0005F706 /* AzPackList.xcdatamodeld in Sources */,
@@ -3970,7 +3465,6 @@
 				44A7DB2F14DE6A7A00DB72E2 /* NSDataAddition.m in Sources */,
 				44835AD1156BDC1E00A83167 /* UIDevice-Hardware.m in Sources */,
 				4416337615F25D1B009CD324 /* MocFunctions.m in Sources */,
-				44965B811EFFF17800350EDA /* VerificationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

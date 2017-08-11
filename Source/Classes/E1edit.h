@@ -9,13 +9,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface E1edit : UIViewController  <UITextFieldDelegate, UITextViewDelegate>
+@interface E1edit : UIViewController
 
 @property (nonatomic, retain) E1		*e1target;
 @property NSInteger							addRow;
 
 //@property (nonatomic, assign) id									delegate;
-@property (nonatomic, retain) UIPopoverController*	selfPopover;
+//@property (nonatomic, retain) UIPopoverController*	selfPopover;
 
 @end
 

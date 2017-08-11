@@ -305,7 +305,7 @@
 	// @"stamp"(W3C-DTF:UTC) --> NSDate 
 	NSDateFormatter *df = [[NSDateFormatter alloc] init];
 	// カレンダーの設定 ＜＜システム設定が「和暦」になると、2012-->平成2012年-->西暦4000年になるのを避けるため、西暦（グレゴリア）に固定
-	NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+	NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
 	[df setCalendar:calendar];
 	//[df setTimeStyle:NSDateFormatterFullStyle];
 	[df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];

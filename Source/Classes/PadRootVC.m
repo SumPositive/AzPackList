@@ -9,7 +9,7 @@
 #import "Global.h"
 #import "AppDelegate.h"
 #import "PadRootVC.h"
-#import "SpSearchVC.h"
+//#import "SpSearchVC.h"
 #import "E2viewController.h"
 
 #define BAG_FRAME			CGRectMake(100, 120, 72*2, 72*2)  // 取手が中心になるようにしている。

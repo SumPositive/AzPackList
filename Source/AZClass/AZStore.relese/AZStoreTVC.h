@@ -13,25 +13,7 @@
 #import "VerificationController.h"
 
 
-@interface AZStoreTVC : UITableViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIAlertViewDelegate, SKProductsRequestDelegate, SKPaymentTransactionObserver, VerificationControllerDelegate>
-{	
-@private
-	UITextField						*mTfGiftCode;
-	UIAlertView						*mAlertActivity;
-	UIActivityIndicatorView	*mAlertActivityIndicator;
-	SKProductsRequest		*mProductRequest;
-	
-	BOOL								mIsPad;
-	NSSet								*mProductIDs;
-	NSMutableArray				*mProducts;
-
-	NSString							*mGiftDetail;	//=nil; 招待パスなし
-	NSString							*mGiftProductID;
-	NSString							*mGiftSecretKey;//1615AzPackList
-	//NSUInteger						mDidSelect_ProductNo;
-	
-	NSString							*mPurchasedProductID;
-}
+@interface AZStoreTVC : UITableViewController
 
 @property (nonatomic, assign) id			delegate;
 

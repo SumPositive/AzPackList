@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "AZStoreTVC.h"	//<AZStoreDelegate>
+//#import "AZStoreTVC.h"	//<AZStoreDelegate>
 #import "AZAboutVC.h"
 //#import "AZDropboxVC.h"
 #import "Global.h"
@@ -21,7 +21,7 @@
 #import "E3viewController.h"
 #import "SettingTVC.h"
 #import "FileCsv.h"
-#import "SpSearchVC.h"
+//#import "SpSearchVC.h"
 #import "PatternImageView.h"
 //#import "GDocDownloadTVC.h"
 

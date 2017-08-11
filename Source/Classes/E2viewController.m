@@ -21,7 +21,7 @@
 //#import "MyHTTPConnection.h"
 //#import "localhostAddresses.h"
 #import "FileCsv.h"
-#import "SpAppendVC.h"
+//#import "SpAppendVC.h"
 #import "PatternImageView.h"
 //#import "GDocUploadVC.h"
 
@@ -35,7 +35,30 @@
 #define ALERT_TAG_DELETEGROUP		136		//[2.0.1]BugFix
 
 
-@interface E2viewController (PrivateMethods)
+@interface E2viewController ()
+<UIActionSheetDelegate, MFMailComposeViewControllerDelegate, UIPopoverControllerDelegate>
+{
+    UIPopoverController*	menuPopover_;  //[MENU]にて自身を包むPopover  閉じる為に必要
+    // setPopover:にてセットされる
+    
+    NSMutableArray		*e2array_;   // Rrは local alloc につき release 必須を示す
+    HTTPServer			*httpServer_;
+    UIAlertView			*alertHttpServer_;
+    NSDictionary		*dicAddresses_;
+    E2edit				*e2editView_;				// self.navigationControllerがOwnerになる
+    
+    UIPopoverController*			popOver_;
+    NSIndexPath*						indexPathEdit_;	//[1.1]ポインタ代入注意！copyするように改善した。
+    
+    AppDelegate		*appDelegate_;
+    NSIndexPath	  *indexPathActionDelete_;	//[1.1]ポインタ代入注意！copyするように改善した。
+    
+    BOOL optWeightRound_;
+    BOOL optShowTotalWeight_;
+    BOOL optShowTotalWeightReq_;
+    NSInteger section0Rows_; // E2レコード数　＜高速化＞
+    CGPoint		contentOffsetDidSelect_; // didSelect時のScrollView位置を記録
+}
 - (void)allZero;
 - (void)addTestData;
 //- (void)httpInfoUpdate:(NSNotification *)notification;
@@ -272,22 +295,22 @@
 	});
 }
 
-- (void)actionSharedPackListUp:(NSIndexPath*)indexPath
-{
-	SpAppendVC *vc = [[SpAppendVC alloc] init];
-	vc.Re1selected = e1selected_;
-
-	if (appDelegate_.ppIsPad) {
-		vc.title = NSLocalizedString(@"SharePlan Append",nil);
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
-		nc.modalPresentationStyle = UIModalPresentationFormSheet;
-		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentViewController:nc animated:YES completion:nil];
-	} else {
-		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-		[self.navigationController pushViewController:vc animated:YES];
-	}
-}
+//- (void)actionSharedPackListUp:(NSIndexPath*)indexPath
+//{
+//	SpAppendVC *vc = [[SpAppendVC alloc] init];
+//	vc.Re1selected = e1selected_;
+//
+//	if (appDelegate_.ppIsPad) {
+//		vc.title = NSLocalizedString(@"SharePlan Append",nil);
+//		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+//		nc.modalPresentationStyle = UIModalPresentationFormSheet;
+//		nc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+//		[self presentViewController:nc animated:YES completion:nil];
+//	} else {
+//		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+//		[self.navigationController pushViewController:vc animated:YES];
+//	}
+//}
 
 - (void)actionBackupDropbox:(NSIndexPath*)indexPath
 {	// BACKUP [SAVE]
@@ -1562,20 +1585,20 @@
 					[self actionEmailSend];
 					break; //Popover閉じる
 					
-				case 2: // Upload Share Plan
-					[self actionSharedPackListUp:indexPath];
-					//return; //Popover時に閉じないように
-					break; //Popover閉じる　＜＜閉じないと回転しなくなる
-					
-				case 3: // Google
-					[self actionBackupGoogle:indexPath];
-					//return; //Popover時に閉じないように
-					break; //Popover閉じる
-					
-				case 4: // Dropbox
-					[self actionBackupDropbox:indexPath];
-					//return; //Popover時に閉じないように
-					break; //Popover閉じる
+//				case 2: // Upload Share Plan
+//					[self actionSharedPackListUp:indexPath];
+//					//return; //Popover時に閉じないように
+//					break; //Popover閉じる　＜＜閉じないと回転しなくなる
+//					
+//				case 3: // Google
+//					[self actionBackupGoogle:indexPath];
+//					//return; //Popover時に閉じないように
+//					break; //Popover閉じる
+//					
+//				case 4: // Dropbox
+//					[self actionBackupDropbox:indexPath];
+//					//return; //Popover時に閉じないように
+//					break; //Popover閉じる
 			}
 		}	break;
 

@@ -24,7 +24,7 @@
 
 
 @interface E1viewController ()
-<NSFetchedResultsControllerDelegate, UIPopoverControllerDelegate, AZStoreDelegate>
+<NSFetchedResultsControllerDelegate, UIPopoverControllerDelegate>
 {
     //__weak IBOutlet UITableView*    _tableView;      self.tableView
 
@@ -252,40 +252,40 @@
 	[self.tableView reloadData];
 }
 
-- (void)actionImportSharedPackList
-{
-	if (appDelegate_.ppIsPad) {
-		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-	}
-	
-	SpSearchVC *vc = [[SpSearchVC alloc] init];
-	
-	if (appDelegate_.ppIsPad) {
-	/*	popOver_ = nil;
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
-		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
-		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-		indexPathEdit_ = nil;
-		NSIndexPath *idx = [NSIndexPath indexPathForRow:0 inSection:1];  //<<<<< Shared PackList セル位置をセット
-		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
-		rcArrow.origin.x = 150;		rcArrow.size.width = 1;
-		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
-		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
-				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];*/
-		
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
-		nc.modalPresentationStyle = UIModalPresentationFormSheet;
-		nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;  //UIModalTransitionStyleCrossDissolve;
-		[self presentViewController:nc animated:YES completion:nil];
-	}
-	else {
-//		if (appDelegate_.ppOptShowAd) {
-//			[appDelegate_ AdRefresh:NO];	//広告禁止
-//		}
-		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-		[self.navigationController pushViewController:vc animated:YES];
-	}
-}
+//- (void)actionImportSharedPackList
+//{
+//	if (appDelegate_.ppIsPad) {
+//		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+//	}
+//	
+//	SpSearchVC *vc = [[SpSearchVC alloc] init];
+//	
+//	if (appDelegate_.ppIsPad) {
+//	/*	popOver_ = nil;
+//		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+//		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
+//		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
+//		indexPathEdit_ = nil;
+//		NSIndexPath *idx = [NSIndexPath indexPathForRow:0 inSection:1];  //<<<<< Shared PackList セル位置をセット
+//		CGRect rcArrow = [self.tableView rectForRowAtIndexPath:idx];
+//		rcArrow.origin.x = 150;		rcArrow.size.width = 1;
+//		rcArrow.origin.y += 10;	rcArrow.size.height -= 20;
+//		[popOver_ presentPopoverFromRect:rcArrow  inView:self.view
+//				permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];*/
+//		
+//		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+//		nc.modalPresentationStyle = UIModalPresentationFormSheet;
+//		nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;  //UIModalTransitionStyleCrossDissolve;
+//		[self presentViewController:nc animated:YES completion:nil];
+//	}
+//	else {
+////		if (appDelegate_.ppOptShowAd) {
+////			[appDelegate_ AdRefresh:NO];	//広告禁止
+////		}
+//		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+//		[self.navigationController pushViewController:vc animated:YES];
+//	}
+//}
 
 - (void)actionImportDropbox
 {
@@ -502,36 +502,36 @@
 	}
 }
 
-- (void)actionAZStore
-{
-	// あずき商店
-	AZStoreTVC *vc = [[AZStoreTVC alloc] init];
-	// 商品IDリスト
-	NSSet *pids = [NSSet setWithObjects:STORE_PRODUCTID_AdOff, nil]; // 商品が複数ある場合は列記
-	[vc setProductIDs:pids];
-//	[vc	setGiftDetail:NSLocalizedString(@"STORE GiftDetail", nil)
-//			productID:STORE_PRODUCTID_AdOff
-//			secretKey:@"1615AzPackList"]; //[1.2]にあるsecretKeyに一致すること
-	
-	// クラッキング対策：非消費型でもレシートチェックが必要になった。
-	// [Manage In-App Purchase]-[View or generate a shared secret]-[Generate]から取得した文字列をセットする
-	vc.ppSharedSecret = @"062e76976c5a468a82bda70683326208";
-	
-	if (appDelegate_.ppIsPad) {
-		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
-		nc.modalPresentationStyle = UIModalPresentationFormSheet;
-		nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-		[self presentViewController:nc animated:YES completion:nil];
-	}
-	else {
-//		if (appDelegate_.ppOptShowAd) {
-//			// 各viewDidAppear:にて「許可/禁止」を設定する
-//			[appDelegate_ AdRefresh:NO];	//広告禁止
-//		}
-		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
-		[self.navigationController pushViewController:vc animated:YES];
-	}
-}
+//- (void)actionAZStore
+//{
+//	// あずき商店
+//	AZStoreTVC *vc = [[AZStoreTVC alloc] init];
+//	// 商品IDリスト
+//	NSSet *pids = [NSSet setWithObjects:STORE_PRODUCTID_AdOff, nil]; // 商品が複数ある場合は列記
+//	[vc setProductIDs:pids];
+////	[vc	setGiftDetail:NSLocalizedString(@"STORE GiftDetail", nil)
+////			productID:STORE_PRODUCTID_AdOff
+////			secretKey:@"1615AzPackList"]; //[1.2]にあるsecretKeyに一致すること
+//	
+//	// クラッキング対策：非消費型でもレシートチェックが必要になった。
+//	// [Manage In-App Purchase]-[View or generate a shared secret]-[Generate]から取得した文字列をセットする
+//	vc.ppSharedSecret = @"062e76976c5a468a82bda70683326208";
+//	
+//	if (appDelegate_.ppIsPad) {
+//		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:vc];
+//		nc.modalPresentationStyle = UIModalPresentationFormSheet;
+//		nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+//		[self presentViewController:nc animated:YES completion:nil];
+//	}
+//	else {
+////		if (appDelegate_.ppOptShowAd) {
+////			// 各viewDidAppear:にて「許可/禁止」を設定する
+////			[appDelegate_ AdRefresh:NO];	//広告禁止
+////		}
+//		[vc setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
+//		[self.navigationController pushViewController:vc animated:YES];
+//	}
+//}
 
 - (void)actionCloudReset
 {
@@ -681,7 +681,7 @@
 		rc.origin.y += 10;	rc.size.height -= 20;
 		[popOver_ presentPopoverFromRect:rc
 								  inView:self.view  permittedArrowDirections:UIPopoverArrowDirectionRight  animated:YES];
-		e1editView_.selfPopover = popOver_;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
+		//e1editView_.selfPopover = popOver_;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
 		//e1editView_.delegate = self;		// refresh callback
 	}
 	else {
@@ -1138,12 +1138,10 @@
 	switch (section) {
 		case 0:
 			return section0Rows_ + 1; // +1:Add行
-//		case 1:
-//			return 1;	// Action menu
 		case 1:
-			return 3;	// menu
-		case 2:
-			return 1;	// iCloud Initial
+			return 2;	// menu
+//		case 2:
+//			return 1;	// iCloud Initial
 	}
 	return 0;
 }
@@ -1398,21 +1396,21 @@
 					cell.detailTextLabel.text = NSLocalizedString(@"menu Information msg",nil);
 					break;
 					
-				case 2:
-					cell.imageView.image = [UIImage imageNamed:@"AZStore-32"];
-					cell.textLabel.text = NSLocalizedString(@"menu Purchase",nil);
-					cell.detailTextLabel.text = NSLocalizedString(@"menu Purchase msg",nil);
-					break;
+//				case 2:
+//					cell.imageView.image = [UIImage imageNamed:@"AZStore-32"];
+//					cell.textLabel.text = NSLocalizedString(@"menu Purchase",nil);
+//					cell.detailTextLabel.text = NSLocalizedString(@"menu Purchase msg",nil);
+//					break;
 			}
 		}
-		else if (indexPath.section == 2) { //-----------------------------------------------------------Section 3
-			// iCloud
-			cell.imageView.image = [UIImage imageNamed:@"Icon32-iCloud"];
-			cell.textLabel.text = NSLocalizedString(@"iCloud Reset",nil);
-			cell.textLabel.textColor = [UIColor redColor];
-			cell.detailTextLabel.text = NSLocalizedString(@"iCloud Reset msg",nil);
-			cell.accessoryType = UITableViewCellAccessoryNone;
-		}
+//		else if (indexPath.section == 2) { //-----------------------------------------------------------Section 3
+//			// iCloud
+//			cell.imageView.image = [UIImage imageNamed:@"Icon32-iCloud"];
+//			cell.textLabel.text = NSLocalizedString(@"iCloud Reset",nil);
+//			cell.textLabel.textColor = [UIColor redColor];
+//			cell.detailTextLabel.text = NSLocalizedString(@"iCloud Reset msg",nil);
+//			cell.accessoryType = UITableViewCellAccessoryNone;
+//		}
 	}
 	return cell;
 }
@@ -1486,9 +1484,9 @@
 				[self actionInformation];
 				break;
 				
-			case 2: // Purchase
-				[self actionAZStore];
-				break;
+//			case 2: // Purchase
+//				[self actionAZStore];
+//				break;
 		}
 	}
 //	else if (indexPath.section == 3) {

@@ -10,6 +10,25 @@
 
 
 @interface AZStoreTVC ()
+<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate,
+UIAlertViewDelegate, SKProductsRequestDelegate,
+SKPaymentTransactionObserver, VerificationControllerDelegate>
+{
+    UITextField						*mTfGiftCode;
+    UIAlertView						*mAlertActivity;
+    UIActivityIndicatorView	*       mAlertActivityIndicator;
+    SKProductsRequest		*       mProductRequest;
+    
+    BOOL								mIsPad;
+    NSSet								*mProductIDs;
+    NSMutableArray				*mProducts;
+    
+    NSString							*mGiftDetail;	//=nil; 招待パスなし
+    NSString							*mGiftProductID;
+    NSString							*mGiftSecretKey;//1615AzPackList
+    NSString							*mPurchasedProductID;
+}
+
 //- (void)configureCell:(E2listCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 @end
 

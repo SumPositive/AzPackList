@@ -647,12 +647,18 @@
 		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
 		if ([kvs boolForKey:KV_OptItemsGrayShow] == NO) 
 		{
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Added Item",nil)
-															 message:NSLocalizedString(@"GrayHiddon Alert",nil)
-															delegate:nil 
-												   cancelButtonTitle:nil 
-												   otherButtonTitles:@"OK", nil];
-			[alert show];
+//			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Added Item",nil)
+//															 message:NSLocalizedString(@"GrayHiddon Alert",nil)
+//															delegate:nil 
+//												   cancelButtonTitle:nil 
+//												   otherButtonTitles:@"OK", nil];
+//			[alert show];
+            [AZAlert target:nil
+                      title:NSLocalizedString(@"Added Item",nil)
+                    message:NSLocalizedString(@"GrayHiddon Alert", nil)
+                    b1title:@"OK"
+                    b1style:UIAlertActionStyleDefault
+                   b1action:nil];
 		}
 	}
 }
@@ -967,12 +973,18 @@
 
 - (void)alertWeightOver
 {
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WeightOver",nil)
-													 message:NSLocalizedString(@"WeightOver message",nil)
-													delegate:nil 
-										   cancelButtonTitle:nil 
-										   otherButtonTitles:@"OK", nil];
-	[alert show];
+//	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WeightOver",nil)
+//													 message:NSLocalizedString(@"WeightOver message",nil)
+//													delegate:nil 
+//										   cancelButtonTitle:nil 
+//										   otherButtonTitles:@"OK", nil];
+//	[alert show];
+    [AZAlert target:nil
+              title:NSLocalizedString(@"WeightOver",nil)
+            message:NSLocalizedString(@"WeightOver message", nil)
+            b1title:@"OK"
+            b1style:UIAlertActionStyleDefault
+           b1action:nil];
 }
 
 

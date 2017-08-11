@@ -252,8 +252,9 @@
 		NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:self.ppUrl]];
 		[mWebView loadRequest:request];
 		[self updateToolBar];
-		UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-		[self didRotateFromInterfaceOrientation:orientation]; // 回転に合わせて.frame調整している
+//		UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+//		[self didRotateFromInterfaceOrientation:orientation]; // 回転に合わせて.frame調整している
+        [self didRotate];
 	} else {
 		[self close:nil];
 	}
@@ -265,14 +266,37 @@
     return YES;
 }
 
-// ユーザインタフェースの回転を始める前にこの処理が呼ばれる。 ＜＜OS 3.0以降の推奨メソッド＞＞
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration
-{
-	mLbMessage.hidden = YES;
+//// ユーザインタフェースの回転を始める前にこの処理が呼ばれる。 ＜＜OS 3.0以降の推奨メソッド＞＞
+//- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration
+//{
+//	mLbMessage.hidden = YES;
+//}
+//
+//// ユーザインタフェースが回転した後に呼ばれる
+//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+//{
+//	// URL表示用のラベル生成
+//	CGRect rc = self.view.frame;  // この時点では、ToolBar領域が除外されている
+//	rc.size.height = 14;
+//	rc.origin.y = 0;  //self.view.frame.size.height - rc.size.height;
+//	mLbMessage.frame = rc;
+//	mLbMessage.hidden = NO;
+//}
+
+//iOS8
+- (void)viewWillTransitionToSize:(CGSize)size
+	   withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+//	if (size.width <= size.height) {
+//		// 画面回転後、縦向きになった
+//		
+//	} else {
+//		// 画面回転後、横向きになった
+//		
+//	}
+    [self didRotate];
 }
 
-// ユーザインタフェースが回転した後に呼ばれる
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+- (void)didRotate
 {
 	// URL表示用のラベル生成
 	CGRect rc = self.view.frame;  // この時点では、ToolBar領域が除外されている
@@ -280,18 +304,6 @@
 	rc.origin.y = 0;  //self.view.frame.size.height - rc.size.height;
 	mLbMessage.frame = rc;
 	mLbMessage.hidden = NO;
-}
-
-//iOS8
-- (void)viewWillTransitionToSize:(CGSize)size
-	   withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-	if (size.width <= size.height) {
-		// 画面回転後、縦向きになった
-		
-	} else {
-		// 画面回転後、横向きになった
-		
-	}
 }
 
 // ビューが非表示にされる前や解放される前に呼ばれる

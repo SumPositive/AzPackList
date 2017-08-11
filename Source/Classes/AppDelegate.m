@@ -109,20 +109,8 @@
 	}
 	[kvs synchronize]; // 最新同期
 	
-	__OptShowAd = [kvs boolForKey:KV_OptAdvertising];
-//	__Paid_SwitchAd = [kvs boolForKey:STORE_PRODUCTID_AdOff];
-//	NSLog(@"__Paid_SwitchAd=%d", __Paid_SwitchAd);
-//	
-//	if (__Paid_SwitchAd==NO && [userDefaults boolForKey:UD_OptCrypt]) {
-//		[userDefaults setBool:NO forKey:UD_Crypt_Switch];
-//	}
-//	[userDefaults setBool:__Paid_SwitchAd forKey:UD_OptCrypt];
+    __OptShowAd = NO; //2.1.3//基本無料ADなし　　 //[kvs boolForKey:KV_OptAdvertising];
 	
-#ifdef AzMAKE_SPLASHFACE
-//	__OptShowAd = NO;
-#endif
-	//__OptShowAd = NO;	//AppStore用 画面撮影のため
-
 //    if (__OptShowAd) {
 //        [FIRApp configure];
 //    }
@@ -135,13 +123,6 @@
 	}
 
 	//-------------------------------------------------デバイス、ＯＳ確認
-//	if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0"]==NSOrderedAscending) { // ＜ "5.0"
-//		// iOS5.0より前
-//		azAlertBox(@"! STOP !", @"Need more iOS 5.0", nil);
-//		GA_TRACK_EVENT_ERROR(@"STOP < iOS 5.0",0);
-//		exit(0);
-//	}
-	//__IsPad = [[[UIDevice currentDevice] model] hasPrefix:@"iPad"];	// iPad
 	__IsPad = iS_iPAD;
 //	NSLog(@"__IsPad=%d,  app_is_Ad_=%d,  app_pid_AdOff_=%d", __IsPad, __OptShowAd, __Paid_SwitchAd);
 	
@@ -224,10 +205,11 @@
 		NSLog(@"File loaded into [url path]=%@", [url path]);
 		if ([[[url pathExtension] lowercaseString] isEqualToString:GD_EXTENSION] || [[[url pathExtension] lowercaseString] isEqualToString:@"packlist"])
 		{	// ファイル・タッチ対応
-			UIAlertView *alert = [[UIAlertView alloc] init];
-			alert.title = NSLocalizedString(@"Please Wait",nil);
-			[alert show];
-			
+//			UIAlertView *alert = [[UIAlertView alloc] init];
+//			alert.title = NSLocalizedString(@"Please Wait",nil);
+//			[alert show];
+            [SVProgressHUD showWithStatus:NSLocalizedString(@"Please Wait",nil)];
+            
 			dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 			dispatch_async(queue, ^{
 				// 一時CSVファイルから取り込んで追加する
@@ -235,23 +217,36 @@
 				NSString *zErr = [fcsv zLoadURL:url];
 				
 				dispatch_async(dispatch_get_main_queue(), ^{
-					[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
+//					[alert dismissWithClickedButtonIndex:0 animated:NO]; // 閉じる
+                    [SVProgressHUD dismiss];
 					if (zErr==nil) {
-						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download successful",nil)  //ダウンロード成功
-														   message:NSLocalizedString(@"Added Plan",nil)  //プランを追加しました
-														  delegate:nil 
-												 cancelButtonTitle:nil 
-												 otherButtonTitles:@"OK", nil];
-						[alert show];
+//						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download successful",nil)  //ダウンロード成功
+//														   message:NSLocalizedString(@"Added Plan",nil)  //プランを追加しました
+//														  delegate:nil 
+//												 cancelButtonTitle:nil 
+//												 otherButtonTitles:@"OK", nil];
+//						[alert show];
+                        [AZAlert target:nil
+                                  title:NSLocalizedString(@"Download successful",nil)  //ダウンロード成功
+                                message:NSLocalizedString(@"Added Plan",nil)  //プランを追加しました
+                                b1title:@"OK"
+                                b1style:UIAlertActionStyleDefault
+                               b1action:nil];
 					} 
 					else {
 						GA_TRACK_EVENT_ERROR(zErr,0);
-						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Fail",nil)  //ダウンロード失敗
-														   message: zErr
-														  delegate:nil 
-												 cancelButtonTitle:nil 
-												 otherButtonTitles:@"OK", nil];
-						[alert show];
+//						UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Download Fail",nil)  //ダウンロード失敗
+//														   message: zErr
+//														  delegate:nil 
+//												 cancelButtonTitle:nil 
+//												 otherButtonTitles:@"OK", nil];
+//						[alert show];
+                        [AZAlert target:nil
+                                  title:NSLocalizedString(@"Download Fail",nil)  //ダウンロード失敗
+                                message:zErr
+                                b1title:@"OK"
+                                b1style:UIAlertActionStyleDefault
+                               b1action:nil];
 					}
 					// 再表示
 					if (__IsPad) {
@@ -269,12 +264,18 @@
 			return YES;
 		}
 		else {
-			UIAlertView *alv = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"AlertExtension", nil)
-														   message:NSLocalizedString(@"AlertExtensionMsg", nil)
-														  delegate:nil
-												 cancelButtonTitle:nil
-												 otherButtonTitles:NSLocalizedString(@"Roger", nil), nil];
-			[alv	show];
+//			UIAlertView *alv = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"AlertExtension", nil)
+//														   message:NSLocalizedString(@"AlertExtensionMsg", nil)
+//														  delegate:nil
+//												 cancelButtonTitle:nil
+//												 otherButtonTitles:NSLocalizedString(@"Roger", nil), nil];
+//			[alv	show];
+            [AZAlert target:nil
+                      title:NSLocalizedString(@"AlertExtension", nil)
+                    message:NSLocalizedString(@"AlertExtensionMsg", nil)
+                    b1title:NSLocalizedString(@"Roger", nil)
+                    b1style:UIAlertActionStyleDefault
+                   b1action:nil];
 		}
 	}
 //	else if ([[DBSession sharedSession] handleOpenURL:url]) { //OAuth結果：urlに認証キーが含まれる

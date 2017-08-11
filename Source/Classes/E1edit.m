@@ -16,24 +16,23 @@
 #import "GooDocsTVC.h"
 
 
-@interface E1edit (PrivateMethods)
+@interface E1edit () <UITextFieldDelegate, UITextViewDelegate>
+{
+    UITextField		*MtfName;  // self.viewがOwner
+    UITextView		*MtvNote;  // self.viewがOwner
+    AppDelegate		*appDelegate_;
+}
 - (void)cancel:(id)sender;
 - (void)save:(id)sender;
 - (void)viewDesign;
-- (void)tvNoteNarrow; // Noteフィールドをキーボードに隠れなくする
+//- (void)tvNoteNarrow; // Noteフィールドをキーボードに隠れなくする
 @end
 
 @implementation E1edit   // ViewController
-{
-@private
-	UITextField		*MtfName;  // self.viewがOwner
-	UITextView		*MtvNote;  // self.viewがOwner
-	AppDelegate		*appDelegate_;
-}
 @synthesize e1target = e1target_;
 @synthesize addRow = addRow_;
 //@synthesize delegate = delegate_;	<<<<<Notificationにしたため
-@synthesize selfPopover = selfPopover_;
+//@synthesize selfPopover = selfPopover_;
 
 
 #pragma mark - iCloud
@@ -232,7 +231,7 @@
 - (void)dealloc 
 {
 	//[selfPopover_ release], 
-	selfPopover_ = nil;
+	//selfPopover_ = nil;
 	// @property (retain)
 	//[e1target_ release];
     //[super dealloc];
@@ -282,9 +281,9 @@
 	if (appDelegate_.ppIsPad) {
 		//Cancelでも「新しい・・」を削除しない。Rootに戻ったときに配下クリーン処理している。
 		//[(PadNaviCon*)self.navigationController dismissPopoverCancel];  // PadNaviCon拡張メソッド
-		if (selfPopover_) {
-			[selfPopover_ dismissPopoverAnimated:YES];
-		}
+//		if (selfPopover_) {
+//			[selfPopover_ dismissPopoverAnimated:YES];
+//		}
 	} else {
 		/*	Cancelでも「新しい・・」を削除しない。Rootに戻ったときに配下クリーン処理している。
 		 if (e1target_ && 0 <= addRow_) 
@@ -322,15 +321,15 @@
 	}
 	
 	if (appDelegate_.ppIsPad) {
-		if (selfPopover_) {
-			/*if ([delegate_ respondsToSelector:@selector(refreshE1view)]) {	// メソッドの存在を確認する
-				[delegate_ refreshE1view];// 親の再描画を呼び出す
-			}*/
-			// 再表示 通知発信
-			[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
-																object:self  userInfo:nil];
-			[selfPopover_ dismissPopoverAnimated:YES];
-		}
+//		if (selfPopover_) {
+//			/*if ([delegate_ respondsToSelector:@selector(refreshE1view)]) {	// メソッドの存在を確認する
+//				[delegate_ refreshE1view];// 親の再描画を呼び出す
+//			}*/
+//			// 再表示 通知発信
+//			[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
+//																object:self  userInfo:nil];
+//			[selfPopover_ dismissPopoverAnimated:YES];
+//		}
 	} else {
 		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
 	}
