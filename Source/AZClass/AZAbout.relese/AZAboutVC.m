@@ -254,6 +254,8 @@
 					  [[NSBundle mainBundle] pathForResource:@"AZAbout_Agree" ofType:@"txt"]
 											   encoding:NSUTF8StringEncoding
 												  error:&error];
+    ibTvAgree.contentOffset = CGPointZero;
+    
 	if (error) {
 		NSLog(@"ibTvAgree.text: stringWithContentsOfFile: ERROR: %@", [error localizedDescription]);
 		GA_TRACK_EVENT_ERROR([error localizedDescription],0);

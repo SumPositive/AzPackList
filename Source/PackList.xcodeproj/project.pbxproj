@@ -239,8 +239,8 @@
 		443258151F23002700175312 /* UIDevice-Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 44835ABD156BDC1E00A83167 /* UIDevice-Hardware.h */; };
 		443258161F23002700175312 /* MocFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4416337515F25D1B009CD324 /* MocFunctions.h */; };
 		443258171F23002700175312 /* AZStoreCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 44965B371EFFF17800350EDA /* AZStoreCell.h */; };
-		443258CA1F23097800175312 /* InfoDev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* InfoDev.plist */; };
-		443258CB1F23097D00175312 /* InfoS.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4432581E1F23002700175312 /* InfoS.plist */; };
+		443258CA1F23097800175312 /* PackListBeta-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* PackListBeta-Info.plist */; };
+		443258CB1F23097D00175312 /* PackList-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4432581E1F23002700175312 /* PackList-Info.plist */; };
 		443F26021F28E7C000386907 /* Icon57.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C1134DB1D300342648 /* Icon57.png */; };
 		443F26031F28E7C000386907 /* Icon57@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C0134DB1D300342648 /* Icon57@2x.png */; };
 		443F26041F28E7C000386907 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44965BA01F03E69900350EDA /* Launch Screen.storyboard */; };
@@ -297,7 +297,7 @@
 		443F26371F28E7C000386907 /* Icon-DrumPush@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C341131A889000A97E1A /* Icon-DrumPush@2x.png */; };
 		443F26381F28E7C000386907 /* Icon44-Calc.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CA131D5A4900FA1C3C /* Icon44-Calc.png */; };
 		443F26391F28E7C000386907 /* AZDialTile.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2C1EFFF17700350EDA /* AZDialTile.png */; };
-		443F263A1F28E7C000386907 /* InfoDev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* InfoDev.plist */; };
+		443F263A1F28E7C000386907 /* PackListBeta-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* PackListBeta-Info.plist */; };
 		443F263B1F28E7C000386907 /* Icon44-Calc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CB131D5A4900FA1C3C /* Icon44-Calc@2x.png */; };
 		443F263C1F28E7C000386907 /* Icon32-MailNew@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CD141383730005F706 /* Icon32-MailNew@2x.png */; };
 		443F263D1F28E7C000386907 /* Icon32-MailNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CE141383730005F706 /* Icon32-MailNew.png */; };
@@ -512,7 +512,7 @@
 		443F271B1F28E83100386907 /* Icon-DrumPush@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C341131A889000A97E1A /* Icon-DrumPush@2x.png */; };
 		443F271C1F28E83100386907 /* Icon44-Calc.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CA131D5A4900FA1C3C /* Icon44-Calc.png */; };
 		443F271D1F28E83100386907 /* AZDialTile.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2C1EFFF17700350EDA /* AZDialTile.png */; };
-		443F271E1F28E83100386907 /* InfoDev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* InfoDev.plist */; };
+		443F271E1F28E83100386907 /* PackListBeta-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* PackListBeta-Info.plist */; };
 		443F271F1F28E83100386907 /* Icon44-Calc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CB131D5A4900FA1C3C /* Icon44-Calc@2x.png */; };
 		443F27201F28E83100386907 /* Icon32-MailNew@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CD141383730005F706 /* Icon32-MailNew@2x.png */; };
 		443F27211F28E83100386907 /* Icon32-MailNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CE141383730005F706 /* Icon32-MailNew.png */; };
@@ -727,7 +727,7 @@
 		443F27FF1F28E85D00386907 /* Icon-DrumPush@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C341131A889000A97E1A /* Icon-DrumPush@2x.png */; };
 		443F28001F28E85D00386907 /* Icon44-Calc.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CA131D5A4900FA1C3C /* Icon44-Calc.png */; };
 		443F28011F28E85D00386907 /* AZDialTile.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2C1EFFF17700350EDA /* AZDialTile.png */; };
-		443F28021F28E85D00386907 /* InfoDev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* InfoDev.plist */; };
+		443F28021F28E85D00386907 /* PackListBeta-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* PackListBeta-Info.plist */; };
 		443F28031F28E85D00386907 /* Icon44-Calc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CB131D5A4900FA1C3C /* Icon44-Calc@2x.png */; };
 		443F28041F28E85D00386907 /* Icon32-MailNew@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CD141383730005F706 /* Icon32-MailNew@2x.png */; };
 		443F28051F28E85D00386907 /* Icon32-MailNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CE141383730005F706 /* Icon32-MailNew.png */; };
@@ -942,7 +942,7 @@
 		443F28E31F28E88500386907 /* Icon-DrumPush@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4453C341131A889000A97E1A /* Icon-DrumPush@2x.png */; };
 		443F28E41F28E88500386907 /* Icon44-Calc.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CA131D5A4900FA1C3C /* Icon44-Calc.png */; };
 		443F28E51F28E88500386907 /* AZDialTile.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B2C1EFFF17700350EDA /* AZDialTile.png */; };
-		443F28E61F28E88500386907 /* InfoDev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* InfoDev.plist */; };
+		443F28E61F28E88500386907 /* PackListBeta-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* PackListBeta-Info.plist */; };
 		443F28E71F28E88500386907 /* Icon44-Calc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445404CB131D5A4900FA1C3C /* Icon44-Calc@2x.png */; };
 		443F28E81F28E88500386907 /* Icon32-MailNew@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CD141383730005F706 /* Icon32-MailNew@2x.png */; };
 		443F28E91F28E88500386907 /* Icon32-MailNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998CE141383730005F706 /* Icon32-MailNew.png */; };
@@ -1107,8 +1107,6 @@
 		443F299A1F28EBEC00386907 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 443F29941F28EBCB00386907 /* InfoPlist.strings */; };
 		443F299B1F28EBEC00386907 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 443F29941F28EBCB00386907 /* InfoPlist.strings */; };
 		443F299C1F28EBED00386907 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 443F29941F28EBCB00386907 /* InfoPlist.strings */; };
-		443F299F1F2A2D2500386907 /* AZAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = 443F299D1F2A2D2500386907 /* AZAlert.h */; };
-		443F29A01F2A2D2500386907 /* AZAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = 443F299D1F2A2D2500386907 /* AZAlert.h */; };
 		443F29A11F2A2D2500386907 /* AZAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 443F299E1F2A2D2500386907 /* AZAlert.m */; };
 		443F29A21F2A2D2500386907 /* AZAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 443F299E1F2A2D2500386907 /* AZAlert.m */; };
 		445602E51F053EA900A83A50 /* Mapping4-5.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 445602E41F053EA900A83A50 /* Mapping4-5.xcmappingmodel */; };
@@ -1121,6 +1119,7 @@
 		445998DE141383730005F706 /* Icon32-CircleCheckClear.png in Resources */ = {isa = PBXBuildFile; fileRef = 445998D0141383730005F706 /* Icon32-CircleCheckClear.png */; };
 		44835AD0156BDC1E00A83167 /* UIDevice-Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 44835ABD156BDC1E00A83167 /* UIDevice-Hardware.h */; };
 		44835AD1156BDC1E00A83167 /* UIDevice-Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 44835ABE156BDC1E00A83167 /* UIDevice-Hardware.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		449072B71F3D414700EF9117 /* AZAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 443F299E1F2A2D2500386907 /* AZAlert.m */; };
 		44965B501EFFF17800350EDA /* AZAbout-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B101EFFF17700350EDA /* AZAbout-32.png */; };
 		44965B511EFFF17800350EDA /* AZAbout-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B111EFFF17700350EDA /* AZAbout-32@2x.png */; };
 		44965B521EFFF17800350EDA /* AZAbout-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B121EFFF17700350EDA /* AZAbout-iPad.xib */; };
@@ -1354,16 +1353,15 @@
 		44227A221F121801003D9C8B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/AZLocalizable.strings; sourceTree = "<group>"; };
 		4422F3C8135F215C0067EBEF /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		4432581D1F23002700175312 /* PackList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PackList.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4432581E1F23002700175312 /* InfoS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = InfoS.plist; path = /Users/masa/Code2017/PackList/Source/InfoS.plist; sourceTree = "<absolute>"; };
-		443F25FE1F28E10600386907 /* PackListBeta copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PackListBeta copy-Info.plist"; path = "/Users/masa/Code2017/PackList/Source/PackListBeta copy-Info.plist"; sourceTree = "<absolute>"; };
+		4432581E1F23002700175312 /* PackList-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PackList-Info.plist"; path = "/Users/masa/Code2017/PackList/Source/PackList-Info.plist"; sourceTree = "<absolute>"; };
 		443F26E11F28E7C100386907 /* PackListTel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PackListTel.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		443F26E21F28E7C100386907 /* PackListBeta copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PackListBeta copy2-Info.plist"; path = "/Users/masa/Code2017/PackList/Source/PackListBeta copy2-Info.plist"; sourceTree = "<absolute>"; };
+		443F26E21F28E7C100386907 /* PackListTel-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PackListTel-Info.plist"; path = "/Users/masa/Code2017/PackList/Source/PackListTel-Info.plist"; sourceTree = "<absolute>"; };
 		443F27C51F28E83100386907 /* PackListTelFree.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PackListTelFree.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		443F27C61F28E83100386907 /* PackListTel copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PackListTel copy-Info.plist"; path = "/Users/masa/Code2017/PackList/Source/PackListTel copy-Info.plist"; sourceTree = "<absolute>"; };
+		443F27C61F28E83100386907 /* PackListTelFree-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PackListTelFree-Info.plist"; path = "/Users/masa/Code2017/PackList/Source/PackListTelFree-Info.plist"; sourceTree = "<absolute>"; };
 		443F28A91F28E85D00386907 /* PackListPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PackListPad.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		443F28AA1F28E85E00386907 /* PackListBeta copy3-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PackListBeta copy3-Info.plist"; path = "/Users/masa/Code2017/PackList/Source/PackListBeta copy3-Info.plist"; sourceTree = "<absolute>"; };
+		443F28AA1F28E85E00386907 /* PackListPad-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PackListPad-Info.plist"; path = "/Users/masa/Code2017/PackList/Source/PackListPad-Info.plist"; sourceTree = "<absolute>"; };
 		443F298D1F28E88500386907 /* PackListPadFree.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PackListPadFree.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		443F298E1F28E88500386907 /* PackListPad copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PackListPad copy-Info.plist"; path = "/Users/masa/Code2017/PackList/Source/PackListPad copy-Info.plist"; sourceTree = "<absolute>"; };
+		443F298E1F28E88500386907 /* PackListPadFree-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PackListPadFree-Info.plist"; path = "/Users/masa/Code2017/PackList/Source/PackListPadFree-Info.plist"; sourceTree = "<absolute>"; };
 		443F29951F28EBCB00386907 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		443F29971F28EBD700386907 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		443F299D1F2A2D2500386907 /* AZAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZAlert.h; sourceTree = "<group>"; };
@@ -1504,7 +1502,7 @@
 		44965B9D1F02962500350EDA /* ja */ = {isa = PBXFileReference; lastKnownFileType = text; name = ja; path = ja.lproj/AZAbout_Agree.txt; sourceTree = "<group>"; };
 		44965B9F1F02963600350EDA /* en */ = {isa = PBXFileReference; lastKnownFileType = text; name = en; path = en.lproj/AZAbout_Agree.txt; sourceTree = "<group>"; };
 		44965BA01F03E69900350EDA /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
-		4499D7C9134D9D8900342648 /* InfoDev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InfoDev.plist; sourceTree = "<group>"; };
+		4499D7C9134D9D8900342648 /* PackListBeta-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "PackListBeta-Info.plist"; sourceTree = "<group>"; };
 		4499D9BC134DA60700342648 /* PackList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PackList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4499D9C0134DB1D300342648 /* Icon57@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon57@2x.png"; sourceTree = "<group>"; };
 		4499D9C1134DB1D300342648 /* Icon57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon57.png; sourceTree = "<group>"; };
@@ -1773,11 +1771,6 @@
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				B51205D29DB60C081CD3FB91 /* Pods */,
-				443F25FE1F28E10600386907 /* PackListBeta copy-Info.plist */,
-				443F26E21F28E7C100386907 /* PackListBeta copy2-Info.plist */,
-				443F27C61F28E83100386907 /* PackListTel copy-Info.plist */,
-				443F28AA1F28E85E00386907 /* PackListBeta copy3-Info.plist */,
-				443F298E1F28E88500386907 /* PackListPad copy-Info.plist */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -1798,9 +1791,13 @@
 				445602EA1F053EF300A83A50 /* Mapping2-3.xcmappingmodel */,
 				445998C41413757E0005F706 /* Mapping3-4.xcmappingmodel */,
 				445602E41F053EA900A83A50 /* Mapping4-5.xcmappingmodel */,
-				4499D7C9134D9D8900342648 /* InfoDev.plist */,
-				4432581E1F23002700175312 /* InfoS.plist */,
 				4486955F10F5ABCC00AD02D8 /* PackList_Prefix.pch */,
+				4432581E1F23002700175312 /* PackList-Info.plist */,
+				4499D7C9134D9D8900342648 /* PackListBeta-Info.plist */,
+				443F26E21F28E7C100386907 /* PackListTel-Info.plist */,
+				443F27C61F28E83100386907 /* PackListTelFree-Info.plist */,
+				443F28AA1F28E85E00386907 /* PackListPad-Info.plist */,
+				443F298E1F28E88500386907 /* PackListPadFree-Info.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -2178,7 +2175,6 @@
 			files = (
 				443257FF1F23002700175312 /* AZAboutVC.h in Headers */,
 				443258001F23002700175312 /* PackList_Prefix.pch in Headers */,
-				443F299F1F2A2D2500386907 /* AZAlert.h in Headers */,
 				443258011F23002700175312 /* SpListTVC.h in Headers */,
 				443258021F23002700175312 /* AZStoreTVC.h in Headers */,
 				443258031F23002700175312 /* AZClass.h in Headers */,
@@ -2339,7 +2335,6 @@
 			files = (
 				44965B541EFFF17800350EDA /* AZAboutVC.h in Headers */,
 				4499D842134DA60600342648 /* PackList_Prefix.pch in Headers */,
-				443F29A01F2A2D2500386907 /* AZAlert.h in Headers */,
 				4499D844134DA60600342648 /* SpListTVC.h in Headers */,
 				44965B731EFFF17800350EDA /* AZStoreTVC.h in Headers */,
 				44965B571EFFF17800350EDA /* AZClass.h in Headers */,
@@ -2503,6 +2498,13 @@
 			attributes = {
 				LastUpgradeCheck = 0830;
 				TargetAttributes = {
+					4432573C1F23002700175312 = {
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
+					};
 					443F26E31F28E83100386907 = {
 						ProvisioningStyle = Manual;
 					};
@@ -2513,7 +2515,7 @@
 								enabled = 1;
 							};
 							com.apple.iCloud = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -2643,7 +2645,7 @@
 				443257981F23002700175312 /* Icon32-Rakuten.png in Resources */,
 				443257991F23002700175312 /* Icon32-Amazon.png in Resources */,
 				4432579A1F23002700175312 /* Icon32-Amazon@2x.png in Resources */,
-				443258CB1F23097D00175312 /* InfoS.plist in Resources */,
+				443258CB1F23097D00175312 /* PackList-Info.plist in Resources */,
 				4432579B1F23002700175312 /* Icon72.png in Resources */,
 				4432579C1F23002700175312 /* Icon72@2x.png in Resources */,
 				4432579D1F23002700175312 /* Tx-Back@2x.png in Resources */,
@@ -2753,7 +2755,7 @@
 				443F26371F28E7C000386907 /* Icon-DrumPush@2x.png in Resources */,
 				443F26381F28E7C000386907 /* Icon44-Calc.png in Resources */,
 				443F26391F28E7C000386907 /* AZDialTile.png in Resources */,
-				443F263A1F28E7C000386907 /* InfoDev.plist in Resources */,
+				443F263A1F28E7C000386907 /* PackListBeta-Info.plist in Resources */,
 				443F263B1F28E7C000386907 /* Icon44-Calc@2x.png in Resources */,
 				443F263C1F28E7C000386907 /* Icon32-MailNew@2x.png in Resources */,
 				443F263D1F28E7C000386907 /* Icon32-MailNew.png in Resources */,
@@ -2899,7 +2901,7 @@
 				443F271B1F28E83100386907 /* Icon-DrumPush@2x.png in Resources */,
 				443F271C1F28E83100386907 /* Icon44-Calc.png in Resources */,
 				443F271D1F28E83100386907 /* AZDialTile.png in Resources */,
-				443F271E1F28E83100386907 /* InfoDev.plist in Resources */,
+				443F271E1F28E83100386907 /* PackListBeta-Info.plist in Resources */,
 				443F271F1F28E83100386907 /* Icon44-Calc@2x.png in Resources */,
 				443F27201F28E83100386907 /* Icon32-MailNew@2x.png in Resources */,
 				443F27211F28E83100386907 /* Icon32-MailNew.png in Resources */,
@@ -3045,7 +3047,7 @@
 				443F27FF1F28E85D00386907 /* Icon-DrumPush@2x.png in Resources */,
 				443F28001F28E85D00386907 /* Icon44-Calc.png in Resources */,
 				443F28011F28E85D00386907 /* AZDialTile.png in Resources */,
-				443F28021F28E85D00386907 /* InfoDev.plist in Resources */,
+				443F28021F28E85D00386907 /* PackListBeta-Info.plist in Resources */,
 				443F28031F28E85D00386907 /* Icon44-Calc@2x.png in Resources */,
 				443F28041F28E85D00386907 /* Icon32-MailNew@2x.png in Resources */,
 				443F28051F28E85D00386907 /* Icon32-MailNew.png in Resources */,
@@ -3191,7 +3193,7 @@
 				443F28E31F28E88500386907 /* Icon-DrumPush@2x.png in Resources */,
 				443F28E41F28E88500386907 /* Icon44-Calc.png in Resources */,
 				443F28E51F28E88500386907 /* AZDialTile.png in Resources */,
-				443F28E61F28E88500386907 /* InfoDev.plist in Resources */,
+				443F28E61F28E88500386907 /* PackListBeta-Info.plist in Resources */,
 				443F28E71F28E88500386907 /* Icon44-Calc@2x.png in Resources */,
 				443F28E81F28E88500386907 /* Icon32-MailNew@2x.png in Resources */,
 				443F28E91F28E88500386907 /* Icon32-MailNew.png in Resources */,
@@ -3337,7 +3339,7 @@
 				4499D7FC134DA60600342648 /* Icon-DrumPush@2x.png in Resources */,
 				4499D7FD134DA60600342648 /* Icon44-Calc.png in Resources */,
 				44965B661EFFF17800350EDA /* AZDialTile.png in Resources */,
-				443258CA1F23097800175312 /* InfoDev.plist in Resources */,
+				443258CA1F23097800175312 /* PackListBeta-Info.plist in Resources */,
 				4499D7FE134DA60600342648 /* Icon44-Calc@2x.png in Resources */,
 				445998D2141383730005F706 /* Icon32-MailNew@2x.png in Resources */,
 				445998D6141383730005F706 /* Icon32-MailNew.png in Resources */,
@@ -3755,6 +3757,7 @@
 				443F26901F28E7C000386907 /* AppDelegate.m in Sources */,
 				443F26911F28E7C000386907 /* SFHFKeychainUtils.m in Sources */,
 				443F26921F28E7C000386907 /* Mapping4-5.xcmappingmodel in Sources */,
+				449072B71F3D414700EF9117 /* AZAlert.m in Sources */,
 				443F26931F28E7C000386907 /* E1viewController.m in Sources */,
 				443F26941F28E7C000386907 /* AZWebView.m in Sources */,
 				443F26951F28E7C000386907 /* Mapping2-3.xcmappingmodel in Sources */,
@@ -4036,7 +4039,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = InfoS.plist;
+				INFOPLIST_FILE = "PackList-Info.plist";
 				INFOPLIST_PREPROCESSOR_DEFINITIONS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4073,7 +4076,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = InfoS.plist;
+				INFOPLIST_FILE = "PackList-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -4113,7 +4116,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "PackListBeta copy2-Info.plist";
+				INFOPLIST_FILE = "PackListTel-Info.plist";
 				INFOPLIST_PREPROCESSOR_DEFINITIONS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4150,7 +4153,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "PackListBeta copy2-Info.plist";
+				INFOPLIST_FILE = "PackListTel-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -4190,7 +4193,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "PackListTel copy-Info.plist";
+				INFOPLIST_FILE = "PackListTelFree-Info.plist";
 				INFOPLIST_PREPROCESSOR_DEFINITIONS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4228,7 +4231,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "PackListTel copy-Info.plist";
+				INFOPLIST_FILE = "PackListTelFree-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -4269,7 +4272,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "PackListBeta copy3-Info.plist";
+				INFOPLIST_FILE = "PackListPad-Info.plist";
 				INFOPLIST_PREPROCESSOR_DEFINITIONS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4306,7 +4309,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "PackListBeta copy3-Info.plist";
+				INFOPLIST_FILE = "PackListPad-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -4346,7 +4349,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "PackListPad copy-Info.plist";
+				INFOPLIST_FILE = "PackListPadFree-Info.plist";
 				INFOPLIST_PREPROCESSOR_DEFINITIONS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4383,7 +4386,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "PackListPad copy-Info.plist";
+				INFOPLIST_FILE = "PackListPadFree-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -4423,7 +4426,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = InfoDev.plist;
+				INFOPLIST_FILE = "PackListBeta-Info.plist";
 				INFOPLIST_PREPROCESSOR_DEFINITIONS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4460,7 +4463,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = InfoDev.plist;
+				INFOPLIST_FILE = "PackListBeta-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
