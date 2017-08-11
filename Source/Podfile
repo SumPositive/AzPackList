@@ -12,15 +12,14 @@ def install_pods
   #pod 'GoogleAnalytics-iOS-SDK',  '~> 3.0'
   #pod 'GoogleMobileAds'
   
-  pod 'Firebase/Core'
-  pod 'Firebase/AdMob'
+  #pod 'Firebase/Core'
+  #pod 'Firebase/AdMob'
   
   #pod 'CocoaHTTPServer'
   #pod 'GTMHTTPFetcher'
   #pod 'SFHFKeychainUtils'
   
-  pod 'CargoBay'
-
+  #pod 'CargoBay'
 
 end
 

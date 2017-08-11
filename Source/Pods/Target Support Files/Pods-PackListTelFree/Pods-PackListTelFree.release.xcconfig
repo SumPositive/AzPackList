@@ -1,9 +1,7 @@
-FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/FirebaseAnalytics/Frameworks" "${PODS_ROOT}/FirebaseCore/Frameworks" "${PODS_ROOT}/FirebaseInstanceID/Frameworks" "${PODS_ROOT}/Google-Mobile-Ads-SDK/Frameworks/frameworks"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) ${PODS_ROOT}/Firebase/Core/Sources $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AFNetworking" "${PODS_ROOT}/Headers/Public/CargoBay" "${PODS_ROOT}/Headers/Public/Firebase" "${PODS_ROOT}/Headers/Public/FirebaseAnalytics" "${PODS_ROOT}/Headers/Public/FirebaseCore" "${PODS_ROOT}/Headers/Public/FirebaseInstanceID" "${PODS_ROOT}/Headers/Public/Google-Mobile-Ads-SDK" "${PODS_ROOT}/Headers/Public/GoogleToolboxForMac"
-LIBRARY_SEARCH_PATHS = $(inherited) "$PODS_CONFIGURATION_BUILD_DIR/AFNetworking" "$PODS_CONFIGURATION_BUILD_DIR/CargoBay" "$PODS_CONFIGURATION_BUILD_DIR/GoogleToolboxForMac"
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/AFNetworking" -isystem "${PODS_ROOT}/Headers/Public/CargoBay" -isystem "${PODS_ROOT}/Headers/Public/Firebase" -isystem "${PODS_ROOT}/Headers/Public/FirebaseAnalytics" -isystem "${PODS_ROOT}/Headers/Public/FirebaseCore" -isystem "${PODS_ROOT}/Headers/Public/FirebaseInstanceID" -isystem "${PODS_ROOT}/Headers/Public/Google-Mobile-Ads-SDK" -isystem "${PODS_ROOT}/Headers/Public/GoogleToolboxForMac"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"AFNetworking" -l"CargoBay" -l"GoogleToolboxForMac" -l"c++" -l"sqlite3" -l"z" -framework "AVFoundation" -framework "AudioToolbox" -framework "CoreGraphics" -framework "CoreMedia" -framework "CoreMotion" -framework "CoreTelephony" -framework "CoreVideo" -framework "FirebaseAnalytics" -framework "FirebaseCore" -framework "FirebaseInstanceID" -framework "GLKit" -framework "GoogleMobileAds" -framework "MediaPlayer" -framework "MessageUI" -framework "MobileCoreServices" -framework "OpenGLES" -framework "Security" -framework "StoreKit" -framework "SystemConfiguration" -weak_framework "AdSupport" -weak_framework "JavaScriptCore" -weak_framework "SafariServices" -weak_framework "WebKit"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public"
+OTHER_LDFLAGS = $(inherited) -ObjC
 PODS_BUILD_DIR = $BUILD_DIR
 PODS_CONFIGURATION_BUILD_DIR = $PODS_BUILD_DIR/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_PODFILE_DIR_PATH = ${SRCROOT}/.

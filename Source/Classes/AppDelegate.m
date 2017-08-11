@@ -14,7 +14,7 @@
 #import "MocFunctions.h"
 #import "FileCsv.h"
 #import "E1viewController.h"
-#import <FirebaseCore/FirebaseCore.h>
+//#import <FirebaseCore/FirebaseCore.h>
 
 
 //iOS6以降、回転対応のためサブクラス化が必要になった。
