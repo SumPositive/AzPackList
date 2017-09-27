@@ -203,8 +203,6 @@
 		443258141F23002700175312 /* NSDataAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 44A7DB2C14DE6A7A00DB72E2 /* NSDataAddition.h */; };
 		443258151F23002700175312 /* UIDevice-Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 44835ABD156BDC1E00A83167 /* UIDevice-Hardware.h */; };
 		443258161F23002700175312 /* MocFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4416337515F25D1B009CD324 /* MocFunctions.h */; };
-		443258CA1F23097800175312 /* PackListBeta-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* PackListBeta-Info.plist */; };
-		443258CB1F23097D00175312 /* PackList-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4432581E1F23002700175312 /* PackList-Info.plist */; };
 		443F26021F28E7C000386907 /* Icon57.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C1134DB1D300342648 /* Icon57.png */; };
 		443F26031F28E7C000386907 /* Icon57@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4499D9C0134DB1D300342648 /* Icon57@2x.png */; };
 		443F26041F28E7C000386907 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44965BA01F03E69900350EDA /* Launch Screen.storyboard */; };
@@ -936,12 +934,14 @@
 		44835AD0156BDC1E00A83167 /* UIDevice-Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 44835ABD156BDC1E00A83167 /* UIDevice-Hardware.h */; };
 		44835AD1156BDC1E00A83167 /* UIDevice-Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 44835ABE156BDC1E00A83167 /* UIDevice-Hardware.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		449072B71F3D414700EF9117 /* AZAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 443F299E1F2A2D2500386907 /* AZAlert.m */; };
-		449072B91F3D98D800EF9117 /* PackListTel-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 443F26E21F28E7C100386907 /* PackListTel-Info.plist */; };
-		449072BA1F3D98DD00EF9117 /* PackListTelFree-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 443F27C61F28E83100386907 /* PackListTelFree-Info.plist */; };
-		449072BB1F3D98E000EF9117 /* PackListPad-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 443F28AA1F28E85E00386907 /* PackListPad-Info.plist */; };
-		449072BC1F3D98E400EF9117 /* PackListPadFree-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 443F298E1F28E88500386907 /* PackListPadFree-Info.plist */; };
 		449072BE1F3DE6BF00EF9117 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 449072BD1F3DE6BF00EF9117 /* Settings.bundle */; };
 		449072BF1F3DE6BF00EF9117 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 449072BD1F3DE6BF00EF9117 /* Settings.bundle */; };
+		4490A9E01F7BE0EB006A572D /* PackList-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4432581E1F23002700175312 /* PackList-Info.plist */; };
+		4490A9E11F7BE0F1006A572D /* PackListBeta-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4499D7C9134D9D8900342648 /* PackListBeta-Info.plist */; };
+		4490A9E21F7BE0F5006A572D /* PackListTel-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 443F26E21F28E7C100386907 /* PackListTel-Info.plist */; };
+		4490A9E31F7BE0F9006A572D /* PackListTelFree-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 443F27C61F28E83100386907 /* PackListTelFree-Info.plist */; };
+		4490A9E41F7BE0FE006A572D /* PackListPad-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 443F28AA1F28E85E00386907 /* PackListPad-Info.plist */; };
+		4490A9E51F7BE102006A572D /* PackListPadFree-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 443F298E1F28E88500386907 /* PackListPadFree-Info.plist */; };
 		44965B501EFFF17800350EDA /* AZAbout-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B101EFFF17700350EDA /* AZAbout-32.png */; };
 		44965B511EFFF17800350EDA /* AZAbout-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44965B111EFFF17700350EDA /* AZAbout-32@2x.png */; };
 		44965B521EFFF17800350EDA /* AZAbout-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44965B121EFFF17700350EDA /* AZAbout-iPad.xib */; };
@@ -2150,7 +2150,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0900;
 				TargetAttributes = {
 					4432573C1F23002700175312 = {
 						SystemCapabilities = {
@@ -2289,7 +2289,6 @@
 				443257981F23002700175312 /* Icon32-Rakuten.png in Resources */,
 				443257991F23002700175312 /* Icon32-Amazon.png in Resources */,
 				4432579A1F23002700175312 /* Icon32-Amazon@2x.png in Resources */,
-				443258CB1F23097D00175312 /* PackList-Info.plist in Resources */,
 				4432579B1F23002700175312 /* Icon72.png in Resources */,
 				4432579C1F23002700175312 /* Icon72@2x.png in Resources */,
 				4432579D1F23002700175312 /* Tx-Back@2x.png in Resources */,
@@ -2323,6 +2322,7 @@
 				443257BE1F23002700175312 /* Icon24-Camera.png in Resources */,
 				443257BF1F23002700175312 /* AZWeb-Forward-16@2x.png in Resources */,
 				443257C01F23002700175312 /* Icon24-Camera@2x.png in Resources */,
+				4490A9E01F7BE0EB006A572D /* PackList-Info.plist in Resources */,
 				443257C11F23002700175312 /* Icon64-DownloadNG@2x.png in Resources */,
 				443257C21F23002700175312 /* Icon64-DownloadNG.png in Resources */,
 				443257C31F23002700175312 /* Images.xcassets in Resources */,
@@ -2376,6 +2376,7 @@
 				443F262A1F28E7C000386907 /* AZDialStepperMinus.png in Resources */,
 				443F262C1F28E7C000386907 /* Icon32-CircleGray@2x.png in Resources */,
 				443F262D1F28E7C000386907 /* AZDialBack.png in Resources */,
+				4490A9E21F7BE0F5006A572D /* PackListTel-Info.plist in Resources */,
 				443F262E1F28E7C000386907 /* Icon44-ClipOn.png in Resources */,
 				443F262F1F28E7C000386907 /* AZWeb-Back-16@2x.png in Resources */,
 				443F26301F28E7C000386907 /* Icon44-ClipOn@2x.png in Resources */,
@@ -2420,7 +2421,6 @@
 				443F265F1F28E7C000386907 /* Icon72.png in Resources */,
 				443F26601F28E7C000386907 /* Icon72@2x.png in Resources */,
 				443F26611F28E7C000386907 /* Tx-Back@2x.png in Resources */,
-				449072B91F3D98D800EF9117 /* PackListTel-Info.plist in Resources */,
 				443F26621F28E7C000386907 /* Tx-Back.png in Resources */,
 				443F26641F28E7C000386907 /* AZWeb-Forward-16.png in Resources */,
 				443F26651F28E7C000386907 /* Icon32-Setting@2x.png in Resources */,
@@ -2490,6 +2490,7 @@
 				443F26FF1F28E83100386907 /* Icon32-BagBlue.png in Resources */,
 				443F27001F28E83100386907 /* Icon32-BagBlue@2x.png in Resources */,
 				443F27011F28E83100386907 /* Icon32-BagGray.png in Resources */,
+				4490A9E31F7BE0F9006A572D /* PackListTelFree-Info.plist in Resources */,
 				443F27021F28E83100386907 /* Icon32-BagGray@2x.png in Resources */,
 				443F27031F28E83100386907 /* Icon32-BagYellow.png in Resources */,
 				443F27041F28E83100386907 /* Icon32-BagYellow@2x.png in Resources */,
@@ -2546,7 +2547,6 @@
 				443F27411F28E83100386907 /* Icon32-Amazon.png in Resources */,
 				443F27421F28E83100386907 /* Icon32-Amazon@2x.png in Resources */,
 				443F27431F28E83100386907 /* Icon72.png in Resources */,
-				449072BA1F3D98DD00EF9117 /* PackListTelFree-Info.plist in Resources */,
 				443F27441F28E83100386907 /* Icon72@2x.png in Resources */,
 				443F27451F28E83100386907 /* Tx-Back@2x.png in Resources */,
 				443F27461F28E83100386907 /* Tx-Back.png in Resources */,
@@ -2596,7 +2596,6 @@
 				443F27CB1F28E85D00386907 /* Icon57@2x.png in Resources */,
 				443F27CC1F28E85D00386907 /* Launch Screen.storyboard in Resources */,
 				443F27CD1F28E85D00386907 /* Icon16-ItemGrayHide.png in Resources */,
-				449072BB1F3D98E000EF9117 /* PackListPad-Info.plist in Resources */,
 				443F27CE1F28E85D00386907 /* AZDialStepperMinusDown@2x.png in Resources */,
 				443F27CF1F28E85D00386907 /* AZDialStepperPlus.png in Resources */,
 				443F27D01F28E85D00386907 /* Icon16-ItemGrayHide@2x.png in Resources */,
@@ -2625,6 +2624,7 @@
 				443F27E91F28E85D00386907 /* Icon32-Circle.png in Resources */,
 				443F27EA1F28E85D00386907 /* Icon32-Circle@2x.png in Resources */,
 				443F27EB1F28E85D00386907 /* Icon32-CircleCheck.png in Resources */,
+				4490A9E41F7BE0FE006A572D /* PackListPad-Info.plist in Resources */,
 				443F27EC1F28E85D00386907 /* Icon32-CircleCheck@2x.png in Resources */,
 				443F27ED1F28E85D00386907 /* Icon32-CircleCheck2.png in Resources */,
 				443F27EE1F28E85D00386907 /* Icon32-CircleCheck2@2x.png in Resources */,
@@ -2745,7 +2745,6 @@
 				443F28C61F28E88500386907 /* Icon24-RedMinus@2x.png in Resources */,
 				443F28C71F28E88500386907 /* Icon32-BagBlue.png in Resources */,
 				443F28C81F28E88500386907 /* Icon32-BagBlue@2x.png in Resources */,
-				449072BC1F3D98E400EF9117 /* PackListPadFree-Info.plist in Resources */,
 				443F28C91F28E88500386907 /* Icon32-BagGray.png in Resources */,
 				443F28CA1F28E88500386907 /* Icon32-BagGray@2x.png in Resources */,
 				443F28CB1F28E88500386907 /* Icon32-BagYellow.png in Resources */,
@@ -2766,6 +2765,7 @@
 				443F28DC1F28E88500386907 /* Icon44-ClipOn@2x.png in Resources */,
 				443F28DD1F28E88500386907 /* Icon44-ClipOff@2x.png in Resources */,
 				443F28DE1F28E88500386907 /* Icon44-ClipOff.png in Resources */,
+				4490A9E51F7BE102006A572D /* PackListPadFree-Info.plist in Resources */,
 				443F28DF1F28E88500386907 /* Icon-Drum.png in Resources */,
 				443F28E01F28E88500386907 /* Icon-Drum@2x.png in Resources */,
 				443F28E11F28E88500386907 /* Icon-DrumPush.png in Resources */,
@@ -2901,7 +2901,6 @@
 				4499D7FC134DA60600342648 /* Icon-DrumPush@2x.png in Resources */,
 				4499D7FD134DA60600342648 /* Icon44-Calc.png in Resources */,
 				44965B661EFFF17800350EDA /* AZDialTile.png in Resources */,
-				443258CA1F23097800175312 /* PackListBeta-Info.plist in Resources */,
 				4499D7FE134DA60600342648 /* Icon44-Calc@2x.png in Resources */,
 				445998D2141383730005F706 /* Icon32-MailNew@2x.png in Resources */,
 				445998D6141383730005F706 /* Icon32-MailNew.png in Resources */,
@@ -2960,6 +2959,7 @@
 				44AC159514E8093B0007229F /* Icon32-PicasaBlack@2x.png in Resources */,
 				443F29981F28EBEB00386907 /* InfoPlist.strings in Resources */,
 				44965B521EFFF17800350EDA /* AZAbout-iPad.xib in Resources */,
+				4490A9E11F7BE0F1006A572D /* PackListBeta-Info.plist in Resources */,
 				44AC159614E8093B0007229F /* Icon32-PicasaBlack.png in Resources */,
 				44C167EE14E9505000F54B55 /* Icon24-Camera.png in Resources */,
 				44965B851EFFF17800350EDA /* AZWeb-Forward-16@2x.png in Resources */,
@@ -3979,12 +3979,18 @@
 			buildSettings = {
 				ADDITIONAL_SDKS = "";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -4012,7 +4018,7 @@
 					"\"$(SRCROOT)\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -4027,12 +4033,18 @@
 			buildSettings = {
 				ADDITIONAL_SDKS = "";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
