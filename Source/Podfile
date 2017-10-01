@@ -25,34 +25,29 @@ def install_pods
 
 end
 
-# 安定版「少し新しいモチメモ」com.azukid.AzPackList5
+# 「モチメモ」com.azukid.AzPackList5
 target 'PackList' do
-    install_pods
-end
-
-# 開発版「モチメモβ」com.azukid.c26b3b4dab9ca6 常に先行公開
-target 'PackListBeta' do
     install_pods
 end
 
 
 #---
-# OLD iPhone「モチメモ」com.azukid.AzPackingS1
+# OLD iPhone「モチメモ Legacy」com.azukid.AzPackingS1
 target 'PackListTel' do
     install_pods
 end
 
-# OLD iPhone Free「モチメモ Free」com.azukid.AzPacking
+# OLD iPhone Free「モチメモ Legacy F」com.azukid.AzPacking
 target 'PackListTelFree' do
     install_pods
 end
 
-# OLD iPad「モチメモ for iPad」com.azukid.AzPackPadS1
+# OLD iPad「モチメモ Legacy iPad」com.azukid.AzPackPadS1
 target 'PackListPad' do
     install_pods
 end
 
-# OLD iPad Free「モチメモ Free for iPad」com.azukid.AzPackPadFree
+# OLD iPad Free「モチメモ Legacy iPad F」com.azukid.AzPackPadFree
 target 'PackListPadFree' do
     install_pods
 end
