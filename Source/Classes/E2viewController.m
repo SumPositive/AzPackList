@@ -36,9 +36,9 @@
 
 
 @interface E2viewController ()
-<UIActionSheetDelegate, MFMailComposeViewControllerDelegate, UIPopoverControllerDelegate>
+<UIActionSheetDelegate, MFMailComposeViewControllerDelegate, UIPopoverPresentationControllerDelegate>
 {
-    UIPopoverController*	menuPopover_;  //[MENU]にて自身を包むPopover  閉じる為に必要
+    //UIPopoverController*	menuPopover_;  //[MENU]にて自身を包むPopover  閉じる為に必要
     // setPopover:にてセットされる
     
     NSMutableArray		*e2array_;   // Rrは local alloc につき release 必須を示す
@@ -47,7 +47,7 @@
     NSDictionary		*dicAddresses_;
     E2edit				*e2editView_;				// self.navigationControllerがOwnerになる
     
-    UIPopoverController*			popOver_;
+//    UIPopoverController*            popOver_;
     NSIndexPath*						indexPathEdit_;	//[1.1]ポインタ代入注意！copyするように改善した。
     
     AppDelegate		*appDelegate_;
@@ -76,11 +76,11 @@
 
 #pragma mark - Delegate
 
-- (void)setPopover:(UIPopoverController*)pc
-{
-	menuPopover_ = pc;
-	menuPopover_.delegate = self;	//枠外タッチでpopoverControllerDidDismissPopover：を呼び出すため。
-}
+//- (void)setPopover:(UIPopoverController*)pc
+//{
+//    menuPopover_ = pc;
+//    menuPopover_.delegate = self;    //枠外タッチでpopoverControllerDidDismissPopover：を呼び出すため。
+//}
 
 - (void)refreshE2view
 {
@@ -666,9 +666,9 @@
 	if (indexPath.section != 0) return;  // ここを通るのはセクション0だけ。
 	if (section0Rows_ <= indexPath.row) return;  // Addボタン行などの場合パスする
 
-	if (appDelegate_.ppIsPad) {
-		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-	}
+//    if (appDelegate_.ppIsPad) {
+//        if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+//    }
 	
 	E2 *e2obj = [e2array_ objectAtIndex:indexPath.row];
 	
@@ -680,28 +680,35 @@
 	e2editView_.sharePlanList = sharePlanList_;
 	
 	if (appDelegate_.ppIsPad) {
-		if ([menuPopover_ isPopoverVisible]) {
-			//タテ： E2viewが[MENU]でPopover内包されているとき、E2editはiPhone同様にNavi遷移するだけ
-			[self.navigationController pushViewController:e2editView_ animated:YES];
-		} else {
+//        if ([menuPopover_ isPopoverVisible]) {
+//            //タテ： E2viewが[MENU]でPopover内包されているとき、E2editはiPhone同様にNavi遷移するだけ
+//            [self.navigationController pushViewController:e2editView_ animated:YES];
+//        } else {
 			//ヨコ： E2viewが左ペインにあるとき、E2editを内包するPopoverを閉じる
-			//[Mpopover release], 
-			popOver_ = nil;
+//            popOver_ = nil;
 			UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:e2editView_];
-			popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
-			//[nc release];
-			popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
-			//MindexPathEdit = indexPath;
-			//[MindexPathEdit release], 
-			indexPathEdit_ = [indexPath copy];
+//            popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
+//            popOver_.delegate = self;    // popoverControllerDidDismissPopover:を呼び出してもらうため
+
+        
+            indexPathEdit_ = [indexPath copy];
 			CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
 			rc.origin.x = rc.size.width - 25;	rc.size.width = 1;
 			rc.origin.y += 10;	rc.size.height -= 20;
-			[popOver_ presentPopoverFromRect:rc
-									  inView:self.view  permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
-			e2editView_.selfPopover = popOver_;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
-			e2editView_.delegate = self;		// refresh callback
-		}
+//            [popOver_ presentPopoverFromRect:rc
+//                                      inView:self.view  permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
+//            e2editView_.selfPopover = popOver_;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
+
+        nc.modalPresentationStyle = UIModalPresentationPopover;
+        nc.preferredContentSize = GD_POPOVER_SIZE_E2edit;
+        nc.popoverPresentationController.sourceView = self.view;
+        nc.popoverPresentationController.sourceRect = rc;
+        nc.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+        nc.popoverPresentationController.delegate = self;
+        [self presentViewController:nc animated:YES completion:nil];
+        
+        e2editView_.delegate = self;		// refresh callback
+//        }
 	} else {
 		[e2editView_ setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
 		[self.navigationController pushViewController:e2editView_ animated:YES];
@@ -968,9 +975,9 @@
 - (void)viewWillDisappear:(BOOL)animated 
 {
 	if (appDelegate_.ppIsPad) {
-		if ([popOver_ isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
-			[popOver_ dismissPopoverAnimated:animated];
-		}
+//        if ([popOver_ isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
+//            [popOver_ dismissPopoverAnimated:animated];
+//        }
 		// YES=BagSwing // 全収納済みとなったE1から戻ったとき。
 		appDelegate_.ppBagSwing = (0 < [e1selected_.sumNoGray integerValue]				// グレーを除く
 															   && [e1selected_.sumNoCheck integerValue] <= 0	// 全チェック済
@@ -1013,13 +1020,13 @@
 // 回転した後に呼び出される
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {	// Popoverの位置を調整する　＜＜UIPopoverController の矢印が画面回転時にターゲットから外れてはならない＞＞
-	if ([popOver_ isPopoverVisible]) {
-		// E2は、タテになると非表示⇒Popoverになるので、常に閉じる
-		// 回転後のアンカー位置が再現不可なので閉じる
-		[popOver_ dismissPopoverAnimated:YES];
-		//[Mpopover release], 
-		popOver_ = nil;
-	}
+//    if ([popOver_ isPopoverVisible]) {
+//        // E2は、タテになると非表示⇒Popoverになるので、常に閉じる
+//        // 回転後のアンカー位置が再現不可なので閉じる
+//        [popOver_ dismissPopoverAnimated:YES];
+//        //[Mpopover release],
+//        popOver_ = nil;
+//    }
 	
 	
 }
@@ -1058,8 +1065,8 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	delegateE3viewController_ = nil;
-	[popOver_ setDelegate:nil];	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
-	popOver_ = nil;
+//    [popOver_ setDelegate:nil];    //[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
+//    popOver_ = nil;
 	indexPathEdit_ = nil;
 
 	[self unloadRelease];
@@ -1615,11 +1622,11 @@
 		}	break;*/
 	}
 
-	if (appDelegate_.ppIsPad) {
-		if ([menuPopover_ isPopoverVisible]) {	//選択後、Popoverならば閉じる
-			[menuPopover_ dismissPopoverAnimated:YES];
-		}
-	}
+//    if (appDelegate_.ppIsPad) {
+//        if ([menuPopover_ isPopoverVisible]) {    //選択後、Popoverならば閉じる
+//            [menuPopover_ dismissPopoverAnimated:YES];
+//        }
+//    }
 }
 
 /*
@@ -1799,32 +1806,32 @@
 
 
 #pragma mark - delegate UIPopoverController
-- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController
-{	// Popoverの外部をタップして閉じる前に通知
-	// 内部(SAVE)から、dismissPopoverAnimated:で閉じた場合は呼び出されない。
-	//[1.0.6]Cancel: 今更ながら、insert後、saveしていない限り、rollbackだけで十分であることが解った。
-
-	UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
-	if ( [[nc visibleViewController] isMemberOfClass:[E2edit class]] ) {	// E2edit のときだけ、
-		if (appDelegate_.ppChanged) { // E2editにて、変更あるので閉じさせない
-			azAlertBox(NSLocalizedString(@"Cancel or Save",nil), 
-					 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
-			return NO; 
-		}
-	}
-	return YES; // 閉じることを許可
-}
-
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
-{	// [Cancel][Save][枠外タッチ]何れでも閉じるときここを通るので解放する。さもなくば回転後に現れることになる
-	if (popoverController == menuPopover_) {
-		if (self.navigationController.topViewController != self) {
-			//タテ： E2viewが[MENU]でPopover内包されているとき、配下に遷移しておれば戻す
-			[self.navigationController popViewControllerAnimated:NO];	// < 前のViewへ戻る
-			[e1selected_.managedObjectContext rollback]; // 前回のSAVE以降を取り消す
-		}
-	}	
-}
+//- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController
+//{    // Popoverの外部をタップして閉じる前に通知
+//    // 内部(SAVE)から、dismissPopoverAnimated:で閉じた場合は呼び出されない。
+//    //[1.0.6]Cancel: 今更ながら、insert後、saveしていない限り、rollbackだけで十分であることが解った。
+//
+//    UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
+//    if ( [[nc visibleViewController] isMemberOfClass:[E2edit class]] ) {    // E2edit のときだけ、
+//        if (appDelegate_.ppChanged) { // E2editにて、変更あるので閉じさせない
+//            azAlertBox(NSLocalizedString(@"Cancel or Save",nil),
+//                     NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
+//            return NO;
+//        }
+//    }
+//    return YES; // 閉じることを許可
+//}
+//
+//- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
+//{    // [Cancel][Save][枠外タッチ]何れでも閉じるときここを通るので解放する。さもなくば回転後に現れることになる
+//    if (popoverController == menuPopover_) {
+//        if (self.navigationController.topViewController != self) {
+//            //タテ： E2viewが[MENU]でPopover内包されているとき、配下に遷移しておれば戻す
+//            [self.navigationController popViewControllerAnimated:NO];    // < 前のViewへ戻る
+//            [e1selected_.managedObjectContext rollback]; // 前回のSAVE以降を取り消す
+//        }
+//    }
+//}
 
 
 @end

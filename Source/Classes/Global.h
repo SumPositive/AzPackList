@@ -81,7 +81,7 @@
 #define GD_POPOVER_SIZE_Camera		CGSizeMake(480, 500)
 #define GD_POPOVER_SIZE_Share		CGSizeMake(480, 500)
 #define GD_POPOVER_SIZE_iPhone		CGSizeMake(320, 480)		// iPhoneタテ
-#define GD_POPOVER_SIZE_PadMenu	CGSizeMake(350, 800)
+#define GD_POPOVER_SIZE_PadMenu	    CGSizeMake(350, 800)
 
 // iCloud NSNotification messages
 #define NFM_REFRESH_ALL_VIEWS			@"RefreshAllViews"					// 再描画（MOC変更）

@@ -358,90 +358,90 @@
 
 
 #pragma mark - <UISplitViewControllerDelegate>
-//[Index]Popoverが開いたときに呼び出される
-- (void)splitViewController:(UISplitViewController*)svc
-		  popoverController:(UIPopoverController*)pc
-  willPresentViewController:(UIViewController *)aViewController
-{
-	//NSLog(@"aViewController=%@", aViewController);
-	AzNavigationController* nc = (AzNavigationController*)aViewController;
-	E2viewController* vc = (E2viewController*)nc.visibleViewController;
-	if ([vc respondsToSelector:@selector(setPopover:)]) {
-		[vc setPopover:pc];	//内側から閉じるため
-	}
-	return;
-}
-
-//タテになって左ペインが隠れる前に呼び出される
-- (void)splitViewController:(UISplitViewController*)svc
-	 willHideViewController:(UIViewController *)aViewController
-		  withBarButtonItem:(UIBarButtonItem*)barButtonItem
-	   forPopoverController:(UIPopoverController*)pc		//左ペインが内包されるPopover
-{
-	barButtonItem.title = NSLocalizedString(@"Index button", nil);
-	//self.popoverController = pc;
-    popoverButtonItem_ = barButtonItem;
-	AzNavigationController *navi = [svc.viewControllers objectAtIndex:1];
-	UIViewController <DetailViewController> *detailVC = (UIViewController <DetailViewController> *)navi.visibleViewController;
-	if ([detailVC respondsToSelector:@selector(showPopoverButtonItem:)]) {
-		[detailVC showPopoverButtonItem:popoverButtonItem_];
-	}
-}
-
-//ヨコになって左ペインが現れる前に呼び出される
-- (void)splitViewController:(UISplitViewController*)svc
-	 willShowViewController:(UIViewController *)aViewController
-  invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
-{
-	AzNavigationController *navi = [svc.viewControllers objectAtIndex:1];
-	UIViewController <DetailViewController> *detailVC = (UIViewController <DetailViewController> *)navi.visibleViewController;
-	if ([detailVC respondsToSelector:@selector(hidePopoverButtonItem:)]) {
-		[detailVC hidePopoverButtonItem:popoverButtonItem_];
-	}
-    //self.popoverController = nil;
-	popoverButtonItem_ = nil;
-}
-
-- (BOOL)splitViewController:(UISplitViewController *)splitViewController
-        collapseSecondaryViewController:(UIViewController *)secondaryViewController
-        ontoPrimaryViewController:(UIViewController *)primaryViewController {
-    return YES;
-}
+////[Index]Popoverが開いたときに呼び出される
+//- (void)splitViewController:(UISplitViewController*)svc
+//          popoverController:(UIPopoverController*)pc
+//  willPresentViewController:(UIViewController *)aViewController
+//{
+//    //NSLog(@"aViewController=%@", aViewController);
+//    AzNavigationController* nc = (AzNavigationController*)aViewController;
+//    E2viewController* vc = (E2viewController*)nc.visibleViewController;
+//    if ([vc respondsToSelector:@selector(setPopover:)]) {
+//        [vc setPopover:pc];    //内側から閉じるため
+//    }
+//    return;
+//}
+//
+////タテになって左ペインが隠れる前に呼び出される
+//- (void)splitViewController:(UISplitViewController*)svc
+//     willHideViewController:(UIViewController *)aViewController
+//          withBarButtonItem:(UIBarButtonItem*)barButtonItem
+//       forPopoverController:(UIPopoverController*)pc        //左ペインが内包されるPopover
+//{
+//    barButtonItem.title = NSLocalizedString(@"Index button", nil);
+//    //self.popoverController = pc;
+//    popoverButtonItem_ = barButtonItem;
+//    AzNavigationController *navi = [svc.viewControllers objectAtIndex:1];
+//    UIViewController <DetailViewController> *detailVC = (UIViewController <DetailViewController> *)navi.visibleViewController;
+//    if ([detailVC respondsToSelector:@selector(showPopoverButtonItem:)]) {
+//        [detailVC showPopoverButtonItem:popoverButtonItem_];
+//    }
+//}
+//
+////ヨコになって左ペインが現れる前に呼び出される
+//- (void)splitViewController:(UISplitViewController*)svc
+//     willShowViewController:(UIViewController *)aViewController
+//  invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
+//{
+//    AzNavigationController *navi = [svc.viewControllers objectAtIndex:1];
+//    UIViewController <DetailViewController> *detailVC = (UIViewController <DetailViewController> *)navi.visibleViewController;
+//    if ([detailVC respondsToSelector:@selector(hidePopoverButtonItem:)]) {
+//        [detailVC hidePopoverButtonItem:popoverButtonItem_];
+//    }
+//    //self.popoverController = nil;
+//    popoverButtonItem_ = nil;
+//}
+//
+//- (BOOL)splitViewController:(UISplitViewController *)splitViewController
+//        collapseSecondaryViewController:(UIViewController *)secondaryViewController
+//        ontoPrimaryViewController:(UIViewController *)primaryViewController {
+//    return YES;
+//}
 
 
 
 #pragma mark - <AZDropboxDelegate>
-- (NSString*)azDropboxBeforeUpFilePath:(NSString*)filePath crypt:(BOOL)crypt
-{	//Up前処理＜UPするファイルを準備する＞
-	// ファイルへ書き出す
-	if (__dropboxSaveE1selected) {
-		FileCsv *fcsv = [[FileCsv alloc] initWithTmpFilePath:filePath];
-		return [fcsv zSaveTmpFile:__dropboxSaveE1selected crypt:crypt];
-	} else {
-		return NSLocalizedString(@"Dropbox NoFile", nil);
-	}
-}
-
-- (NSString*)azDropboxDownAfterFilePath:(NSString*)filePath
-{	//Down後処理＜DOWNしたファイルを読み込むなど＞
-	// ファイルから読み込む
-	FileCsv *fcsv = [[FileCsv alloc] initWithTmpFilePath:filePath];
-	return  [fcsv zLoadTmpFile];
-}
-
-//結果　　ここで、成功後の再描画など行う
-- (void)azDropboxUpResult:(NSString*)result
-{	//=nil:Up成功
-	return;
-}
-- (void)azDropboxDownResult:(NSString*)result
-{	//=nil:Down成功
-	if (result==nil) {
-		// 再読み込み 通知発信---> E1viewController
-		[[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
-															object:self userInfo:nil];
-	}
-}
+//- (NSString*)azDropboxBeforeUpFilePath:(NSString*)filePath crypt:(BOOL)crypt
+//{    //Up前処理＜UPするファイルを準備する＞
+//    // ファイルへ書き出す
+//    if (__dropboxSaveE1selected) {
+//        FileCsv *fcsv = [[FileCsv alloc] initWithTmpFilePath:filePath];
+//        return [fcsv zSaveTmpFile:__dropboxSaveE1selected crypt:crypt];
+//    } else {
+//        return NSLocalizedString(@"Dropbox NoFile", nil);
+//    }
+//}
+//
+//- (NSString*)azDropboxDownAfterFilePath:(NSString*)filePath
+//{    //Down後処理＜DOWNしたファイルを読み込むなど＞
+//    // ファイルから読み込む
+//    FileCsv *fcsv = [[FileCsv alloc] initWithTmpFilePath:filePath];
+//    return  [fcsv zLoadTmpFile];
+//}
+//
+////結果　　ここで、成功後の再描画など行う
+//- (void)azDropboxUpResult:(NSString*)result
+//{    //=nil:Up成功
+//    return;
+//}
+//- (void)azDropboxDownResult:(NSString*)result
+//{    //=nil:Down成功
+//    if (result==nil) {
+//        // 再読み込み 通知発信---> E1viewController
+//        [[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
+//                                                            object:self userInfo:nil];
+//    }
+//}
 
 
 #pragma mark - Ad

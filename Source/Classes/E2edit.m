@@ -33,13 +33,13 @@
 @synthesize addRow = addRow_;
 @synthesize sharePlanList = sharePlanList_;
 @synthesize delegate = delegate_;
-@synthesize selfPopover = selfPopover_;
+//@synthesize selfPopover = selfPopover_;
 
 
 - (void)dealloc 
 {
 	//[selfPopover_ release], 
-	selfPopover_ = nil;
+//    selfPopover_ = nil;
 	// @property (retain)
 	//[Re2target release];
 	//[Re1selected release];
@@ -285,14 +285,16 @@ replacementString:(NSString *)string
 
 - (void)cancel:(id)sender 
 {
-	if (appDelegate_.ppIsPad) {
-		if (selfPopover_) 
-		{	//ヨコ： E2viewが左ペインにあるとき、E2editを内包するPopoverを閉じる
-			[selfPopover_ dismissPopoverAnimated:YES];
-			return;
-		}
-		//タテ： E2viewが[MENU]でPopover内包されているとき、E2editはiPhone同様にNavi遷移するだけ
-	}
+    if (appDelegate_.ppIsPad) {
+//        if (selfPopover_)
+//        {    //ヨコ： E2viewが左ペインにあるとき、E2editを内包するPopoverを閉じる
+//            [selfPopover_ dismissPopoverAnimated:YES];
+//            return;
+//        }
+//        //タテ： E2viewが[MENU]でPopover内包されているとき、E2editはiPhone同様にNavi遷移するだけ
+        [self dismissViewControllerAnimated:YES completion:nil];
+        return;
+    }
 	[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
 }
 
@@ -317,17 +319,23 @@ replacementString:(NSString *)string
 		}
 	}
 
-	if (appDelegate_.ppIsPad) {
-		if (selfPopover_) 
-		{	//ヨコ： E2viewが左ペインにあるとき、E2editを内包するPopoverを閉じる
-			if ([delegate_ respondsToSelector:@selector(refreshE2view)]) {	// メソッドの存在を確認する
-				[delegate_ refreshE2view];// 親の再描画を呼び出す
-			}
-			[selfPopover_ dismissPopoverAnimated:YES];
-			return;
-		}
-		//タテ： E2viewが[MENU]でPopover内包されているとき、E2editはiPhone同様にNavi遷移するだけ
-	}
+    if (appDelegate_.ppIsPad) {
+//        if (selfPopover_)
+//        {    //ヨコ： E2viewが左ペインにあるとき、E2editを内包するPopoverを閉じる
+//            if ([delegate_ respondsToSelector:@selector(refreshE2view)]) {    // メソッドの存在を確認する
+//                [delegate_ refreshE2view];// 親の再描画を呼び出す
+//            }
+//            [selfPopover_ dismissPopoverAnimated:YES];
+//            return;
+//        }
+//        //タテ： E2viewが[MENU]でPopover内包されているとき、E2editはiPhone同様にNavi遷移するだけ
+
+        if ([delegate_ respondsToSelector:@selector(refreshE2view)]) {    // メソッドの存在を確認する
+            [delegate_ refreshE2view];// 親の再描画を呼び出す
+        }
+        [self dismissViewControllerAnimated:YES completion:nil];
+        return;
+    }
 	[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
 }
 
