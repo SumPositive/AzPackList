@@ -47,7 +47,7 @@
 	NSMutableArray		*e2array_;			//[1.0.2]E2から受け取るのではなく、ここで生成するようにした。
 	NSMutableArray		*e3array_;
 
-	UIPopoverController*	popOver_;
+//    UIPopoverController*    popOver_;
 	NSIndexPath*				indexPathEdit_;	//[1.1]ポインタ代入注意！copyするように改善した。
 	UIToolbar*					e2toolbar_;
 
@@ -597,9 +597,9 @@
 - (void)viewWillDisappear:(BOOL)animated 
 {
 	if (appDelegate_.ppIsPad) {
-		if ([popOver_ isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
-			[popOver_ dismissPopoverAnimated:animated];
-		}
+//        if ([popOver_ isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
+//            [popOver_ dismissPopoverAnimated:animated];
+//        }
 		// 左側のＥ２を閉じる
 //左ペイン常時表示になったため、
 //		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) 
@@ -652,29 +652,29 @@
 // 回転した後に呼び出される
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {	// Popoverの位置を調整する　＜＜UIPopoverController の矢印が画面回転時にターゲットから外れてはならない＞＞
-	if ([popOver_ isPopoverVisible]) {
-		if (indexPathEdit_) { 
-			@try {		//何度かここでSIGABRT発生、MindexPathEdit不正だと思うが原因不明につき @try 回避
-							//[1.1]原因は、retainしていないポインタを代入していたことだと思う。　代入時に copy した。
-				//NSLog(@"MindexPathEdit=%@", MindexPathEdit);
-				[self.tableView scrollToRowAtIndexPath:indexPathEdit_ 
-									  atScrollPosition:UITableViewScrollPositionMiddle animated:NO]; // YESだと次の座標取得までにアニメーションが終了せずに反映されない
-				CGRect rc = [self.tableView rectForRowAtIndexPath:indexPathEdit_];
-				rc.origin.x += 140;  //(rc.size.width/2 - 100);	//(-100)ヨコのとき幅が縮小されてテンキーが欠けるため
-				rc.size.width = 1;
-				[popOver_ presentPopoverFromRect:rc  inView:self.tableView 
-						permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
-			}
-			@catch (NSException *exception) {
-				assert(NO);
-				[popOver_ dismissPopoverAnimated:YES];
-			}
-		} else {
-			// 回転後のアンカー位置が再現不可なので閉じる
-			[popOver_ dismissPopoverAnimated:YES];
-			//[Mpopover release], Mpopover = nil;
-		}
-	}
+//    if ([popOver_ isPopoverVisible]) {
+//        if (indexPathEdit_) {
+//            @try {        //何度かここでSIGABRT発生、MindexPathEdit不正だと思うが原因不明につき @try 回避
+//                            //[1.1]原因は、retainしていないポインタを代入していたことだと思う。　代入時に copy した。
+//                //NSLog(@"MindexPathEdit=%@", MindexPathEdit);
+//                [self.tableView scrollToRowAtIndexPath:indexPathEdit_
+//                                      atScrollPosition:UITableViewScrollPositionMiddle animated:NO]; // YESだと次の座標取得までにアニメーションが終了せずに反映されない
+//                CGRect rc = [self.tableView rectForRowAtIndexPath:indexPathEdit_];
+//                rc.origin.x += 140;  //(rc.size.width/2 - 100);    //(-100)ヨコのとき幅が縮小されてテンキーが欠けるため
+//                rc.size.width = 1;
+//                [popOver_ presentPopoverFromRect:rc  inView:self.tableView
+//                        permittedArrowDirections:UIPopoverArrowDirectionLeft  animated:YES];
+//            }
+//            @catch (NSException *exception) {
+//                assert(NO);
+//                [popOver_ dismissPopoverAnimated:YES];
+//            }
+//        } else {
+//            // 回転後のアンカー位置が再現不可なので閉じる
+//            [popOver_ dismissPopoverAnimated:YES];
+//            //[Mpopover release], Mpopover = nil;
+//        }
+//    }
 	[self viewDesign];
 }
 
@@ -712,9 +712,9 @@
 - (void)e3detailView:(NSIndexPath *)indexPath 
 {
 	if (sharePlanList_) return;  //サンプルモードにつき
-	if (appDelegate_.ppIsPad) {
-		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-	}
+//    if (appDelegate_.ppIsPad) {
+//        if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+//    }
 
 	// E3detailTVC へドリルダウン
 	E3detailTVC *e3detail = [[E3detailTVC alloc] init];
@@ -800,8 +800,8 @@
 	[self unloadRelease];
 
 	if (appDelegate_.ppIsPad) {
-		popOver_.delegate = nil;	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
-		//[MindexPathEdit release], 
+//        popOver_.delegate = nil;    //[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
+		//[MindexPathEdit release],
 		indexPathEdit_ = nil;
 	}
 	//[MindexPathActionDelete release], 
@@ -1827,30 +1827,30 @@
 }
 
 
-#pragma mark - <UIPopoverControllerDelegate>
-
-- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController
-{	// Popoverの外部をタップして閉じる前に通知
-	// 内部(SAVE)から、dismissPopoverAnimated:で閉じた場合は呼び出されない。
-	//[1.0.6]Cancel: 今更ながら、insert後、saveしていない限り、rollbackだけで十分であることが解った。
-
-/*	UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
-	if ( [[nc visibleViewController] isMemberOfClass:[E3detailTVC class]] ) {	// E3detailTVC のときだけ、
-		if (appDelegate_.app_UpdateSave) { // E3detailTVCにて、変更あるので閉じさせない
-			alertBox(NSLocalizedString(@"Cancel or Save",nil), 
-					 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
-			return NO; 
-		}
-	}*/
-	
-	if (appDelegate_.ppChanged) { // 変更あるので閉じさせない
-		azAlertBox(NSLocalizedString(@"Cancel or Save",nil), 
-				 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
-		return NO; 
-	}
-	[e1selected_.managedObjectContext rollback]; // 前回のSAVE以降を取り消す
-	return YES; // 閉じることを許可
-}
+//#pragma mark - <UIPopoverControllerDelegate>
+//
+//- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController
+//{    // Popoverの外部をタップして閉じる前に通知
+//    // 内部(SAVE)から、dismissPopoverAnimated:で閉じた場合は呼び出されない。
+//    //[1.0.6]Cancel: 今更ながら、insert後、saveしていない限り、rollbackだけで十分であることが解った。
+//
+///*    UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
+//    if ( [[nc visibleViewController] isMemberOfClass:[E3detailTVC class]] ) {    // E3detailTVC のときだけ、
+//        if (appDelegate_.app_UpdateSave) { // E3detailTVCにて、変更あるので閉じさせない
+//            alertBox(NSLocalizedString(@"Cancel or Save",nil), 
+//                     NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
+//            return NO; 
+//        }
+//    }*/
+//    
+//    if (appDelegate_.ppChanged) { // 変更あるので閉じさせない
+//        azAlertBox(NSLocalizedString(@"Cancel or Save",nil), 
+//                 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
+//        return NO; 
+//    }
+//    [e1selected_.managedObjectContext rollback]; // 前回のSAVE以降を取り消す
+//    return YES; // 閉じることを許可
+//}
 
 
 @end

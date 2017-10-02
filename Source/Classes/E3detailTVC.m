@@ -91,7 +91,7 @@
 @synthesize addE3row = pAddE3row;
 @synthesize sharePlanList = pSharePlanList;
 @synthesize delegate = pDelegate;
-@synthesize selfPopover = pSelfPopover;
+//@synthesize selfPopover = pSelfPopover;
 
 
 
@@ -365,7 +365,7 @@
 		mWebViewShop.delegate = nil; // これしないと落ちます
 		mWebViewShop = nil;
 	}
-	pSelfPopover = nil;
+//    pSelfPopover = nil;
 }
 
 
@@ -386,48 +386,11 @@
 {	// E3は、Cancel時、新規ならば破棄、修正ならば復旧、させる
 	if (pE3target && pSharePlanList==NO) {  // Sample表示のときrollbackすると、一時表示用のE1まで消えてしまうので回避する。
 		// ROLLBACK
-#ifdef xxxDEBUG
-		NSManagedObjectContext *moc = e3target_.managedObjectContext;
-		//NSLog(@"--1-- e3target_=%@", e3target_);
-		//[1.0.6]insertされたentityが本当にrollbackされているのかを検証
-		{
-			E2 *e2 = e3target_.parent;
-			NSLog(@"--1-- [[e2.childs allObjects] count]=%d", (int)[[e2.childs allObjects] count]);
-			
-			NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-			NSEntityDescription *entity = [NSEntityDescription entityForName:@"E3" inManagedObjectContext:moc];
-			[fetchRequest setEntity:entity];
-			NSArray *arFetch = [moc executeFetchRequest:fetchRequest error:nil];
-			NSLog(@"--1-- E3 count=%d", (int)[arFetch count]); //＜＜ New Goods CANCEL時、insertNewされたものが増えている。
-			[fetchRequest release];
-		}
-#endif		
-
 		//[1.0.6]今更ながら、insert後、saveしていない限り、rollbackだけで十分であることが解った。 ＜＜前後のDEBUGによる検証済み。
 		[pE3target.managedObjectContext rollback]; // 前回のSAVE以降を取り消す
-		
-#ifdef xxxDEBUG
-		//NSLog(@"--2-- e3target_=%@", e3target_);
-		//[1.0.6]insertされたentityが本当にrollbackされているのかを検証
-		{
-			E2 *e2 = e3target_.parent;
-			NSLog(@"--2-- [[e2.childs allObjects] count]=%d", (int)[[e2.childs allObjects] count]);
-			
-			NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-			NSEntityDescription *entity = [NSEntityDescription entityForName:@"E3" inManagedObjectContext:moc];
-			[fetchRequest setEntity:entity];
-			NSArray *arFetch = [moc executeFetchRequest:fetchRequest error:nil];
-			NSLog(@"--2-- E3 count=%d", (int)[arFetch count]); //＜＜ New Goods CANCEL時、--1-- E3 count より1つ減っていることを確認した。
-			[fetchRequest release];
-		}
-#endif		
-		
 	}
 
 	if (mAppDelegate.ppIsPad) {
-//		if (pSelfPopover) {
-//			[pSelfPopover dismissPopoverAnimated:YES];
-//		}
         [self dismissViewControllerAnimated:YES completion:nil];
 	} else {
 		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
@@ -626,13 +589,6 @@
 //	}
 	
 	if (mAppDelegate.ppIsPad) {
-//		//[(PadNaviCon*)self.navigationController dismissPopoverSaved];  // SAVE: PadNaviCon拡張メソッド
-//		if (pSelfPopover) {
-//			if ([pDelegate respondsToSelector:@selector(refreshE3view)]) {	// メソッドの存在を確認する
-//				[pDelegate refreshE3view];// 親の再描画を呼び出す
-//			}
-//			[pSelfPopover dismissPopoverAnimated:YES];
-//		}
         if ([pDelegate respondsToSelector:@selector(refreshE3view)]) {	// メソッドの存在を確認する
             [pDelegate refreshE3view];// 親の再描画を呼び出す
         }
@@ -647,12 +603,6 @@
 		NSUbiquitousKeyValueStore *kvs = [NSUbiquitousKeyValueStore defaultStore];
 		if ([kvs boolForKey:KV_OptItemsGrayShow] == NO) 
 		{
-//			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Added Item",nil)
-//															 message:NSLocalizedString(@"GrayHiddon Alert",nil)
-//															delegate:nil 
-//												   cancelButtonTitle:nil 
-//												   otherButtonTitles:@"OK", nil];
-//			[alert show];
             [AZAlert target:nil
                       title:NSLocalizedString(@"Added Item",nil)
                     message:NSLocalizedString(@"GrayHiddon Alert", nil)
@@ -665,12 +615,12 @@
 
 - (void)closePopover
 {
-	if (pSelfPopover) {	//dismissPopoverCancel
-		if (mCalcView && [mCalcView isShow]) {
-			[mCalcView cancel];  //　ラベル表示を元に戻す
-		}
-		[pSelfPopover dismissPopoverAnimated:YES];
-	}
+//    if (pSelfPopover) {    //dismissPopoverCancel
+//        if (mCalcView && [mCalcView isShow]) {
+//            [mCalcView cancel];  //　ラベル表示を元に戻す
+//        }
+//        [pSelfPopover dismissPopoverAnimated:YES];
+//    }
 }
 
 

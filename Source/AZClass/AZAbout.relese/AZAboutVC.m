@@ -95,24 +95,24 @@
 }
 
 
-#pragma mark - <alertView>
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	if (buttonIndex != 1) return; // Cancel
-	// OK
-	switch (alertView.tag) 
-	{
-		case ALERT_TAG_GoSupportBlog: {
-			//NSURL *url = [NSURL URLWithString:@"http://packlist.azukid.com/"];
-			NSURL *url = [NSURL URLWithString:self.ppSupportSite];
-			[[UIApplication sharedApplication] openURL:url];
-		}	break;
-			
-		case ALERT_TAG_PostToAuthor: { // Post commens
-			[self sendmail];
-		}	break;
-	}
-}
+//#pragma mark - <alertView>
+//- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//    if (buttonIndex != 1) return; // Cancel
+//    // OK
+//    switch (alertView.tag) 
+//    {
+//        case ALERT_TAG_GoSupportBlog: {
+//            //NSURL *url = [NSURL URLWithString:@"http://packlist.azukid.com/"];
+//            NSURL *url = [NSURL URLWithString:self.ppSupportSite];
+//            [[UIApplication sharedApplication] openURL:url];
+//        }    break;
+//            
+//        case ALERT_TAG_PostToAuthor: { // Post commens
+//            [self sendmail];
+//        }    break;
+//    }
+//}
 
 
 #pragma mark - Action
@@ -160,13 +160,25 @@
         return;
     }
 	
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:AZLocalizedString(@"AZAbout PostTo",nil)
-													message:AZLocalizedString(@"AZAbout PostTo msg",nil)
-												   delegate:self		// clickedButtonAtIndexが呼び出される
-										  cancelButtonTitle:@"Cancel"
-										  otherButtonTitles:@"OK", nil];
-	alert.tag = ALERT_TAG_PostToAuthor;
-	[alert show];
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:AZLocalizedString(@"AZAbout PostTo",nil)
+//                                                    message:AZLocalizedString(@"AZAbout PostTo msg",nil)
+//                                                   delegate:self        // clickedButtonAtIndexが呼び出される
+//                                          cancelButtonTitle:@"Cancel"
+//                                          otherButtonTitles:@"OK", nil];
+//    alert.tag = ALERT_TAG_PostToAuthor;
+//    [alert show];
+
+    [AZAlert target:nil
+              title:AZLocalizedString(@"AZAbout PostTo",nil)
+            message:AZLocalizedString(@"AZAbout PostTo msg",nil)
+            b1title:@"OK"
+            b1style:UIAlertActionStyleDefault
+           b1action:^(UIAlertAction * _Nullable action) {
+               [self sendmail];
+           }
+            b2title:@"Cancel"
+            b2style:UIAlertActionStyleCancel
+           b2action:nil];
 }
 /*
 - (IBAction)ibBuClose:(UIButton *)button	//iPadのみ

@@ -24,7 +24,7 @@
 
 
 @interface E1viewController ()
-<NSFetchedResultsControllerDelegate, UIPopoverControllerDelegate>
+<NSFetchedResultsControllerDelegate, UIPopoverPresentationControllerDelegate>
 {
     //__weak IBOutlet UITableView*    _tableView;      self.tableView
 
@@ -37,7 +37,7 @@
     E1edit							*e1editView_;
     //InformationView			*informationView_;
     
-    UIPopoverController	*popOver_;
+//    UIPopoverController    *popOver_;
     NSIndexPath*				indexPathEdit_;	//[1.1]ポインタ代入注意！copyするように改善した。
     
     AppDelegate		*appDelegate_;
@@ -653,9 +653,9 @@
 {
 	if (section0Rows_ <= indexPath.row) return;  // Addボタン行などの場合パスする
 
-	if (appDelegate_.ppIsPad) {
-		if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
-	}
+//    if (appDelegate_.ppIsPad) {
+//        if ([popOver_ isPopoverVisible]) return; //[1.0.6-Bug01]同時タッチで落ちる⇒既に開いておれば拒否
+//    }
 	
 	// E1 : NSManagedObject
 	E1 *e1obj = [mFetchedE1 objectAtIndexPath:indexPath];
@@ -667,22 +667,31 @@
 	
 	if (appDelegate_.ppIsPad) {
 		//[Mpopover release], 
-		popOver_ = nil;
+//        popOver_ = nil;
 		//Mpopover = [[PadPopoverInNaviCon alloc] initWithContentViewController:Me1editView];
 		UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:e1editView_];
-		popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
+//        popOver_ = [[UIPopoverController alloc] initWithContentViewController:nc];
 	//	[nc release];
-		popOver_.delegate = self;	// popoverControllerDidDismissPopover:を呼び出してもらうため
+//        popOver_.delegate = self;    // popoverControllerDidDismissPopover:を呼び出してもらうため
 		//MindexPathEdit = indexPath;
 		//[MindexPathEdit release], 
 		indexPathEdit_ = [indexPath copy];
 		CGRect rc = [self.tableView rectForRowAtIndexPath:indexPath];
 		rc.origin.x = rc.size.width - 65;	rc.size.width = 1;
 		rc.origin.y += 10;	rc.size.height -= 20;
-		[popOver_ presentPopoverFromRect:rc
-								  inView:self.view  permittedArrowDirections:UIPopoverArrowDirectionRight  animated:YES];
+//        [popOver_ presentPopoverFromRect:rc
+//                                  inView:self.view  permittedArrowDirections:UIPopoverArrowDirectionRight  animated:YES];
 		//e1editView_.selfPopover = popOver_;  //[Mpopover release]; //(retain)  内から閉じるときに必要になる
 		//e1editView_.delegate = self;		// refresh callback
+        
+        nc.modalPresentationStyle = UIModalPresentationPopover;
+        nc.preferredContentSize = GD_POPOVER_SIZE_E1edit;
+        nc.popoverPresentationController.sourceView = self.view;
+        nc.popoverPresentationController.sourceRect = rc;
+        nc.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+        nc.popoverPresentationController.delegate = self;
+        [self presentViewController:nc animated:YES completion:nil];
+
 	}
 	else {
 		[e1editView_ setHidesBottomBarWhenPushed:YES]; // 現在のToolBar状態をPushした上で、次画面では非表示にする
@@ -997,11 +1006,11 @@
 // この画面が非表示になる直前に呼ばれる
 - (void)viewWillDisappear:(BOOL)animated 
 {
-	if (appDelegate_.ppIsPad) {
-		if ([popOver_ isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
-			[popOver_ dismissPopoverAnimated:animated];
-		}
-	}
+//    if (appDelegate_.ppIsPad) {
+//        if ([popOver_ isPopoverVisible]) { //[1.0.6-Bug01]戻る同時タッチで落ちる⇒強制的に閉じるようにした。
+//            [popOver_ dismissPopoverAnimated:animated];
+//        }
+//    }
 	
 	[super viewWillDisappear:animated];
 }
@@ -1045,20 +1054,20 @@
 // 回転した後に呼び出される
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {	// Popoverの位置を調整する　＜＜UIPopoverController の矢印が画面回転時にターゲットから外れてはならない＞＞
-	if ([popOver_ isPopoverVisible]) {
-		if (indexPathEdit_) { 
-			//NSLog(@"MindexPathEdit=%@", MindexPathEdit);
-			[self.tableView scrollToRowAtIndexPath:indexPathEdit_ 
-								  atScrollPosition:UITableViewScrollPositionMiddle animated:NO]; // YESだと次の座標取得までにアニメーションが終了せずに反映されない
-			[popOver_ presentPopoverFromRect:[self.tableView rectForRowAtIndexPath:indexPathEdit_]
-									  inView:self.view  permittedArrowDirections:UIPopoverArrowDirectionAny  animated:YES];
-		} else {
-			// Information, Setting などで、回転後のアンカー位置が再現不可なので閉じる
-			[popOver_ dismissPopoverAnimated:YES];
-			//[Mpopover release], 
-			popOver_ = nil;
-		}
-	}
+//    if ([popOver_ isPopoverVisible]) {
+//        if (indexPathEdit_) {
+//            //NSLog(@"MindexPathEdit=%@", MindexPathEdit);
+//            [self.tableView scrollToRowAtIndexPath:indexPathEdit_
+//                                  atScrollPosition:UITableViewScrollPositionMiddle animated:NO]; // YESだと次の座標取得までにアニメーションが終了せずに反映されない
+//            [popOver_ presentPopoverFromRect:[self.tableView rectForRowAtIndexPath:indexPathEdit_]
+//                                      inView:self.view  permittedArrowDirections:UIPopoverArrowDirectionAny  animated:YES];
+//        } else {
+//            // Information, Setting などで、回転後のアンカー位置が再現不可なので閉じる
+//            [popOver_ dismissPopoverAnimated:YES];
+//            //[Mpopover release],
+//            popOver_ = nil;
+//        }
+//    }
 }
 
 #pragma mark  View Unload
@@ -1107,10 +1116,10 @@
 	[self unloadRelease];
 
 	if (appDelegate_.ppIsPad) {
-		popOver_.delegate = nil;	//[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
-		//[Mpopover release], 
-		popOver_ = nil;
-		//[MindexPathEdit release], 
+//        popOver_.delegate = nil;    //[1.0.6-Bug01]戻る同時タッチで落ちる⇒delegate呼び出し強制断
+		//[Mpopover release],
+//        popOver_ = nil;
+		//[MindexPathEdit release],
 		indexPathEdit_ = nil;
 	}
 	//--------------------------------@property (retain)
@@ -1310,7 +1319,7 @@
 				cell.imageView.image = [UIImage imageNamed:@"Icon32-BagGray.png"];
 			}
 			
-			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton; // ディスクロージャボタン
+			cell.accessoryType = UITableViewCellAccessoryDetailButton; // ディスクロージャボタン
 			cell.showsReorderControl = YES;		// Move有効
 		} 
 		else {
@@ -1643,30 +1652,30 @@
 	}
 }
 
-#pragma mark - delegate UIPopoverController
-- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController
-{	// Popoverの外部をタップして閉じる前に通知
-	// 内部(SAVE)から、dismissPopoverAnimated:で閉じた場合は呼び出されない。
-	//[1.0.6]Cancel: 今更ながら、insert後、saveしていない限り、rollbackだけで十分であることが解った。
-
-	UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
-	if ( [[nc visibleViewController] isMemberOfClass:[E1edit class]] ) {	// E1edit のときだけ、
-		if (appDelegate_.ppChanged) { // E1editにて、変更あるので閉じさせない
-			azAlertBox(NSLocalizedString(@"Cancel or Save",nil), 
-					 NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
-			return NO; 
-		}
-	}
-	[mMoc rollback]; // 前回のSAVE以降を取り消す。＜＜サンプルの一時取込をクリアするために必要
-	return YES; // 閉じることを許可
-}
-
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
-{	// [Cancel][Save][枠外タッチ]何れでも閉じるときここを通る
-	//[self refreshE1view];
-	[self refreshAllViews:nil];
-	return;
-}
+//#pragma mark - delegate UIPopoverController
+//- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController
+//{    // Popoverの外部をタップして閉じる前に通知
+//    // 内部(SAVE)から、dismissPopoverAnimated:で閉じた場合は呼び出されない。
+//    //[1.0.6]Cancel: 今更ながら、insert後、saveしていない限り、rollbackだけで十分であることが解った。
+//
+//    UINavigationController* nc = (UINavigationController*)[popoverController contentViewController];
+//    if ( [[nc visibleViewController] isMemberOfClass:[E1edit class]] ) {    // E1edit のときだけ、
+//        if (appDelegate_.ppChanged) { // E1editにて、変更あるので閉じさせない
+//            azAlertBox(NSLocalizedString(@"Cancel or Save",nil),
+//                     NSLocalizedString(@"Cancel or Save msg",nil), NSLocalizedString(@"Roger",nil));
+//            return NO;
+//        }
+//    }
+//    [mMoc rollback]; // 前回のSAVE以降を取り消す。＜＜サンプルの一時取込をクリアするために必要
+//    return YES; // 閉じることを許可
+//}
+//
+//- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
+//{    // [Cancel][Save][枠外タッチ]何れでも閉じるときここを通る
+//    //[self refreshE1view];
+//    [self refreshAllViews:nil];
+//    return;
+//}
 
 
 

@@ -11,12 +11,18 @@
 
 void azAlertBox( NSString *zTitle, NSString *zMsg, NSString *zButton )
 {
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:zTitle
-													message:zMsg
-												   delegate:nil
-										  cancelButtonTitle:nil
-										  otherButtonTitles:zButton, nil];
-	[alert show];
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:zTitle
+//                                                    message:zMsg
+//                                                   delegate:nil
+//                                          cancelButtonTitle:nil
+//                                          otherButtonTitles:zButton, nil];
+//    [alert show];
+    [AZAlert target:nil
+              title:zTitle
+            message:zMsg
+            b1title:zButton
+            b1style:UIAlertActionStyleDefault
+           b1action:nil];
 }
 
 // nil --> [NSNull null]   コンテナ保存オブジェクトにnilが含まれる可能性があるときに使用

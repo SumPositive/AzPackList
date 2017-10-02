@@ -13,7 +13,7 @@
 #import "E1viewController.h"
 #import "E1edit.h"
 //#import "E2viewController.h"
-#import "GooDocsTVC.h"
+//#import "GooDocsTVC.h"
 
 
 @interface E1edit () <UITextFieldDelegate, UITextViewDelegate>
@@ -284,6 +284,7 @@
 //		if (selfPopover_) {
 //			[selfPopover_ dismissPopoverAnimated:YES];
 //		}
+        [self dismissViewControllerAnimated:YES completion:nil];
 	} else {
 		/*	Cancelでも「新しい・・」を削除しない。Rootに戻ったときに配下クリーン処理している。
 		 if (e1target_ && 0 <= addRow_) 
@@ -330,7 +331,11 @@
 //																object:self  userInfo:nil];
 //			[selfPopover_ dismissPopoverAnimated:YES];
 //		}
-	} else {
+        // 再表示 通知発信
+        [[NSNotificationCenter defaultCenter] postNotificationName:NFM_REFRESH_ALL_VIEWS
+                                                            object:self  userInfo:nil];
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
 		[self.navigationController popViewControllerAnimated:YES];	// < 前のViewへ戻る
 	}
 }

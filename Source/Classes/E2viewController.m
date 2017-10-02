@@ -43,7 +43,7 @@
     
     NSMutableArray		*e2array_;   // Rrは local alloc につき release 必須を示す
     HTTPServer			*httpServer_;
-    UIAlertView			*alertHttpServer_;
+//    UIAlertView            *alertHttpServer_;
     NSDictionary		*dicAddresses_;
     E2edit				*e2editView_;				// self.navigationControllerがOwnerになる
     
@@ -1046,8 +1046,8 @@
 //		httpServer_ = nil;
 //	}
 	//[RalertHttpServer release], 
-	alertHttpServer_ = nil;
-	//[MdicAddresses release], 
+//    alertHttpServer_ = nil;
+	//[MdicAddresses release],
 	dicAddresses_ = nil;
 	//[RaE2array release], 
 	e2array_ = nil;
@@ -1339,7 +1339,7 @@
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	// > ディスクロージャマーク
 				} else {
 					cell.showsReorderControl = YES;		// Move許可
-					cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton; // ディスクロージャボタン
+					cell.accessoryType = UITableViewCellAccessoryDetailButton; // ディスクロージャボタン
 				}
 			} 
 			else if (indexPath.row == section0Rows_) {
@@ -1805,7 +1805,7 @@
 }
 
 
-#pragma mark - delegate UIPopoverController
+//#pragma mark - delegate UIPopoverController
 //- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController
 //{    // Popoverの外部をタップして閉じる前に通知
 //    // 内部(SAVE)から、dismissPopoverAnimated:で閉じた場合は呼び出されない。

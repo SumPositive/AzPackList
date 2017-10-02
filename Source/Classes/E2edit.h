@@ -17,6 +17,6 @@
 @property (nonatomic, assign) BOOL				sharePlanList;
 
 @property (nonatomic, assign) id									delegate;
-@property (nonatomic, retain) UIPopoverController*	selfPopover;
+//@property (nonatomic, retain) UIPopoverController*	selfPopover;
 
 @end

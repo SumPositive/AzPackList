@@ -24,7 +24,7 @@
 @property (nonatomic, assign) NSInteger					addE3row;
 @property (nonatomic, assign) BOOL							sharePlanList;
 @property (nonatomic, assign) id									delegate;
-@property (nonatomic, retain) UIPopoverController*	selfPopover;
+//@property (nonatomic, retain) UIPopoverController*	selfPopover;
 
 // 公開メソッド
 - (void)cancelClose:(id)sender ;
